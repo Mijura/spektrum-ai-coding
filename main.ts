@@ -2,9 +2,9 @@ import { createFsFromVolume, Volume } from "memfs";
 import { webpack, Compiler, Configuration } from "webpack";
 import { code } from "./source-code";
 import * as path from "path";
+import { configuration } from "./configs/webpack.prod";
 
 export const buildSourceCode = async () => {
-  const inputPath = "/index.js";
   const files = code;
 
   const memoryVolume = Volume.fromJSON(files);
@@ -12,21 +12,7 @@ export const buildSourceCode = async () => {
   const memfs = createFsFromVolume(memoryVolume);
 
   // Define Rspack configuration
-  const config: Configuration = {
-    mode: "production",
-    entry: inputPath, // Entry should be the in-memory file path
-    output: {
-      path: "/dist", // Output directory in the in-memory filesystem
-      filename: "bundle.js",
-      library: {
-        type: "commonjs2", // Export as CommonJS
-      },
-    },
-    // Enable webpack-like configuration for memfs
-    resolve: {
-      extensions: [".js"],
-    },
-  };
+  const config: Configuration = configuration as Configuration
 
   // Create and configure a Compiler instance
   const compiler: Compiler = webpack(config);
