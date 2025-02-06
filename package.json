@@ -1,0 +1,17 @@
+{
+    "name": "rspack-api-example",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc && node server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "memfs": "^4.17.0",
+        "typescript": "^5.7.3",
+        "webpack": "^5.97.1"
+    }
+}
