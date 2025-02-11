@@ -1,8 +1,13 @@
 import { createFsFromVolume, Volume } from "memfs";
-import { webpack, Compiler, Configuration } from "webpack";
+import { webpack } from "webpack";
 import { code } from "./source-code";
-import * as path from "path";
-import { configuration } from "./configs/webpack.prod";
+import * as fs from "fs";
+import { ufs } from "unionfs";
+
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 export const buildSourceCode = async () => {
   const files = code;
@@ -11,49 +16,68 @@ export const buildSourceCode = async () => {
 
   const memfs = createFsFromVolume(memoryVolume);
 
-  // Define Rspack configuration
-  const config: Configuration = configuration as Configuration
+  ufs.use(fs).use(memfs as any);
 
-  // Create and configure a Compiler instance
-  const compiler: Compiler = webpack(config);
-  compiler.inputFileSystem = memfs as any;
-  compiler.outputFileSystem = memfs as any;
+  console.log("📂 Virtual Filesystem Structure:", ufs.readdirSync(__dirname));
 
-  // Run the compiler
+
+  const compiler = webpack({
+    entry: {
+      index: "./src/index.tsx",
+    },
+    mode: "production",
+    target: "web",
+    module: {
+      rules: [
+        {
+          test: /\.(tsx|ts|js)$/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                "@babel/preset-env",
+                ["@babel/preset-react", { runtime: "automatic" }],
+                "@babel/preset-typescript",
+              ],
+            },
+          },
+        },
+        {
+          test: /\.css$/,
+          use: ["style-loader", "css-loader", "postcss-loader"],
+        },
+      ],
+    },
+    plugins: [
+      new CopyPlugin({
+        patterns: [{ from: "./public/favicon.ico" }],
+      }),
+      new Dotenv({
+        path: "./.env", // Path to .env file (this is the default)
+        safe: true, // load .env.example (defaults to "false" which does not use dotenv-safe)
+      }),
+      new HtmlWebpackPlugin({
+        template: "./public/index.html", // Path to your HTML file
+        filename: "index.html", // Output file name
+      }),
+    ],
+    resolve: {
+      extensions: [".tsx", ".ts", ".js"],
+    },
+    output: {
+      path: path.join(__dirname, "dist"),
+      filename: "[name].js",
+    },
+  });
+
+  compiler.inputFileSystem = ufs as any;
+
   compiler.run((err, stats) => {
     if (err) {
-      console.error("Compilation error:", err);
+      console.error(err);
       return;
     }
-
-    if (stats?.hasErrors()) {
-      console.error("Compilation errors:", stats.toJson().errors);
-      return;
-    }
-
-    console.log("Compilation succeeded!");
-
-    // Access the compiled output from the in-memory filesystem
-    const outputPath = path.join(
-      config.output?.path || "",
-      config.output?.filename?.toString() || ""
-    );
-    const compiledCode = memoryVolume
-      .readFileSync(outputPath, "utf-8")
-      .toString();
-
-    // Dynamically execute the compiled bundle
-    const compiledFunction = new Function(
-      "module",
-      "exports",
-      "require",
-      compiledCode
-    );
-    const module = { exports: {} };
-    compiledFunction(module, module.exports, require);
-    // Test the compiled function
-    const multiply = module.exports as (a: number, b: number) => number;
-    console.log("Result of multiply(4, 5):", multiply(4, 5));
+    console.log(stats?.toString({ colors: true }));
   });
 
   // Close the compiler after the process
@@ -61,7 +85,6 @@ export const buildSourceCode = async () => {
     console.log("Compiler closed.");
   });
 
-  return files;
 };
 
 buildSourceCode();
