@@ -18,7 +18,7 @@ export const code = {
   "./src/App.tsx": `
     export default function App() {
 	    return (
-	        <div className="text-pink-500 font-bold">Hello world</div>
+	        <div className="text-blue-500 font-bold">Miodrag</div>
 	);
 }
 `

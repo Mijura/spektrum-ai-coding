@@ -8,6 +8,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
+const TerserPlugin = require("terser-webpack-plugin")
 
 export const buildSourceCode = async () => {
   const files = code;
@@ -64,6 +65,19 @@ export const buildSourceCode = async () => {
     resolve: {
       extensions: [".tsx", ".ts", ".js"],
     },
+    optimization: {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          extractComments: false,
+          terserOptions: {
+            format: {
+              comments: false,
+            },
+          },
+        }),
+      ],
+    },
     output: {
       path: path.join(__dirname, "dist"),
       filename: "[name].js",
@@ -71,6 +85,7 @@ export const buildSourceCode = async () => {
   });
 
   compiler.inputFileSystem = ufs as any;
+  compiler.outputFileSystem = ufs as any;
 
   compiler.run((err, stats) => {
     if (err) {
