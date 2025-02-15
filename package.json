@@ -1,40 +1,44 @@
 {
-    "name": "rspack-api-example",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "build": "tsc",
-        "serve": "node ./build/main.js"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "description": "",
-    "dependencies": {
-        "memfs": "^4.17.0",
-        "unionfs": "^4.5.4",
-        "webpack": "^5.97.1"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.26.8",
-        "@babel/preset-env": "^7.26.8",
-        "@babel/preset-react": "^7.26.3",
-        "@babel/preset-typescript": "^7.26.0",
-        "@tailwindcss/postcss": "^4.0.6",
-        "postcss": "^8.5.1",
-        "postcss-loader": "^8.1.1",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
-        "tailwindcss": "^4.0.6",
-        "typescript": "^5.7.3",
-        "@types/react": "^19.0.8",
-        "@types/react-dom": "^19.0.3",
-        "babel-loader": "^9.2.1",
-        "copy-webpack-plugin": "^12.0.2",
-        "css-loader": "^7.1.2",
-        "dotenv-webpack": "^8.1.0",
-        "fork-ts-checker-webpack-plugin": "^9.0.2",
-        "html-webpack-plugin": "^5.6.3",
-        "style-loader": "^4.0.0"
-    }
+  "name": "rspack-api-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "memfs": "^4.17.0",
+    "unionfs": "^4.5.4",
+    "webpack": "^5.97.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.8",
+    "@babel/preset-env": "^7.26.8",
+    "@babel/preset-react": "^7.26.3",
+    "@babel/preset-typescript": "^7.26.0",
+    "@tailwindcss/postcss": "^4.0.6",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "babel-loader": "^9.2.1",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
+    "dotenv-webpack": "^8.1.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "html-webpack-plugin": "^5.6.3",
+    "postcss": "^8.5.1",
+    "postcss-loader": "^8.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "style-loader": "^4.0.0",
+    "tailwindcss": "^4.0.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
 }

@@ -1,6 +1,5 @@
 import { createFsFromVolume, Volume } from "memfs";
 import { webpack } from "webpack";
-import { code } from "./source-code";
 import * as fs from "fs";
 import { ufs } from "unionfs";
 
@@ -8,10 +7,9 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
-const TerserPlugin = require("terser-webpack-plugin")
+const TerserPlugin = require("terser-webpack-plugin");
 
-export const buildSourceCode = async () => {
-  const files = code;
+export const buildSourceCode = async (files: any, projectId:string) => {
 
   const memoryVolume = Volume.fromJSON(files);
 
@@ -20,7 +18,6 @@ export const buildSourceCode = async () => {
   ufs.use(fs).use(memfs as any);
 
   console.log("📂 Virtual Filesystem Structure:", ufs.readdirSync(__dirname));
-
 
   const compiler = webpack({
     entry: {
@@ -78,14 +75,21 @@ export const buildSourceCode = async () => {
         }),
       ],
     },
+    cache: {
+      type: 'filesystem', // Webpack's default cache type for persistent caching
+      buildDependencies: {
+        config: [__filename], // Rebuild if config file changes
+      },
+    },
     output: {
-      path: path.join(__dirname, "dist"),
-      filename: "[name].js",
+      path: path.join(__dirname, projectId),
+      filename: "[name].[contenthash].js",
+      clean: true
     },
   });
 
   compiler.inputFileSystem = ufs as any;
-  compiler.outputFileSystem = ufs as any;
+  compiler.outputFileSystem = fs as any;
 
   compiler.run((err, stats) => {
     if (err) {
@@ -93,13 +97,13 @@ export const buildSourceCode = async () => {
       return;
     }
     console.log(stats?.toString({ colors: true }));
-  });
 
-  // Close the compiler after the process
-  compiler.close(() => {
-    console.log("Compiler closed.");
-  });
+    console.log(fs.readdirSync(`./${projectId}`))
 
+    compiler.close(() => {
+      console.log("Compiler closed.");
+    });
+
+    return stats?.toString({ colors: true });
+  });
 };
-
-buildSourceCode();
