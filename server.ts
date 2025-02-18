@@ -11,9 +11,9 @@ app.use(express.json());
 
 // Example of a POST route
 app.post("/build", async (req: Request, res: Response) => {
-  const { sourceCode, projectId } = req.body;
+  const { sourceCode, id } = req.body;
 
-  const response = await buildSourceCode(sourceCode, projectId);
+  const response = await buildSourceCode(sourceCode, id);
   res.send(response);
 });
 
@@ -43,6 +43,6 @@ app.get("/:projectId", (req: Request, res: Response) => {
 });
 
 // Start the server
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

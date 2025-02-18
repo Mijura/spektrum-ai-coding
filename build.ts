@@ -75,12 +75,7 @@ export const buildSourceCode = async (files: any, projectId:string) => {
         }),
       ],
     },
-    cache: {
-      type: 'filesystem', // Webpack's default cache type for persistent caching
-      buildDependencies: {
-        config: [__filename], // Rebuild if config file changes
-      },
-    },
+
     output: {
       path: path.join(__dirname, projectId),
       filename: "[name].[contenthash].js",
@@ -91,7 +86,7 @@ export const buildSourceCode = async (files: any, projectId:string) => {
   compiler.inputFileSystem = ufs as any;
   compiler.outputFileSystem = fs as any;
 
-  compiler.run((err, stats) => {
+  await compiler.run((err, stats) => {
     if (err) {
       console.error(err);
       return;
