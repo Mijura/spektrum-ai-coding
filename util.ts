@@ -9,7 +9,7 @@ app.use(express.json());
 
 async function setupNewProject(projectId: string): Promise<string> {
     try {
-        const templatePath: string = path.join(__dirname, 'react-template');
+        const templatePath: string = path.join(__dirname, 'rspack-react-tailwind');
         const projectPath: string = path.join(__dirname, 'projects', projectId);
 
         // Copy React template to new project folder
