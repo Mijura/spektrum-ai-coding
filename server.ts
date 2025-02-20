@@ -2,7 +2,8 @@ import express, { NextFunction, Request, Response } from "express";
 import path from "path";
 import fs from "fs";
 import { v4 as uuidv4 } from 'uuid';
-import { getProjectSourceCode, setupNewProject } from "./util";
+import { getProjectSourceCode, setupNewProject, updateProjectSourceCode } from "./util";
+import { Project } from "./dto/Project";
 
 const app = express();
 const port = 3000;
@@ -54,6 +55,16 @@ app.get('/:projectId/source', async (req: Request, res: Response) => {
       res.json({ sourceCode });
   } catch (error) {
       res.status(500).json({ error: `Error fetching source code: ${error}` });
+  }
+});
+
+app.post('/rebuild', async (req: Request, res: Response) => {
+  try {
+      const project: Project = req.body;
+      await updateProjectSourceCode(project);
+      res.json({ message: 'Project rebuilt successfully.', projectId: project.projectId });
+  } catch (error) {
+      res.status(500).json({ error: `Error rebuilding project: ${error}` });
   }
 });
 
