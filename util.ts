@@ -32,4 +32,32 @@ function runCommand(command: string, cwd: string): Promise<string> {
   });
 }
 
-export { setupNewProject };
+async function getProjectSourceCode(projectId: string): Promise<{ [key: string]: string }> {
+  const projectPath = path.join(__dirname, 'projects', projectId);
+  const srcPath = path.join(projectPath, 'src');
+  const packageJsonPath = path.join(projectPath, 'package.json');
+  const sourceCode: { [key: string]: string } = {};
+
+  try {
+      if (await fs.pathExists(packageJsonPath)) {
+          sourceCode['package.json'] = await fs.readFile(packageJsonPath, 'utf-8');
+      }
+
+      if (await fs.pathExists(srcPath)) {
+          const files = await fs.readdir(srcPath);
+          for (const file of files) {
+              const filePath = path.join(srcPath, file);
+              if ((await fs.stat(filePath)).isFile()) {
+                  sourceCode[`src/${file}`] = await fs.readFile(filePath, 'utf-8');
+              }
+          }
+      }
+  } catch (error) {
+      console.error('Error fetching source code:', error);
+      throw error;
+  }
+
+  return sourceCode;
+}
+
+export { setupNewProject, getProjectSourceCode };
