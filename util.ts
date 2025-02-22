@@ -1,11 +1,34 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { exec } from 'child_process';
-import express from 'express';
 import { Project } from './dto/Project';
 
-const app = express();
-app.use(express.json());
+async function runCommand(command: string, cwd: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        exec(command, { cwd }, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error running command: ${command}`);
+                console.error(`Stderr: ${stderr}`);
+                reject(error);
+                return;
+            }
+            console.log(`Stdout: ${stdout}`);
+            resolve();
+        });
+    });
+}
+
+async function installDependencies(projectPath: string): Promise<void> {
+    console.log(`Installing dependencies in ${projectPath}...`);
+    await runCommand('yarn install', projectPath);
+    console.log('Dependencies installed successfully.');
+}
+
+async function buildProject(projectPath: string): Promise<void> {
+    console.log(`Building project in ${projectPath}...`);
+    await runCommand('yarn build', projectPath);
+    console.log('Project built successfully.');
+}
 
 async function setupNewProject(projectId: string): Promise<string> {
     try {
@@ -16,6 +39,7 @@ async function setupNewProject(projectId: string): Promise<string> {
         await fs.copy(templatePath, projectPath);
         console.log(`Project template copied to ${projectPath}`);
 
+        // Install dependencies and build the project
         await installDependencies(projectPath);
         await buildProject(projectPath);
 
@@ -73,29 +97,6 @@ async function updateProjectSourceCode(project: Project): Promise<void> {
         console.error('Error updating project source code:', error);
         throw error;
     }
-}
-
-async function installDependencies(projectPath: string): Promise<void> {
-    await runCommand('yarn install', projectPath);
-    console.log('Dependencies installed');
-}
-
-async function buildProject(projectPath: string): Promise<void> {
-    await runCommand('yarn build', projectPath);
-    console.log('Project built successfully');
-}
-
-function runCommand(command: string, cwd: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        exec(command, { cwd }, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error executing ${command}:`, stderr);
-                return reject(error);
-            }
-            console.log(stdout);
-            resolve(stdout);
-        });
-    });
 }
 
 export { setupNewProject, getProjectSourceCode, updateProjectSourceCode };

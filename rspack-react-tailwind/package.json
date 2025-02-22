@@ -2,6 +2,7 @@
   "name": "jigjoy-template",
   "private": true,
   "version": "1.0.0",
+  "license": "MIT",
   "scripts": {
     "start": "rspack serve --config configs/rspack.dev.js",
     "serve": "rspack serve --config configs/rspack.dev.js",
