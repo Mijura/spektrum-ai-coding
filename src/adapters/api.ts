@@ -1,0 +1,99 @@
+import express, { NextFunction, Request, Response } from "express"
+import path from "path"
+import fs from "fs"
+import { v4 as uuidv4 } from "uuid"
+import { getSourceCode } from "@utils/project"
+import { setupProject } from "@use-cases/setup-new-project"
+import { ChangeRequestDto, ProjectDto } from "@dto/project"
+import { implementRequest } from "@use-cases/implement-request"
+
+import dotenv from "dotenv"
+
+// Load environment variables from .env file
+dotenv.config()
+
+const PORT = 3000
+
+const app = express()
+
+// Middleware to parse JSON requests
+app.use(express.json())
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+	res.header("Access-Control-Allow-Origin", "*") // Allow requests from any origin
+	res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS") // Include OPTIONS
+	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization") // Allow these headers
+
+	// Handle preflight requests
+	if (req.method === "OPTIONS") {
+		res.sendStatus(204) // No content for preflight requests
+		return
+	}
+
+	next()
+})
+
+// Project intialization
+app.post("/project/new", async (req: Request, res: Response) => {
+	try {
+		const projectId = uuidv4()
+		await setupProject(projectId)
+		res.json({ message: "Project built successfully.", projectId })
+	} catch (error) {
+		console.error("Error setting up project:", error)
+		res.status(500).json({ error: `Error setting up project: ${error}` })
+	}
+})
+
+app.get("/project/fetch/:projectId", async (req: Request, res: Response) => {
+	try {
+		const { projectId } = req.params
+		const sourceCode = await getSourceCode(projectId)
+		const project: ProjectDto = { projectId, sourceCode }
+		res.json(project)
+	} catch (error) {
+		res.status(500).json({ error: `Error fetching source code: ${error}` })
+	}
+})
+
+app.put("/project/implement", async (req: Request, res: Response) => {
+	try {
+		const changeRequest: ChangeRequestDto = req.body
+
+		console.log(changeRequest)
+		await implementRequest(changeRequest)
+		res.json({
+			message: "Request implemented successfully.",
+		})
+	} catch (error) {
+		console.error("Error rebuilding project:", error)
+		res.status(500).json({ error: `Error rebuilding project: ${error}` })
+	}
+})
+
+// Middleware to serve static files
+app.use("/:projectId", (req: Request, res: Response, next: NextFunction) => {
+	const projectPath = path.resolve(`projects/${req.params.projectId}/dist`)
+
+	if (fs.existsSync(projectPath)) {
+		express.static(projectPath)(req, res, next)
+	} else {
+		res.status(404).send("Project not found")
+	}
+})
+
+// Serve index.html when accessing `/projectId`
+app.get("/:projectId", (req: Request, res: Response) => {
+	const projectPath = path.resolve(`projects/${req.params.projectId}/dist/index.html`)
+
+	if (fs.existsSync(projectPath)) {
+		res.sendFile(projectPath)
+	} else {
+		res.status(404).send("Project not found")
+	}
+})
+
+// Start the server
+app.listen(PORT, "0.0.0.0", () => {
+	console.log(`Server is running on http://localhost:${PORT}`)
+})

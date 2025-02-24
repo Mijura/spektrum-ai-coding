@@ -7,7 +7,21 @@
       "forceConsistentCasingInFileNames": true,  
       "strict": true, 
       "skipLibCheck": true,
-      "outDir": "build"                    
+      "outDir": "build",
+      "baseUrl": "./",
+      "paths": {
+        "@adapters/*": ["src/adapters/*"],
+        "@domain/*": ["src/domain/*"],
+        "@dto/*": ["src/dto/*"],
+        "@entity/*": ["src/entity/*"],
+        "@errors/*": ["src//errors/*"],
+        "@repositories/*": ["src/repositories/*"],
+        "@schemas/*": ["src/schemas/*"],
+        "@models/*": ["src/models/*"],
+        "@use-cases/*": ["src/use-cases/*"],
+        "@utils/*": ["src/utils/*"],
+        "@project-templates/*": ["project-templates/*"]
+      }                    
     },
     "exclude": ["node_modules", "dist", "rspack-react-tailwind"]
   }
