@@ -7,7 +7,7 @@ import {
   setupNewProject,
   updateProjectSourceCode,
 } from "./util";
-import { Project } from "../dto/Project";
+import { Project } from "./dto/Project";
 
 const app = express();
 const port = 3000;
