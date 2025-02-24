@@ -3,9 +3,6 @@ const rspack = require("@rspack/core")
 const Dotenv = require("dotenv-webpack")
 const { TsCheckerRspackPlugin } = require('ts-checker-rspack-plugin');
 
-// Target browsers, see: https://github.com/browserslist/browserslist
-const targets = ["chrome >= 87", "edge >= 88", "firefox >= 78", "safari >= 14"]
-
 module.exports = {
 	entry: {
 		main: path.join(__dirname, "../src/main.tsx"),
@@ -44,12 +41,14 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				use: ["postcss-loader"],
-				type: "css",
+				use: [rspack.CssExtractRspackPlugin.loader, "css-loader", "postcss-loader"],
 			},
 		],
 	},
 	plugins: [
+		new rspack.CssExtractRspackPlugin({
+			filename: "[name].[contenthash].css",
+		}),
 		new rspack.HtmlRspackPlugin({
 			template: path.join(__dirname, "../index.html"),
 		}),
@@ -68,18 +67,7 @@ module.exports = {
 			},
 		  }),
 	],
-	optimization: {
-		minimizer: [
-			new rspack.SwcJsMinimizerRspackPlugin(),
-			new rspack.LightningCssMinimizerRspackPlugin({
-				minimizerOptions: { targets },
-			}),
-		],
-	},
 	resolve: {
 		extensions: [".jsx", ".tsx", ".ts", ".js", ".json"],
-	},
-	experiments: {
-		css: true,
-	},
+	}
 }
