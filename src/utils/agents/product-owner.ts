@@ -32,7 +32,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<typeof
 			`),
 		new ChatOpenAI({
 			modelName: "o1-mini",
-			openAIApiKey: process.env.OPENAI_API_KEY,
+			apiKey: process.env.OPENAI_API_KEY,
 		}),
 	])
 
