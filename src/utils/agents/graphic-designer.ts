@@ -50,7 +50,7 @@ const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typ
 			`),
 		new ChatOpenAI({
 			modelName: "o1-mini",
-			openAIApiKey: process.env.OPENAI_API_KEY,
+			apiKey: process.env.OPENAI_API_KEY,
 		}),
 	])
 

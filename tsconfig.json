@@ -23,5 +23,5 @@
         "@project-templates/*": ["project-templates/*"]
       }                    
     },
-    "exclude": ["node_modules", "dist", "rspack-react-tailwind"]
+    "exclude": ["node_modules", "dist", "project-templates", "projects", "build"]
   }
