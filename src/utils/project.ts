@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import path from "path"
 import { exec } from "child_process"
-import { ProjectDto } from "../dto/project"
+import { ProjectDto, SourceCode } from "../dto/project"
 
 async function runCommand(command: string, cwd: string): Promise<void> {
 	return new Promise((resolve, reject) => {
@@ -30,16 +30,15 @@ async function buildProject(projectPath: string): Promise<void> {
 	console.log("Project built successfully.")
 }
 
-
-async function getSourceCode(projectId: string): Promise<{ [key: string]: string }> {
+async function getSourceCode(projectId: string): Promise<SourceCode> {
 	const projectPath = path.join("projects", projectId)
 	const srcPath = path.join(projectPath, "src")
 	const packageJsonPath = path.join(projectPath, "package.json")
-	const sourceCode: { [key: string]: string } = {}
+	const sourceCode: SourceCode = {}
 
 	try {
 		if (await fs.pathExists(packageJsonPath)) {
-			sourceCode["package.json"] = await fs.readFile(packageJsonPath, "utf-8")
+			sourceCode["package.json"] = { code: await fs.readFile(packageJsonPath, "utf-8") }
 		}
 
 		if (await fs.pathExists(srcPath)) {
@@ -47,7 +46,7 @@ async function getSourceCode(projectId: string): Promise<{ [key: string]: string
 			for (const file of files) {
 				const filePath = path.join(srcPath, file)
 				if ((await fs.stat(filePath)).isFile()) {
-					sourceCode[`src/${file}`] = await fs.readFile(filePath, "utf-8")
+					sourceCode[`src/${file}`] = { code: await fs.readFile(filePath, "utf-8") }
 				}
 			}
 		}
@@ -63,10 +62,10 @@ async function rebuildProject(project: ProjectDto): Promise<void> {
 	const projectPath = path.join("projects", project.projectId)
 
 	try {
-		for (const [filePath, fileContent] of Object.entries(project.sourceCode)) {
+		for (const [filePath, fileDetails] of Object.entries(project.sourceCode)) {
 			const fullPath = path.join(projectPath, filePath)
 			await fs.ensureFile(fullPath)
-			await fs.writeFile(fullPath, fileContent, "utf-8")
+			await fs.writeFile(fullPath, fileDetails.code, "utf-8")
 		}
 
 		if ("package.json" in project.sourceCode) {

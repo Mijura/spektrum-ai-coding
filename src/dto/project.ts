@@ -9,5 +9,8 @@ export type ChangeRequestDto = {
 }
 
 export interface SourceCode {
-	[filePath: string]: string
+	[filePath: string]: {
+		context?: string,
+		code: string
+	}
 }
