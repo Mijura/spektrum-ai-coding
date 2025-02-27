@@ -6,7 +6,8 @@ export async function implementRequest(changeRequest: ChangeRequestDto): Promise
 	try {
 
         const newSourceCode = await Team.implement(changeRequest)
-		await rebuildProject(newSourceCode)
+		console.log("kraj")
+		//await rebuildProject(newSourceCode)
 	} catch (error) {
 		console.error("Error:", error)
 	}

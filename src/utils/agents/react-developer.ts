@@ -1,7 +1,7 @@
 import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
-import { Annotation } from "@langchain/langgraph"
+import { Annotation, MessagesAnnotation } from "@langchain/langgraph"
 import { SourceCode } from "@dto/project"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import ProjectDtoSchema from "@schemas/project.schema"
@@ -9,19 +9,23 @@ import { RootAnnotation } from "../team"
 import { writeFileTool } from "@utils/tools/write-file-tool"
 import { installDependenciesTool } from "@utils/tools/install-dependencies-tool"
 import { buildProjectTool } from "@utils/tools/build-project-tool"
+import { ToolNode } from "@langchain/langgraph/prebuilt"
+import { BaseMessage } from "@langchain/core/messages"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCode>(),
 })
 
-const reactDeveloper = async (_state: typeof RootAnnotation.State)  => {
+const tools = [writeFileTool, installDependenciesTool, buildProjectTool]
+
+const toolNodeForGraph = new ToolNode(tools)
+
+const reactDeveloper = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State>   => {
 	const { sourceCode, ticket, projectId } = _state
 
 	const parser = StructuredOutputParser.fromZodSchema(ProjectDtoSchema)
 
 	console.log(`\n\n\nDeveloper:\n\nRecieved Ticket:\n\n${ticket}`)
-
-	const tools = [writeFileTool, installDependenciesTool, buildProjectTool]
 
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(`You are an expert React Developer.
@@ -67,26 +71,27 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State)  => {
 			ALWAYS call buildProjectTool(content) after you finish with all file changes.
 
 			### **Important Notes**
-            ✅ Do not implement functionality from scratch if it already exists—modify existing code when possible.
-			✅ Always check the current source code before adding new functionality.
-			✅ Ensure UI elements follow Tailwind CSS and animations use Framer Motion.
-			✅ Call all necessary tools to apply changes correctly.
-			
-
+            1 - Do not implement functionality from scratch if it already exists—modify existing code when possible.
+			2 - Always check the current source code before adding new functionality.
+			3 - Ensure UI elements follow Tailwind CSS and animations use Framer Motion.
+			4 - Call all necessary tools to apply changes correctly.
 
 			`),
 		new ChatOpenAI({
 			modelName: "gpt-4o",
 			openAIApiKey: process.env.OPENAI_API_KEY,
-		}).bindTools(tools)
+		}).bindTools(tools),
 	])
 
-
-	await chain.invoke({
+	const response = await chain.invoke({
 		ticket: ticket,
 		projectId: projectId,
 		sourceCode: sourceCode,
 	})
+
+	console.log(response)
+
+	return { ..._state, messages: response as any}
 }
 
-export { reactDeveloper, DeveloperOutputAnnotation }
+export { reactDeveloper, toolNodeForGraph, DeveloperOutputAnnotation }
