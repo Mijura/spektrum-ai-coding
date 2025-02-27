@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import path from "path"
 import { exec } from "child_process"
-import { ProjectDto, SourceCode } from "../dto/project"
+import { ProjectDto, SourceCodeDto } from "../dto/project"
 
 async function runCommand(command: string, cwd: string): Promise<void> {
 	return new Promise((resolve, reject) => {
@@ -30,11 +30,11 @@ async function buildProject(projectPath: string): Promise<void> {
 	console.log("Project built successfully.")
 }
 
-async function getSourceCode(projectId: string): Promise<SourceCode> {
+async function getSourceCode(projectId: string): Promise<SourceCodeDto> {
 	const projectPath = path.join("projects", projectId)
 	const srcPath = path.join(projectPath, "src")
 	const packageJsonPath = path.join(projectPath, "package.json")
-	const sourceCode: SourceCode = {}
+	const sourceCode: SourceCodeDto = {}
 
 	try {
 		if (await fs.pathExists(packageJsonPath)) {
@@ -58,20 +58,11 @@ async function getSourceCode(projectId: string): Promise<SourceCode> {
 	return sourceCode
 }
 
-async function rebuildProject(project: ProjectDto): Promise<void> {
-	const projectPath = path.join("projects", project.projectId)
+async function rebuildProject(projectId: string): Promise<void> {
+	const projectPath = path.join("projects", projectId)
 
 	try {
-		for (const [filePath, fileDetails] of Object.entries(project.sourceCode)) {
-			const fullPath = path.join(projectPath, filePath)
-			await fs.ensureFile(fullPath)
-			await fs.writeFile(fullPath, fileDetails.code, "utf-8")
-		}
-
-		if ("package.json" in project.sourceCode) {
-			await installDependencies(projectPath)
-		}
-
+		await installDependencies(projectPath)
 		await buildProject(projectPath)
 	} catch (error) {
 		console.error("Error updating project source code:", error)

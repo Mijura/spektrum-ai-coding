@@ -1,6 +1,6 @@
 export interface ProjectDto {
     projectId: string;
-    sourceCode: SourceCode;
+    sourceCode: SourceCodeDto;
 }
 export type ChangeRequestDto = {
 	id: string,
@@ -8,7 +8,7 @@ export type ChangeRequestDto = {
 	message: string
 }
 
-export interface SourceCode {
+export interface SourceCodeDto {
 	[filePath: string]: {
 		context?: string,
 		code: string

@@ -1,37 +1,37 @@
 import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
-import { Annotation, MessagesAnnotation } from "@langchain/langgraph"
-import { SourceCode } from "@dto/project"
+import { Annotation } from "@langchain/langgraph"
+import { SourceCodeDto } from "@dto/project"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
-import ProjectDtoSchema from "@schemas/project.schema"
 import { RootAnnotation } from "../team"
-import { writeFileTool } from "@utils/tools/write-file-tool"
-import { installDependenciesTool } from "@utils/tools/install-dependencies-tool"
-import { buildProjectTool } from "@utils/tools/build-project-tool"
+import { createOrEditFilesTool } from "@utils/tools/create-or-edit-files-tool"
 import { ToolNode } from "@langchain/langgraph/prebuilt"
-import { BaseMessage } from "@langchain/core/messages"
+import ProjectDtoSchema from "@schemas/project.schema"
 
 const DeveloperOutputAnnotation = Annotation.Root({
-	sourceCode: Annotation<SourceCode>(),
+	sourceCode: Annotation<SourceCodeDto>(),
 })
 
-const tools = [writeFileTool, installDependenciesTool, buildProjectTool]
+const tools = [createOrEditFilesTool]
 
 const toolNodeForGraph = new ToolNode(tools)
 
-const reactDeveloper = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State>   => {
+const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 	const { sourceCode, ticket, projectId } = _state
 
 	const parser = StructuredOutputParser.fromZodSchema(ProjectDtoSchema)
 
 	console.log(`\n\n\nDeveloper:\n\nRecieved Ticket:\n\n${ticket}`)
 
+	console.log(`Source Code:\n\n${JSON.stringify(sourceCode)}`)
+
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(`You are an expert React Developer.
 
 			### Role:
-			You are an AI React Frontend Developer responsible for modifying project source code based on the provided ticket.
+			You are an AI React Frontend Developer working on React/Typescript project. You are responsible for modifying project source code based on the provided ticket.
+
 
 			### **Your Task:**
 			1. **Analyze the current source code** to determine if the required functionality already exists.
@@ -43,20 +43,10 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State): Promise<type
 			- Use **Framer Motion** to create rich animations and interactions.
 
 			3. **Modify or create source files as needed**:
-			- If you need to change a file, use "writeFileTool(projectId, filename, fileContent)".
-			- If you need to add a new feature, create a new file with the appropriate content.
-
-			4. **Manage dependencies**:
-			- If "package.json" is modified, call "installDependenciesTool(projectId)" to install new dependencies.
-
-			5. **Ensure the project is rebuilt**:
-			- Once all required changes are made, call "buildProjectTool(projectId)" to rebuild the project.
-
-			### **Tools Available:**
-			- "writeFileTool(projectId: string, filename: string, content: string)": Creates or modifies files.
-			- "installDependenciesTool(projectId: string)": Installs dependencies after modifying "package.json".
-			- "buildProjectTool(projectId)": Rebuilds the project to apply changes.
-
+			- After you generate files you must save it on the disk. This can be accomplished by calling tool createOrEditFilesTool(project)
+			
+			Project schema: {projectSchema}
+			
 			---
 
 			### **Project Details**
@@ -65,16 +55,13 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State): Promise<type
 			- **Current Source Code:** {sourceCode}
 			
 			### **Output Format**
-			Your response must always include the necessary tool calls in **JSON format**.
+			Your response should include the necessary tool calls in **JSON format**.
 
-			DO NOT return plain code—always call writeFileTool for any code modifications.
-			ALWAYS call buildProjectTool(content) after you finish with all file changes.
-
-			### **Important Notes**
-            1 - Do not implement functionality from scratch if it already exists—modify existing code when possible.
-			2 - Always check the current source code before adding new functionality.
-			3 - Ensure UI elements follow Tailwind CSS and animations use Framer Motion.
-			4 - Call all necessary tools to apply changes correctly.
+			#### **Important Notes**
+			✅ **Do not implement functionality from scratch** if it already exists—modify existing code when possible.  
+			✅ **Always check the current source code** before adding new functionality.  
+			✅ **Ensure UI elements follow Tailwind CSS and animations use Framer Motion.**  
+			✅ **Call all necessary tools using the correct structured format.** 
 
 			`),
 		new ChatOpenAI({
@@ -87,11 +74,12 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State): Promise<type
 		ticket: ticket,
 		projectId: projectId,
 		sourceCode: sourceCode,
+		projectSchema: parser.getFormatInstructions(),
 	})
 
 	console.log(response)
 
-	return { ..._state, messages: response as any}
+	return { messages: response }
 }
 
 export { reactDeveloper, toolNodeForGraph, DeveloperOutputAnnotation }

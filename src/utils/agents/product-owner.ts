@@ -7,6 +7,8 @@ import { RootAnnotation } from "../team"
 const productOwner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { userRequest } = _state
 
+	console.log(`\n\n\nProduct Owner:\n\nRecieved Ticket:\n\n${userRequest}`)
+
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(`You are an product owner exper. Your task is to transform user request into ticket for developers.
 

@@ -61,10 +61,8 @@ app.put("/project/implement", async (req: Request, res: Response) => {
 		const changeRequest: ChangeRequestDto = req.body
 
 		console.log(changeRequest)
-		await implementRequest(changeRequest)
-		res.json({
-			message: "Request implemented successfully.",
-		})
+		const sourceCode = await implementRequest(changeRequest)
+		res.json(sourceCode)
 	} catch (error) {
 		console.error("Error rebuilding project:", error)
 		res.status(500).json({ error: `Error rebuilding project: ${error}` })

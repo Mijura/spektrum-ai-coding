@@ -4,7 +4,9 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { RootAnnotation } from "@utils/team"
 
 const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { ticket, sourceCode } = _state
+	const { ticket } = _state
+
+    console.log(`\n\n\nGraphic Designer:\n\nRecieved Ticket:\n\n${ticket}`)
 
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(` 
@@ -45,7 +47,7 @@ const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typ
             By the end of the process, you will provide the UX designer with a **fully detailed, interactive, and motion-aware design**, ready for front-end development using Tailwind CSS and Framer Motion.
 
             Ticket: {{ticket}}
-            Existing: {{sourceCode}}
+            Existing Source Code: {{sourceCode}}
 
 			`),
 		new ChatOpenAI({
@@ -55,8 +57,7 @@ const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typ
 	])
 
 	const design = await chain.invoke({
-		ticket,
-        sourceCode
+		ticket
 	})
 
 	const updatedTicket = `Task Description: ${ticket} \n\nDesign Instructions: ${design.content.toString()}`
