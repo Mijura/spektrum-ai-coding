@@ -5,7 +5,7 @@ import { uiUxDesigner } from "./agents/uiux-designer"
 import { graphicDesigner } from "./agents/graphic-designer"
 import { ChangeRequestDto, ProjectDto, SourceCodeDto } from "../dto/project"
 import { BaseMessage } from "@langchain/core/messages"
-import { writeFilesTool } from "./tools/write-files-tool"
+import { rebuildProject } from "./tools/rebuild-project-tool"
 
 // Define Root Annotation with Reducer
 export const RootAnnotation = Annotation.Root({
@@ -27,7 +27,7 @@ const shouldContinue = (state: typeof RootAnnotation.State) => {
 	const { messages } = state
 	const lastMessage = messages[messages.length - 1]
 	if ("tool_calls" in lastMessage && Array.isArray(lastMessage.tool_calls) && lastMessage.tool_calls?.length) {
-		return "writeFiles"
+		return "rebuild"
 	}
 	return "__end__"
 }
@@ -42,13 +42,13 @@ class Team {
 			.addNode("ReactDeveloper", reactDeveloper)
 			//.addNode("UiUxDesigner", uiUxDesigner)
 			//.addNode("GraphicDesigner", graphicDesigner)
-			.addNode("writeFiles", writeFilesTool)
+			.addNode("rebuild", rebuildProject)
 			.addEdge(START, "ProductOwner")
 			//.addEdge("ProductOwner", "UiUxDesigner")
 			//.addEdge("UiUxDesigner", "GraphicDesigner")
 			.addEdge("ProductOwner", "ReactDeveloper")
-			.addConditionalEdges("ReactDeveloper", shouldContinue, ["writeFiles", END])
-			.addEdge("writeFiles", END)
+			.addConditionalEdges("ReactDeveloper", shouldContinue, ["rebuild", END])
+			.addEdge("rebuild", END)
 
 		const checkpointer = new MemorySaver()
 

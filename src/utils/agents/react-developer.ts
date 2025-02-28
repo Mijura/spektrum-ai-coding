@@ -5,9 +5,6 @@ import { Annotation } from "@langchain/langgraph"
 import { SourceCodeDto } from "@dto/project"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../team"
-import { writeFilesTool } from "@utils/tools/write-files-tool"
-import { ToolNode } from "@langchain/langgraph/prebuilt"
-import { ChatAnthropic } from "@langchain/anthropic"
 import { SourceCodeSchema } from "@schemas/project.schema"
 import { AIMessage } from "@langchain/core/messages"
 
@@ -79,12 +76,12 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 				response_metadata: {},
 				tool_calls: [
 					{
-						name: "writeFiles",
+						name: "rebuild-project",
 						args: {
 							projectId: projectId,
 							sourceCode: changes,
 						},
-						id: "tool_abcd123",
+						id: "rebuild_abcd123",
 					},
 				],
 				invalid_tool_calls: [],

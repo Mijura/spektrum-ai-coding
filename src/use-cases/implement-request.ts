@@ -6,9 +6,7 @@ export async function implementRequest(changeRequest: ChangeRequestDto): Promise
 	try {
 
         await Team.implement(changeRequest)
-		await rebuildProject(changeRequest.project.projectId)
 		return getSourceCode(changeRequest.project.projectId)
-		//
 	} catch (error) {
 		console.error("Error:", error)
 	}
