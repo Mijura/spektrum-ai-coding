@@ -5,22 +5,20 @@ import { Annotation } from "@langchain/langgraph"
 import { SourceCodeDto } from "@dto/project"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../team"
-import { createOrEditFilesTool } from "@utils/tools/create-or-edit-files-tool"
+import { writeFilesTool } from "@utils/tools/write-files-tool"
 import { ToolNode } from "@langchain/langgraph/prebuilt"
-import ProjectDtoSchema from "@schemas/project.schema"
+import { ChatAnthropic } from "@langchain/anthropic"
+import { SourceCodeSchema } from "@schemas/project.schema"
+import { AIMessage } from "@langchain/core/messages"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCodeDto>(),
 })
 
-const tools = [createOrEditFilesTool]
-
-const toolNodeForGraph = new ToolNode(tools)
-
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 	const { sourceCode, ticket, projectId } = _state
 
-	const parser = StructuredOutputParser.fromZodSchema(ProjectDtoSchema)
+	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
 
 	console.log(`\n\n\nDeveloper:\n\nRecieved Ticket:\n\n${ticket}`)
 
@@ -30,8 +28,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 		PromptTemplate.fromTemplate(`You are an expert React Developer.
 
 			### Role:
-			You are an AI React Frontend Developer working on React/Typescript project. You are responsible for modifying project source code based on the provided ticket.
-
+			You are an AI React Frontend Developer working on React/Typescript project. 
 
 			### **Your Task:**
 			1. **Analyze the current source code** to determine if the required functionality already exists.
@@ -43,43 +40,57 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 			- Use **Framer Motion** to create rich animations and interactions.
 
 			3. **Modify or create source files as needed**:
-			- After you generate files you must save it on the disk. This can be accomplished by calling tool createOrEditFilesTool(project)
-			
-			Project schema: {projectSchema}
-			
-			---
+			- Create new components, hooks, or utilities as required.
+
+			4. **Modify package.json when you plan to use external dependencies**:
+			- If a new dependency is introduced, update package.json.
+
 
 			### **Project Details**
 			- **Project ID:** {projectId}
 			- **Ticket Details:** {ticket}
 			- **Current Source Code:** {sourceCode}
-			
-			### **Output Format**
-			Your response should include the necessary tool calls in **JSON format**.
 
-			#### **Important Notes**
-			✅ **Do not implement functionality from scratch** if it already exists—modify existing code when possible.  
-			✅ **Always check the current source code** before adding new functionality.  
-			✅ **Ensure UI elements follow Tailwind CSS and animations use Framer Motion.**  
-			✅ **Call all necessary tools using the correct structured format.** 
+			Important: Respond only in valid JSON.  The JSON object you return should match the following schema:
+			{outputSchema}
 
 			`),
 		new ChatOpenAI({
-			modelName: "gpt-4o",
+			modelName: "o1-mini",
 			openAIApiKey: process.env.OPENAI_API_KEY,
-		}).bindTools(tools),
+		}),
+		parser,
 	])
 
-	const response = await chain.invoke({
+	const changes = await chain.invoke({
 		ticket: ticket,
 		projectId: projectId,
 		sourceCode: sourceCode,
-		projectSchema: parser.getFormatInstructions(),
+		outputSchema: parser.getFormatInstructions(),
 	})
 
-	console.log(response)
+	console.log(changes)
 
-	return { messages: response }
+	return {
+		messages: [
+			new AIMessage({
+				content: "",
+				additional_kwargs: {},
+				response_metadata: {},
+				tool_calls: [
+					{
+						name: "writeFiles",
+						args: {
+							projectId: projectId,
+							sourceCode: changes,
+						},
+						id: "tool_abcd123",
+					},
+				],
+				invalid_tool_calls: [],
+			}),
+		],
+	}
 }
 
-export { reactDeveloper, toolNodeForGraph, DeveloperOutputAnnotation }
+export { reactDeveloper, DeveloperOutputAnnotation }
