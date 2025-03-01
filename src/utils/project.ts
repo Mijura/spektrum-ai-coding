@@ -2,6 +2,7 @@ import fs from "fs-extra"
 import path from "path"
 import { exec } from "child_process"
 import { ProjectDto, SourceCodeDto } from "../dto/project"
+import { RspackCompiler } from "./compilers/rspack-compiler"
 
 async function runCommand(command: string, cwd: string): Promise<void> {
 	return new Promise((resolve, reject) => {
@@ -32,28 +33,34 @@ async function buildProject(projectPath: string): Promise<void> {
 
 async function getSourceCode(projectId: string): Promise<SourceCodeDto> {
 	const projectPath = path.join("projects", projectId)
-	const srcPath = path.join(projectPath, "src")
-	const packageJsonPath = path.join(projectPath, "package.json")
 	const sourceCode: SourceCodeDto = {}
+    const blacklist = new Set(['yarn.lock', '.env.example']);
 
-	try {
-		if (await fs.pathExists(packageJsonPath)) {
-			sourceCode["package.json"] = { code: await fs.readFile(packageJsonPath, "utf-8") }
-		}
+	function readDirectory(directory: string, relativePath = "") {
+		const files = fs.readdirSync(directory)
 
-		if (await fs.pathExists(srcPath)) {
-			const files = await fs.readdir(srcPath)
-			for (const file of files) {
-				const filePath = path.join(srcPath, file)
-				if ((await fs.stat(filePath)).isFile()) {
-					sourceCode[`src/${file}`] = { code: await fs.readFile(filePath, "utf-8") }
+		for (const file of files) {
+
+
+            if (blacklist.has(file)) continue;
+
+			const filePath = path.join(directory, file)
+			const fileRelativePath = path.join(relativePath, file)
+			const stat = fs.statSync(filePath)
+
+			if (stat.isDirectory()) {
+				if (file !== "node_modules" && file !== "dist") {
+					readDirectory(filePath, fileRelativePath)
+				}
+			} else {
+				sourceCode[fileRelativePath] = {
+					code: fs.readFileSync(filePath, "utf8")
 				}
 			}
 		}
-	} catch (error) {
-		console.error("Error fetching source code:", error)
-		throw error
 	}
+
+	readDirectory(projectPath)
 
 	return sourceCode
 }
