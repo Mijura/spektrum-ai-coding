@@ -56,8 +56,17 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 			- **Ticket Details:** {ticket}
 			- **Current Source Code:** {sourceCode}
 
-			Important: Respond only in valid JSON.  The JSON object you return should match the following schema:
-			{outputSchema}
+			Important:
+			- Pay attention on tailwind version. We are using Tailwind CSS v3, so all the classes should be compatible with this version.
+			- Double check all imports or require statements to ensure they are listed in the package.json file.
+			- Respond only in valid JSON. The JSON object you return should match the following schema:
+
+            Example of valid response:
+			{{
+				"src/App.tsx": 'export default function App() {{ return <div>Hello World</div>; }}'
+			}}
+
+			Format Instructions: {outputSchema}
 
 			By the end of the process, you will provide source code with  **fully detailed, interactive, and motion-aware design** using Tailwind CSS and Framer Motion.
 
