@@ -33,9 +33,17 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 			- If the functionality does not exist, create new code to implement it.
 
 			2. **Apply the correct UI styling and animations:**
-			- Use **Tailwind CSS** for styling UI components.
-			- Use **Framer Motion** to create rich animations and interactions.
+			- Use or edit **tailwind.config.js** to:
+				- Define custom colors, typography, spacing, and other design tokens.
+				- Implement Material Design principles.
+				- Implement consistent spacing guidelines, alignment suggestions, and grid structure for the layout.
 
+            - **Microinteractions**: For each feature, implement hover effects, focus states, active states, and transitions to make the user interface feel dynamic and interactive. Describe specific hover/elevation behaviors, color changes, and shadow effects.
+            - **Motion Effects**: Use **Framer Motion** to recommend animations for specific interactions, such as:
+                - Fade-in effects for elements loading on the screen.
+                - Button hover animations (e.g., scaling, color change).
+                - Smooth transitions for form inputs and card components.
+			
 			3. **Modify or create source files as needed**:
 			- Create new components, hooks, or utilities as required.
 
@@ -50,6 +58,8 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 			Important: Respond only in valid JSON.  The JSON object you return should match the following schema:
 			{outputSchema}
+
+			By the end of the process, you will provide source code with  **fully detailed, interactive, and motion-aware design** using Tailwind CSS and Framer Motion.
 
 			`),
 		new ChatOpenAI({

@@ -42,7 +42,7 @@ const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typ
             **Your Task as the Graphic Designer**:
             1. Review and **extend** the UI/UX guidelines with specific recommendations for typography, spacing, colors, microinteractions, and motion effects.
             2. Implement the **necessary animations** using Framer Motion (e.g., button scaling, card fading in, input focus state).
-            3. Provide a **tailwind.config.js** file reflecting all design decisions and explain how to use it for the implementation of the features.
+            3. Provide a **tailwind.config.js** file reflecting all design decisions by UI/UX designer.
 
             By the end of the process, you will provide the UX designer with a **fully detailed, interactive, and motion-aware design**, ready for front-end development using Tailwind CSS and Framer Motion.
 
