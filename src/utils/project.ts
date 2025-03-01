@@ -1,48 +1,89 @@
 import fs from "fs-extra"
 import path from "path"
-import { exec } from "child_process"
-import { ProjectDto, SourceCodeDto } from "../dto/project"
-import { RspackCompiler } from "./compilers/rspack-compiler"
+import { spawn } from "child_process"
+import { SourceCodeDto } from "../dto/project"
 
-async function runCommand(command: string, cwd: string): Promise<void> {
-	return new Promise((resolve, reject) => {
-		exec(command, { cwd }, (error, stdout, stderr) => {
-			if (error) {
-				console.error(`Error running command: ${command}`)
-				console.error(`Stderr: ${stderr}`)
-				reject(error)
-				return
+interface CommandResult {
+	success: boolean
+	stdout: string
+	stderr: string
+	exitCode: number
+}
+
+async function runCommand(command: string, cwd: string, contextMessage?: string): Promise<CommandResult> {
+	return new Promise((resolve) => {
+		const [cmd, ...args] = command.split(" ")
+		const process = spawn(cmd, args, { cwd, stdio: "pipe", shell: true })
+
+		let stdout = contextMessage ? `${contextMessage}\n` : ""
+		let stderr = ""
+
+		process.stdout?.on("data", (data) => {
+			const output = data.toString()
+			stdout += output
+			console.log(output.trim()) // Real-time output
+		})
+
+		process.stderr?.on("data", (data) => {
+			const errorOutput = data.toString()
+			stderr += errorOutput
+			console.error(errorOutput.trim()) // Real-time error logs
+		})
+
+		process.on("error", (error) => {
+			stderr += `\nProcess error: ${error.message}`
+		})
+
+		process.on("close", (code) => {
+			const success = code === 0
+			const finalMessage = success
+				? `✅ Command "${command}" executed successfully.`
+				: `❌ Command "${command}" failed with exit code ${code}.`
+
+			if (success) {
+				stdout += `\n${finalMessage}`
+			} else {
+				stderr += `\n${finalMessage}`
 			}
-			console.log(`Stdout: ${stdout}`)
-			resolve()
+
+			resolve({
+				success,
+				stdout: stdout.trim(),
+				stderr: stderr.trim(),
+				exitCode: code ?? -1,
+			})
 		})
 	})
 }
 
-async function installDependencies(projectPath: string): Promise<void> {
-	console.log(`Installing dependencies in ${projectPath}...`)
-	await runCommand("yarn install", projectPath)
-	console.log("Dependencies installed successfully.")
+async function installDependencies(projectPath: string): Promise<CommandResult> {
+	const result = await runCommand("yarn install", projectPath, `Installing dependencies in ${projectPath}...`)
+	console.log(result.stdout)
+	if (!result.success) {
+		console.error(result.stderr)
+	}
+	return result
 }
 
-async function buildProject(projectPath: string): Promise<void> {
-	console.log(`Building project in ${projectPath}...`)
-	await runCommand("yarn build", projectPath)
-	console.log("Project built successfully.")
+async function buildProject(projectPath: string): Promise<CommandResult> {
+	const result = await runCommand("yarn build", projectPath, `Building project in ${projectPath}...`)
+	console.log(result.stdout) 
+	if (!result.success) {
+		console.error(result.stderr)
+	}
+	return result
 }
 
 async function getSourceCode(projectId: string): Promise<SourceCodeDto> {
 	const projectPath = path.join("projects", projectId)
 	const sourceCode: SourceCodeDto = {}
-    const blacklist = new Set(['yarn.lock', '.env.example']);
+	const blacklist = new Set(["yarn.lock", ".env.example"])
 
 	function readDirectory(directory: string, relativePath = "") {
 		const files = fs.readdirSync(directory)
 
 		for (const file of files) {
-
-
-            if (blacklist.has(file)) continue;
+			if (blacklist.has(file)) continue
 
 			const filePath = path.join(directory, file)
 			const fileRelativePath = path.join(relativePath, file)
@@ -54,7 +95,7 @@ async function getSourceCode(projectId: string): Promise<SourceCodeDto> {
 				}
 			} else {
 				sourceCode[fileRelativePath] = {
-					code: fs.readFileSync(filePath, "utf8")
+					code: fs.readFileSync(filePath, "utf8"),
 				}
 			}
 		}
