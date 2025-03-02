@@ -48,7 +48,7 @@ app.get("/project/fetch/:projectId", async (req: Request, res: Response) => {
 	try {
 		const { projectId } = req.params
 		
-		const project: ProjectDto = { projectId }
+		const project: ProjectDto = { id: projectId }
 		res.json(project)
 	} catch (error) {
 		res.status(500).json({ error: `Error fetching source code: ${error}` })

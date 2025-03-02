@@ -1,7 +1,7 @@
 import { RootAnnotation } from "../team"
 import { fetchFiles } from "@utils/project"
 
-const fetchSourceCode = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
+const fetchProject = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { projectId } = _state
 
 	const sourceCode = await fetchFiles(projectId)
@@ -12,4 +12,4 @@ const fetchSourceCode = async (_state: typeof RootAnnotation.State): Promise<typ
 	}
 }
 
-export { fetchSourceCode }
+export { fetchProject }

@@ -5,7 +5,7 @@ import { uiUxDesigner } from "./agents/uiux-designer"
 import { ChangeRequestDto, SourceCodeDto } from "../dto/project"
 import { BaseMessage } from "@langchain/core/messages"
 import { rebuildProject } from "./tools/rebuild-project"
-import { fetchSourceCode } from "./tools/fetch-source-code"
+import { fetchProject } from "./tools/fetch-project"
 
 // Define Root Annotation with Reducer
 export const RootAnnotation = Annotation.Root({
@@ -29,15 +29,15 @@ class Team {
 			input: RootAnnotation,
 			output: RootAnnotation,
 		})
-			.addNode("fetchSourceCode", fetchSourceCode)
+			.addNode("fetchProject", fetchProject)
 			.addNode("ProductOwner", productOwner)
 			.addNode("ReactDeveloper", reactDeveloper)
 			.addNode("UiUxDesigner", uiUxDesigner)
 			.addNode("rebuild", rebuildProject)
-			.addEdge(START, "ProductOwner")
+			.addEdge(START, "fetchProject")
+			.addEdge("fetchProject", "ProductOwner")
 			.addEdge("ProductOwner", "UiUxDesigner")
-			.addEdge("UiUxDesigner", "fetchSourceCode")
-			.addEdge("fetchSourceCode", "ReactDeveloper")
+			.addEdge("UiUxDesigner", "ReactDeveloper")
 			.addEdge("ReactDeveloper", "rebuild")
 			.addEdge("rebuild", END)
 
@@ -47,7 +47,7 @@ class Team {
 
 		const finalState = await app.invoke({
 			userRequest: changeRequest.message,
-			projectId: changeRequest.project.projectId,
+			projectId: changeRequest.project.id,
 		},
 		{ configurable: { thread_id: "42" } }
 	)

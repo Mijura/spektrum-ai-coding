@@ -1,9 +1,10 @@
 export interface ProjectDto {
-	projectId: string
+	id: string
 	chatHistory?: string[]
 	name?: string
 	description?: string
 	owner?: string
+	context?: string
 }
 export type ChangeRequestDto = {
 	id: string

@@ -1,6 +1,9 @@
 import path from "path"
 import fs from "fs-extra"
 import { buildProject, installDependencies } from "@utils/project"
+import { ProjectDto } from "@dto/project"
+import { saveProject } from "@adapters/secodnary/project-database-adapter"
+import { v4 as uuidv4 } from "uuid"
 
 export async function setupProject(projectId: string): Promise<string> {
 	try {
@@ -18,6 +21,8 @@ export async function setupProject(projectId: string): Promise<string> {
 		// Install dependencies and build the project
 		await installDependencies(projectPath)
 		await buildProject(projectPath)
+		const project : ProjectDto = { id: projectId, owner: uuidv4(), chatHistory: [], context: "" }
+		await saveProject(project)
 
 		return projectId
 	} catch (error) {
