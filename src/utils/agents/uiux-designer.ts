@@ -3,7 +3,14 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { RootAnnotation } from "../team"
 
-// UI/UX Designer Node
+/**
+ * UI/UX Designer Node
+ * 
+ * This function is responsible for providing precise, step-by-step guidelines for implementing a specific feature in a digital product using principles inspired by Shneiderman’s Eight Golden Rules.
+ * 
+ * @param _state Graph State
+ * @returns State with updated ticket
+ */
 const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { ticket } = _state
 

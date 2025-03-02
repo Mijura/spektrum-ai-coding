@@ -3,6 +3,14 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { RootAnnotation } from "@utils/team"
 
+/**
+ * CURRENTLY NOT IN USE. 
+ * 
+ * This function is responsible for creating a graphic design guideline based on the provided ticket including typography, color palette, spacing, layout, microinteractions, and motion effects.
+ * 
+ * @param _state Graph State
+ * @returns State with graphic design guidelines
+ */
 const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { ticket } = _state
 

@@ -3,7 +3,14 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { RootAnnotation } from "../team"
 
-// Product Owner Node
+/**
+ * Product Owner Node
+ * 
+ * This function is responsible for transforming user request into a ticket for developers.
+ * 
+ * @param _state Graph State
+ * @returns State with ticket
+ */
 const productOwner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { userRequest } = _state
 

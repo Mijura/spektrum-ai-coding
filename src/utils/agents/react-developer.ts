@@ -12,6 +12,14 @@ const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCodeDto>(),
 })
 
+/**
+ * React Developer Node
+ * 
+ * This function is responsible for developing React components based on the provided source code and feature request.
+ * 
+ * @param _state Graph State
+ * @returns State with source code
+ */
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 	const { sourceCode, ticket, projectId } = _state
 
