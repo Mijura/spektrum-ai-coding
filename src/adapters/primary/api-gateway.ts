@@ -2,7 +2,6 @@ import express, { NextFunction, Request, Response } from "express"
 import path from "path"
 import fs from "fs"
 import { v4 as uuidv4 } from "uuid"
-import { getSourceCode } from "@utils/project"
 import { setupProject } from "@use-cases/setup-new-project"
 import { ChangeRequestDto, ProjectDto } from "@dto/project"
 import { implementRequest } from "@use-cases/implement-request"
@@ -48,8 +47,8 @@ app.post("/project/new", async (req: Request, res: Response) => {
 app.get("/project/fetch/:projectId", async (req: Request, res: Response) => {
 	try {
 		const { projectId } = req.params
-		const sourceCode = await getSourceCode(projectId)
-		const project: ProjectDto = { projectId, sourceCode }
+		
+		const project: ProjectDto = { projectId }
 		res.json(project)
 	} catch (error) {
 		res.status(500).json({ error: `Error fetching source code: ${error}` })
@@ -61,8 +60,8 @@ app.put("/project/implement", async (req: Request, res: Response) => {
 		const changeRequest: ChangeRequestDto = req.body
 
 		console.log(changeRequest)
-		const sourceCode = await implementRequest(changeRequest)
-		res.json(sourceCode)
+		await implementRequest(changeRequest)
+		res.json({ message: "Feacture successfully implemented." })
 	} catch (error) {
 		console.error("Error rebuilding project:", error)
 		res.status(500).json({ error: `Error rebuilding project: ${error}` })

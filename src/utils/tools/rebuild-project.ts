@@ -1,14 +1,11 @@
 import fs from "fs-extra"
 import * as path from "path"
-import { tool } from "@langchain/core/tools"
-import { ProjectSchema } from "@schemas/project.schema"
-import { ToolNode } from "@langchain/langgraph/prebuilt"
 import { buildProject, installDependencies } from "@utils/project"
+import { RootAnnotation } from "../team"
 
-const rebuildProjectTool = tool(
-	async (project) => {
+const rebuildProject = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
+	const { projectId, sourceCode } = _state
 
-		const {projectId, sourceCode } = project
 		const projectPath = path.resolve(`projects/${projectId}`)
 
 		try {
@@ -29,17 +26,10 @@ const rebuildProjectTool = tool(
 			throw error
 		}
 
-		return "Project updated and built succesfylly."
-	},
-	{
-		name: "rebuild-project",
-		description: "Write files to the file system and build React project",
-		schema: ProjectSchema,
+	return {
+		..._state
 	}
-)
-
-const tools = [rebuildProjectTool]
-
-const rebuildProject = new ToolNode(tools)
+}
 
 export { rebuildProject }
+

@@ -74,7 +74,7 @@ async function buildProject(projectPath: string): Promise<CommandResult> {
 	return result
 }
 
-async function getSourceCode(projectId: string): Promise<SourceCodeDto> {
+async function fetchFiles(projectId: string): Promise<SourceCodeDto> {
 	const projectPath = path.join("projects", projectId)
 	const sourceCode: SourceCodeDto = {}
 	const blacklist = new Set(["yarn.lock", ".env.example"])
@@ -118,4 +118,4 @@ async function rebuildProject(projectId: string): Promise<void> {
 	}
 }
 
-export { getSourceCode, buildProject, rebuildProject, installDependencies }
+export { fetchFiles, buildProject, rebuildProject, installDependencies }

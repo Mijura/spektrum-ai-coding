@@ -6,7 +6,6 @@ import { SourceCodeDto } from "@dto/project"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../team"
 import { SourceCodeSchema } from "@schemas/project.schema"
-import { AIMessage } from "@langchain/core/messages"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCodeDto>(),
@@ -96,24 +95,8 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 	console.log(changes)
 
 	return {
-		messages: [
-			new AIMessage({
-				content: "",
-				additional_kwargs: {},
-				response_metadata: {},
-				tool_calls: [
-					{
-						name: "rebuild-project",
-						args: {
-							projectId: projectId,
-							sourceCode: changes,
-						},
-						id: "rebuild_abcd123",
-					},
-				],
-				invalid_tool_calls: [],
-			}),
-		],
+		..._state,
+		sourceCode: changes,
 	}
 }
 

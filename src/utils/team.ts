@@ -1,11 +1,11 @@
-import { Annotation, StateGraph, START, END, MessagesAnnotation, MemorySaver } from "@langchain/langgraph"
+import { Annotation, StateGraph, START, END, MemorySaver } from "@langchain/langgraph"
 import { productOwner } from "./agents/product-owner"
 import { reactDeveloper } from "./agents/react-developer"
 import { uiUxDesigner } from "./agents/uiux-designer"
-import { graphicDesigner } from "./agents/graphic-designer"
-import { ChangeRequestDto, ProjectDto, SourceCodeDto } from "../dto/project"
+import { ChangeRequestDto, SourceCodeDto } from "../dto/project"
 import { BaseMessage } from "@langchain/core/messages"
-import { rebuildProject } from "./tools/rebuild-project-tool"
+import { rebuildProject } from "./tools/rebuild-project"
+import { fetchSourceCode } from "./tools/fetch-source-code"
 
 // Define Root Annotation with Reducer
 export const RootAnnotation = Annotation.Root({
@@ -23,29 +23,22 @@ export const RootAnnotation = Annotation.Root({
 	projectId: Annotation<string>,
 })
 
-const shouldContinue = (state: typeof RootAnnotation.State) => {
-	const { messages } = state
-	const lastMessage = messages[messages.length - 1]
-	if ("tool_calls" in lastMessage && Array.isArray(lastMessage.tool_calls) && lastMessage.tool_calls?.length) {
-		return "rebuild"
-	}
-	return "__end__"
-}
-
 class Team {
 	static async implement(changeRequest: ChangeRequestDto): Promise<SourceCodeDto> {
 		const workflow = new StateGraph({
 			input: RootAnnotation,
 			output: RootAnnotation,
 		})
+			.addNode("fetchSourceCode", fetchSourceCode)
 			.addNode("ProductOwner", productOwner)
 			.addNode("ReactDeveloper", reactDeveloper)
 			.addNode("UiUxDesigner", uiUxDesigner)
 			.addNode("rebuild", rebuildProject)
 			.addEdge(START, "ProductOwner")
 			.addEdge("ProductOwner", "UiUxDesigner")
-			.addEdge("UiUxDesigner", "ReactDeveloper")
-			.addConditionalEdges("ReactDeveloper", shouldContinue, ["rebuild", END])
+			.addEdge("UiUxDesigner", "fetchSourceCode")
+			.addEdge("fetchSourceCode", "ReactDeveloper")
+			.addEdge("ReactDeveloper", "rebuild")
 			.addEdge("rebuild", END)
 
 		const checkpointer = new MemorySaver()
@@ -54,8 +47,6 @@ class Team {
 
 		const finalState = await app.invoke({
 			userRequest: changeRequest.message,
-			ticket: undefined,
-			sourceCode: changeRequest.project.sourceCode,
 			projectId: changeRequest.project.projectId,
 		},
 		{ configurable: { thread_id: "42" } }

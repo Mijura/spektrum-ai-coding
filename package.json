@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "serve": "ts-node -r tsconfig-paths/register src/adapters/api.ts",
-    "start": "ts-node -r tsconfig-paths/register src/adapters/api.ts"
+    "serve": "ts-node -r tsconfig-paths/register src/adapters/primary/api-gateway.ts",
+    "start": "ts-node -r tsconfig-paths/register src/adapters/primary/api-gateway.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.398.0",
+    "@aws-sdk/lib-dynamodb": "^3.398.0",
     "@langchain/anthropic": "^0.3.14",
     "@langchain/community": "^0.3.27",
     "@langchain/core": "^0.3.40",
