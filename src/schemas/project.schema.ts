@@ -14,8 +14,16 @@ const SourceCodeSchema = z.record(
 )
 
 const ProjectSchema = z.object({
-	projectId: z.string().describe("The project id"),
-	sourceCode: SourceCodeSchema.describe("Corresponding file paths and details of each source code file in the project"),
+	id: z.string().describe("The project id"),
+	name: z.string().describe("Short name of the project. Should be filled only if it's empty.").optional(),
+	description: z.string().describe("Short description of the project purpose. Should be filled only if it's empty.").optional(),
+	owner: z.string().describe("The user id"),
+	context: z.string().describe("The broader description of the project. It should contain all users preferences and feature list - it should be updated after each user request.").optional()
 })
 
-export { ProjectSchema, SourceCodeSchema }
+const ProductOwnerSchema = z.object({
+	projectDetails: ProjectSchema,
+	ticket: z.string().describe("The ticket with list of features to be implemented"),
+})
+
+export { ProjectSchema, SourceCodeSchema, ProductOwnerSchema }

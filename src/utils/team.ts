@@ -2,10 +2,13 @@ import { Annotation, StateGraph, START, END, MemorySaver } from "@langchain/lang
 import { productOwner } from "./agents/product-owner"
 import { reactDeveloper } from "./agents/react-developer"
 import { uiUxDesigner } from "./agents/uiux-designer"
-import { ChangeRequestDto, SourceCodeDto } from "../dto/project"
 import { BaseMessage } from "@langchain/core/messages"
 import { rebuildProject } from "./tools/rebuild-project"
 import { fetchProject } from "./tools/fetch-project"
+import { ChangeRequestDto } from "@dto/change-request"
+import { SourceCodeDto } from "@dto/source-code"
+import { ProjectDto } from "@dto/project"
+import { updateProjectDetails } from "./tools/update-project-details"
 
 // Define Root Annotation with Reducer
 export const RootAnnotation = Annotation.Root({
@@ -15,6 +18,9 @@ export const RootAnnotation = Annotation.Root({
 	}),
 	userRequest: Annotation<string>(),
 	ticket: Annotation<string>({
+		reducer: (a: any, b: any) => b,
+	}),
+	projectDetails: Annotation<ProjectDto>({
 		reducer: (a: any, b: any) => b,
 	}),
 	sourceCode: Annotation<SourceCodeDto>({
@@ -34,12 +40,14 @@ class Team {
 			.addNode("ReactDeveloper", reactDeveloper)
 			.addNode("UiUxDesigner", uiUxDesigner)
 			.addNode("rebuild", rebuildProject)
+			.addNode("updateProjectDetails", updateProjectDetails)
 			.addEdge(START, "fetchProject")
 			.addEdge("fetchProject", "ProductOwner")
 			.addEdge("ProductOwner", "UiUxDesigner")
 			.addEdge("UiUxDesigner", "ReactDeveloper")
 			.addEdge("ReactDeveloper", "rebuild")
-			.addEdge("rebuild", END)
+			.addEdge("rebuild", "updateProjectDetails")			
+			.addEdge("updateProjectDetails", END)
 
 		const checkpointer = new MemorySaver()
 

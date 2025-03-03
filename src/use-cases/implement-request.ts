@@ -1,4 +1,5 @@
-import { ChangeRequestDto } from "@dto/project"
+
+import { ChangeRequestDto } from "@dto/change-request"
 import Team from "@utils/team"
 
 export async function implementRequest(changeRequest: ChangeRequestDto): Promise<void> {

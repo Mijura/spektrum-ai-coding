@@ -3,10 +3,11 @@ import path from "path"
 import fs from "fs"
 import { v4 as uuidv4 } from "uuid"
 import { setupProject } from "@use-cases/setup-new-project"
-import { ChangeRequestDto, ProjectDto } from "@dto/project"
+import { ProjectDto } from "@dto/project"
 import { implementRequest } from "@use-cases/implement-request"
 
 import dotenv from "dotenv"
+import { ChangeRequestDto } from "@dto/change-request"
 
 // Load environment variables from .env file
 dotenv.config()
@@ -35,20 +36,20 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Project intialization
 app.post("/project/new", async (req: Request, res: Response) => {
 	try {
-		const projectId = uuidv4()
-		await setupProject(projectId)
-		res.json({ message: "Project built successfully.", projectId })
+		const id = uuidv4()
+		await setupProject(id)
+		res.json({ message: "Project built successfully.", id })
 	} catch (error) {
 		console.error("Error setting up project:", error)
 		res.status(500).json({ error: `Error setting up project: ${error}` })
 	}
 })
 
-app.get("/project/fetch/:projectId", async (req: Request, res: Response) => {
+app.get("/project/fetch/:id", async (req: Request, res: Response) => {
 	try {
-		const { projectId } = req.params
+		const { id } = req.params
 		
-		const project: ProjectDto = { id: projectId }
+		const project: ProjectDto = { id: id }
 		res.json(project)
 	} catch (error) {
 		res.status(500).json({ error: `Error fetching source code: ${error}` })
@@ -69,8 +70,8 @@ app.put("/project/implement", async (req: Request, res: Response) => {
 })
 
 // Middleware to serve static files
-app.use("/:projectId", (req: Request, res: Response, next: NextFunction) => {
-	const projectPath = path.resolve(`projects/${req.params.projectId}/dist`)
+app.use("/:id", (req: Request, res: Response, next: NextFunction) => {
+	const projectPath = path.resolve(`projects/${req.params.id}/dist`)
 
 	if (fs.existsSync(projectPath)) {
 		express.static(projectPath)(req, res, next)
@@ -79,9 +80,9 @@ app.use("/:projectId", (req: Request, res: Response, next: NextFunction) => {
 	}
 })
 
-// Serve index.html when accessing `/projectId`
-app.get("/:projectId", (req: Request, res: Response) => {
-	const projectPath = path.resolve(`projects/${req.params.projectId}/dist/index.html`)
+// Serve index.html when accessing `/id`
+app.get("/:id", (req: Request, res: Response) => {
+	const projectPath = path.resolve(`projects/${req.params.id}/dist/index.html`)
 
 	if (fs.existsSync(projectPath)) {
 		res.sendFile(projectPath)

@@ -2,10 +2,10 @@ import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
-import { SourceCodeDto } from "@dto/project"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../team"
 import { SourceCodeSchema } from "@schemas/project.schema"
+import { SourceCodeDto } from "@dto/source-code"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCodeDto>(),
@@ -20,7 +20,7 @@ const DeveloperOutputAnnotation = Annotation.Root({
  * @returns State with source code
  */
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { sourceCode, ticket, projectId } = _state
+	const { sourceCode, ticket } = _state
 
 	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
 
@@ -59,7 +59,6 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 
 			### **Project Details**
-			- **Project ID:** {projectId}
 			- **Ticket Details:** {ticket}
 			- **Current Source Code:** {sourceCode}
 
@@ -87,7 +86,6 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 	const changes = await chain.invoke({
 		ticket: ticket,
-		projectId: projectId,
 		sourceCode: sourceCode,
 		outputSchema: parser.getFormatInstructions(),
 	})

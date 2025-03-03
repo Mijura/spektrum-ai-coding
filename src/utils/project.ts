@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import path from "path"
 import { spawn } from "child_process"
-import { SourceCodeDto } from "../dto/project"
+import { SourceCodeDto } from "@dto/source-code"
 
 interface CommandResult {
 	success: boolean
@@ -74,8 +74,8 @@ async function buildProject(projectPath: string): Promise<CommandResult> {
 	return result
 }
 
-async function fetchFiles(projectId: string): Promise<SourceCodeDto> {
-	const projectPath = path.join("projects", projectId)
+async function fetchFiles(id: string): Promise<SourceCodeDto> {
+	const projectPath = path.join("projects", id)
 	const sourceCode: SourceCodeDto = {}
 	const blacklist = new Set(["yarn.lock", ".env.example"])
 
@@ -106,8 +106,8 @@ async function fetchFiles(projectId: string): Promise<SourceCodeDto> {
 	return sourceCode
 }
 
-async function rebuildProject(projectId: string): Promise<void> {
-	const projectPath = path.join("projects", projectId)
+async function rebuildProject(id: string): Promise<void> {
+	const projectPath = path.join("projects", id)
 
 	try {
 		await installDependencies(projectPath)

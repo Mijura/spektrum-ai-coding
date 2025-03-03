@@ -2,19 +2,24 @@ import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { RootAnnotation } from "../team"
+import { StructuredOutputParser } from "@langchain/core/output_parsers"
+import { ProductOwnerSchema, ProjectSchema } from "@schemas/project.schema"
+import { ProductOwnerOutputDto } from "@dto/project"
 
 /**
  * Product Owner Node
- * 
+ *
  * This function is responsible for transforming user request into a ticket for developers.
- * 
+ *
  * @param _state Graph State
  * @returns State with ticket
  */
-const productOwner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { userRequest } = _state
+const productOwner = async (_state: typeof RootAnnotation.State): Promise<ProductOwnerOutputDto> => {
+	const { userRequest, projectDetails } = _state
 
 	console.log(`\n\n\nProduct Owner:\n\nRecieved Ticket:\n\n${userRequest}`)
+
+	const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
 
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(`You are an product owner exper. Your task is to transform user request into ticket for developers.
@@ -37,23 +42,43 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<typeof
 			To summuarize don't suggest any additional improvements nor too broad features - just essence of user request.
 
 			User Request: {userRequest}
+			Project Details: {projectDetails}
+
+			Project Details may be incomplete in the beginning, your task is to fill it and maintain context field every new user request. You should also populate name and description fields if needed.
+
+			Example of valid response:
+			{{
+				"ticket": 'Feature 1: Enable user to add notes\n\nFeature 2: Implement notes overview',
+				"projectDetails": {{
+					id: 'e4cb89b1-c1e5-4e94-bc3c-2056344a1369',
+					name: 'Note Taking App',
+					description: 'App for taking notes',
+					owner: 'c8e64f96-8450-4925-8077-04bfd8e1014e',
+					owner: '12345',
+					context: 'User is building note taking app. He wants to enable users to add notes, and prefers...',
+				}}
+			}}
 			`),
 		new ChatOpenAI({
 			modelName: "o1-mini",
 			apiKey: process.env.OPENAI_API_KEY,
 		}),
+		parser,
 	])
 
-	const ticket = await chain.invoke({
-		userRequest
+	const response = await chain.invoke({
+		userRequest,
+		projectDetails,
+		outputSchema: parser.getFormatInstructions(),
 	})
 
-    console.log(`\n\n\nProduct Owner:\n\nTicket:\n\n${ticket.content.toString()}`)
+	console.log(`\n\n\nProduct Owner:\n\nTicket:\n\n${JSON.stringify(response)}`)
 
 	return {
 		..._state,
-		ticket: ticket.content.toString(),
+		ticket: response.ticket,
+		projectDetails: response.projectDetails,
 	}
 }
 
-export { productOwner } 
+export { productOwner }

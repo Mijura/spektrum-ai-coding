@@ -1,6 +1,6 @@
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
-import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb"
+import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
 import { ProjectDto } from "@dto/project"
 
 const client = new DynamoDBClient({
@@ -19,4 +19,16 @@ export async function saveProject(project: ProjectDto): Promise<void> {
 	}
 
 	await ddbDocClient.send(new PutCommand(params))
+}
+
+export async function getProject(id: string): Promise<ProjectDto> {
+	const tableName = process.env.PROJECT_TABLE
+	var params = {
+		TableName: tableName,
+		Key: { id: id },
+	}
+
+	const { Item: item } = await ddbDocClient.send(new GetCommand(params))
+
+	return item as ProjectDto
 }
