@@ -4,7 +4,13 @@ export interface ProjectDto {
 	description?: string
 	owner?: string
 	context?: string
+	files?: FileContextDto
+	
 }
+
+interface FileContextDto {
+	[filePath: string]: string | undefined
+  }
 
 
 export interface ProductOwnerOutputDto {
