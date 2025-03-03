@@ -20,7 +20,7 @@ const DeveloperOutputAnnotation = Annotation.Root({
  * @returns State with source code
  */
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { sourceCode, ticket } = _state
+	const { sourceCode, projectDetails, ticket } = _state
 
 	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
 
@@ -59,6 +59,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 
 			### **Project Details**
+			- **Project Context:** {projectDetails}
 			- **Ticket Details:** {ticket}
 			- **Current Source Code:** {sourceCode}
 
@@ -86,6 +87,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 	const changes = await chain.invoke({
 		ticket: ticket,
+		projectDetails: projectDetails,
 		sourceCode: sourceCode,
 		outputSchema: parser.getFormatInstructions(),
 	})

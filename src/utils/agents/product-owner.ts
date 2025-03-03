@@ -42,7 +42,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 			To summuarize don't suggest any additional improvements nor too broad features - just essence of user request.
 
 			User Request: {userRequest}
-			Project Details: {projectDetails}
+			Project Context: {projectDetails}
 
 			Project Details may be incomplete in the beginning, your task is to fill it and maintain context field every new user request. You should also populate name and description fields if needed.
 
