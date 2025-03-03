@@ -21,7 +21,7 @@ export async function setupProject(projectId: string): Promise<string> {
 		// Install dependencies and build the project
 		await installDependencies(projectPath)
 		await buildProject(projectPath)
-		const project : ProjectDto = { id: projectId, owner: uuidv4(), chatHistory: [], context: "" }
+		const project : ProjectDto = { id: projectId, owner: uuidv4(), chatHistory: [], context: "Project is empty wihout any user request" }
 		await saveProject(project)
 
 		return projectId
