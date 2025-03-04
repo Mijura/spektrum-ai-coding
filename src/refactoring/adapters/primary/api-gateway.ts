@@ -2,12 +2,12 @@ import express, { NextFunction, Request, Response } from "express"
 import path from "path"
 import fs from "fs"
 import { v4 as uuidv4 } from "uuid"
-import { setupProject } from "@use-cases/setup-new-project"
-import { ProjectDto } from "@dto/project"
-import { implementRequest } from "@use-cases/implement-request"
 
 import dotenv from "dotenv"
-import { ChangeRequestDto } from "@dto/change-request"
+import { setupProject } from "src/refactoring/use-cases/setup-new-project"
+import { ProjectDto } from "src/refactoring/dto/project"
+import { ChangeRequestDto } from "src/refactoring/dto/change-request"
+import { implementRequest } from "src/refactoring/use-cases/implement-request"
 
 // Load environment variables from .env file
 dotenv.config()
