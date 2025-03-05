@@ -1,17 +1,13 @@
-import { FileSystem } from "@domain/ports/outbound/file-system"
-import fs from "fs/promises"
+import { FileSystemPort } from "@domain/ports/outbound/file-system-port"
+import fs from "fs-extra"
 
-export class FileSystemAdapter implements FileSystem {
-	async copyFile(source: string, destination: string): Promise<void> {
-		await fs.copyFile(source, destination)
-	}
+export class FileSystemAdapter implements FileSystemPort {
+	async copyFolder(source: string, destination: string): Promise<void> {
+		// Ensure the destination directory exists
+		await fs.ensureDir(destination)
 
-	async deleteFile(path: string): Promise<void> {
-		await fs.unlink(path)
-	}
-
-	async readFile(path: string): Promise<string> {
-		return await fs.readFile(path, "utf-8")
+		// Copy the template files to the new project directory
+		await fs.copy(source, destination)
 	}
 
 	async writeFile(path: string, content: string): Promise<void> {

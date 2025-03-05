@@ -1,7 +1,7 @@
-import { PackageManager } from "@domain/ports/outbound/package-manager"
+import { PackageManagerPort } from "@domain/ports/outbound/package-manager-port"
 import { runCommand } from "../utils/command-runner"
 
-export class YarnPackageManager implements PackageManager {
+export class YarnPackageManager implements PackageManagerPort {
 	async installDependencies(projectPath: string): Promise<boolean> {
 		const result = await runCommand("yarn install", projectPath, `Installing dependencies in ${projectPath}...`)
 		console.log(result.stdout)

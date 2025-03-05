@@ -1,31 +1,38 @@
-import { FileSystem } from "@domain/ports/outbound/file-system"
+import path from "path"
+import { PackageManagerPort } from "../ports/outbound/package-manager-port"
+import { TemplateServicePort } from "@domain/ports/outbound/template-service-port"
 
 export class ProjectService {
-	constructor(private fileSystem: FileSystem) {}
+	constructor(
+		private readonly templateService: TemplateServicePort, // Adapter for file system operations
+		private readonly packageManager: PackageManagerPort // Adapter for package management (Yarn)
+	) {}
 
-	async initializeProjectFiles(projectId: string): Promise<void> {
+	// Initializes project by copying the template (creating folder structure), installing dependencies, and building the project
+	async setupProject(projectId: string): Promise<void> {
 		try {
-            const templateName = "rspack-react-tailwind"
-            const templatePath = path.resolve(`project-templates/${templateName}`)
-    
-            console.log("Checking path:", templatePath)
-    
-            const projectPath: string = path.join("projects", id)
-    
-            // Copy React template to new project folder
-            await fs.copy(templatePath, projectPath)
-            console.log(`Project template copied to ${projectPath}`)
-    
-            // Install dependencies and build the project
-            await installDependencies(projectPath)
-            await buildProject(projectPath)
-            const project : ProjectDto = { id: id, owner: uuidv4(), context: "", name: "", description: "" }
-            await saveProject(project)
-    
-            return id
-        } catch (error) {
-            console.error("Error setting up project:", error)
-            throw error
-        }
+
+			const projectPath: string = path.join("projects", projectId) // Path for the new project
+
+            // 1. Copy the project template
+            await this.templateService.copyProjectTemplate(projectPath)
+
+			// 2. Install dependencies
+			const installSuccess = await this.packageManager.installDependencies(projectPath)
+			if (!installSuccess) {
+				throw new Error("Failed to install dependencies.")
+			}
+
+			// 3. Build the project
+			const buildSuccess = await this.packageManager.buildProject(projectPath)
+			if (!buildSuccess) {
+				throw new Error("Failed to build the project.")
+			}
+
+			console.log(`Project ${projectId} initialized and built successfully!`)
+		} catch (error) {
+			console.error(`Error initializing project ${projectId}:`, error)
+			throw new Error("Project initialization failed.")
+		}
 	}
 }

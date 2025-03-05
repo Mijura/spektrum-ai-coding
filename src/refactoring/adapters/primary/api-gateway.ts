@@ -5,8 +5,8 @@ import { v4 as uuidv4 } from "uuid"
 
 import dotenv from "dotenv"
 import { setupProject } from "src/refactoring/use-cases/setup-new-project"
-import { ProjectDto } from "src/refactoring/dto/project"
-import { ChangeRequestDto } from "src/refactoring/dto/change-request"
+import { ProjectDto } from "src/application/dto/project"
+import { ChangeRequestDto } from "src/application/dto/change-request"
 import { implementRequest } from "src/refactoring/use-cases/implement-request"
 
 // Load environment variables from .env file
@@ -33,17 +33,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	next()
 })
 
-// Project intialization
-app.post("/project/new", async (req: Request, res: Response) => {
-	try {
-		const id = uuidv4()
-		await setupProject(id)
-		res.json({ message: "Project built successfully.", id })
-	} catch (error) {
-		console.error("Error setting up project:", error)
-		res.status(500).json({ error: `Error setting up project: ${error}` })
-	}
-})
 
 app.get("/project/fetch/:id", async (req: Request, res: Response) => {
 	try {

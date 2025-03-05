@@ -12,10 +12,10 @@ export class CreateNewProject implements ProjectUseCase<null, Project> {
 			// Create a new project with a unique ID
 			const project = new Project(uuidv4())
 
-			// Initialize project files (e.g., folder structure, cloning the template)
-			await this.projectService.initializeProjectFiles(project.id)
+			// Initialize and build project
+			await this.projectService.setupProject(project.id)
 
-			// Persist the project details (e.g., save project in the database)
+			// Persist the project details in the database
 			await this.projectRepository.save(project)
 
 			return project
