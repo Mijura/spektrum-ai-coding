@@ -1,6 +1,6 @@
 import { WebDevelopmentWorkflow } from "@domain/ports/outbound/web-development-workflow"
 import { UserRequestDto } from "src/application/dto/user-request"
-import { PackageManagerPort } from "@domain/ports/outbound/package-manager"
+import { PackageManager } from "@domain/ports/outbound/package-manager"
 import { FileSystemPort } from "@domain/ports/outbound/file-system"
 import { ProjectRepository } from "@domain/ports/outbound/project-repository"
 import { Project } from "@domain/entities/project"
@@ -35,7 +35,7 @@ export const RootAnnotation = Annotation.Root({
 
 export class LangGraphWebDevelopment implements WebDevelopmentWorkflow {
 	constructor(
-		private readonly packageManager: PackageManagerPort,
+		private readonly packageManager: PackageManager,
 		private readonly fileSystem: FileSystemPort,
 		private readonly projectRepository: ProjectRepository
 	) {}

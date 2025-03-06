@@ -1,7 +1,7 @@
 import { Project } from "@domain/entities/project"
 import { ProjectUseCase } from "@domain/ports/inbound/project-use-case"
 import { ProjectRepository } from "@domain/ports/outbound/project-repository"
-import { ProjectService } from "@domain/services/project-service"
+import { ProjectService } from "@application/services/project-service"
 import { v4 as uuidv4 } from "uuid"
 
 export class CreateNewProject implements ProjectUseCase<null, Project> {
