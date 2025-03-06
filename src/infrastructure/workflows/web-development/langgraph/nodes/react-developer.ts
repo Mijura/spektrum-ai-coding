@@ -3,9 +3,9 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
-import { RootAnnotation } from "../team"
 import { SourceCodeSchema } from "@schemas/project.schema"
 import { SourceCodeDto } from "@dto/source-code"
+import { RootAnnotation } from "../langgraph-web-development"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCodeDto>(),

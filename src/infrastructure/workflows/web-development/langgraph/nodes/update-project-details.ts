@@ -1,6 +1,6 @@
-import { SourceCodeDto } from "@dto/source-code"
-import { RootAnnotation } from "../team"
-import { saveProject } from "@adapters/secodnary/project-database-adapter"
+import { SourceCodeDto } from "@application/dto/source-code"
+import { RootAnnotation } from "../langgraph-web-development"
+
 
 const updateProjectDetails = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { projectDetails, sourceCode } = _state

@@ -1,6 +1,6 @@
 // src/infrastructure/adapters/RspackTemplateService.ts
-import { FileSystemPort } from "@domain/ports/outbound/file-system-port"
-import { GithubServicePort } from "@domain/ports/outbound/github-service-port"
+import { FileSystemPort } from "@domain/ports/outbound/file-system"
+import { GithubServicePort } from "@domain/ports/outbound/github-service"
 import path from "path"
 
 export class GithubService implements GithubServicePort {

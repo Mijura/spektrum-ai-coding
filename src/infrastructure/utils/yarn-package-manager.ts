@@ -1,5 +1,5 @@
-import { PackageManagerPort } from "@domain/ports/outbound/package-manager-port"
-import { runCommand } from "../utils/command-runner"
+import { PackageManagerPort } from "@domain/ports/outbound/package-manager"
+import { runCommand } from "./command-runner"
 
 export class YarnPackageManager implements PackageManagerPort {
 	async installDependencies(projectPath: string): Promise<boolean> {

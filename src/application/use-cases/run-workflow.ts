@@ -7,6 +7,6 @@ export class RunWorkflow implements ProjectUseCase<UserRequestDto, Project | nul
 	constructor(private readonly webDevelopmentWorkflow: WebDevelopmentWorkflow) {}
 
 	async execute(userRequest: UserRequestDto): Promise<Project | null> {
-		return this.webDevelopmentWorkflow.run(userRequest)
+		return this.webDevelopmentWorkflow.develop(userRequest)
 	}
 }

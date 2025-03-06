@@ -1,15 +1,10 @@
-// src/infrastructure/web/controllers/ProjectController.ts
-import express, { Request, Response, NextFunction } from "express"
-import { ProjectService } from "@domain/services/project-service"
+import { Request, Response } from "express"
+import { ProjectService } from "@application/services/project-service"
 import { UserRequestDto } from "src/application/dto/user-request"
 import { createNewProject, fetchProjectDetails, runWorkflow } from "@infrastructure/config/dependencies"
 
-
 export class ProjectController {
-
-	constructor(
-		private readonly projectService: ProjectService
-	) {}
+	constructor(private readonly projectService: ProjectService) {}
 
 	async createProject(req: Request, res: Response): Promise<void> {
 		try {
@@ -35,7 +30,6 @@ export class ProjectController {
 	}
 
 	async runWorkflow(req: Request, res: Response): Promise<void> {
-
 		try {
 			const userRequest: UserRequestDto = req.body
 
@@ -48,33 +42,17 @@ export class ProjectController {
 		}
 	}
 
-
-    // Serve static project files
-    async serveStaticFiles(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const projectPath = await this.projectService.getStaticFilesPath(req.params.id);
-            if (projectPath) {
-                express.static(projectPath)(req, res, next);
-            } else {
-                res.status(404).send("Project not found");
-            }
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    // Serve index.html
-    async serveIndexHtml(req: Request, res: Response): Promise<void> {
-        try {
-            const indexPath = await this.projectService.getIndexFilePath(req.params.id);
-            if (indexPath) {
-                res.sendFile(indexPath);
-            } else {
-                res.status(404).send("Project not found");
-            }
-        } catch (error) {
-            res.status(500).json({ message: "Error serving index.html" });
-        }
-    }
-
+	// Serve index.html
+	async serveIndexHtml(req: Request, res: Response): Promise<void> {
+		try {
+			const indexPath = await this.projectService.getIndexFilePath(req.params.id)
+			if (indexPath) {
+				res.sendFile(indexPath)
+			} else {
+				res.status(404).send("Project not found")
+			}
+		} catch (error) {
+			res.status(500).json({ message: "Error serving index.html" })
+		}
+	}
 }
