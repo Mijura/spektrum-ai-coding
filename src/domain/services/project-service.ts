@@ -1,10 +1,10 @@
 import path from "path"
 import { PackageManagerPort } from "../ports/outbound/package-manager-port"
-import { TemplateServicePort } from "@domain/ports/outbound/template-service-port"
+import { GithubServicePort } from "@domain/ports/outbound/github-service-port"
 
 export class ProjectService {
 	constructor(
-		private readonly templateService: TemplateServicePort, // Adapter for file system operations
+		private readonly githubService: GithubServicePort, // Adapter for file system operations
 		private readonly packageManager: PackageManagerPort // Adapter for package management (Yarn)
 	) {}
 
@@ -15,7 +15,7 @@ export class ProjectService {
 			const projectPath: string = path.join("projects", projectId) // Path for the new project
 
             // 1. Copy the project template
-            await this.templateService.copyProjectTemplate(projectPath)
+            await this.githubService.cloneTemplate(projectPath)
 
 			// 2. Install dependencies
 			const installSuccess = await this.packageManager.installDependencies(projectPath)

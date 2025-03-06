@@ -1,28 +1,16 @@
 // src/infrastructure/web/controllers/ProjectController.ts
-import { Request, Response } from "express"
+import express, { Request, Response, NextFunction } from "express"
 import { ProjectService } from "@domain/services/project-service"
-import { CreateNewProject } from "src/application/use-cases/create-new-project"
-import { FileSystemAdapter } from "src/infrastructure/adapters/file-system-adapter"
-import { YarnPackageManager } from "src/infrastructure/adapters/yarn-package-manager"
-import { DynamoDBProjectRepository } from "src/infrastructure/adapters/persistence/project-repository-dynamodb"
-import { RspackTemplateService } from "src/infrastructure/adapters/rspack-template-service"
-import { FetchProjectDetails } from "src/application/use-cases/fetch-project-details"
-import { ChangeRequestDto } from "src/application/dto/change-request"
-import { implementChangeRequest } from "src/application/use-cases/implement-request"
+import { UserRequestDto } from "src/application/dto/user-request"
+import { createNewProject, fetchProjectDetails, runWorkflow } from "@infrastructure/config/dependencies"
 
-// You may need to initialize these dependencies using dependency injection or a service container.
-const fileSystemAdapter = new FileSystemAdapter()
-const templateService = new RspackTemplateService(fileSystemAdapter)
-const yarnPackageManager = new YarnPackageManager()
-const projectRepository = new DynamoDBProjectRepository()
-
-const projectService = new ProjectService(templateService, yarnPackageManager)
-const createNewProject = new CreateNewProject(projectService, projectRepository)
-const fetchProjectDetails = new FetchProjectDetails(projectRepository)
-const implementChangeRequest = new implementChangeRequest(projectRepository)
 
 export class ProjectController {
-	// This controller method handles the request to create a new project.
+
+	constructor(
+		private readonly projectService: ProjectService
+	) {}
+
 	async createProject(req: Request, res: Response): Promise<void> {
 		try {
 			const project = await createNewProject.execute()
@@ -46,17 +34,47 @@ export class ProjectController {
 		}
 	}
 
-	async implementChangeRequest(req: Request, res: Response): Promise<void> {
-		// Implement the change request
-		try {
-			const changeRequest: ChangeRequestDto = req.body
+	async runWorkflow(req: Request, res: Response): Promise<void> {
 
-			console.log(changeRequest)
-			await implementChangeRequest.execute(changeRequest)
-			res.json({ message: "Feacture successfully implemented." })
+		try {
+			const userRequest: UserRequestDto = req.body
+
+			console.log(userRequest)
+			await runWorkflow.execute(userRequest)
+			res.json({ message: "Worfklow successfully executed." })
 		} catch (error) {
 			console.error("Error rebuilding project:", error)
 			res.status(500).json({ error: `Error rebuilding project: ${error}` })
 		}
 	}
+
+
+    // Serve static project files
+    async serveStaticFiles(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const projectPath = await this.projectService.getStaticFilesPath(req.params.id);
+            if (projectPath) {
+                express.static(projectPath)(req, res, next);
+            } else {
+                res.status(404).send("Project not found");
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // Serve index.html
+    async serveIndexHtml(req: Request, res: Response): Promise<void> {
+        try {
+            const indexPath = await this.projectService.getIndexFilePath(req.params.id);
+            if (indexPath) {
+                res.sendFile(indexPath);
+            } else {
+                res.status(404).send("Project not found");
+            }
+        } catch (error) {
+            res.status(500).json({ message: "Error serving index.html" });
+        }
+    }
+
 }

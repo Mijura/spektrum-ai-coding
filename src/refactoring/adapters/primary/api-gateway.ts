@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid"
 import dotenv from "dotenv"
 import { setupProject } from "src/refactoring/use-cases/setup-new-project"
 import { ProjectDto } from "src/application/dto/project"
-import { ChangeRequestDto } from "src/application/dto/change-request"
+import { ChangeRequestDto } from "src/application/dto/user-request"
 import { implementRequest } from "src/refactoring/use-cases/implement-request"
 
 // Load environment variables from .env file

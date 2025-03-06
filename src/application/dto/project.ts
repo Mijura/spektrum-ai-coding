@@ -5,7 +5,8 @@ export interface ProjectDto {
 	owner?: string
 	context?: string
 	files?: FileContextDto
-	
+	createdAt?: Date
+	updatedAt?: Date
 }
 
 interface FileContextDto {

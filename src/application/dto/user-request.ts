@@ -1,6 +1,6 @@
 import { ProjectDto } from "./project"
 
-export type ChangeRequestDto = {
+export type UserRequestDto = {
 	id: string
 	project: ProjectDto
 	message: string
