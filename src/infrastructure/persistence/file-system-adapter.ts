@@ -1,7 +1,7 @@
-import { FileSystemPort } from "@domain/ports/outbound/file-system"
+import { FileSystemPort } from "@domain/utils/file-system"
 import fs from "fs-extra"
 
-export class FileSystemAdapter implements FileSystemPort {
+export class FileSystem implements FileSystemPort {
 	
      async copyFolder(source: string, destination: string): Promise<void> {
 		// Ensure the destination directory exists

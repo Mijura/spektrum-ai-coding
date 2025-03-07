@@ -1,7 +1,8 @@
 import fs from "fs-extra"
 import * as path from "path"
 import { RootAnnotation } from "../langgraph-web-development"
-import { } from "@domain/outbound/package-manager" 
+import { projectStorage } from "@infrastructure/config/dependencies"
+
 
 const rebuildProject = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { projectId, sourceCode } = _state
@@ -18,8 +19,8 @@ const rebuildProject = async (_state: typeof RootAnnotation.State): Promise<type
 		}
 
 		await Promise.all(promises)
-		await installDependencies(projectPath)
-		await buildProject(projectPath)
+		await packageManager.installDependencies(projectPath)
+		await packageManager.buildProject(projectPath)
 	} catch (error) {
 		console.error("Error writing files:", error)
 		throw error

@@ -1,7 +1,6 @@
-import { ProjectStorage } from "@domain/ports/outbound/project-storage"
-
+import { ProjectStorage } from "@domain/persistence/project-storage"
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
-import { Project } from "@domain/entities/project-details"
+import { ProjectDetails } from "@domain/entities/project-details"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectDto } from "src/application/dto/project"
 
@@ -15,7 +14,7 @@ const ddbDocClient = DynamoDBDocumentClient.from(client)
 export class DynamoDBProjectStorage implements ProjectStorage {
 	private tableName = process.env.PROJECT_TABLE
 
-	async save(project: Project): Promise<void> {
+	async save(project: ProjectDetails): Promise<ProjectDetails> {
 		const projectDto: ProjectDto = {
 			id: project.id,
 		}
@@ -26,9 +25,11 @@ export class DynamoDBProjectStorage implements ProjectStorage {
 		}
 
 		await ddbDocClient.send(new PutCommand(params))
+
+		return projectDto
 	}
 
-	async findById(id: string): Promise<Project | null> {
+	async findById(id: string): Promise<ProjectDetails | null> {
 		const params = {
 			TableName: this.tableName,
 			Key: { id },
@@ -39,6 +40,6 @@ export class DynamoDBProjectStorage implements ProjectStorage {
 		if (!item) return null
 
 		// Convert ProjectDto back into a Project entity
-		return new Project(item.id)
+		return new ProjectDetails(item.id)
 	}
 }

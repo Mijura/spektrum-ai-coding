@@ -1,12 +1,12 @@
 import { ProjectDetails } from "@domain/entities/project-details"
 import { UserRequestDto } from "../dto/user-request"
-import { WebDevelopmentWorkflow } from "@domain/ports/outbound/web-development-workflow"
-import { DevelopUserRequestUseCase } from "@domain/ports/inbound/develop-user-request-use-case"
+import { DevelopUserRequestUseCase } from "@domain/use-cases/develop-user-request-use-case"
+import { FrontendDevelopmentService } from "@application/services/fronted-development-service"
 
 export class DevelopUserRequest implements DevelopUserRequestUseCase {
-	constructor(private readonly webDevelopmentWorkflow: WebDevelopmentWorkflow) {}
+	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {}
 
 	async execute(userRequest: UserRequestDto): Promise<ProjectDetails> {
-		return this.webDevelopmentWorkflow.develop(userRequest)
+		return this.frontendDevelopmentService.develop(userRequest)
 	}
 }

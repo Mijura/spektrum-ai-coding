@@ -1,6 +1,6 @@
 import { ProjectDetails } from "@domain/entities/project-details"
-import { FetchProjectDetailsUseCase } from "@domain/ports/inbound/fetch-project-details-use-case"
-import { ProjectStorage } from "@domain/ports/outbound/project-storage"
+import { FetchProjectDetailsUseCase } from "@domain/use-cases/fetch-project-details-use-case"
+import { ProjectStorage } from "@domain/persistence/project-storage"
 
 export class FetchProjectDetails implements FetchProjectDetailsUseCase {
 	constructor(private readonly projectStorage: ProjectStorage) {}

@@ -1,4 +1,4 @@
-import { PackageManagerPort } from "@domain/ports/outbound/package-manager"
+import { PackageManagerPort } from "@domain/utils/package-manager"
 import { runCommand } from "./command-runner"
 
 export class YarnPackageManager implements PackageManagerPort {

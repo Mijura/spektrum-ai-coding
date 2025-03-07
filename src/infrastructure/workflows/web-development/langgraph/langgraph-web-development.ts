@@ -1,9 +1,9 @@
-import { WebDevelopmentWorkflow } from "@domain/ports/outbound/web-development-workflow"
+import { WebDevelopmentWorkflow } from "@domain/workflows/web-development-workflow"
 import { UserRequestDto } from "src/application/dto/user-request"
-import { PackageManager } from "@domain/ports/outbound/package-manager"
-import { FileSystemPort } from "@domain/ports/outbound/file-system"
-import { ProjectRepository } from "@domain/ports/outbound/project-storage"
-import { Project } from "@domain/entities/project-details"
+import { PackageManager } from "@domain/utils/package-manager"
+import { FileSystemPort } from "@domain/utils/file-system"
+import { ProjectStorage } from "@domain/persistence/project-storage"
+import { ProjectDetails } from "@domain/entities/project-details"
 import { Annotation, END, START, StateGraph } from "@langchain/langgraph"
 import { BaseMessage } from "@langchain/core/messages"
 import { ProjectDto } from "@application/dto/project"
@@ -37,10 +37,10 @@ export class LangGraphWebDevelopment implements WebDevelopmentWorkflow {
 	constructor(
 		private readonly packageManager: PackageManager,
 		private readonly fileSystem: FileSystemPort,
-		private readonly projectRepository: ProjectRepository
+		private readonly projectStorage: ProjectStorage
 	) {}
 
-	async run(userRequest: UserRequestDto): Promise<Project> {
+	async process(userRequest: UserRequestDto): Promise<ProjectDetails> {
 		const workflow = new StateGraph({
 			input: RootAnnotation,
 			output: RootAnnotation,
@@ -65,6 +65,6 @@ export class LangGraphWebDevelopment implements WebDevelopmentWorkflow {
 			projectId: userRequest.project.id,
 		})
 
-		return finalState.sourceCode
+		return finalState.projectDetails
 	}
 }

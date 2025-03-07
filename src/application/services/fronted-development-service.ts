@@ -1,40 +1,65 @@
 import path from "path"
-import { PackageManager } from "@domain/ports/outbound/package-manager"
-import { GithubService } from "@domain/ports/outbound/github-service"
-import { FileSystemPort } from "@domain/ports/outbound/file-system"
+import { PackageManager } from "@domain/utils/package-manager"
+import { FileSystemPort } from "@domain/utils/file-system"
+import { UserRequestDto } from "@application/dto/user-request"
+import { ProjectDetails } from "../../domain/entities/project-details"
+import { WebDevelopmentWorkflow } from "@domain/workflows/web-development-workflow"
 
 export class FrontendDevelopmentService {
-	constructor(
-		private readonly githubService: GithubService, // Adapter for file system operations
+
+	constructor(// Adapter for file system operations
 		private readonly packageManager: PackageManager, // Adapter for package management (Yarn)
-        private readonly fileSystem: FileSystemPort // Adapter for file system operations
+        private readonly fileSystem: FileSystemPort, // Adapter for file system operations
+		private readonly webDevelopmentWorkflow: WebDevelopmentWorkflow // Adapter for web development workflow
 	) {}
 
-	// Initializes project by copying the template (creating folder structure), installing dependencies, and building the project
+	/**
+	 * Initializes project by copying the template (project-templates/rspack-react-tailwind), installing dependencies, and building the project
+	 * @param projectId - The ID of the project to initialize
+	 */
 	async setupProject(projectId: string): Promise<void> {
 		try {
 			const projectPath: string = path.join("projects", projectId) // Path for the new project
 
-			// 1. Copy the project template
-			await this.githubService.cloneTemplate(projectPath)
+			const templateName = "rspack-react-tailwind" // The template name
+			const templatePath = path.resolve(`project-templates/${templateName}`) // Path to the template
 
-			// 2. Install dependencies
-			const installSuccess = await this.packageManager.installDependencies(projectPath)
-			if (!installSuccess) {
-				throw new Error("Failed to install dependencies.")
-			}
+			console.log("Template path:", templatePath)
 
-			// 3. Build the project
-			const buildSuccess = await this.packageManager.buildProject(projectPath)
-			if (!buildSuccess) {
-				throw new Error("Failed to build the project.")
-			}
+			// Use FileSystemPort to copy files
+			await this.fileSystem.copyFolder(templatePath, projectPath)
+			console.log(`✅ Project template copied to ${projectPath}`)
+
+
+			await this.installDependencies(projectId)
+			await this.buildProject(projectId)
 
 			console.log(`Project ${projectId} initialized and built successfully!`)
 		} catch (error) {
 			console.error(`Error initializing project ${projectId}:`, error)
 			throw new Error("Project initialization failed.")
 		}
+	}
+
+	async installDependencies(projectId: string): Promise<void> {
+		const projectPath: string = path.join("projects", projectId)
+		const installSuccess = await this.packageManager.installDependencies(projectPath)
+		if (!installSuccess) {
+			throw new Error("Failed to install dependencies.")
+		}
+	  }
+	
+	async buildProject(projectId: string): Promise<void> {
+		const projectPath: string = path.join("projects", projectId)
+		const buildSuccess = await this.packageManager.buildProject(projectPath)
+		if (!buildSuccess) {
+			throw new Error("Failed to build the project.")
+		}
+	}
+
+
+	async develop(userRequest: UserRequestDto): Promise<ProjectDetails> {
+		return await this.webDevelopmentWorkflow.process(userRequest)
 	}
 
 	async getStaticFilesPath(projectId: string): Promise<string | null> {
