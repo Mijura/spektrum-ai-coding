@@ -3,7 +3,7 @@ import { PackageManager } from "@domain/ports/outbound/package-manager"
 import { GithubService } from "@domain/ports/outbound/github-service"
 import { FileSystemPort } from "@domain/ports/outbound/file-system"
 
-export class ProjectService {
+export class FrontendDevelopmentService {
 	constructor(
 		private readonly githubService: GithubService, // Adapter for file system operations
 		private readonly packageManager: PackageManager, // Adapter for package management (Yarn)

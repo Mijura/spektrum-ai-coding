@@ -1,11 +1,11 @@
-import { Project } from "@domain/entities/project"
-import { ProjectUseCase } from "@domain/ports/inbound/project-use-case"
-import { ProjectRepository } from "@domain/ports/outbound/project-repository"
+import { ProjectDetails } from "@domain/entities/project-details"
+import { FetchProjectDetailsUseCase } from "@domain/ports/inbound/fetch-project-details-use-case"
+import { ProjectStorage } from "@domain/ports/outbound/project-storage"
 
-export class FetchProjectDetails implements ProjectUseCase<string, Project | null> {
-	constructor(private readonly projectRepository: ProjectRepository) {}
+export class FetchProjectDetails implements FetchProjectDetailsUseCase {
+	constructor(private readonly projectStorage: ProjectStorage) {}
 
-	async execute(projectId: string): Promise<Project | null> {
-		return await this.projectRepository.findById(projectId)
+	async execute(projectId: string): Promise<ProjectDetails | null> {
+		return await this.projectStorage.findById(projectId)
 	}
 }

@@ -1,22 +1,25 @@
-import { Project } from "@domain/entities/project"
-import { ProjectUseCase } from "@domain/ports/inbound/project-use-case"
-import { ProjectRepository } from "@domain/ports/outbound/project-repository"
-import { ProjectService } from "@application/services/project-service"
+import { ProjectDetails } from "@domain/entities/project-details"
+import { ProjectStorage } from "@domain/ports/outbound/project-storage"
+import { FrontendDevelopmentService } from "@application/services/fronted-development-service"
 import { v4 as uuidv4 } from "uuid"
+import { CreateProjectUseCase } from "@domain/ports/inbound/create-project-use-case"
 
-export class CreateNewProject implements ProjectUseCase<null, Project> {
-	constructor(private readonly projectService: ProjectService, private readonly projectRepository: ProjectRepository) {}
+export class CreateNewProject implements CreateProjectUseCase {
+	constructor(
+		private readonly frontendDevelopmentService: FrontendDevelopmentService,
+		private readonly projectStorage: ProjectStorage
+	) {}
 
-	async execute(): Promise<Project> {
+	async execute(): Promise<ProjectDetails> {
 		try {
 			// Create a new project with a unique ID
-			const project = new Project(uuidv4())
+			const project = new ProjectDetails(uuidv4())
 
 			// Initialize and build project
-			await this.projectService.setupProject(project.id)
+			await this.frontendDevelopmentService.setupProject(project.id)
 
 			// Persist the project details in the database
-			await this.projectRepository.save(project)
+			await this.projectStorage.save(project)
 
 			return project
 		} catch (error) {

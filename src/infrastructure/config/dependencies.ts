@@ -1,7 +1,7 @@
 import { FileSystemAdapter } from "@infrastructure/persistence/file-system-adapter"
 import { GithubService } from "@infrastructure/utils/github-service"
 import { YarnPackageManager } from "@infrastructure/utils/yarn-package-manager"
-import { DynamoDBProjectRepository } from "@infrastructure/persistence/dynamodb-project-repository"
+import { DynamoDBProjectStorage } from "@infrastructure/persistence/dynamodb-project-storage"
 import { LangGraphWebDevelopment } from "@infrastructure/workflows/langgraph/langgraph-web-development"
 import { ProjectService } from "@domain/services/project-service"
 
@@ -14,7 +14,7 @@ import { RunWorkflow } from "@application/use-cases/run-workflow"
 import { FileSystemPort } from "@domain/ports/outbound/file-system"
 import { GithubService } from "@domain/ports/outbound/github-service"
 import { PackageManager } from "@domain/ports/outbound/package-manager"
-import { ProjectRepository } from "@domain/ports/outbound/project-repository"
+import { ProjectStorage } from "@domain/ports/outbound/project-storage"
 import { WebDevelopmentWorkflow } from "@domain/ports/outbound/web-development-workflow"
 import { ProjectController } from "@infrastructure/web/controllers/project-controller"
 
@@ -22,7 +22,7 @@ import { ProjectController } from "@infrastructure/web/controllers/project-contr
 export const fileSystemAdapter: FileSystemPort = new FileSystemAdapter()
 export const githubService: GithubService = new GithubService(fileSystemAdapter)
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
-export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
+export const projectStorage: ProjectStorage = new DynamoDBProjectStorage()
 export const projectService: ProjectService = new ProjectService(githubService, yarnPackageManager, fileSystemAdapter)
 export const projectWorkflow: WebDevelopmentWorkflow = new LangGraphWebDevelopment(yarnPackageManager, fileSystemAdapter, projectRepository)
 export const projectController = new ProjectController(projectService)

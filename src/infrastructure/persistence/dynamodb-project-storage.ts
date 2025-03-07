@@ -1,8 +1,7 @@
-// infrastructure/adapters/dynamodb/project-repository-dynamodb.ts
-import { ProjectRepository } from "@domain/ports/outbound/project-repository"
+import { ProjectStorage } from "@domain/ports/outbound/project-storage"
 
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
-import { Project } from "@domain/entities/project"
+import { Project } from "@domain/entities/project-details"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectDto } from "src/application/dto/project"
 
@@ -13,7 +12,7 @@ const client = new DynamoDBClient({
 })
 const ddbDocClient = DynamoDBDocumentClient.from(client)
 
-export class DynamoDBProjectRepository implements ProjectRepository {
+export class DynamoDBProjectStorage implements ProjectStorage {
 	private tableName = process.env.PROJECT_TABLE
 
 	async save(project: Project): Promise<void> {

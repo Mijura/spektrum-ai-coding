@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
-import { ProjectService } from "@application/services/project-service"
+import { FrontendDevelopmentService } from "@application/services/fronted-development-service"
 import { UserRequestDto } from "src/application/dto/user-request"
 import { createNewProject, fetchProjectDetails, runWorkflow } from "@infrastructure/config/dependencies"
 
 export class ProjectController {
-	constructor(private readonly projectService: ProjectService) {}
+	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {}
 
 	async createProject(req: Request, res: Response): Promise<void> {
 		try {
@@ -45,7 +45,7 @@ export class ProjectController {
 	// Serve index.html
 	async serveIndexHtml(req: Request, res: Response): Promise<void> {
 		try {
-			const indexPath = await this.projectService.getIndexFilePath(req.params.id)
+			const indexPath = await this.frontendDevelopmentService.getIndexFilePath(req.params.id)
 			if (indexPath) {
 				res.sendFile(indexPath)
 			} else {

@@ -1,4 +1,4 @@
-export class Project {
+export class ProjectDetails {
     constructor(
         public readonly id: string,
         public readonly name?: string,
