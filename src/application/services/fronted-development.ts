@@ -19,7 +19,7 @@ export class FrontendDevelopmentService {
 			const projectPath: string = path.join("projects", projectId) // Path for the new project
 
 			const templateName = "rspack-react-tailwind" // The template name
-			const templatePath = path.resolve(`project-templates/${templateName}`) // Path to the template
+			const templatePath = path.resolve(`src/application/templates/${templateName}`) // Path to the template
 
 			console.log("Template path:", templatePath)
 

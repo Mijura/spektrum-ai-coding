@@ -22,8 +22,8 @@
         "@utils/*": ["src/utils/*"],
         "@infrastructure/*": ["src/infrastructure/*"],
         "@application/*": ["src/application/*"],
-        "@project-templates/*": ["project-templates/*"]
+        "@project-templates/*": ["templates/*"]
       }                    
     },
-    "exclude": ["node_modules", "dist", "project-templates", "projects", "build"]
+    "exclude": ["node_modules", "dist", "src/application/templates/*", "projects", "build"]
   }
