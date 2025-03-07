@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
-import { FrontendDevelopmentService } from "@application/services/fronted-development-service"
-import { UserRequestDto } from "src/application/dto/user-request"
-import { createNewProject, fetchProjectDetails, runWorkflow } from "@infrastructure/config/dependencies"
+import { FrontendDevelopmentService } from "@application/services/fronted-development"
+import { createNewProject, fetchProjectDetails, developUserRequest } from "@infrastructure/config/dependencies"
 
 export class ProjectController {
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {}
@@ -29,12 +28,12 @@ export class ProjectController {
 		}
 	}
 
-	async runWorkflow(req: Request, res: Response): Promise<void> {
+	async develop(req: Request, res: Response): Promise<void> {
 		try {
-			const userRequest: UserRequestDto = req.body
 
-			console.log(userRequest)
-			await runWorkflow.execute(userRequest)
+			const { projectId, message } = req.body
+
+			await developUserRequest.execute(projectId, message)
 			res.json({ message: "Worfklow successfully executed." })
 		} catch (error) {
 			console.error("Error rebuilding project:", error)
@@ -42,8 +41,7 @@ export class ProjectController {
 		}
 	}
 
-	// Serve index.html
-	async serveIndexHtml(req: Request, res: Response): Promise<void> {
+	async serveProject(req: Request, res: Response): Promise<void> {
 		try {
 			const indexPath = await this.frontendDevelopmentService.getIndexFilePath(req.params.id)
 			if (indexPath) {

@@ -7,8 +7,8 @@ router.post("/new", (req: Request, res: Response) => projectController.createPro
 
 router.get("/fetch/:id", (req: Request, res: Response) => projectController.fetchProject(req, res))
 
-router.put("/workflow/run", (req: Request, res: Response) => projectController.runWorkflow(req, res))
+router.put("/develop", (req: Request, res: Response) => projectController.develop(req, res))
 
-router.get("/:id", (req: Request, res: Response) => projectController.serveIndexHtml(req, res))
+router.get("/:id", (req: Request, res: Response) => projectController.serveProject(req, res))
 
 export { router }

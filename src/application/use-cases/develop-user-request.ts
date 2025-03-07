@@ -1,12 +1,17 @@
 import { ProjectDetails } from "@domain/entities/project-details"
-import { UserRequestDto } from "../dto/user-request"
 import { DevelopUserRequestUseCase } from "@domain/use-cases/develop-user-request-use-case"
-import { FrontendDevelopmentService } from "@application/services/fronted-development-service"
+import { ProjectStorage } from "@domain/persistence/project-storage"
+import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"
 
 export class DevelopUserRequest implements DevelopUserRequestUseCase {
-	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {}
+	constructor(private readonly projectStorage: ProjectStorage, private readonly codeGenerationWorkflow: CodeGenerationWorkflow) {}
 
-	async execute(userRequest: UserRequestDto): Promise<ProjectDetails> {
-		return this.frontendDevelopmentService.develop(userRequest)
+	async execute(projectId: string, message: string): Promise<ProjectDetails> {
+
+		const projectDetails = await this.projectStorage.findById(projectId)
+		if (!projectDetails) {
+			throw new Error("Project not found")
+		}
+		return this.codeGenerationWorkflow.execute(projectDetails, message)
 	}
 }

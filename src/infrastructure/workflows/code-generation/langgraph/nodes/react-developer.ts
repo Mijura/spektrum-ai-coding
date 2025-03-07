@@ -5,7 +5,7 @@ import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { SourceCodeSchema } from "@schemas/project.schema"
 import { SourceCodeDto } from "@dto/source-code"
-import { RootAnnotation } from "../langgraph-web-development"
+import { RootAnnotation } from "../langgraph-generate-code"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCodeDto>(),

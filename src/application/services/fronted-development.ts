@@ -1,16 +1,14 @@
 import path from "path"
 import { PackageManager } from "@domain/utils/package-manager"
 import { FileSystemPort } from "@domain/utils/file-system"
-import { UserRequestDto } from "@application/dto/user-request"
-import { ProjectDetails } from "../../domain/entities/project-details"
-import { WebDevelopmentWorkflow } from "@domain/workflows/web-development-workflow"
+import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"
+import { SourceCodeDto } from "@application/dto/source-code"
 
 export class FrontendDevelopmentService {
 
-	constructor(// Adapter for file system operations
-		private readonly packageManager: PackageManager, // Adapter for package management (Yarn)
+	constructor(
+		private readonly packageManager: PackageManager, // Adapter for package management
         private readonly fileSystem: FileSystemPort, // Adapter for file system operations
-		private readonly webDevelopmentWorkflow: WebDevelopmentWorkflow // Adapter for web development workflow
 	) {}
 
 	/**
@@ -40,7 +38,11 @@ export class FrontendDevelopmentService {
 			throw new Error("Project initialization failed.")
 		}
 	}
-
+	
+	/**
+	 * Installs dependencies for the project
+	 * @param projectId - The ID of the project to install dependencies for
+	 */
 	async installDependencies(projectId: string): Promise<void> {
 		const projectPath: string = path.join("projects", projectId)
 		const installSuccess = await this.packageManager.installDependencies(projectPath)
@@ -48,7 +50,11 @@ export class FrontendDevelopmentService {
 			throw new Error("Failed to install dependencies.")
 		}
 	  }
-	
+
+	/**
+	 * Builds the project
+	 * @param projectId - The ID of the project to build
+	 */
 	async buildProject(projectId: string): Promise<void> {
 		const projectPath: string = path.join("projects", projectId)
 		const buildSuccess = await this.packageManager.buildProject(projectPath)
@@ -57,9 +63,17 @@ export class FrontendDevelopmentService {
 		}
 	}
 
+	async writeFiles(projectId: string, sourceCode: SourceCodeDto): Promise<void> {
+		const projectPath = path.resolve(`projects/${projectId}`)
+		let promises = []
+		for (const [filePath, fileDetails] of Object.entries(sourceCode)) {
+			const fullPath = path.join(projectPath, filePath)
+			await this.fileSystem.ensureFile(fullPath)
+			const writingPromise = this.fileSystem.writeFile(fullPath, fileDetails.code)
+			promises.push(writingPromise)
+		}
 
-	async develop(userRequest: UserRequestDto): Promise<ProjectDetails> {
-		return await this.webDevelopmentWorkflow.process(userRequest)
+		await Promise.all(promises)
 	}
 
 	async getStaticFilesPath(projectId: string): Promise<string | null> {

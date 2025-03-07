@@ -1,10 +1,10 @@
 import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
-import { RootAnnotation } from "../team"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { ProductOwnerSchema, ProjectSchema } from "@schemas/project.schema"
 import { ProductOwnerOutputDto } from "@dto/project"
+import { RootAnnotation } from "../langgraph-generate-code"
 
 /**
  * Product Owner Node

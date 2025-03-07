@@ -1,9 +1,10 @@
 import { FileSystemPort } from "@domain/utils/file-system"
 import fs from "fs-extra"
 
-export class FileSystem implements FileSystemPort {
+export class LocalFileSystem implements FileSystemPort {
+
 	
-     async copyFolder(source: string, destination: string): Promise<void> {
+    async copyFolder(source: string, destination: string): Promise<void> {
 		// Ensure the destination directory exists
 		await fs.ensureDir(destination)
 
@@ -13,6 +14,10 @@ export class FileSystem implements FileSystemPort {
 
 	async writeFile(path: string, content: string): Promise<void> {
 		await fs.writeFile(path, content, "utf-8")
+	}
+
+	async ensureFile(path: string): Promise<void> {
+		await fs.ensureFile(path)
 	}
 
 	exists(filePath: string): boolean {

@@ -1,7 +1,7 @@
 import express from "express"
 import { router as projectRouter } from "@infrastructure/web/routes/project-routes"
-import { corsMiddleware } from "@infrastructure/middlewares/cors-middleware"
-import { serveProjectFilesMiddleware } from "@infrastructure/middlewares/serve-project-files-middleware"
+import { corsMiddleware } from "@infrastructure/middleware/allow-requests"
+import { serveProjectFilesMiddleware } from "@infrastructure/middleware/serve-project-files"
 
 const app = express()
 
