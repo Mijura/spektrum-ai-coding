@@ -1,7 +1,6 @@
 import path from "path"
 import { PackageManager } from "@domain/utils/package-manager"
 import { FileSystemPort } from "@domain/utils/file-system"
-import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"
 import { SourceCodeDto } from "@application/dto/source-code"
 
 export class FrontendDevelopmentService {
@@ -63,7 +62,12 @@ export class FrontendDevelopmentService {
 		}
 	}
 
-	async writeFiles(projectId: string, sourceCode: SourceCodeDto): Promise<void> {
+	/**
+	 * Writes the source code to the project
+	 * @param projectId - The ID of the project to write the source code to
+	 * @param sourceCode - The source code to write to the project
+	 */
+	async editSourceCode(projectId: string, sourceCode: SourceCodeDto): Promise<void> {
 		const projectPath = path.resolve(`projects/${projectId}`)
 		let promises = []
 		for (const [filePath, fileDetails] of Object.entries(sourceCode)) {

@@ -6,7 +6,7 @@ const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof R
 
 	try {
 
-		await frontendDevelopmentService.writeFiles(projectDetails.id, sourceCode)
+		await frontendDevelopmentService.editSourceCode(projectDetails.id, sourceCode)
 		await frontendDevelopmentService.installDependencies(projectDetails.id)
 		await frontendDevelopmentService.buildProject(projectDetails.id)
 
