@@ -7,17 +7,17 @@ import { FrontendDevelopmentPort } from "@domain/services/frontend-development"
 export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 
 	constructor(
-		private readonly packageManager: PackageManager, // Adapter for package management
-        private readonly fileSystem: FileSystemPort, // Adapter for file system operations
+		private readonly packageManager: PackageManager,
+        private readonly fileSystem: FileSystemPort
 	) {}
 
 
 	async setupProject(projectId: string): Promise<void> {
 		try {
-			const projectPath: string = path.join("projects", projectId) // Path for the new project
+			const projectPath: string = path.join("projects", projectId) 
 
-			const templateName = "rspack-react-tailwind" // The template name
-			const templatePath = path.resolve(`src/application/templates/${templateName}`) // Path to the template
+			const templateName = "rspack-react-tailwind" 
+			const templatePath = path.resolve(`src/application/templates/${templateName}`)
 
 			console.log("Template path:", templatePath)
 
@@ -53,8 +53,32 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 		}
 	}
 
-	fetchSourceCode(projectId: string): Promise<SourceCode> {
-		throw new Error("Method not implemented.")
+	async fetchSourceCode(projectId: string): Promise<SourceCode> {
+		const projectPath = path.join("projects", projectId)
+		const sourceCode: SourceCode = {}
+		const blacklist = new Set(["yarn.lock", ".env.example", "node_modules", "dist"])
+	
+		const readDir = async (directory: string, relativePath = "") => {
+			const files = await this.fileSystem.readDirectory(directory)
+	
+			for (const file of files) {
+				if (blacklist.has(file)) continue
+	
+				const filePath = path.join(directory, file)
+				const fileRelativePath = path.join(relativePath, file)
+	
+				if (await this.fileSystem.isDirectory(filePath)) {
+					await readDir(filePath, fileRelativePath)
+				} else {
+					sourceCode[fileRelativePath] = {
+						code: await this.fileSystem.readFile(filePath, "utf8"),
+					}
+				}
+			}
+		}
+	
+		await readDir(projectPath)
+		return sourceCode
 	}
 	
 	async updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<void> {
@@ -63,7 +87,7 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 		for (const [filePath, fileDetails] of Object.entries(sourceCode)) {
 			const fullPath = path.join(projectPath, filePath)
 			await this.fileSystem.ensureFile(fullPath)
-			const writingPromise = this.fileSystem.writeFile(fullPath, fileDetails.code)
+			const writingPromise = await this.fileSystem.writeFile(fullPath, fileDetails.code)
 			promises.push(writingPromise)
 		}
 
