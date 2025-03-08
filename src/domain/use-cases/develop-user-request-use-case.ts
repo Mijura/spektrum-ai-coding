@@ -1,4 +1,4 @@
-import { ProjectDetails } from "@domain/entities/project-details"
+import { ProjectDetails } from "@domain/model/project-details"
 
 export interface DevelopUserRequestUseCase {
 	execute(projectId: string, message: string): Promise<ProjectDetails>

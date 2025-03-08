@@ -1,6 +1,6 @@
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
-import { ProjectDetails } from "@domain/entities/project-details"
+import { ProjectDetails } from "@domain/model/project-details"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectDto } from "src/application/dto/project"
 

@@ -1,4 +1,4 @@
-import { FileSystemPort } from "@domain/utils/file-system"
+import { FileSystemPort } from "@domain/persistence/file-system"
 import fs from "fs-extra"
 
 export class LocalFileSystem implements FileSystemPort {

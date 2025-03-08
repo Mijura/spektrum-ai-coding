@@ -1,4 +1,4 @@
-import { ProjectDetails } from "@domain/entities/project-details"
+import { ProjectDetails } from "@domain/model/project-details"
 import { FetchProjectDetailsUseCase } from "@domain/use-cases/fetch-project-details-use-case"
 import { ProjectStorage } from "@domain/persistence/project-storage"
 

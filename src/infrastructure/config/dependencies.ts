@@ -8,7 +8,7 @@ import { CreateNewProject } from "@application/use-cases/create-new-project"
 import { FetchProjectDetails } from "@application/use-cases/fetch-project-details"
 
 // Ports
-import { FileSystemPort } from "@domain/utils/file-system"
+import { FileSystemPort } from "@domain/persistence/file-system"
 import { PackageManager } from "@domain/utils/package-manager"
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"

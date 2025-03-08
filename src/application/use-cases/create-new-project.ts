@@ -1,4 +1,4 @@
-import { ProjectDetails } from "@domain/entities/project-details"
+import { ProjectDetails } from "@domain/model/project-details"
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { v4 as uuidv4 } from "uuid"

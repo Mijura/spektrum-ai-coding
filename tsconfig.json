@@ -10,16 +10,7 @@
       "outDir": "build",
       "baseUrl": "./",
       "paths": {
-        "@adapters/*": ["src/adapters/*"],
         "@domain/*": ["src/domain/*"],
-        "@dto/*": ["src/dto/*"],
-        "@entity/*": ["src/entity/*"],
-        "@errors/*": ["src//errors/*"],
-        "@repositories/*": ["src/repositories/*"],
-        "@schemas/*": ["src/schemas/*"],
-        "@models/*": ["src/models/*"],
-        "@use-cases/*": ["src/use-cases/*"],
-        "@utils/*": ["src/utils/*"],
         "@infrastructure/*": ["src/infrastructure/*"],
         "@application/*": ["src/application/*"],
         "@project-templates/*": ["templates/*"]

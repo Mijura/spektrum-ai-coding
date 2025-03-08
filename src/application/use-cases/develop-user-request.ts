@@ -1,4 +1,4 @@
-import { ProjectDetails } from "@domain/entities/project-details"
+import { ProjectDetails } from "@domain/model/project-details"
 import { DevelopUserRequestUseCase } from "@domain/use-cases/develop-user-request-use-case"
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"

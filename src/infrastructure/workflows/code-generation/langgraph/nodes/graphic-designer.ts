@@ -1,7 +1,7 @@
 import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
-import { RootAnnotation } from "../langgraph-generate-code"
+import { RootAnnotation } from "@infrastructure/workflows/code-generation/langgraph/state/root-annotation"
 
 /**
  * CURRENTLY NOT IN USE. 

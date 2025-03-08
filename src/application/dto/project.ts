@@ -11,10 +11,4 @@ export interface ProjectDto {
 
 interface FileContextDto {
 	[filePath: string]: string | undefined
-  }
-
-
-export interface ProductOwnerOutputDto {
-	projectDetails: ProjectDto
-	ticket: string
 }

@@ -1,19 +1,17 @@
 import path from "path"
 import { PackageManager } from "@domain/utils/package-manager"
-import { FileSystemPort } from "@domain/utils/file-system"
-import { SourceCodeDto } from "@application/dto/source-code"
+import { FileSystemPort } from "@domain/persistence/file-system"
+import { SourceCode } from "@domain/model/source-code"
+import { FrontendDevelopmentPort } from "@domain/services/frontend-development"
 
-export class FrontendDevelopmentService {
+export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 
 	constructor(
 		private readonly packageManager: PackageManager, // Adapter for package management
         private readonly fileSystem: FileSystemPort, // Adapter for file system operations
 	) {}
 
-	/**
-	 * Initializes project by copying the template (project-templates/rspack-react-tailwind), installing dependencies, and building the project
-	 * @param projectId - The ID of the project to initialize
-	 */
+
 	async setupProject(projectId: string): Promise<void> {
 		try {
 			const projectPath: string = path.join("projects", projectId) // Path for the new project
@@ -38,10 +36,7 @@ export class FrontendDevelopmentService {
 		}
 	}
 	
-	/**
-	 * Installs dependencies for the project
-	 * @param projectId - The ID of the project to install dependencies for
-	 */
+
 	async installDependencies(projectId: string): Promise<void> {
 		const projectPath: string = path.join("projects", projectId)
 		const installSuccess = await this.packageManager.installDependencies(projectPath)
@@ -50,10 +45,6 @@ export class FrontendDevelopmentService {
 		}
 	  }
 
-	/**
-	 * Builds the project
-	 * @param projectId - The ID of the project to build
-	 */
 	async buildProject(projectId: string): Promise<void> {
 		const projectPath: string = path.join("projects", projectId)
 		const buildSuccess = await this.packageManager.buildProject(projectPath)
@@ -62,12 +53,11 @@ export class FrontendDevelopmentService {
 		}
 	}
 
-	/**
-	 * Writes the source code to the project
-	 * @param projectId - The ID of the project to write the source code to
-	 * @param sourceCode - The source code to write to the project
-	 */
-	async editSourceCode(projectId: string, sourceCode: SourceCodeDto): Promise<void> {
+	fetchSourceCode(projectId: string): Promise<SourceCode> {
+		throw new Error("Method not implemented.")
+	}
+	
+	async updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<void> {
 		const projectPath = path.resolve(`projects/${projectId}`)
 		let promises = []
 		for (const [filePath, fileDetails] of Object.entries(sourceCode)) {

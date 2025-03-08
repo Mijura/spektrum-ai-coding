@@ -1,4 +1,5 @@
-import { RootAnnotation } from "../langgraph-generate-code"
+import { RootAnnotation } from "../state/root-annotation"
+
 
 const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { projectDetails, sourceCode, frontendDevelopmentService } = _state
@@ -6,7 +7,7 @@ const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof R
 
 	try {
 
-		await frontendDevelopmentService.editSourceCode(projectDetails.id, sourceCode)
+		await frontendDevelopmentService.updateSourceCode(projectDetails.id, sourceCode)
 		await frontendDevelopmentService.installDependencies(projectDetails.id)
 		await frontendDevelopmentService.buildProject(projectDetails.id)
 
