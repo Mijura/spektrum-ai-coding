@@ -1,18 +1,5 @@
 import { z } from "zod"
 
-// FileDto Schema (map of file paths to FileContentDto)
-const SourceCodeSchema = z.record(
-	z.string().describe("The file path as a string"),
-	z.object({
-		code: z.string().describe("The source code (content) inside a file"),
-		context: z
-			.string()
-			.describe(
-				"Provides a semantic summary of the file's purpose, responsibilities, and implemented features. It captures what functionality the file implements, its role within the codebase architecture, and any specific features or business logic it contains."
-			),
-	})
-)
-
 const ProjectSchema = z.object({
 	id: z.string().describe("The project id"),
 	name: z.string().describe("Short name of the project. Should be filled only if it's empty.").optional(),
@@ -21,9 +8,4 @@ const ProjectSchema = z.object({
 	context: z.string().describe("The broader description of the project. It should contain all users preferences and feature list - it should be updated after each user request.").optional()
 })
 
-const ProductOwnerSchema = z.object({
-	projectDetails: ProjectSchema,
-	ticket: z.string().describe("The ticket with list of features to be implemented"),
-})
-
-export { ProjectSchema, SourceCodeSchema, ProductOwnerSchema }
+export { ProjectSchema }

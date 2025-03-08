@@ -1,14 +1,9 @@
-export interface ProjectDto {
+export interface ProjectDetailsDto {
 	id: string
 	name?: string
 	description?: string
 	owner?: string
 	context?: string
-	files?: FileContextDto
 	createdAt?: Date
 	updatedAt?: Date
-}
-
-interface FileContextDto {
-	[filePath: string]: string | undefined
 }

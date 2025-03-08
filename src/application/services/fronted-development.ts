@@ -96,11 +96,11 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 
 	async getStaticFilesPath(projectId: string): Promise<string | null> {
 		const projectPath = path.resolve(`projects/${projectId}/dist`)
-		return this.fileSystem.exists(projectPath) ? projectPath : null
+		return await this.fileSystem.exists(projectPath) ? projectPath : null
 	}
 
 	async getIndexFilePath(projectId: string): Promise<string | null> {
 		const indexPath = path.resolve(`projects/${projectId}/dist/index.html`)
-		return this.fileSystem.exists(indexPath) ? indexPath : null
+		return await this.fileSystem.exists(indexPath) ? indexPath : null
 	}
 }

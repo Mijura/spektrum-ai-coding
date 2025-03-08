@@ -1,4 +1,4 @@
 export type UserMessageDto = {
-	id: string
+	projectId: string
 	message: string
 }

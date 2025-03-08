@@ -3,12 +3,12 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
-import { SourceCodeSchema } from "@schemas/project.schema"
-import { SourceCodeDto } from "@dto/source-code"
 import { RootAnnotation } from "../state/root-annotation"
+import { SourceCodeSchema } from "@application/schemas/source-code.schema"
+import { SourceCode } from "@domain/model/source-code"
 
 const DeveloperOutputAnnotation = Annotation.Root({
-	sourceCode: Annotation<SourceCodeDto>(),
+	sourceCode: Annotation<SourceCode>(),
 })
 
 /**
@@ -20,14 +20,16 @@ const DeveloperOutputAnnotation = Annotation.Root({
  * @returns State with source code
  */
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { sourceCode, projectDetails, ticket } = _state
-
-	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
+	const { projectDetails, ticket, frontendDevelopmentService } = _state
 
 	console.log(`\n\n\nDeveloper:\n\nRecieved Ticket:\n\n${ticket}`)
 
-	console.log(`Source Code:\n\n${JSON.stringify(sourceCode)}`)
 
+	const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(projectDetails.id)
+	console.log(`Source Code Before Generation:\n\n${JSON.stringify(sourceCodeBefore)}`)
+
+	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
+	
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(`You are an expert React Developer.
 
@@ -85,18 +87,18 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 		parser,
 	])
 
-	const changes = await chain.invoke({
+	const sourceCodeAfter = await chain.invoke({
 		ticket: ticket,
 		projectDetails: projectDetails,
-		sourceCode: sourceCode,
+		sourceCode: sourceCodeBefore,
 		outputSchema: parser.getFormatInstructions(),
 	})
 
-	console.log(changes)
+	console.log(`Source Code After Generation:\n\n${JSON.stringify(sourceCodeAfter)}`)
 
 	return {
 		..._state,
-		sourceCode: changes,
+		sourceCode: sourceCodeAfter,
 	}
 }
 

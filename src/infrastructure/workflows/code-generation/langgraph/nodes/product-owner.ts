@@ -2,9 +2,23 @@ import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
-import { ProductOwnerSchema } from "@schemas/project.schema"
-import { ProductOwnerOutputDto } from "@dto/project"
 import { RootAnnotation } from "../state/root-annotation"
+
+
+import { ProjectSchema } from "@application/schemas/project.schema"
+import { ProjectDetails } from "@domain/model/project-details"
+import { z } from "zod"
+
+interface ProductOwnerOutput {
+	projectDetails: ProjectDetails
+	ticket: string
+}
+
+const ProductOwnerSchema = z.object({
+	projectDetails: ProjectSchema,
+	ticket: z.string().describe("The ticket with list of features to be implemented"),
+})
+
 
 /**
  * Product Owner Node
@@ -14,7 +28,7 @@ import { RootAnnotation } from "../state/root-annotation"
  * @param _state Graph State
  * @returns State with ticket
  */
-const productOwner = async (_state: typeof RootAnnotation.State): Promise<ProductOwnerOutputDto> => {
+const productOwner = async (_state: typeof RootAnnotation.State): Promise<ProductOwnerOutput> => {
 	const { userRequest, projectDetails } = _state
 
 	console.log(`\n\n\nProduct Owner:\n\nRecieved Ticket:\n\n${userRequest}`)

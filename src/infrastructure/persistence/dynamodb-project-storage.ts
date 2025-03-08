@@ -2,7 +2,7 @@ import { ProjectStorage } from "@domain/persistence/project-storage"
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
 import { ProjectDetails } from "@domain/model/project-details"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
-import { ProjectDto } from "src/application/dto/project"
+import { ProjectDetailsDto } from "src/application/dto/project"
 
 // DynamoDB client setup
 const client = new DynamoDBClient({
@@ -15,18 +15,18 @@ export class DynamoDBProjectStorage implements ProjectStorage {
 	private tableName = process.env.PROJECT_TABLE
 
 	async save(project: ProjectDetails): Promise<ProjectDetails> {
-		const projectDto: ProjectDto = {
+		const projectDetailsDto: ProjectDetailsDto = {
 			id: project.id,
 		}
 
 		const params = {
 			TableName: this.tableName,
-			Item: projectDto,
+			Item: projectDetailsDto,
 		}
 
 		await ddbDocClient.send(new PutCommand(params))
 
-		return projectDto
+		return new ProjectDetails(projectDetailsDto.id)
 	}
 
 	async findById(id: string): Promise<ProjectDetails | null> {
