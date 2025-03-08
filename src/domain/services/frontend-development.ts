@@ -19,10 +19,11 @@ export interface FrontendDevelopmentPort {
 	 */
 	buildProject(projectId: string): Promise<void>
 
-    /**
-     * 
-     * @param projectId - 
-     */
+	/**
+	 * Fetches the source code for a project
+	 * @param projectId - The ID of the project to fetch the source code for
+	 * @returns The source code for the project
+	 */
 	fetchSourceCode(projectId: string): Promise<SourceCode>
 
 	/**
