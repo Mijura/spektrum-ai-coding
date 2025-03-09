@@ -33,6 +33,10 @@ export class DynamoDBProjectStorage implements ProjectStorage {
 
 	async findById(id: string): Promise<ProjectDetails | null> {
 		const tableName = process.env.PROJECT_TABLE
+
+		console.log("tableName", tableName)
+		console.log("id", id)
+		
 		const params = {
 			TableName: tableName,
 			Key: { id },
