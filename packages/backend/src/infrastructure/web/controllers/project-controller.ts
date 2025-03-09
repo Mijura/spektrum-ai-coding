@@ -10,7 +10,7 @@ export class ProjectController {
 			const project = await createNewProject.execute()
 			res.status(201).json({ project })
 		} catch (error) {
-			console.error(error)
+			console.error("Error creating project:", error)
 			res.status(500).json({ message: "Error creating project." })
 		}
 	}
@@ -24,6 +24,7 @@ export class ProjectController {
 			}
 			res.json(project)
 		} catch (error) {
+			console.error("Error fetching project:", error)
 			res.status(500).json({ message: "Error fetching project" })
 		}
 	}
@@ -41,16 +42,4 @@ export class ProjectController {
 		}
 	}
 
-	async serveProject(req: Request, res: Response): Promise<void> {
-		try {
-			const indexPath = await this.frontendDevelopmentService.getIndexFilePath(req.params.id)
-			if (indexPath) {
-				res.sendFile(indexPath)
-			} else {
-				res.status(404).send("Project not found")
-			}
-		} catch (error) {
-			res.status(500).json({ message: "Error serving index.html" })
-		}
-	}
 }

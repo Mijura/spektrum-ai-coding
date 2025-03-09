@@ -14,10 +14,10 @@ const app = express()
 // Middlewares
 app.use(express.json())
 app.use(corsMiddleware)
-app.use("/:id", serveProjectFilesMiddleware)
 
 // Routes
 app.use("/", projectRouter)
+app.use("/:id", serveProjectFilesMiddleware)
 
 app.listen(3000, () => {
 	console.log("Server running on http://localhost:3000")

@@ -9,6 +9,5 @@ router.get("/fetch/:id", (req: Request, res: Response) => projectController.fetc
 
 router.put("/develop", (req: Request, res: Response) => projectController.develop(req, res))
 
-router.get("/:id", (req: Request, res: Response) => projectController.serveProject(req, res))
 
 export { router }

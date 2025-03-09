@@ -98,9 +98,4 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 		const projectPath = path.resolve(`projects/${projectId}/dist`)
 		return await this.fileSystem.exists(projectPath) ? projectPath : null
 	}
-
-	async getIndexFilePath(projectId: string): Promise<string | null> {
-		const indexPath = path.resolve(`projects/${projectId}/dist/index.html`)
-		return await this.fileSystem.exists(indexPath) ? indexPath : null
-	}
 }
