@@ -11,7 +11,7 @@ const client = new DynamoDBClient({
 })
 const ddbDocClient = DynamoDBDocumentClient.from(client)
 
-export class DynamoDBProjectStorage implements ProjectStorage {
+export class DynamoDBProjectRepository implements ProjectStorage {
 
 
 	async save(project: ProjectDetails): Promise<ProjectDetails> {

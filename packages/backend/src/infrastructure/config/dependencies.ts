@@ -1,6 +1,6 @@
 import { LocalFileSystem } from "@infrastructure/persistence/local-file-system"
 import { YarnPackageManager } from "@infrastructure/utils/yarn-package-manager"
-import { DynamoDBProjectStorage } from "@infrastructure/persistence/dynamodb-project-storage"
+import { DynamoDBProjectRepository } from "@infrastructure/persistence/dynamodb/project-repository"
 import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generation/langgraph/langgraph-generate-code"
 
 // Use Cases
@@ -19,7 +19,7 @@ import { DevelopUserRequest } from "@application/use-cases/develop-user-request"
 // Concrete implementations
 export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
-export const projectStorage: ProjectStorage = new DynamoDBProjectStorage()
+export const projectStorage: ProjectStorage = new DynamoDBProjectRepository()
 export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopmentService(yarnPackageManager, fileSystem)
 export const codeGenerationWorkflow: CodeGenerationWorkflow = new LangGraphCodeGeneration(frontendDevelopmentService)
 
