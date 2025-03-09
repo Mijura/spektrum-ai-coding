@@ -1,0 +1,4 @@
+@import "../node_modules/@jigjoy-io/ui/dist/index.css";
+@import "../node_modules/@jigjoy-io/ui/dist/theme.css";
+
+@import "tailwindcss";
