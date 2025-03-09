@@ -9,5 +9,4 @@ router.get("/fetch/:projectId", (req: Request, res: Response) => projectControll
 
 router.put("/develop", (req: Request, res: Response) => projectController.develop(req, res))
 
-
 export { router }

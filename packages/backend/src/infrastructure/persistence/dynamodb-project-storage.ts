@@ -17,6 +17,8 @@ export class DynamoDBProjectStorage implements ProjectStorage {
 	async save(project: ProjectDetails): Promise<ProjectDetails> {
 
 		const tableName = process.env.PROJECT_TABLE
+
+		console.log(`User is trying to save project with ${project.id} to dynamodb table ${tableName}.`)
 		const projectDetailsDto: ProjectDetailsDto = {
 			id: project.id,
 		}
@@ -34,9 +36,7 @@ export class DynamoDBProjectStorage implements ProjectStorage {
 	async findById(id: string): Promise<ProjectDetails | null> {
 		const tableName = process.env.PROJECT_TABLE
 
-		console.log("tableName", tableName)
-		console.log("id", id)
-		
+		console.log(`User is trying to fetch project with ${id} from dynamodb table ${tableName}.`)
 		const params = {
 			TableName: tableName,
 			Key: { id },
