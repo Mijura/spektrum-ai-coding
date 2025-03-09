@@ -12,15 +12,17 @@ const client = new DynamoDBClient({
 const ddbDocClient = DynamoDBDocumentClient.from(client)
 
 export class DynamoDBProjectStorage implements ProjectStorage {
-	private tableName = process.env.PROJECT_TABLE
+
 
 	async save(project: ProjectDetails): Promise<ProjectDetails> {
+
+		const tableName = process.env.PROJECT_TABLE
 		const projectDetailsDto: ProjectDetailsDto = {
 			id: project.id,
 		}
 
 		const params = {
-			TableName: this.tableName,
+			TableName: tableName,
 			Item: projectDetailsDto,
 		}
 
@@ -30,8 +32,9 @@ export class DynamoDBProjectStorage implements ProjectStorage {
 	}
 
 	async findById(id: string): Promise<ProjectDetails | null> {
+		const tableName = process.env.PROJECT_TABLE
 		const params = {
-			TableName: this.tableName,
+			TableName: tableName,
 			Key: { id },
 		}
 

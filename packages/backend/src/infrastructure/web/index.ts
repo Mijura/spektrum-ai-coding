@@ -3,6 +3,12 @@ import { router as projectRouter } from "@infrastructure/web/routes/project-rout
 import { corsMiddleware } from "@infrastructure/web/middleware/allow-requests"
 import { serveProjectFilesMiddleware } from "@infrastructure/web/middleware/serve-project-files"
 
+
+import dotenv from "dotenv"
+
+// Load environment variables from .env file
+dotenv.config()
+
 const app = express()
 
 // Middlewares
@@ -11,7 +17,7 @@ app.use(corsMiddleware)
 app.use("/:id", serveProjectFilesMiddleware)
 
 // Routes
-app.use("/api", projectRouter)
+app.use("/", projectRouter)
 
 app.listen(3000, () => {
 	console.log("Server running on http://localhost:3000")
