@@ -1,6 +1,3 @@
 export interface SourceCode {
-	[filePath: string]: {
-		context?: string
-		code: string
-	}
+	[filePath: string]: string
 }

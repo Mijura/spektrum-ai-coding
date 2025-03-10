@@ -38,9 +38,8 @@ export class LangGraphCodeGeneration implements CodeGenerationWorkflow {
 				userRequest: message,
 				projectDetails: projectDetails,
 				frontendDevelopmentService: this.frontendDevelopmentService
-				}, {
-					streamMode: "updates",
-			})
+				},
+				{ streamMode: ["values","custom", "updates"] })
 		) {
 			for (const [node, values] of Object.entries(chunk)) {
 				console.log(`Receiving update from node: ${node}`);

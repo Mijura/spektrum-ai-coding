@@ -22,11 +22,11 @@ const DeveloperOutputAnnotation = Annotation.Root({
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 	const { projectDetails, ticket, frontendDevelopmentService } = _state
 
-	console.log(`\n\n\nDeveloper:\n\nRecieved Ticket:\n\n${ticket}`)
+	//console.log(`\n\n\nDeveloper:\n\nRecieved Ticket:\n\n${ticket}`)
 
 
 	const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(projectDetails.id)
-	console.log(`Source Code Before Generation:\n\n${JSON.stringify(sourceCodeBefore)}`)
+	//console.log(`Source Code Before Generation:\n\n${JSON.stringify(sourceCodeBefore)}`)
 
 	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
 	
@@ -40,23 +40,11 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 			1. **Analyze the current source code** to determine if the required functionality already exists.
 			- If the functionality exists, modify it as needed.
 			- If the functionality does not exist, create new code to implement it.
-
-			2. **Apply the correct UI styling and animations:**
-			- Use or edit **tailwind.config.js** to:
-				- Define custom colors, typography, spacing, and other design tokens.
-				- Implement Material Design principles.
-				- Implement consistent spacing guidelines, alignment suggestions, and grid structure for the layout.
-
-            - **Microinteractions**: For each feature, implement hover effects, focus states, active states, and transitions to make the user interface feel dynamic and interactive. Describe specific hover/elevation behaviors, color changes, and shadow effects.
-            - **Motion Effects**: Use **Framer Motion** to recommend animations for specific interactions, such as:
-                - Fade-in effects for elements loading on the screen.
-                - Button hover animations (e.g., scaling, color change).
-                - Smooth transitions for form inputs and card components.
 			
-			3. **Modify or create source files as needed**:
+			2. **Modify or create source files as needed**:
 			- Create new components, hooks, or utilities as required.
 
-			4. **Modify package.json when you plan to use external dependencies**:
+			3. **Modify package.json when you plan to use external dependencies**:
 			- If a new dependency is introduced, update package.json.
 
 
@@ -70,14 +58,12 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 			- Double check all imports or require statements to ensure they are listed in the package.json file.
 			- Respond only in valid JSON. The JSON object you return should match the following schema:
 
-            Example of valid response:
 			{{
 				"src/App.tsx": 'export default function App() {{ return <div>Hello World</div>; }}'
 			}}
 
 			Format Instructions: {outputSchema}
 
-			By the end of the process, you will provide source code with  **fully detailed, interactive, and motion-aware design** using Tailwind CSS and Framer Motion.
 
 			`),
 		new ChatOpenAI({
@@ -94,7 +80,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 		outputSchema: parser.getFormatInstructions(),
 	})
 
-	console.log(`Source Code After Generation:\n\n${JSON.stringify(sourceCodeAfter)}`)
+	//console.log(`Source Code After Generation:\n\n${JSON.stringify(sourceCodeAfter)}`)
 
 	return {
 		..._state,

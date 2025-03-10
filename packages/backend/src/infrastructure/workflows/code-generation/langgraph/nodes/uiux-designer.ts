@@ -14,7 +14,7 @@ import { RootAnnotation } from "../state/root-annotation"
 const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { ticket } = _state
 
-	console.log(`\n\n\UI/UX Designer:\n\nRecieved Ticket:\n\n${ticket}`)
+	//console.log(`\n\n\nUI/UX Designer:\n\nRecieved Ticket:\n\n${ticket}`)
 
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(` 
@@ -78,7 +78,7 @@ const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof
 
 	const updatedTicket = `Task Description: ${ticket} \n\nDesign Instructions: ${design.content.toString()}`
 
-	console.log(`\n\n\nUI/UX Designer:\n\nUpdated Ticket:\n\n${updatedTicket}`)
+	//console.log(`\n\n\nUI/UX Designer:\n\nUpdated Ticket:\n\n${updatedTicket}`)
 
 	return {
 		..._state,

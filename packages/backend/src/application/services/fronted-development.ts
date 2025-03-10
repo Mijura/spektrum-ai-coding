@@ -70,9 +70,7 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 				if (await this.fileSystem.isDirectory(filePath)) {
 					await readDir(filePath, fileRelativePath)
 				} else {
-					sourceCode[fileRelativePath] = {
-						code: await this.fileSystem.readFile(filePath, "utf8"),
-					}
+					sourceCode[fileRelativePath] = await this.fileSystem.readFile(filePath, "utf8")
 				}
 			}
 		}
@@ -84,10 +82,10 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 	async updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<void> {
 		const projectPath = path.resolve(`projects/${projectId}`)
 		let promises = []
-		for (const [filePath, fileDetails] of Object.entries(sourceCode)) {
+		for (const [filePath, fileContent] of Object.entries(sourceCode)) {
 			const fullPath = path.join(projectPath, filePath)
 			await this.fileSystem.ensureFile(fullPath)
-			const writingPromise = await this.fileSystem.writeFile(fullPath, fileDetails.code)
+			const writingPromise = await this.fileSystem.writeFile(fullPath, fileContent)
 			promises.push(writingPromise)
 		}
 

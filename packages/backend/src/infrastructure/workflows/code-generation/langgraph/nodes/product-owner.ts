@@ -1,6 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
-import { RunnableSequence } from "@langchain/core/runnables"
+import { RunnableMap, RunnableSequence } from "@langchain/core/runnables"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../state/root-annotation"
 
@@ -31,7 +31,7 @@ const ProductOwnerSchema = z.object({
 const productOwner = async (_state: typeof RootAnnotation.State): Promise<ProductOwnerOutput> => {
 	const { userRequest, projectDetails } = _state
 
-	console.log(`\n\n\nProduct Owner:\n\nRecieved Ticket:\n\n${userRequest}`)
+	//console.log(`\n\n\nProduct Owner:\n\nRecieved Ticket:\n\n${userRequest}`)
 
 	const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
 
@@ -75,7 +75,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 			`),
 		new ChatOpenAI({
 			modelName: "o1-mini",
-			apiKey: process.env.OPENAI_API_KEY,
+			apiKey: process.env.OPENAI_API_KEY
 		}),
 		parser,
 	])
@@ -86,7 +86,8 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 		outputSchema: parser.getFormatInstructions(),
 	})
 
-	console.log(`\n\n\nProduct Owner:\n\nTicket:\n\n${JSON.stringify(response)}`)
+	
+	//console.log(`\n\n\nProduct Owner:\n\nTicket:\n\n${JSON.stringify(response.ticket)}`)
 
 	return {
 		..._state,
