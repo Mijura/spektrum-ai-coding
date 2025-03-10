@@ -15,6 +15,7 @@ import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"
 import { ProjectController } from "@infrastructure/web/controllers/project-controller"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { DevelopUserRequest } from "@application/use-cases/develop-user-request"
+import { DeployProject } from "@application/use-cases/deploy-project"
 
 // Concrete implementations
 export const fileSystem: FileSystemPort = new LocalFileSystem()
@@ -29,3 +30,4 @@ export const projectController = new ProjectController(frontendDevelopmentServic
 export const createNewProject = new CreateNewProject(frontendDevelopmentService, projectStorage)
 export const fetchProjectDetails = new FetchProjectDetails(projectStorage)
 export const developUserRequest = new DevelopUserRequest(projectStorage, codeGenerationWorkflow)
+export const deployProject = new DeployProject(frontendDevelopmentService, projectStorage)

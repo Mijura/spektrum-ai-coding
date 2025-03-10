@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
-import { createNewProject, fetchProjectDetails, developUserRequest } from "@infrastructure/config/dependencies"
+import { createNewProject, fetchProjectDetails, developUserRequest, deployProject } from "@infrastructure/config/dependencies"
 
 export class ProjectController {
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {}
@@ -36,6 +36,19 @@ export class ProjectController {
 
 			await developUserRequest.execute(projectId, message)
 			res.json({ message: "Worfklow successfully executed." })
+		} catch (error) {
+			console.error("Error rebuilding project:", error)
+			res.status(500).json({ error: `Error rebuilding project: ${error}` })
+		}
+	}
+
+	async deploy(req: Request, res: Response): Promise<void> {
+		try {
+
+			const { projectId } = req.body
+
+			const project = await deployProject.execute(projectId)
+			res.json(project)
 		} catch (error) {
 			console.error("Error rebuilding project:", error)
 			res.status(500).json({ error: `Error rebuilding project: ${error}` })

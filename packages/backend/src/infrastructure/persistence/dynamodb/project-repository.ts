@@ -30,7 +30,7 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 
 		await ddbDocClient.send(new PutCommand(params))
 
-		return new ProjectDetails(projectDetailsDto.id)
+		return project
 	}
 
 	async findById(id: string): Promise<ProjectDetails | null> {

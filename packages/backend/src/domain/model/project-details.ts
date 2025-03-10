@@ -5,6 +5,7 @@ export class ProjectDetails {
         public readonly description?: string,
         public readonly owner?: string, 
         public readonly context?: string,
+        public deploymentId?: string | undefined
     ) {}
 
 }

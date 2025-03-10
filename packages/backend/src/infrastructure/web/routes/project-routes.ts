@@ -9,4 +9,6 @@ router.get("/fetch/:projectId", (req: Request, res: Response) => projectControll
 
 router.put("/develop", (req: Request, res: Response) => projectController.develop(req, res))
 
+router.put("/deploy", (req: Request, res: Response) => projectController.deploy(req, res))
+
 export { router }

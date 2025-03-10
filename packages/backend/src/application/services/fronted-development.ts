@@ -2,21 +2,17 @@ import path from "path"
 import { PackageManager } from "@domain/utils/package-manager"
 import { FileSystemPort } from "@domain/persistence/file-system"
 import { SourceCode } from "@domain/model/source-code"
+import { v4 as uuidv4 } from "uuid"
 import { FrontendDevelopmentPort } from "@domain/services/frontend-development"
 
-export class FrontendDevelopmentService implements FrontendDevelopmentPort{
-
-	constructor(
-		private readonly packageManager: PackageManager,
-        private readonly fileSystem: FileSystemPort
-	) {}
-
+export class FrontendDevelopmentService implements FrontendDevelopmentPort {
+	constructor(private readonly packageManager: PackageManager, private readonly fileSystem: FileSystemPort) {}
 
 	async setupProject(projectId: string): Promise<void> {
 		try {
-			const projectPath: string = path.join("projects", projectId) 
+			const projectPath: string = path.join("projects", projectId)
 
-			const templateName = "rspack-react-tailwind" 
+			const templateName = "rspack-react-tailwind"
 			const templatePath = path.resolve(`src/application/templates/${templateName}`)
 
 			console.log("Template path:", templatePath)
@@ -24,7 +20,6 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 			// Use FileSystemPort to copy files
 			await this.fileSystem.copyFolder(templatePath, projectPath)
 			console.log(`✅ Project template copied to ${projectPath}`)
-
 
 			await this.installDependencies(projectId)
 			await this.buildProject(projectId)
@@ -35,7 +30,6 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 			throw new Error("Project initialization failed.")
 		}
 	}
-	
 
 	async installDependencies(projectId: string): Promise<void> {
 		const projectPath: string = path.join("projects", projectId)
@@ -43,7 +37,7 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 		if (!installSuccess) {
 			throw new Error("Failed to install dependencies.")
 		}
-	  }
+	}
 
 	async buildProject(projectId: string): Promise<void> {
 		const projectPath: string = path.join("projects", projectId)
@@ -53,20 +47,30 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 		}
 	}
 
+	async deployProject(projectId: string, deploymentId: string | undefined): Promise<string> {
+		if(deploymentId===undefined) deploymentId = uuidv4()
+		const buildPath: string = path.resolve(`projects/${projectId}/dist`)
+
+		const productionFolder = path.resolve(`projects/${deploymentId}/dist`)
+		await this.fileSystem.copyFolder(buildPath, productionFolder)
+
+		return deploymentId
+	}
+
 	async fetchSourceCode(projectId: string): Promise<SourceCode> {
 		const projectPath = path.join("projects", projectId)
 		const sourceCode: SourceCode = {}
 		const blacklist = new Set(["yarn.lock", ".env.example", "node_modules", "dist"])
-	
+
 		const readDir = async (directory: string, relativePath = "") => {
 			const files = await this.fileSystem.readDirectory(directory)
-	
+
 			for (const file of files) {
 				if (blacklist.has(file)) continue
-	
+
 				const filePath = path.join(directory, file)
 				const fileRelativePath = path.join(relativePath, file)
-	
+
 				if (await this.fileSystem.isDirectory(filePath)) {
 					await readDir(filePath, fileRelativePath)
 				} else {
@@ -74,11 +78,11 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 				}
 			}
 		}
-	
+
 		await readDir(projectPath)
 		return sourceCode
 	}
-	
+
 	async updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<void> {
 		const projectPath = path.resolve(`projects/${projectId}`)
 		let promises = []
@@ -94,6 +98,6 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort{
 
 	async getStaticFilesPath(projectId: string): Promise<string | null> {
 		const projectPath = path.resolve(`projects/${projectId}/dist`)
-		return await this.fileSystem.exists(projectPath) ? projectPath : null
+		return (await this.fileSystem.exists(projectPath)) ? projectPath : null
 	}
 }
