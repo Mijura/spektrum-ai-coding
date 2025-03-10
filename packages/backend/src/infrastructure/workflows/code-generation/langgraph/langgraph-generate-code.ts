@@ -31,12 +31,26 @@ export class LangGraphCodeGeneration implements CodeGenerationWorkflow {
 			.addEdge("updateProjectDetails", END)
 			.compile()
 
-		const finalState = await workflow.invoke({
-			userRequest: message,
-			projectDetails: projectDetails,
-			frontendDevelopmentService: this.frontendDevelopmentService
-		})
 
-		return finalState.projectDetails
+
+		for await (
+			const chunk of await workflow.stream({
+				userRequest: message,
+				projectDetails: projectDetails,
+				frontendDevelopmentService: this.frontendDevelopmentService
+				}, {
+					streamMode: "updates",
+			})
+		) {
+			for (const [node, values] of Object.entries(chunk)) {
+				console.log(`Receiving update from node: ${node}`);
+				console.log(values);
+				console.log("\n====\n");
+			}
+		}
+
+		//const finalState = await workflow.invoke()
+
+		return projectDetails
 	}
 }
