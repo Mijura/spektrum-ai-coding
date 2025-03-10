@@ -21,9 +21,6 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort {
 			await this.fileSystem.copyFolder(templatePath, projectPath)
 			console.log(`✅ Project template copied to ${projectPath}`)
 
-			await this.installDependencies(projectId)
-			await this.buildProject(projectId)
-
 			console.log(`Project ${projectId} initialized and built successfully!`)
 		} catch (error) {
 			console.error(`Error initializing project ${projectId}:`, error)
