@@ -8,10 +8,11 @@ import { updateCode } from "./nodes/update-code"
 import { updateProjectDetails } from "./nodes/update-project-details"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { RootAnnotation } from "./state/root-annotation"
-export class LangGraphCodeGeneration implements CodeGenerationWorkflow {
-
-
-	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {}
+import { EventEmitter } from "events"
+export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerationWorkflow {
+	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
+		super()
+	}
 
 	async execute(projectDetails: ProjectDetails, message: string): Promise<ProjectDetails> {
 		const workflow = new StateGraph({
@@ -31,24 +32,24 @@ export class LangGraphCodeGeneration implements CodeGenerationWorkflow {
 			.addEdge("updateProjectDetails", END)
 			.compile()
 
-
-
-		for await (
-			const chunk of await workflow.stream({
+		for await (const chunk of await workflow.stream(
+			{
 				userRequest: message,
 				projectDetails: projectDetails,
-				frontendDevelopmentService: this.frontendDevelopmentService
-				},
-				{ streamMode: ["values","custom", "updates"] })
-		) {
+				frontendDevelopmentService: this.frontendDevelopmentService,
+			},
+			{ streamMode: ["values", "custom", "updates"] }
+		)) {
 			for (const [node, values] of Object.entries(chunk)) {
-				console.log(`Receiving update from node: ${node}`);
-				console.log(values);
-				console.log("\n====\n");
+				console.log(`Receiving update from node: ${node}`)
+				console.log(values)
+				console.log("\n====\n")
+				const update = { node, values }
+				this.emit("update", update)
 			}
 		}
 
-		//const finalState = await workflow.invoke()
+		this.emit("done", projectDetails)
 
 		return projectDetails
 	}

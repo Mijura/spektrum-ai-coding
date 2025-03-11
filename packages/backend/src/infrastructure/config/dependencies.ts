@@ -24,10 +24,10 @@ export const projectStorage: ProjectStorage = new DynamoDBProjectRepository()
 export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopmentService(yarnPackageManager, fileSystem)
 export const codeGenerationWorkflow: CodeGenerationWorkflow = new LangGraphCodeGeneration(frontendDevelopmentService)
 
+
 export const projectController = new ProjectController()
 
 // Use Case Instances
 export const createNewProject = new CreateNewProject(frontendDevelopmentService, projectStorage)
 export const fetchProjectDetails = new FetchProjectDetails(projectStorage)
-export const developUserRequest = new DevelopUserRequest(projectStorage, codeGenerationWorkflow)
 export const deployProject = new DeployProject(frontendDevelopmentService, projectStorage)
