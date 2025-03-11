@@ -1,9 +1,8 @@
 import { Request, Response } from "express"
-import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { createNewProject, fetchProjectDetails, developUserRequest, deployProject } from "@infrastructure/config/dependencies"
 
 export class ProjectController {
-	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {}
+	constructor() {}
 
 	async createProject(req: Request, res: Response): Promise<void> {
 		try {
