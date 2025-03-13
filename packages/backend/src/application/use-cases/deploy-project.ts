@@ -1,6 +1,7 @@
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { DeployProjectUseCase } from "@domain/use-cases/deploy-project-use-case"
+import { Project } from "@domain/entities/project"
 
 export class DeployProject implements DeployProjectUseCase {
 	constructor(
@@ -8,7 +9,7 @@ export class DeployProject implements DeployProjectUseCase {
 		private readonly projectStorage: ProjectStorage
 	) {}
 
-	async execute(projectId: string): Promise<void> {
+	async execute(projectId: string): Promise<Project> {
 		const project = await this.projectStorage.findById(projectId)
 
 		if (!project) {
@@ -26,6 +27,8 @@ export class DeployProject implements DeployProjectUseCase {
 			if (wasUpdated) {
 				await this.projectStorage.save(project)
 			}
+
+			return project
 		} catch (error) {
 	
 			throw new Error(`Deployment failed: ${error}`)

@@ -76,7 +76,7 @@ export class ProjectController {
 			const { projectId } = req.body
 
 			const project = await deployProject.execute(projectId)
-			res.json(project)
+			res.status(200).json(project)
 		} catch (error) {
 			console.error("Error rebuilding project:", error)
 			res.status(500).json({ error: `Error rebuilding project: ${error}` })
