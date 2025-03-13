@@ -1,9 +1,9 @@
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
-import { Project } from "@domain/model/project"
+import { Project } from "@domain/entities/project"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
-import { MarshalledProject } from "@domain/mappers/types"
+import { MarshalledProject } from "@domain/types/project"
 
 // DynamoDB client setup
 const client = new DynamoDBClient({

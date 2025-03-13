@@ -6,10 +6,10 @@ import { RootAnnotation } from "../state/root-annotation"
 
 
 import { ProjectSchema } from "@application/schemas/project.schema"
-import { Project } from "@domain/model/project"
+import { Project } from "@domain/entities/project"
 import { z } from "zod"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
-import { MarshalledProject } from "@domain/mappers/types"
+import { MarshalledProject } from "@domain/types/project"
 
 interface ProductOwnerOutput {
 	project: Project

@@ -1,8 +1,8 @@
 import { BaseMessage } from "@langchain/core/messages"
-import { SourceCode } from "@domain/model/source-code"
+import { SourceCode } from "@domain/types/project"
 import { Annotation } from "@langchain/langgraph"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
-import { Project } from "@domain/model/project"
+import { Project } from "@domain/entities/project"
 
 export const RootAnnotation = Annotation.Root({
 	messages: Annotation<BaseMessage[]>({

@@ -1,6 +1,6 @@
 // src/domain/mappers/project-mapper.ts
-import { Project } from "@domain/model/project"
-import { MarshalledProject } from "./types"
+import { Project } from "@domain/entities/project"
+import { MarshalledProject } from "../types/project"
 
 export class ProjectMapper {
 	/** Convert Project entity → MarshalledProject for storage/transfer */

@@ -7,3 +7,7 @@ export type MarshalledProject = {
 	updated: string | null
 	deploymentId: string | null
 }
+
+export interface SourceCode {
+	[filePath: string]: string
+}

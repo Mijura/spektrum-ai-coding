@@ -31,7 +31,7 @@ export class Project {
 	static create(name: string, description: string, owner?: string): Project {
 		const id = uuidv4() // Generate unique ID
 		const created = new Date().toISOString() // ISO format
-		const user  = owner ? owner : 'GUEST'
+		const user = owner ? owner : "GUEST"
 		return new Project(id, user, name, description, created, null, null)
 	}
 

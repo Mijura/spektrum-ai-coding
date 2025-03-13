@@ -1,5 +1,5 @@
-import { Project } from "@domain/model/project"
-import { SourceCode } from "@domain/model/source-code"
+import { Project } from "@domain/entities/project"
+import { SourceCode } from "@domain/types/project"
 
 export interface FrontendDevelopmentPort {
 	/**

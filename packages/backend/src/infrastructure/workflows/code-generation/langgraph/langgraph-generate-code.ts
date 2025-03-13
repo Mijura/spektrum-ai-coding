@@ -1,5 +1,5 @@
 import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"
-import { Project } from "@domain/model/project"
+import { Project } from "@domain/entities/project"
 import { END, START, StateGraph } from "@langchain/langgraph"
 import { productOwner } from "./nodes/product-owner"
 import { reactDeveloper } from "./nodes/react-developer"

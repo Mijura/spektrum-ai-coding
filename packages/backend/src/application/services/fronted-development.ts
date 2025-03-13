@@ -1,9 +1,9 @@
 import path from "path"
 import { PackageManager } from "@domain/utils/package-manager"
 import { FileSystemPort } from "@domain/persistence/file-system"
-import { SourceCode } from "@domain/model/source-code"
+import { SourceCode } from "@domain/types/project"
 import { FrontendDevelopmentPort } from "@domain/services/frontend-development"
-import { Project } from "@domain/model/project"
+import { Project } from "@domain/entities/project"
 
 export class FrontendDevelopmentService implements FrontendDevelopmentPort {
 	constructor(private readonly packageManager: PackageManager, private readonly fileSystem: FileSystemPort) {}
