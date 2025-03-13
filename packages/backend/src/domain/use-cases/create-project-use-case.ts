@@ -1,4 +1,4 @@
-import { Project } from "@domain/model/project"
+import { Project } from "@domain/entities/project"
 
 export interface CreateProjectUseCase {
     execute(): Promise<Project>
