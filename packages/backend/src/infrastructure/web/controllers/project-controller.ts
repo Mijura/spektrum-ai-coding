@@ -36,13 +36,9 @@ export class ProjectController {
 		}
 	}
 
-	async develop(req: Request, res: Response) {
+	async develop(req: Request, res: Response): Promise<void> {
 		try {
-
 			const { projectId, message } = req.body
-
-			console.log(projectId)
-			console.log('developppp')
 
 			const developUserRequest = new DevelopUserRequest(projectStorage, codeGenerationWorkflow)
 			// Stream updates
@@ -68,6 +64,7 @@ export class ProjectController {
 			// 🔹 Debug: Ensure execution starts
 			console.log("Starting code generation workflow...")
 			await developUserRequest.execute(projectId, message)
+
 		} catch (error) {
 			console.error("Error rebuilding project:", error)
 			res.status(500).json({ error: `Error rebuilding project: ${error}` })
