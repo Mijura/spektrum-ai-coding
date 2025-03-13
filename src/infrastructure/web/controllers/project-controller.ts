@@ -3,11 +3,8 @@ import {
 	createNewProject,
 	fetchProject,
 	deployProject,
-	projectStorage,
-	codeGenerationWorkflow,
+	developUserRequest,
 } from "@infrastructure/config/dependencies"
-import { DevelopUserRequestUseCase } from "@domain/use-cases/develop-user-request-use-case"
-import { DevelopUserRequest } from "@application/use-cases/develop-user-request"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
 
 export class ProjectController {
@@ -40,7 +37,6 @@ export class ProjectController {
 		try {
 			const { projectId, message } = req.body
 
-			const developUserRequest = new DevelopUserRequest(projectStorage, codeGenerationWorkflow)
 			// Stream updates
 			developUserRequest.on("update", (data) => {
 				console.log(`Streaming update: ${JSON.stringify(data)}`)
@@ -64,7 +60,6 @@ export class ProjectController {
 			// 🔹 Debug: Ensure execution starts
 			console.log("Starting code generation workflow...")
 			await developUserRequest.execute(projectId, message)
-
 		} catch (error) {
 			console.error("Error rebuilding project:", error)
 			res.status(500).json({ error: `Error rebuilding project: ${error}` })

@@ -12,8 +12,8 @@ dotenv.config()
 const app = express()
 
 // Middlewares
-app.use(express.json())
 app.use(corsMiddleware)
+app.use(express.json())
 
 // Routes
 app.use("/", projectRouter)
