@@ -41,6 +41,9 @@ export class ProjectController {
 
 			const { projectId, message } = req.body
 
+			console.log(projectId)
+			console.log('developppp')
+
 			const developUserRequest = new DevelopUserRequest(projectStorage, codeGenerationWorkflow)
 			// Stream updates
 			developUserRequest.on("update", (data) => {

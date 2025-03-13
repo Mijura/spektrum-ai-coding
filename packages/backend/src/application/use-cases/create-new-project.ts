@@ -12,7 +12,7 @@ export class CreateNewProject implements CreateProjectUseCase {
 	async execute(): Promise<Project> {
 		try {
 			// Create a new project with a unique ID
-			const project: Project = Project.create("My Project", "Empty project...", "GUEST")
+			const project: Project = Project.create("My Project", "Empty project...", undefined)
 
 			// Initialize and run project
 			await this.frontendDevelopmentService.setupProject(project.id)

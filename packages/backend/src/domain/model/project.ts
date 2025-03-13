@@ -28,10 +28,11 @@ export class Project {
 	}
 
 	// Factory method to create a new project
-	static create(name: string, description: string, owner: string): Project {
+	static create(name: string, description: string, owner?: string): Project {
 		const id = uuidv4() // Generate unique ID
 		const created = new Date().toISOString() // ISO format
-		return new Project(id, owner, name, description, created, null, null)
+		const user  = owner ? owner : 'GUEST'
+		return new Project(id, user, name, description, created, null, null)
 	}
 
 	/** Restore method to rehydrate a project from persisted data */

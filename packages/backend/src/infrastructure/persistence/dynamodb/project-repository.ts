@@ -18,9 +18,11 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 
 		console.log(`User is trying to save project with ${project.id} to dynamodb table ${tableName}.`)
 
+		const marshalled: MarshalledProject = ProjectMapper.marshal(project)
+
 		const params = {
 			TableName: tableName,
-			Item: project,
+			Item: marshalled,
 		}
 
 		await ddbDocClient.send(new PutCommand(params))
@@ -41,7 +43,8 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 
 		if (!item) return null
 
-		const restoredProject = ProjectMapper.unmarshal(item as MarshalledProject)
+		const marshalled: MarshalledProject = item as MarshalledProject
+		const restoredProject = ProjectMapper.unmarshal(marshalled)
 
 		return restoredProject
 	}
