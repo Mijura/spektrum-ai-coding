@@ -8,6 +8,7 @@ import {
 } from "@infrastructure/config/dependencies"
 import { DevelopUserRequestUseCase } from "@domain/use-cases/develop-user-request-use-case"
 import { DevelopUserRequest } from "@application/use-cases/develop-user-request"
+import { ProjectMapper } from "@domain/mappers/project-mapper"
 
 export class ProjectController {
 	constructor() {}
@@ -26,11 +27,10 @@ export class ProjectController {
 		try {
 			const { projectId } = req.params
 			const project = await fetchProject.execute(projectId)
-			if (!project) {
-				return res.status(404).json({ message: "Project not found" })
-			}
-			res.json(project)
+			const projectDTO = ProjectMapper.marshal(project)
+			res.json(projectDTO)
 		} catch (error) {
+			// TODO: Handle Project Not Found
 			console.error("Error fetching project:", error)
 			res.status(500).json({ message: "Error fetching project" })
 		}

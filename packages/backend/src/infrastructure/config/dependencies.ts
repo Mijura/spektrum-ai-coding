@@ -5,7 +5,7 @@ import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generati
 
 // Use Cases
 import { CreateNewProject } from "@application/use-cases/create-new-project"
-import { FetchProject } from "@application/use-cases/fetch-project-details"
+import { FetchProject } from "@application/use-cases/fetch-project"
 
 // Ports
 import { FileSystemPort } from "@domain/persistence/file-system"

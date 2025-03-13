@@ -30,7 +30,7 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 		return project
 	}
 
-	async findById(id: string): Promise<Project | null> {
+	async findById(id: string): Promise<Project> {
 		const tableName = process.env.PROJECT_TABLE
 
 		console.log(`User is trying to fetch project with ${id} from dynamodb table ${tableName}.`)
@@ -41,7 +41,7 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 
 		const { Item: item } = await ddbDocClient.send(new GetCommand(params))
 
-		if (!item) return null
+		if (!item) throw new Error(`Project not found!`)
 
 		const marshalled: MarshalledProject = item as MarshalledProject
 		const restoredProject = ProjectMapper.unmarshal(marshalled)

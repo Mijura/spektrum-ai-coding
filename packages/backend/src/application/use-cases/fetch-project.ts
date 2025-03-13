@@ -5,7 +5,7 @@ import { ProjectStorage } from "@domain/persistence/project-storage"
 export class FetchProject implements FetchProjectUseCase {
 	constructor(private readonly projectStorage: ProjectStorage) {}
 
-	async execute(projectId: string): Promise<Project | null> {
+	async execute(projectId: string): Promise<Project> {
 		return await this.projectStorage.findById(projectId)
 	}
 }
