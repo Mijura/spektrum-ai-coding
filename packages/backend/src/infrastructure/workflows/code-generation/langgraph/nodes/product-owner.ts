@@ -1,21 +1,23 @@
 import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
-import { RunnableMap, RunnableSequence } from "@langchain/core/runnables"
+import { RunnableSequence } from "@langchain/core/runnables"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../state/root-annotation"
 
 
 import { ProjectSchema } from "@application/schemas/project.schema"
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 import { z } from "zod"
+import { ProjectMapper } from "@domain/mappers/project-mapper"
+import { MarshalledProject } from "@domain/mappers/types"
 
 interface ProductOwnerOutput {
-	projectDetails: ProjectDetails
+	project: Project
 	ticket: string
 }
 
 const ProductOwnerSchema = z.object({
-	projectDetails: ProjectSchema,
+	project: ProjectSchema,
 	ticket: z.string().describe("The ticket with list of features to be implemented"),
 })
 
@@ -29,7 +31,7 @@ const ProductOwnerSchema = z.object({
  * @returns State with ticket
  */
 const productOwner = async (_state: typeof RootAnnotation.State): Promise<ProductOwnerOutput> => {
-	const { userRequest, projectDetails } = _state
+	const { userRequest, project } = _state
 
 	//console.log(`\n\n\nProduct Owner:\n\nRecieved Ticket:\n\n${userRequest}`)
 
@@ -56,14 +58,14 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 			To summuarize don't suggest any additional improvements nor too broad features - just essence of user request.
 
 			User Request: {userRequest}
-			Project Context: {projectDetails}
+			Project Context: {project}
 
 			Project Details may be incomplete in the beginning, your task is to fill it and maintain context field every new user request. You should also populate name and description fields if needed.
 
 			Example of valid response:
 			{{
 				"ticket": 'Feature 1: Enable user to add notes\n\nFeature 2: Implement notes overview',
-				"projectDetails": {{
+				"project": {{
 					id: 'e4cb89b1-c1e5-4e94-bc3c-2056344a1369',
 					name: 'Note Taking App',
 					description: 'App for taking notes',
@@ -82,7 +84,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 
 	const response = await chain.invoke({
 		userRequest,
-		projectDetails,
+		project,
 		outputSchema: parser.getFormatInstructions(),
 	})
 
@@ -92,7 +94,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 	return {
 		..._state,
 		ticket: response.ticket,
-		projectDetails: response.projectDetails,
+		project: ProjectMapper.unmarshal(response.project as MarshalledProject),
 	}
 }
 

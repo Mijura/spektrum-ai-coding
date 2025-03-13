@@ -1,9 +1,9 @@
-export interface ProjectDetailsDto {
+export interface ProjectDto {
 	id: string
 	name?: string
 	description?: string
-	owner?: string
-	context?: string
-	createdAt?: Date
-	updatedAt?: Date
+	owner: string
+	deploymentId?: string
+	created: Date
+	updated: Date
 }

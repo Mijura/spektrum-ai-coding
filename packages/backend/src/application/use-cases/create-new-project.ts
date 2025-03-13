@@ -1,7 +1,6 @@
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
-import { v4 as uuidv4 } from "uuid"
 import { CreateProjectUseCase } from "@domain/use-cases/create-project-use-case"
 
 export class CreateNewProject implements CreateProjectUseCase {
@@ -10,16 +9,16 @@ export class CreateNewProject implements CreateProjectUseCase {
 		private readonly projectStorage: ProjectStorage
 	) {}
 
-	async execute(): Promise<ProjectDetails> {
+	async execute(): Promise<Project> {
 		try {
 			// Create a new project with a unique ID
-			const project = new ProjectDetails(uuidv4())
+			const project: Project = Project.create("My Project", "Empty project...", "GUEST")
 
 			// Initialize and run project
 			await this.frontendDevelopmentService.setupProject(project.id)
 
 			// Persist the project details in the database
-			
+
 			return await this.projectStorage.save(project)
 		} catch (error) {
 			console.error("Error creating new project:", error)

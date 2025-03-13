@@ -5,7 +5,7 @@ import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generati
 
 // Use Cases
 import { CreateNewProject } from "@application/use-cases/create-new-project"
-import { FetchProjectDetails } from "@application/use-cases/fetch-project-details"
+import { FetchProject } from "@application/use-cases/fetch-project-details"
 
 // Ports
 import { FileSystemPort } from "@domain/persistence/file-system"
@@ -29,5 +29,5 @@ export const projectController = new ProjectController()
 
 // Use Case Instances
 export const createNewProject = new CreateNewProject(frontendDevelopmentService, projectStorage)
-export const fetchProjectDetails = new FetchProjectDetails(projectStorage)
+export const fetchProject = new FetchProject(projectStorage)
 export const deployProject = new DeployProject(frontendDevelopmentService, projectStorage)

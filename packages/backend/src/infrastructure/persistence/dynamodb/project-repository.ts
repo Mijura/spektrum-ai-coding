@@ -1,8 +1,9 @@
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
-import { ProjectDetailsDto } from "src/application/dto/project"
+import { ProjectMapper } from "@domain/mappers/project-mapper"
+import { MarshalledProject } from "@domain/mappers/types"
 
 // DynamoDB client setup
 const client = new DynamoDBClient({
@@ -12,20 +13,14 @@ const client = new DynamoDBClient({
 const ddbDocClient = DynamoDBDocumentClient.from(client)
 
 export class DynamoDBProjectRepository implements ProjectStorage {
-
-
-	async save(project: ProjectDetails): Promise<ProjectDetails> {
-
+	async save(project: Project): Promise<Project> {
 		const tableName = process.env.PROJECT_TABLE
 
 		console.log(`User is trying to save project with ${project.id} to dynamodb table ${tableName}.`)
-		const projectDetailsDto: ProjectDetailsDto = {
-			id: project.id,
-		}
 
 		const params = {
 			TableName: tableName,
-			Item: projectDetailsDto,
+			Item: project,
 		}
 
 		await ddbDocClient.send(new PutCommand(params))
@@ -33,7 +28,7 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 		return project
 	}
 
-	async findById(id: string): Promise<ProjectDetails | null> {
+	async findById(id: string): Promise<Project | null> {
 		const tableName = process.env.PROJECT_TABLE
 
 		console.log(`User is trying to fetch project with ${id} from dynamodb table ${tableName}.`)
@@ -46,7 +41,8 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 
 		if (!item) return null
 
-		// Convert ProjectDto back into a Project entity
-		return new ProjectDetails(item.id)
+		const restoredProject = ProjectMapper.unmarshal(item as MarshalledProject)
+
+		return restoredProject
 	}
 }

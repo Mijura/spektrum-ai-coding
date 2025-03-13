@@ -1,6 +1,6 @@
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 
-export interface FetchProjectDetailsUseCase {
-    execute(projectId: string): Promise<ProjectDetails | null> 
+export interface FetchProjectUseCase {
+    execute(projectId: string): Promise<Project | null> 
 }
 

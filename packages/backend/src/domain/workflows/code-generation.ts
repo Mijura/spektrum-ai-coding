@@ -1,8 +1,8 @@
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 
 
 export interface CodeGenerationWorkflow {
 	on(event: "update", listener: (data: any) => void): unknown
 	on(event: "done", listener: (data: any) => void): unknown
-	execute(projectDetails: ProjectDetails, message: string): Promise<ProjectDetails>
+	execute(project: Project, message: string): Promise<Project>
 }

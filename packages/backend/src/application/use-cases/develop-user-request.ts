@@ -1,4 +1,4 @@
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 import { DevelopUserRequestUseCase } from "@domain/use-cases/develop-user-request-use-case"
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"
@@ -12,9 +12,9 @@ export class DevelopUserRequest extends EventEmitter implements DevelopUserReque
 		super()
 	}
 
-	async execute(projectId: string, message: string): Promise<ProjectDetails> {
-		const projectDetails = await this.projectStorage.findById(projectId)
-		if (!projectDetails) {
+	async execute(projectId: string, message: string): Promise<Project> {
+		const project = await this.projectStorage.findById(projectId)
+		if (!project) {
 			throw new Error("Project not found")
 		}
 
@@ -30,6 +30,6 @@ export class DevelopUserRequest extends EventEmitter implements DevelopUserReque
 			this.emit("done", data)
 		})
 
-		return await this.codeGenerationWorkflow.execute(projectDetails, message)
+		return await this.codeGenerationWorkflow.execute(project, message)
 	}
 }

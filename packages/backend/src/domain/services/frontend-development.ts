@@ -1,3 +1,4 @@
+import { Project } from "@domain/model/project"
 import { SourceCode } from "@domain/model/source-code"
 
 export interface FrontendDevelopmentPort {
@@ -25,7 +26,7 @@ export interface FrontendDevelopmentPort {
 	 * @param deploymentId - The ID of the production deployment
 	 * @returns the id of deployed project
 	 */
-	deployProject(projectId: string, deploymentId: string | undefined): Promise<string>
+	deployProject(project: Project): Promise<void>
 
 	/**
 	 * Fetches the source code for a project

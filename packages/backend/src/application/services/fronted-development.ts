@@ -2,8 +2,8 @@ import path from "path"
 import { PackageManager } from "@domain/utils/package-manager"
 import { FileSystemPort } from "@domain/persistence/file-system"
 import { SourceCode } from "@domain/model/source-code"
-import { v4 as uuidv4 } from "uuid"
 import { FrontendDevelopmentPort } from "@domain/services/frontend-development"
+import { Project } from "@domain/model/project"
 
 export class FrontendDevelopmentService implements FrontendDevelopmentPort {
 	constructor(private readonly packageManager: PackageManager, private readonly fileSystem: FileSystemPort) {}
@@ -44,14 +44,12 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort {
 		}
 	}
 
-	async deployProject(projectId: string, deploymentId: string | undefined): Promise<string> {
-		if(deploymentId===undefined) deploymentId = uuidv4()
-		const buildPath: string = path.resolve(`projects/${projectId}/dist`)
+	async deployProject(project: Project): Promise<void> {
+		const buildPath: string = path.resolve(`projects/${project.id}/dist`)
 
-		const productionFolder = path.resolve(`projects/${deploymentId}/dist`)
+		const productionFolder = path.resolve(`projects/${project.deploymentId}/dist`)
 		await this.fileSystem.copyFolder(buildPath, productionFolder)
 
-		return deploymentId
 	}
 
 	async fetchSourceCode(projectId: string): Promise<SourceCode> {

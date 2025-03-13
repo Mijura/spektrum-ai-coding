@@ -2,7 +2,7 @@ import { BaseMessage } from "@langchain/core/messages"
 import { SourceCode } from "@domain/model/source-code"
 import { Annotation } from "@langchain/langgraph"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 
 export const RootAnnotation = Annotation.Root({
 	messages: Annotation<BaseMessage[]>({
@@ -12,7 +12,7 @@ export const RootAnnotation = Annotation.Root({
 	ticket: Annotation<string>({
 		reducer: (a: any, b: any) => b,
 	}),
-	projectDetails: Annotation<ProjectDetails>({
+	project: Annotation<Project>({
 		reducer: (a: any, b: any) => b,
 	}),
 	sourceCode: Annotation<SourceCode>({

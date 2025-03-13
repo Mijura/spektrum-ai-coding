@@ -20,12 +20,12 @@ const DeveloperOutputAnnotation = Annotation.Root({
  * @returns State with source code
  */
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { projectDetails, ticket, frontendDevelopmentService } = _state
+	const { project, ticket, frontendDevelopmentService } = _state
 
 	//console.log(`\n\n\nDeveloper:\n\nRecieved Ticket:\n\n${ticket}`)
 
 
-	const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(projectDetails.id)
+	const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(project.id)
 	//console.log(`Source Code Before Generation:\n\n${JSON.stringify(sourceCodeBefore)}`)
 
 	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
@@ -49,7 +49,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 
 			### **Project Details**
-			- **Project Context:** {projectDetails}
+			- **Project Context:** {project}
 			- **Ticket Details:** {ticket}
 			- **Current Source Code:** {sourceCode}
 
@@ -75,7 +75,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 	const sourceCodeAfter = await chain.invoke({
 		ticket: ticket,
-		projectDetails: projectDetails,
+		project: project,
 		sourceCode: sourceCodeBefore,
 		outputSchema: parser.getFormatInstructions(),
 	})

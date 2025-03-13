@@ -1,6 +1,6 @@
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 
 export interface ProjectStorage {
-	save(project: ProjectDetails): Promise<ProjectDetails>
-	findById(id: string): Promise<ProjectDetails | null>
+	save(project: Project): Promise<Project>
+	findById(id: string): Promise<Project | null>
 }

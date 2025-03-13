@@ -1,11 +1,11 @@
 import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 import { END, START, StateGraph } from "@langchain/langgraph"
 import { productOwner } from "./nodes/product-owner"
 import { reactDeveloper } from "./nodes/react-developer"
 import { uiUxDesigner } from "./nodes/uiux-designer"
 import { updateCode } from "./nodes/update-code"
-import { updateProjectDetails } from "./nodes/update-project-details"
+import { updateProject } from "./nodes/update-project-details"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { RootAnnotation } from "./state/root-annotation"
 import { EventEmitter } from "events"
@@ -14,7 +14,7 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 		super()
 	}
 
-	async execute(projectDetails: ProjectDetails, message: string): Promise<ProjectDetails> {
+	async execute(project: Project, message: string): Promise<Project> {
 		const workflow = new StateGraph({
 			input: RootAnnotation,
 			output: RootAnnotation,
@@ -23,19 +23,19 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 			.addNode("ReactDeveloper", reactDeveloper)
 			.addNode("UiUxDesigner", uiUxDesigner)
 			.addNode("updateCode", updateCode)
-			.addNode("updateProjectDetails", updateProjectDetails)
+			.addNode("updateProject", updateProject)
 			.addEdge(START, "ProductOwner")
 			.addEdge("ProductOwner", "UiUxDesigner")
 			.addEdge("UiUxDesigner", "ReactDeveloper")
 			.addEdge("ReactDeveloper", "updateCode")
-			.addEdge("updateCode", "updateProjectDetails")
-			.addEdge("updateProjectDetails", END)
+			.addEdge("updateCode", "updateProject")
+			.addEdge("updateProject", END)
 			.compile()
 
 		for await (const chunk of await workflow.stream(
 			{
 				userRequest: message,
-				projectDetails: projectDetails,
+				project: project,
 				frontendDevelopmentService: this.frontendDevelopmentService,
 			},
 			{ streamMode: ["values", "custom", "updates"] }
@@ -49,8 +49,8 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 			}
 		}
 
-		this.emit("done", projectDetails)
+		this.emit("done", project)
 
-		return projectDetails
+		return project
 	}
 }

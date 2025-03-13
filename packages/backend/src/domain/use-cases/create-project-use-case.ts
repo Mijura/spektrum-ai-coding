@@ -1,5 +1,5 @@
-import { ProjectDetails } from "@domain/model/project-details"
+import { Project } from "@domain/model/project"
 
 export interface CreateProjectUseCase {
-    execute(): Promise<ProjectDetails>
+    execute(): Promise<Project>
 }

@@ -1,28 +1,34 @@
-import { ProjectDetails } from "@domain/model/project-details"
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { DeployProjectUseCase } from "@domain/use-cases/deploy-project-use-case"
 
 export class DeployProject implements DeployProjectUseCase {
-    constructor(
-            private readonly frontendDevelopmentService: FrontendDevelopmentService,
-            private readonly projectStorage: ProjectStorage) {}
+	constructor(
+		private readonly frontendDevelopmentService: FrontendDevelopmentService,
+		private readonly projectStorage: ProjectStorage
+	) {}
 
-    async execute(projectId: string): Promise<ProjectDetails> {
+	async execute(projectId: string): Promise<void> {
+		const project = await this.projectStorage.findById(projectId)
 
-        const projectDetails = await this.projectStorage.findById(projectId)
-        if (!projectDetails) {
-            throw new Error("Project not found")
-        }
-        
-        const productionUrl = await this.frontendDevelopmentService.deployProject(projectId, projectDetails.deploymentId)
+		if (!project) {
+			throw new Error("Project not found")
+		}
 
-        console.log(productionUrl)
+		// Assign a deployment ID if needed
+		const wasUpdated = project.assignDeploymentId()
 
-        projectDetails.deploymentId = productionUrl
+		try {
+			// Attempt to deploy the project
+			await this.frontendDevelopmentService.deployProject(project)
 
-        console.log(projectDetails)
-
-        return await this.projectStorage.save(projectDetails)
-    }
+			// Only persist if a new deployment ID was assigned
+			if (wasUpdated) {
+				await this.projectStorage.save(project)
+			}
+		} catch (error) {
+	
+			throw new Error(`Deployment failed: ${error}`)
+		}
+	}
 }

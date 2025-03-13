@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import {
 	createNewProject,
-	fetchProjectDetails,
+	fetchProject,
 	deployProject,
 	projectStorage,
 	codeGenerationWorkflow,
@@ -25,7 +25,7 @@ export class ProjectController {
 	async fetchProject(req: Request, res: Response): Promise<any> {
 		try {
 			const { projectId } = req.params
-			const project = await fetchProjectDetails.execute(projectId)
+			const project = await fetchProject.execute(projectId)
 			if (!project) {
 				return res.status(404).json({ message: "Project not found" })
 			}
@@ -49,9 +49,9 @@ export class ProjectController {
 			})
 
 			// Stream final state
-			developUserRequest.on("done", (finalProjectDetails) => {
-				console.log(`Streaming final result: ${JSON.stringify(finalProjectDetails)}`)
-				res.write(`event: final\ndata: ${JSON.stringify(finalProjectDetails)}\n\n`)
+			developUserRequest.on("done", (finalProject) => {
+				console.log(`Streaming final result: ${JSON.stringify(finalProject)}`)
+				res.write(`event: final\ndata: ${JSON.stringify(finalProject)}\n\n`)
 				res.end()
 			})
 
