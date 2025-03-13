@@ -63,7 +63,7 @@ export class Project {
 	}
 
 	updateOwner(owner: string) {
-		if (this.owner === null) {
+		if (this.owner === "GUEST") {
 			this.owner = owner
 			this.updated = new Date().toISOString()
 		}
