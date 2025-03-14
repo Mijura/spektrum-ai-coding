@@ -4,7 +4,7 @@ import { ProjectDto } from "../types/project"
 
 export class ProjectMapper {
 	/** Convert Project entity → marshalled project for storage/transfer */
-	static toDTO(project: Project): ProjectDto {
+	static toDto(project: Project): ProjectDto {
 		return {
 			id: project.id,
 			owner: project.owner,

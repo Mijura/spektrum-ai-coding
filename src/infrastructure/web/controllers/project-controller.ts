@@ -19,7 +19,7 @@ export class ProjectController {
 		try {
 			const { projectId } = req.params
 			const project = await fetchProject.execute(projectId)
-			const projectDTO = ProjectMapper.toDTO(project)
+			const projectDTO = ProjectMapper.toDto(project)
 			res.json(projectDTO)
 		} catch (error) {
 			// TODO: Handle Project Not Found

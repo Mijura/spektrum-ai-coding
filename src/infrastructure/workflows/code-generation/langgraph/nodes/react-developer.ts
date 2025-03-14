@@ -20,7 +20,7 @@ const DeveloperOutputAnnotation = Annotation.Root({
  * @returns State with source code
  */
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { project, ticket, frontendDevelopmentService } = _state
+	const { project, tickets, frontendDevelopmentService } = _state
 
 	//console.log(`\n\n\nDeveloper:\n\nRecieved Ticket:\n\n${ticket}`)
 
@@ -74,7 +74,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 	])
 
 	const sourceCodeAfter = await chain.invoke({
-		ticket: ticket,
+		ticket: tickets[0],
 		project: project,
 		sourceCode: sourceCodeBefore,
 		outputSchema: parser.getFormatInstructions(),

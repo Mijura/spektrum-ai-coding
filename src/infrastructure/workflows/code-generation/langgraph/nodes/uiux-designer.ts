@@ -12,7 +12,7 @@ import { RootAnnotation } from "../state/root-annotation"
  * @returns State with updated ticket
  */
 const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { ticket } = _state
+	const { tickets } = _state
 
 	//console.log(`\n\n\nUI/UX Designer:\n\nRecieved Ticket:\n\n${ticket}`)
 
@@ -73,16 +73,16 @@ const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof
 	])
 
 	const design = await chain.invoke({
-		ticket
+		ticket: tickets[0]
 	})
 
-	const updatedTicket = `Task Description: ${ticket} \n\nDesign Instructions: ${design.content.toString()}`
+	const updatedTicket = `Task Description: ${tickets[0]} \n\nDesign Instructions: ${design.content.toString()}`
 
 	//console.log(`\n\n\nUI/UX Designer:\n\nUpdated Ticket:\n\n${updatedTicket}`)
 
 	return {
 		..._state,
-		ticket: updatedTicket,
+		tickets: [updatedTicket],
 	}
 }
 

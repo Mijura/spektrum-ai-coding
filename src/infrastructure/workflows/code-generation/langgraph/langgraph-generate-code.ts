@@ -36,10 +36,10 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 		for await (const chunk of await workflow.stream(
 			{
 				userRequest: message,
-				project: ProjectMapper.toDTO(project),
+				project: ProjectMapper.toDto(project),
 				frontendDevelopmentService: this.frontendDevelopmentService,
 			},
-			{ streamMode: ["values", "custom", "updates"] }
+			{ streamMode: "updates" }
 		)) {
 			for (const [node, values] of Object.entries(chunk)) {
 				console.log(`Receiving update from node: ${node}`)

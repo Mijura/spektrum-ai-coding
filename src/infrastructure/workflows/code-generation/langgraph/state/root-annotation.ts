@@ -8,7 +8,7 @@ export const RootAnnotation = Annotation.Root({
 		reducer: (x, y) => x.concat(y),
 		default: () => [],
 	}),
-	ticket: Annotation<string>({
+	tickets: Annotation<string[]>({
 		reducer: (a: any, b: any) => b,
 	}),
 	project: Annotation<ProjectDto>({

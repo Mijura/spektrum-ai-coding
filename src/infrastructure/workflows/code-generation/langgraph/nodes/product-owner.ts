@@ -6,17 +6,17 @@ import { RootAnnotation } from "../state/root-annotation"
 
 
 import { ProjectSchema } from "@application/schemas/project.schema"
-import { z } from "zod"
+import { z, ZodString } from "zod"
 import { ProjectDto } from "@domain/types/project"
 
 interface ProductOwnerOutput {
 	project: ProjectDto
-	ticket: string
+	tickets: string[]
 }
 
 const ProductOwnerSchema = z.object({
 	project: ProjectSchema,
-	ticket: z.string().describe("The ticket with list of features to be implemented"),
+	tickets: z.array(z.string()).describe("The ticket with list of features to be implemented"),
 })
 
 
@@ -36,14 +36,14 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 	const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
 
 	const chain = RunnableSequence.from([
-		PromptTemplate.fromTemplate(`You are an product owner exper. Your task is to transform user request into ticket for developers.
+		PromptTemplate.fromTemplate(`You are an product owner exper. Your task is to transform user request into the list of tickets for developers.
 
-			Create a concise and minimal description. If the request is too broad try to minimize the request.
+			Create a concise and minimal description. If the request is too broad try to minimize the request. 
+			Each task should be cohesive representing unit which have sense for user.
 			For example if the user demand note taking app, try to figure out what is the essence for this request.
 
 			Good output in this case would be:
-			Feature 1: Enable user to add notes
-			Feature 2: Implement notes overview
+			Feature 1: Enable user to add notes and see all added notes.
 			 
 			Bad otput:
 			Feature 1: Implement login and registration to the system
@@ -62,7 +62,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 
 			Example of valid response:
 			{{
-				"ticket": 'Feature 1: Enable user to add notes\n\nFeature 2: Implement notes overview',
+				"tickets": ['Feature 1: Enable user to add notes and display it after adding', 'Feature 2: Implement note editing'],
 				"project": {{
 					id: 'e4cb89b1-c1e5-4e94-bc3c-2056344a1369',
 					name: 'Note Taking App',
@@ -92,7 +92,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 
 	return {
 		..._state,
-		ticket: response.ticket,
+		tickets: response.tickets,
 		project: response.project,
 	}
 }

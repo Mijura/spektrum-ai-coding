@@ -18,7 +18,7 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 
 		console.log(`User is trying to save project with ${project.id} to dynamodb table ${tableName}.`)
 
-		const projectDTO: ProjectDto = ProjectMapper.toDTO(project)
+		const projectDTO: ProjectDto = ProjectMapper.toDto(project)
 
 		const params = {
 			TableName: tableName,
