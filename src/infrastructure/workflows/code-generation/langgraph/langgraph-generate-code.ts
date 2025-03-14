@@ -9,6 +9,7 @@ import { updateProject } from "./nodes/update-project-details"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { RootAnnotation } from "./state/root-annotation"
 import { EventEmitter } from "events"
+import { ProjectMapper } from "@domain/mappers/project-mapper"
 export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerationWorkflow {
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
 		super()
@@ -35,7 +36,7 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 		for await (const chunk of await workflow.stream(
 			{
 				userRequest: message,
-				project: project,
+				project: ProjectMapper.toDTO(project),
 				frontendDevelopmentService: this.frontendDevelopmentService,
 			},
 			{ streamMode: ["values", "custom", "updates"] }

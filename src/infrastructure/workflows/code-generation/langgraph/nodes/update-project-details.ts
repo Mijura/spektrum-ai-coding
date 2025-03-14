@@ -1,5 +1,6 @@
 import { projectStorage } from "@infrastructure/config/dependencies"
 import { RootAnnotation } from "../state/root-annotation"
+import { ProjectMapper } from "@domain/mappers/project-mapper"
 
 const updateProject = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { project } = _state
@@ -7,8 +8,8 @@ const updateProject = async (_state: typeof RootAnnotation.State): Promise<typeo
 	// project.files = Object.fromEntries(
 	// 	Object.entries(sourceCode as SourceCode).map(([key, value]) => [key, value.context])
 	// )
-
-	const savedProject = await projectStorage.save(project)
+	const projectToSave = ProjectMapper.toDomain(project)
+	const savedProject = await projectStorage.save(projectToSave)
 
 	console.log("\n\nProject details updated successfully")
 	return {

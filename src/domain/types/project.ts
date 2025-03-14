@@ -1,4 +1,4 @@
-export type MarshalledProject = {
+export type ProjectDTO = {
 	id: string
 	owner: string | null
 	name: string

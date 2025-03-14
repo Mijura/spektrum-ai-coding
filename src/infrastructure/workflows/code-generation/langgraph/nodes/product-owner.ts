@@ -6,13 +6,11 @@ import { RootAnnotation } from "../state/root-annotation"
 
 
 import { ProjectSchema } from "@application/schemas/project.schema"
-import { Project } from "@domain/entities/project"
 import { z } from "zod"
-import { ProjectMapper } from "@domain/mappers/project-mapper"
-import { MarshalledProject } from "@domain/types/project"
+import { ProjectDTO } from "@domain/types/project"
 
 interface ProductOwnerOutput {
-	project: Project
+	project: ProjectDTO
 	ticket: string
 }
 
@@ -70,8 +68,9 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 					name: 'Note Taking App',
 					description: 'App for taking notes',
 					owner: 'c8e64f96-8450-4925-8077-04bfd8e1014e',
-					owner: '12345',
-					context: 'User is building note taking app. He wants to enable users to add notes, and prefers...',
+					created: '2025-03-13T18:08:06.653Z',
+					updated: 'null',
+					deploymentId: ''
 				}}
 			}}
 			`),
@@ -94,7 +93,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 	return {
 		..._state,
 		ticket: response.ticket,
-		project: ProjectMapper.unmarshal(response.project as MarshalledProject),
+		project: response.project,
 	}
 }
 
