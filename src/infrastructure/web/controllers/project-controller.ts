@@ -1,10 +1,5 @@
 import { Request, Response } from "express"
-import {
-	createNewProject,
-	fetchProject,
-	deployProject,
-	developUserRequest,
-} from "@infrastructure/config/dependencies"
+import { createNewProject, fetchProject, deployProject, developUserRequest } from "@infrastructure/config/dependencies"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
 
 export class ProjectController {
@@ -37,29 +32,32 @@ export class ProjectController {
 		try {
 			const { projectId, message } = req.body
 
+			// Ensure that the request is executed before response ends
+			await developUserRequest.execute(projectId, message)
+
 			// Stream updates
-			developUserRequest.on("update", (data) => {
+			const sendUpdate = (data: any) => {
 				console.log(`Streaming update: ${JSON.stringify(data)}`)
 				res.write(`data: ${JSON.stringify(data)}\n\n`)
-			})
+			}
 
 			// Stream final state
-			developUserRequest.on("done", (finalProject) => {
+			const sendFinal = (finalProject: any) => {
 				console.log(`Streaming final result: ${JSON.stringify(finalProject)}`)
 				res.write(`event: final\ndata: ${JSON.stringify(finalProject)}\n\n`)
 				res.end()
-			})
+			}
+
+			// Add event listeners
+			developUserRequest.on("update", sendUpdate)
+			developUserRequest.on("done", sendFinal)
 
 			// Handle client disconnect
 			req.on("close", () => {
 				console.log("Client disconnected, removing listeners...")
-				developUserRequest.removeAllListeners("update")
-				developUserRequest.removeAllListeners("done")
+				developUserRequest.off("update", sendUpdate)
+				developUserRequest.off("done", sendFinal)
 			})
-
-			// 🔹 Debug: Ensure execution starts
-			console.log("Starting code generation workflow...")
-			await developUserRequest.execute(projectId, message)
 		} catch (error) {
 			console.error("Error rebuilding project:", error)
 			res.status(500).json({ error: `Error rebuilding project: ${error}` })

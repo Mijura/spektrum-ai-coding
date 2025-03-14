@@ -1,4 +1,4 @@
-export type ProjectDTO = {
+export type ProjectDto = {
 	id: string
 	owner: string | null
 	name: string
@@ -8,6 +8,6 @@ export type ProjectDTO = {
 	deploymentId: string | null
 }
 
-export interface SourceCode {
+export interface SourceCodeDto {
 	[filePath: string]: string
 }

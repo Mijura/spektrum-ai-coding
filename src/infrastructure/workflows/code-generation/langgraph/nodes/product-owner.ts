@@ -7,10 +7,10 @@ import { RootAnnotation } from "../state/root-annotation"
 
 import { ProjectSchema } from "@application/schemas/project.schema"
 import { z } from "zod"
-import { ProjectDTO } from "@domain/types/project"
+import { ProjectDto } from "@domain/types/project"
 
 interface ProductOwnerOutput {
-	project: ProjectDTO
+	project: ProjectDto
 	ticket: string
 }
 

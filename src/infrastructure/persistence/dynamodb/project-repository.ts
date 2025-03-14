@@ -3,7 +3,7 @@ import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dyn
 import { Project } from "@domain/entities/project"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
-import { ProjectDTO } from "@domain/types/project"
+import { ProjectDto } from "@domain/types/project"
 
 // DynamoDB client setup
 const client = new DynamoDBClient({
@@ -18,7 +18,7 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 
 		console.log(`User is trying to save project with ${project.id} to dynamodb table ${tableName}.`)
 
-		const projectDTO: ProjectDTO = ProjectMapper.toDTO(project)
+		const projectDTO: ProjectDto = ProjectMapper.toDTO(project)
 
 		const params = {
 			TableName: tableName,
@@ -43,7 +43,7 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 
 		if (!item) throw new Error(`Project not found!`)
 
-		const projectDTO: ProjectDTO = item as ProjectDTO
+		const projectDTO: ProjectDto = item as ProjectDto
 
 		return ProjectMapper.toDomain(projectDTO)
 	}

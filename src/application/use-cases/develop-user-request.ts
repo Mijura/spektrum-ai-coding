@@ -10,6 +10,17 @@ export class DevelopUserRequest extends EventEmitter implements DevelopUserReque
 		private readonly codeGenerationWorkflow: CodeGenerationWorkflow
 	) {
 		super()
+
+		// Move listeners to constructor (so they are attached once)
+		this.codeGenerationWorkflow.on("update", (data: any) => {
+			console.log(`update event emitted: ${JSON.stringify(data)}`)
+			this.emit("update", data)
+		})
+
+		this.codeGenerationWorkflow.on("done", (data: any) => {
+			console.log(`done event emitted: ${JSON.stringify(data)}`)
+			this.emit("done", data)
+		})
 	}
 
 	async execute(projectId: string, message: string): Promise<Project> {
@@ -17,18 +28,6 @@ export class DevelopUserRequest extends EventEmitter implements DevelopUserReque
 		if (!project) {
 			throw new Error("Project not found")
 		}
-
-		// Listen to updates and forward them
-		this.codeGenerationWorkflow.on("update", (data: any) => {
-			console.log(`updateeeeeeeeeeee ${JSON.stringify(data)}`)
-			this.emit("update", data)
-		})
-
-		// Capture final project details
-		this.codeGenerationWorkflow.on("done", (data: any) => {
-			console.log(`doneeeeeeeeeeeeeee ${JSON.stringify(data)}`)
-			this.emit("done", data)
-		})
 
 		return await this.codeGenerationWorkflow.execute(project, message)
 	}

@@ -25,6 +25,9 @@ export const corsMiddleware = (req: Request, res: Response, next: NextFunction) 
 		return
 	} else {
 
+
+
+
 		// Handle preflight requests
 		if (req.method === "OPTIONS") {
 			res.sendStatus(204) // No content for preflight requests

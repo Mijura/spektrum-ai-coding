@@ -1,5 +1,5 @@
 import { Project } from "@domain/entities/project"
-import { SourceCode } from "@domain/types/project"
+import { SourceCodeDto } from "@domain/types/project"
 
 export interface FrontendDevelopmentPort {
 	/**
@@ -33,12 +33,12 @@ export interface FrontendDevelopmentPort {
 	 * @param projectId - The ID of the project to fetch the source code for
 	 * @returns The source code for the project
 	 */
-	fetchSourceCode(projectId: string): Promise<SourceCode>
+	fetchSourceCode(projectId: string): Promise<SourceCodeDto>
 
 	/**
 	 * Writes the source code to the project
 	 * @param projectId - The ID of the project to write the source code to
 	 * @param sourceCode - The source code to write to the project
 	 */
-	updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<void>
+	updateSourceCode(projectId: string, sourceCode: SourceCodeDto): Promise<void>
 }

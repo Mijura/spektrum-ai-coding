@@ -1,10 +1,10 @@
 // src/domain/mappers/project-mapper.ts
 import { Project } from "@domain/entities/project"
-import { ProjectDTO } from "../types/project"
+import { ProjectDto } from "../types/project"
 
 export class ProjectMapper {
 	/** Convert Project entity → marshalled project for storage/transfer */
-	static toDTO(project: Project): ProjectDTO {
+	static toDTO(project: Project): ProjectDto {
 		return {
 			id: project.id,
 			owner: project.owner,
@@ -17,7 +17,7 @@ export class ProjectMapper {
 	}
 
 	/** Convert marshalled project (e.g., from DB) → Project entity */
-	static toDomain(data: ProjectDTO): Project {
+	static toDomain(data: ProjectDto): Project {
 		return Project.restore(data)
 	}
 }
