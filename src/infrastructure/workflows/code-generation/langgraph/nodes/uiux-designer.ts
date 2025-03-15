@@ -82,7 +82,7 @@ const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof
 
 	return {
 		..._state,
-		tickets: [updatedTicket],
+		message: updatedTicket,
 	}
 }
 

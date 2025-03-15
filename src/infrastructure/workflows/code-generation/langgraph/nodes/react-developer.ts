@@ -85,6 +85,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 	return {
 		..._state,
 		sourceCode: sourceCodeAfter,
+		message: sourceCodeAfter
 	}
 }
 

@@ -12,11 +12,13 @@ import { ProjectDto } from "@domain/types/project"
 interface ProductOwnerOutput {
 	project: ProjectDto
 	tickets: string[]
+	message: string
 }
 
 const ProductOwnerSchema = z.object({
 	project: ProjectSchema,
 	tickets: z.array(z.string()).describe("The ticket with list of features to be implemented"),
+	message: z.string().describe("Description of what you plan to do that will be shown to user")
 })
 
 
@@ -69,9 +71,10 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 					description: 'App for taking notes',
 					owner: 'c8e64f96-8450-4925-8077-04bfd8e1014e',
 					created: '2025-03-13T18:08:06.653Z',
-					updated: 'null',
-					deploymentId: ''
-				}}
+					updated: null,
+					deploymentId: null
+				}},
+				"message" : "I created task and pass to the team for implementation. The team will implement note adding and displaying. "
 			}}
 			`),
 		new ChatOpenAI({
@@ -94,6 +97,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 		..._state,
 		tickets: response.tickets,
 		project: response.project,
+		message: response.message
 	}
 }
 

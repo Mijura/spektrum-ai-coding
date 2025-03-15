@@ -4,9 +4,8 @@ import { Annotation } from "@langchain/langgraph"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 
 export const RootAnnotation = Annotation.Root({
-	messages: Annotation<BaseMessage[]>({
-		reducer: (x, y) => x.concat(y),
-		default: () => [],
+	message: Annotation<string>({
+		reducer: (x, y) => y
 	}),
 	tickets: Annotation<string[]>({
 		reducer: (a: any, b: any) => b,

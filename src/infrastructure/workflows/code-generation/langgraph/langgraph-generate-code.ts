@@ -45,7 +45,9 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 				console.log(`Receiving update from node: ${node}`)
 				console.log(values)
 				console.log("\n====\n")
-				const update = { node, values }
+				let message = (values as any).message
+				const update = { node, message }
+
 				this.emit("update", update)
 			}
 		}
