@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ProjectTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Project
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: owner
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: ownerGSI
+          KeySchema:
+            - AttributeName: owner
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  TicketTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Ticket
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: projectId
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: projectId_statusGSI
+          KeySchema:
+            - AttributeName: projectId
+              KeyType: HASH
+            - AttributeName: status
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  DeploymentTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Deployment
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: projectId
+          AttributeType: S
+        - AttributeName: environment
+          AttributeType: S
+        - AttributeName: deploymentDate
+          AttributeType: S
+        - AttributeName: ticketId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: projectId_environment_deploymentDateGSI
+          KeySchema:
+            - AttributeName: projectId
+              KeyType: HASH
+            - AttributeName: environment
+              KeyType: RANGE
+            - AttributeName: deploymentDate
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ticketIdGSI
+          KeySchema:
+            - AttributeName: ticketId
+              KeyType: HASH
+            - AttributeName: deploymentDate
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
