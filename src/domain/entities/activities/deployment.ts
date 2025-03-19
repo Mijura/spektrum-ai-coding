@@ -1,4 +1,4 @@
-import { Activity, ActivityType } from "./activity"
+import { Activity, ActivityType } from "./activities/activity"
 
 export enum DeploymentStatus {
     SUCCESS = "SUCCESS",

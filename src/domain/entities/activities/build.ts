@@ -18,7 +18,7 @@ export class Build extends Activity<BuildActivityData> {
         ticketId: string,
         data: BuildActivityData
     ) {
-        super(id, date, assignee, ActivityType.COMMENT, projectId, ticketId, data)
+        super(id, date, assignee, ActivityType.BUILD, projectId, ticketId, data)
     }
 
     static create(id: string, date: string, assignee: string, projectId: string, ticketId: string, status: BuildStatus): Build {
