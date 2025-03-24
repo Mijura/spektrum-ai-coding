@@ -1,13 +1,13 @@
 export enum ActivityType {
     COMMENT = "COMMENT",
-    BUILD = "BUILD",
     DEPLOY_TO_PRODUCTION = "DEPLOY_TO_PRODUCTION",
+    DEVELOPMENT = "DEVELOPMENT",
 }
 
 export class Activity<T> {
     public readonly id: string
     public date: string
-    public assignee: string
+    public accountId: string
     public type: ActivityType
     public projectId: string
     public ticketId: string
@@ -16,7 +16,7 @@ export class Activity<T> {
     constructor(
       id: string,
       date: string,
-      assignee: string,
+      accountId: string,
       type: ActivityType,
       projectId: string,
       ticketId: string,
@@ -24,7 +24,7 @@ export class Activity<T> {
     ) {
       this.id = id
       this.date = date
-      this.assignee = assignee
+      this.accountId = accountId
       this.type = type 
       this.projectId = projectId
       this.ticketId = ticketId
