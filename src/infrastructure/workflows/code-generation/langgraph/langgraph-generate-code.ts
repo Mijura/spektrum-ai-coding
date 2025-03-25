@@ -19,6 +19,7 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 	async execute(project: Project, message: string): Promise<Project> {
 
 		const sdk = new JigJoyActivitySDK()
+		
 		await sdk.ingestActivity({
 			playerId: 'mijura', 
 			gameId: 'unicorn-game', 
