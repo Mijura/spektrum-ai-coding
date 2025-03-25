@@ -18,7 +18,7 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 
 	async execute(project: Project, message: string): Promise<Project> {
 
-		publishActivityStoredEvent('mijura', 'unicorn-game', 'first activity event', {name: 'Miodrag Vilotijevic'})
+		await publishActivityStoredEvent('mijura', 'unicorn-game', 'first activity event', {name: 'Miodrag Vilotijevic'})
 		
 		const workflow = new StateGraph({
 			input: RootAnnotation,
