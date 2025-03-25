@@ -10,7 +10,7 @@ import { FrontendDevelopmentService } from "@application/services/fronted-develo
 import { RootAnnotation } from "./state/root-annotation"
 import { EventEmitter } from "events"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
-import { publishActivityStoredEvent } from "@honeycomb-app/jigjoy-sdk"
+import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
 export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerationWorkflow {
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
 		super()
@@ -18,7 +18,13 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 
 	async execute(project: Project, message: string): Promise<Project> {
 
-		await publishActivityStoredEvent('mijura', 'unicorn-game', 'first activity event', {name: 'Miodrag Vilotijevic'})
+		const sdk = new JigJoyActivitySDK()
+		await sdk.ingestActivity({
+			playerId: 'mijura', 
+			gameId: 'unicorn-game', 
+			type: 'first activity event', 
+			data: {name: 'Miodrag Vilotijevic'}
+		})
 		
 		const workflow = new StateGraph({
 			input: RootAnnotation,
