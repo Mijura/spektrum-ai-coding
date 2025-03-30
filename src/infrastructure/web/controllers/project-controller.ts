@@ -1,8 +1,9 @@
 import { Request, Response } from "express"
-import { createNewProject, fetchProject, deployProject, developUserRequest } from "@infrastructure/config/dependencies"
+import { createNewProject, fetchProject, deployProject, developUserRequest, fetchAllProjects } from "@infrastructure/config/dependencies"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
 
 export class ProjectController {
+
 	constructor() {}
 
 	async createProject(req: Request, res: Response): Promise<void> {
@@ -16,7 +17,7 @@ export class ProjectController {
 		}
 	}
 
-	async fetchProject(req: Request, res: Response): Promise<any> {
+	async fetchProject(req: Request, res: Response): Promise<void> {
 		try {
 			const { projectId } = req.params
 			const project = await fetchProject.execute(projectId)
@@ -28,6 +29,22 @@ export class ProjectController {
 			res.status(500).json({ message: "Error fetching project" })
 		}
 	}
+
+	async fetchAllProjects(req: Request, res: Response): Promise<any> {
+
+		try {
+			const { ownerId } = req.params
+			console.log(`Fetching all projects for ${ownerId}`)
+			const projects = await fetchAllProjects.execute(ownerId)
+			const projectDTO = ProjectMapper.toDtos(projects)
+			res.json(projectDTO)
+		} catch (error) {
+			// TODO: Handle Project Not Found
+			console.error("Error fetching project:", error)
+			res.status(500).json({ message: "Error fetching project" })
+		}
+
+    }
 
 	async develop(req: Request, res: Response): Promise<void> {
 		try {

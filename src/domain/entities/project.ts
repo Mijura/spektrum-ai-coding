@@ -4,14 +4,14 @@ export class Project {
 	public readonly id: string
 	public readonly created: string // ISO String
 	public updated: string | null // ISO String
-	public owner: string | null
+	public ownerId: string
 	public name: string
 	public description: string
 	private _deploymentId: string | null
 
 	private constructor(
 		id: string,
-		owner: string | null,
+		ownerId: string,
 		name: string,
 		description: string,
 		created: string,
@@ -19,7 +19,7 @@ export class Project {
 		deploymentId: string | null
 	) {
 		this.id = id
-		this.owner = owner
+		this.ownerId = ownerId
 		this.name = name
 		this.description = description
 		this.created = created
@@ -37,14 +37,14 @@ export class Project {
 	/** Restore method to rehydrate a project from persisted data */
 	static restore(data: {
 		id: string
-		owner: string | null
+		ownerId: string
 		name: string
 		description: string
 		created: string
 		updated: string | null
 		deploymentId: string | null
 	}): Project {
-		return new Project(data.id, data.owner, data.name, data.description, data.created, data.updated, data.deploymentId)
+		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.deploymentId)
 	}
 
 	public get deploymentId(): string | null {

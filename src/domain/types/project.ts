@@ -1,6 +1,6 @@
 export type ProjectDto = {
 	id: string
-	owner: string | null
+	ownerId: string
 	name: string
 	description: string
 	created: string

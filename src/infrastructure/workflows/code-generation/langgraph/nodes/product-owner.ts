@@ -69,7 +69,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 					id: 'e4cb89b1-c1e5-4e94-bc3c-2056344a1369',
 					name: 'Note Taking App',
 					description: 'App for taking notes',
-					owner: 'c8e64f96-8450-4925-8077-04bfd8e1014e',
+					ownerId: 'c8e64f96-8450-4925-8077-04bfd8e1014e',
 					created: '2025-03-13T18:08:06.653Z',
 					updated: null,
 					deploymentId: null
