@@ -7,7 +7,8 @@ export class ProjectController {
 
 	async createProject(req: Request, res: Response): Promise<void> {
 		try {
-			const project = await createNewProject.execute()
+			const { owner } = req.body
+			const project = await createNewProject.execute(owner)
 			res.status(201).json(project)
 		} catch (error) {
 			console.error("Error creating project:", error)

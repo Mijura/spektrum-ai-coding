@@ -9,10 +9,10 @@ export class CreateNewProject implements CreateProjectUseCase {
 		private readonly projectStorage: ProjectStorage
 	) {}
 
-	async execute(): Promise<Project> {
+	async execute(owner: string): Promise<Project> {
 		try {
 			// Create a new project with a unique ID
-			const project: Project = Project.create("My Project", "Empty project...", undefined)
+			const project: Project = Project.create("My Project", "Empty project...", owner)
 
 			// Initialize and run project
 			await this.frontendDevelopmentService.setupProject(project.id)
