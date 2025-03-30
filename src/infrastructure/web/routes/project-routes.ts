@@ -7,7 +7,7 @@ router.post("/", (req: Request, res: Response) => projectController.createProjec
 
 router.get("/fetch/:projectId", (req: Request, res: Response) => projectController.fetchProject(req, res))
 
-//router.put("/develop", (req: Request, res: Response) => projectController.develop(req, res))
+router.get("/fetch-all/:ownerId", (req: Request, res: Response) => projectController.fetchAllProjects(req, res))
 
 router.put("/deploy", (req: Request, res: Response) => projectController.deploy(req, res))
 

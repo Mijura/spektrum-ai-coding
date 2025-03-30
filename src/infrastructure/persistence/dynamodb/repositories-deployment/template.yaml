@@ -8,7 +8,7 @@ Resources:
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
-        - AttributeName: owner
+        - AttributeName: ownerId
           AttributeType: S
       KeySchema:
         - AttributeName: id
@@ -16,7 +16,7 @@ Resources:
       GlobalSecondaryIndexes:
         - IndexName: ownerGSI
           KeySchema:
-            - AttributeName: owner
+            - AttributeName: ownerId
               KeyType: HASH
           Projection:
             ProjectionType: ALL
@@ -42,31 +42,6 @@ Resources:
             - AttributeName: projectId
               KeyType: HASH
             - AttributeName: status
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
-
-  DeploymentTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: Deployment
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-        - AttributeName: projectId
-          AttributeType: S
-        - AttributeName: deploymentDate
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
-      GlobalSecondaryIndexes:
-        - IndexName: projectId_deploymentDateGSI
-          KeySchema:
-            - AttributeName: projectId
-              KeyType: HASH
-            - AttributeName: deploymentDate
               KeyType: RANGE
           Projection:
             ProjectionType: ALL

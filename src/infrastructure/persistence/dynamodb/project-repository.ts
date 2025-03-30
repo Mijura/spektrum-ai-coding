@@ -1,5 +1,5 @@
 import { ProjectStorage } from "@domain/persistence/project-storage"
-import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
+import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"
 import { Project } from "@domain/entities/project"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
@@ -13,6 +13,7 @@ const client = new DynamoDBClient({
 const ddbDocClient = DynamoDBDocumentClient.from(client)
 
 export class DynamoDBProjectRepository implements ProjectStorage {
+
 	async save(project: Project): Promise<Project> {
 		const tableName = process.env.PROJECT_TABLE
 
@@ -46,5 +47,24 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 		const projectDTO: ProjectDto = item as ProjectDto
 
 		return ProjectMapper.toDomain(projectDTO)
+	}
+
+	async findAll(ownerId: string): Promise<Project[]> {
+
+		const tableName = process.env.PROJECT_TABLE
+
+		const params = {
+			KeyConditionExpression: "ownerId = :ownerId",
+			IndexName: "ownerGSI",
+			ExpressionAttributeValues: {
+				":ownerId": ownerId,
+			},
+			TableName: tableName,
+		}
+	
+		const data = await ddbDocClient.send(new QueryCommand(params))
+		const items = data.Items as []
+	
+		return ProjectMapper.toDomains(items)
 	}
 }

@@ -16,6 +16,7 @@ import { ProjectController } from "@infrastructure/web/controllers/project-contr
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { DevelopUserRequest } from "@application/use-cases/develop-user-request"
 import { DeployProject } from "@application/use-cases/deploy-project"
+import { FetchAllProjects } from "@application/use-cases/fetch-all-projects"
 
 // Concrete implementations
 export const fileSystem: FileSystemPort = new LocalFileSystem()
@@ -30,5 +31,6 @@ export const projectController = new ProjectController()
 // Use Case Instances
 export const createNewProject = new CreateNewProject(frontendDevelopmentService, projectStorage)
 export const fetchProject = new FetchProject(projectStorage)
+export const fetchAllProjects = new FetchAllProjects(projectStorage)
 export const deployProject = new DeployProject(frontendDevelopmentService, projectStorage)
 export const developUserRequest = new DevelopUserRequest(projectStorage, codeGenerationWorkflow)
