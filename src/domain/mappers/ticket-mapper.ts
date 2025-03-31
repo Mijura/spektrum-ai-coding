@@ -7,7 +7,7 @@ export class TicketMapper {
 		return {
 			id: ticket.id,
 			projectId: ticket.projectId,
-			name: ticket.name,
+			title: ticket.title,
 			description: ticket.description,
 			status: ticket.status,
 			created: ticket.created,

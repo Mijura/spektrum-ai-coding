@@ -6,7 +6,7 @@ enum TicketStatus {
 
 export interface TicketDto {
 	id: string
-	name: string
+	title: string
 	description: string
 	projectId: string
 	created: string

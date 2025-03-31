@@ -2,7 +2,6 @@ import { DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-d
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { TicketStorage } from "@domain/persistence/ticket-storage"
 import { Ticket } from "@domain/entities/ticket"
-import { TicketStatus } from "@domain/entities/ticket"
 import { TicketMapper } from "@domain/mappers/ticket-mapper"
 import { TicketDto } from "@application/dto/ticket"
 
@@ -37,11 +36,10 @@ export class DynamoDBTicketRepository implements TicketStorage {
 		const tableName = process.env.TICKET_TABLE
 
 		const params = {
-			KeyConditionExpression: "projectId = :projectId AND status = :status",
-			IndexName: "projectId_statusGSI",
+			KeyConditionExpression: "projectId = :projectId",
+			IndexName: "projectGSI",
 			ExpressionAttributeValues: {
-				":projectId": projectId,
-				":status": TicketStatus.TODO,
+				":projectId": projectId
 			},
 			TableName: tableName,
 		}
