@@ -1,5 +1,6 @@
 import express from "express"
-import { router as projectRouter } from "@infrastructure/web/routes/project-routes"
+import { projectRouter } from "@infrastructure/web/routes/project-routes"
+import { ticketRouter } from "@infrastructure/web/routes/ticket-routes"
 import { corsMiddleware } from "@infrastructure/web/middleware/allow-requests"
 import { serveProjectFilesMiddleware } from "@infrastructure/web/middleware/serve-project-files"
 import { Server } from "socket.io"
@@ -19,6 +20,7 @@ app.use(corsMiddleware)
 app.use(express.json())
 // Routes
 app.use("/", projectRouter)
+app.use("/", ticketRouter)
 app.use("/:id", serveProjectFilesMiddleware)
 
 

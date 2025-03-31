@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 
-enum TicketStatus {
+export enum TicketStatus {
     TODO = "TODO",
     IN_PROGRESS = "IN_PROGRESS",
     DONE = "DONE",
@@ -34,11 +34,11 @@ export class Ticket {
 	}
 
 	// Factory method to create a new ticket
-	static create(projectId: string, name: string, description: string, status: TicketStatus): Ticket {
+	static create(projectId: string, name: string, description: string): Ticket {
 		const id = uuidv4() // Generate unique ID
 		const created = new Date().toISOString() // ISO format
 	
-		return new Ticket(id, projectId, name, description, status, created, null)
+		return new Ticket(id, projectId, name, description, TicketStatus.TODO, created, null)
 	}
 
 	/** Restore method to rehydrate a ticket from persisted data */

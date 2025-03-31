@@ -36,12 +36,12 @@ export class ProjectController {
 			const { ownerId } = req.params
 			console.log(`Fetching all projects for ${ownerId}`)
 			const projects = await fetchAllProjects.execute(ownerId)
-			const projectDTO = ProjectMapper.toDtos(projects)
-			res.json(projectDTO)
+			const projectDtos = ProjectMapper.toDtos(projects)
+			res.json(projectDtos)
 		} catch (error) {
 			// TODO: Handle Project Not Found
-			console.error("Error fetching project:", error)
-			res.status(500).json({ message: "Error fetching project" })
+			console.error("Error fetching projects:", error)
+			res.status(500).json({ message: "Error fetching projects" })
 		}
 
     }

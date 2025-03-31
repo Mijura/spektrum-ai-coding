@@ -1,4 +1,3 @@
-// src/domain/mappers/project-mapper.ts
 import { Project } from "@domain/entities/project"
 import { ProjectDto } from "../types/project"
 
