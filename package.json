@@ -13,7 +13,7 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.398.0",
     "@aws-sdk/lib-dynamodb": "^3.398.0",
-    "@honeycomb-app/jigjoy-sdk": "^0.1.6",
+    "@honeycomb-app/jigjoy-sdk": "^0.1.10",
     "@langchain/anthropic": "^0.3.14",
     "@langchain/community": "^0.3.27",
     "@langchain/core": "^0.3.40",

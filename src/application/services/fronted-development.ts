@@ -28,20 +28,16 @@ export class FrontendDevelopmentService implements FrontendDevelopmentPort {
 		}
 	}
 
-	async installDependencies(projectId: string): Promise<void> {
+	async installDependencies(projectId: string): Promise<boolean> {
 		const projectPath: string = path.join("projects", projectId)
 		const installSuccess = await this.packageManager.installDependencies(projectPath)
-		if (!installSuccess) {
-			throw new Error("Failed to install dependencies.")
-		}
+		return installSuccess
 	}
 
-	async buildProject(projectId: string): Promise<void> {
+	async buildProject(projectId: string): Promise<boolean> {
 		const projectPath: string = path.join("projects", projectId)
 		const buildSuccess = await this.packageManager.buildProject(projectPath)
-		if (!buildSuccess) {
-			throw new Error("Failed to build the project.")
-		}
+		return buildSuccess
 	}
 
 	async deployProject(project: Project): Promise<void> {
