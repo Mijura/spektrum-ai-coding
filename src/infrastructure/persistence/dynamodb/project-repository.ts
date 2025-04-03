@@ -1,6 +1,6 @@
 import { ProjectStorage } from "@domain/persistence/project-storage"
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"
-import { Project } from "@domain/entities/project"
+import { Project, ProjectStatus } from "@domain/entities/project"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
 import { ProjectDto } from "@domain/types/project"
@@ -67,4 +67,27 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 	
 		return ProjectMapper.toDomains(items)
 	}
+
+	async findAllByStatus(ownerId: string, status: ProjectStatus): Promise<Project[]> {
+		const tableName = process.env.PROJECT_TABLE;
+	  
+		const params = {
+		  KeyConditionExpression: "ownerId = :ownerId and #status = :status",  // Use #status to avoid conflict with reserved word
+		  IndexName: "ownerStatusGSI", // Use the GSI that indexes by ownerId and status
+		  ExpressionAttributeNames: {
+			"#status": "status"
+		  },
+		  ExpressionAttributeValues: {
+			":ownerId": ownerId, 
+			":status": status,  
+		  },
+		  TableName: tableName,
+		};
+	  
+		const data = await ddbDocClient.send(new QueryCommand(params));
+		const items = data.Items as [];
+	  
+		return ProjectMapper.toDomains(items);
+	  }
+	  
 }

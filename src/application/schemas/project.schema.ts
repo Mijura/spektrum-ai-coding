@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+const ProjectStatusSchema = z.enum(['Active', 'Archived'])
+
 const ProjectSchema = z.object({
 	id: z.string().describe("The project id"),
 	name: z.string().describe("Short name of the project. Should be filled only if it's empty."),
@@ -7,7 +9,10 @@ const ProjectSchema = z.object({
 	ownerId: z.string().describe("The project owner id"),
 	deploymentId: z.string().describe("Project deploymen id").nullable(),
 	created: z.string().describe("Date of project creation"),
-	updated: z.string().describe("Date of project update").nullable()
+	updated: z.string().describe("Date of project update").nullable(),
+	status: ProjectStatusSchema
 })
+
+
 
 export { ProjectSchema }

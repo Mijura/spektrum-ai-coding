@@ -11,4 +11,6 @@ router.get("/fetch-all/:ownerId", (req: Request, res: Response) => projectContro
 
 router.put("/deploy", (req: Request, res: Response) => projectController.deploy(req, res))
 
+router.put("/archive", (req: Request, res: Response) => projectController.archiveProject(req, res))
+
 export { router as projectRouter }

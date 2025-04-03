@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { createNewProject, fetchProject, deployProject, developUserRequest, fetchAllProjects } from "@infrastructure/config/dependencies"
+import { createNewProject, fetchProject, deployProject, developUserRequest, fetchAllProjects, archiveProject } from "@infrastructure/config/dependencies"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
 
 export class ProjectController {
@@ -45,6 +45,17 @@ export class ProjectController {
 		}
 
     }
+
+	async archiveProject(req: Request, res: Response): Promise<void> {
+		try {
+			const { projectId } = req.body
+			const project = await archiveProject.execute(projectId)
+			res.json(project)
+		} catch (error) {
+			console.error("Error changing project status:", error)
+			res.status(500).json({ message: "Error changing project status" })
+		}
+	}
 
 	async develop(req: Request, res: Response): Promise<void> {
 		try {

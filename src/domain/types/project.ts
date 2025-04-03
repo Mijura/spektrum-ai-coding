@@ -1,3 +1,5 @@
+import { ProjectStatus } from "@domain/entities/project"
+
 export type ProjectDto = {
 	id: string
 	ownerId: string
@@ -6,6 +8,7 @@ export type ProjectDto = {
 	created: string
 	updated: string | null
 	deploymentId: string | null
+	status: ProjectStatus
 }
 
 export interface SourceCodeDto {
