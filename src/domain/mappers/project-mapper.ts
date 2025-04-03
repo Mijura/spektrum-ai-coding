@@ -13,6 +13,7 @@ export class ProjectMapper {
 			created: project.created,
 			updated: project.updated,
 			deploymentId: project.deploymentId,
+			status: project.status,
 		}
 	}
 

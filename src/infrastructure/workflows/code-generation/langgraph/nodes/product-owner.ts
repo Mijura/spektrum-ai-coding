@@ -6,8 +6,9 @@ import { RootAnnotation } from "../state/root-annotation"
 
 
 import { ProjectSchema } from "@application/schemas/project.schema"
-import { z, ZodString } from "zod"
+import { z } from "zod"
 import { ProjectDto } from "@domain/types/project"
+import { ProjectStatus } from "@domain/entities/project"
 
 interface ProductOwnerOutput {
 	project: ProjectDto
@@ -72,6 +73,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 					ownerId: 'c8e64f96-8450-4925-8077-04bfd8e1014e',
 					created: '2025-03-13T18:08:06.653Z',
 					updated: null,
+					status: 'Active',
 					deploymentId: null
 				}},
 				"message" : "I created task and pass to the team for implementation. The team will implement note adding and displaying. "
@@ -96,7 +98,10 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 	return {
 		..._state,
 		tickets: response.tickets,
-		project: response.project,
+		project: {
+			...response.project,
+			status: response.project.status as ProjectStatus
+		},
 		message: response.message
 	}
 }

@@ -10,6 +10,8 @@ Resources:
           AttributeType: S
         - AttributeName: ownerId
           AttributeType: S
+        - AttributeName: status
+          AttributeType: S
       KeySchema:
         - AttributeName: id
           KeyType: HASH
@@ -18,6 +20,14 @@ Resources:
           KeySchema:
             - AttributeName: ownerId
               KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ownerStatusGSI
+          KeySchema:
+            - AttributeName: ownerId
+              KeyType: HASH
+            - AttributeName: status
+              KeyType: RANGE
           Projection:
             ProjectionType: ALL
 

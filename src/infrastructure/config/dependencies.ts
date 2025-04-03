@@ -24,6 +24,7 @@ import { TicketStorage } from "@domain/persistence/ticket-storage"
 import { DynamoDBTicketRepository } from "@infrastructure/persistence/dynamodb/ticket-repository"
 import { CreateNewTicket } from "@application/use-cases/create-new-ticket"
 import { FetchAllTickets } from "@application/use-cases/fetch-all-tickets"
+import { ArchiveProject } from "@application/use-cases/archive-project"
 
 // Concrete implementations
 export const fileSystem: FileSystemPort = new LocalFileSystem()
@@ -40,6 +41,7 @@ export const ticketController = new TicketController()
 export const createNewProject = new CreateNewProject(frontendDevelopmentService, projectStorage)
 export const fetchProject = new FetchProject(projectStorage)
 export const fetchAllProjects = new FetchAllProjects(projectStorage)
+export const archiveProject = new ArchiveProject(projectStorage)
 export const deployProject = new DeployProject(frontendDevelopmentService, projectStorage)
 export const developUserRequest = new DevelopUserRequest(projectStorage, codeGenerationWorkflow)
 
