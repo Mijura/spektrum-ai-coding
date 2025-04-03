@@ -12,13 +12,13 @@ export interface FrontendDevelopmentPort {
 	 * Installs dependencies for the project
 	 * @param projectId - The ID of the project to install dependencies for
 	 */
-	installDependencies(projectId: string): Promise<void>
+	installDependencies(projectId: string): Promise<boolean>
 
 	/**
 	 * Builds the project
 	 * @param projectId - The ID of the project to build
 	 */
-	buildProject(projectId: string): Promise<void>
+	buildProject(projectId: string): Promise<boolean>
 
 	/**
 	 * Deploy the project

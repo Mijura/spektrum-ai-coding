@@ -869,10 +869,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@honeycomb-app/jigjoy-sdk@^0.1.6":
-  version "0.1.6"
-  resolved "https://npm.pkg.github.com/download/@honeycomb-app/jigjoy-sdk/0.1.6/d74ae459d1a0c8f6e85b6e7421c70aa7fa0d382c#d74ae459d1a0c8f6e85b6e7421c70aa7fa0d382c"
-  integrity sha512-xTUhry7Tl2fbs259nzqOPoN8ZQyNK+4aduCu8qAo60En5fdVb+OwOvniEOdX/c4iDtu8QpB3hBBDQfFu0U8HHQ==
+"@honeycomb-app/jigjoy-sdk@^0.1.10":
+  version "0.1.10"
+  resolved "https://npm.pkg.github.com/download/@honeycomb-app/jigjoy-sdk/0.1.10/3f65c9b60b117c8531fbff801b25de0223ce0d0f#3f65c9b60b117c8531fbff801b25de0223ce0d0f"
+  integrity sha512-NdJwE+vQvc89xsJmkZ0Y9T8KVgTB2KvQQIDqhr4fAIsfAQ8U3RcXeEduXJ7DE+tY2aGFGm4emXFhWDf35s8P0Q==
   dependencies:
     "@aws-sdk/client-eventbridge" "^3.772.0"
 
