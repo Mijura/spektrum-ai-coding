@@ -67,7 +67,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 			`),
 		new ChatOpenAI({
-			modelName: "o1-mini",
+			modelName: "o3-mini",
 			openAIApiKey: process.env.OPENAI_API_KEY,
 		}),
 		parser,
@@ -79,8 +79,6 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 		sourceCode: sourceCodeBefore,
 		outputSchema: parser.getFormatInstructions(),
 	})
-
-	//console.log(`Source Code After Generation:\n\n${JSON.stringify(sourceCodeAfter)}`)
 
 	return {
 		..._state,

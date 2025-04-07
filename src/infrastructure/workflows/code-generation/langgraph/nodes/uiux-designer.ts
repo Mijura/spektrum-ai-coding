@@ -78,8 +78,6 @@ const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof
 
 	const updatedTicket = `Task Description: ${tickets[0]} \n\nDesign Instructions: ${design.content.toString()}`
 
-	//console.log(`\n\n\nUI/UX Designer:\n\nUpdated Ticket:\n\n${updatedTicket}`)
-
 	return {
 		..._state,
 		message: updatedTicket,

@@ -12,9 +12,9 @@ import { RootAnnotation } from "@infrastructure/workflows/code-generation/langgr
  * @returns State with graphic design guidelines
  */
 const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { ticket } = _state
+	const { message } = _state
 
-    console.log(`\n\n\nGraphic Designer:\n\nRecieved Ticket:\n\n${ticket}`)
+    console.log(`\n\n\nGraphic Designer:\n\nRecieved Ticket:\n\n${message}`)
 
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(` 
@@ -65,16 +65,16 @@ const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typ
 	])
 
 	const design = await chain.invoke({
-		ticket
+		ticket: message
 	})
 
-	const updatedTicket = `Task Description: ${ticket} \n\nDesign Instructions: ${design.content.toString()}`
+	const updatedTicket = `Design Instructions: ${design.content.toString()}`
 
 	console.log(`\n\n\nUI/UX Designer:\n\nUpdated Ticket:\n\n${updatedTicket}`)
 
 	return {
 		..._state,
-		ticket: updatedTicket,
+		message: updatedTicket,
 	}
 }
 

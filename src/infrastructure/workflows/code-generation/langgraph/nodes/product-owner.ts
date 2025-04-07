@@ -5,10 +5,9 @@ import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../state/root-annotation"
 
 
-import { ProjectSchema } from "@application/schemas/project.schema"
+import { ProjectDetailsSchema } from "@application/schemas/project.schema"
 import { z } from "zod"
 import { ProjectDto } from "@domain/types/project"
-import { ProjectStatus } from "@domain/entities/project"
 
 interface ProductOwnerOutput {
 	project: ProjectDto
@@ -17,7 +16,7 @@ interface ProductOwnerOutput {
 }
 
 const ProductOwnerSchema = z.object({
-	project: ProjectSchema,
+	projectDetails: ProjectDetailsSchema,
 	tickets: z.array(z.string()).describe("The ticket with list of features to be implemented"),
 	message: z.string().describe("Description of what you plan to do that will be shown to user")
 })
@@ -61,20 +60,14 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 			User Request: {userRequest}
 			Project Context: {project}
 
-			Project Details may be incomplete in the beginning, your task is to fill it and maintain context field every new user request. You should also populate name and description fields if needed.
+			You should also populate projectDetails.name and projectDetails.description fields if needed.
 
-			Example of valid response:
+			You must return JSON as response. Here is example of valid response:
 			{{
 				"tickets": ['Feature 1: Enable user to add notes and display it after adding', 'Feature 2: Implement note editing'],
-				"project": {{
-					id: 'e4cb89b1-c1e5-4e94-bc3c-2056344a1369',
+				"projectDetails": {{
 					name: 'Note Taking App',
 					description: 'App for taking notes',
-					ownerId: 'c8e64f96-8450-4925-8077-04bfd8e1014e',
-					created: '2025-03-13T18:08:06.653Z',
-					updated: null,
-					status: 'Active',
-					deploymentId: null
 				}},
 				"message" : "I created task and pass to the team for implementation. The team will implement note adding and displaying. "
 			}}
@@ -92,15 +85,12 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 		outputSchema: parser.getFormatInstructions(),
 	})
 
-	
-	//console.log(`\n\n\nProduct Owner:\n\nTicket:\n\n${JSON.stringify(response.ticket)}`)
-
 	return {
 		..._state,
 		tickets: response.tickets,
 		project: {
-			...response.project,
-			status: response.project.status as ProjectStatus
+			...project,
+			...response.projectDetails,
 		},
 		message: response.message
 	}

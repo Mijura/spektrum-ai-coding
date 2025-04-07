@@ -15,15 +15,15 @@ export class RunWorkflow extends EventEmitter implements RunWorkflowUseCase {
 	) {
 		super()
 
-		this.workflow = WorkflowFactory.getById(this.workflowId)
-		// Move listeners to constructor (so they are attached once)
+		this.workflow = WorkflowFactory.create(this.workflowId)
+		// listeners are placed in the constructor so they are attached once
 		this.workflow.on("update", (data: any) => {
-			console.log(`update event emitted: ${JSON.stringify(data)}`)
+			//console.log(`update event emitted: ${JSON.stringify(data)}`)
 			this.emit("update", data)
 		})
 
 		this.workflow.on("done", (data: any) => {
-			console.log(`done event emitted: ${JSON.stringify(data)}`)
+			//console.log(`done event emitted: ${JSON.stringify(data)}`)
 			this.emit("done", data)
 		})
 	}

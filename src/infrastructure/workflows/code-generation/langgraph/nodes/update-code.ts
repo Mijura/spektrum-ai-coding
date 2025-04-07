@@ -22,9 +22,10 @@ const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof R
 		await sdk.ingestActivity({
 			playerId: project.ownerId, 
 			gameId: 'honeycomb', 
-			type: 'development-activity', 
+			type: 'workflow-execution', 
 			data: {
 				projectId: project.id,
+				workflowId: 'code-generation',
 				buildStatus: buildSuccess && installSuccess ? "success" : "failed",
 			}
 		})
