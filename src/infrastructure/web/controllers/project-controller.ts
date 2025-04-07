@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { createNewProject, fetchProject, deployProject, developUserRequest, fetchAllProjects, archiveProject } from "@infrastructure/config/dependencies"
+import { createNewProject, fetchProject, deployProject, fetchAllProjects, archiveProject } from "@infrastructure/config/dependencies"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
 
 export class ProjectController {
@@ -54,42 +54,6 @@ export class ProjectController {
 		} catch (error) {
 			console.error("Error changing project status:", error)
 			res.status(500).json({ message: "Error changing project status" })
-		}
-	}
-
-	async develop(req: Request, res: Response): Promise<void> {
-		try {
-			const { projectId, message } = req.body
-
-			// Ensure that the request is executed before response ends
-			await developUserRequest.execute(projectId, message)
-
-			// Stream updates
-			const sendUpdate = (data: any) => {
-				console.log(`Streaming update: ${JSON.stringify(data)}`)
-				res.write(`data: ${JSON.stringify(data)}\n\n`)
-			}
-
-			// Stream final state
-			const sendFinal = (finalProject: any) => {
-				console.log(`Streaming final result: ${JSON.stringify(finalProject)}`)
-				res.write(`event: final\ndata: ${JSON.stringify(finalProject)}\n\n`)
-				res.end()
-			}
-
-			// Add event listeners
-			developUserRequest.on("update", sendUpdate)
-			developUserRequest.on("done", sendFinal)
-
-			// Handle client disconnect
-			req.on("close", () => {
-				console.log("Client disconnected, removing listeners...")
-				developUserRequest.off("update", sendUpdate)
-				developUserRequest.off("done", sendFinal)
-			})
-		} catch (error) {
-			console.error("Error rebuilding project:", error)
-			res.status(500).json({ error: `Error rebuilding project: ${error}` })
 		}
 	}
 

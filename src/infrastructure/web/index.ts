@@ -7,8 +7,8 @@ import { Server } from "socket.io"
 import http from "http"
 
 import dotenv from "dotenv"
-import { codeGenerationWorkflow, projectStorage } from "@infrastructure/config/dependencies"
-import { DevelopUserRequest } from "@application/use-cases/develop-user-request"
+import { projectStorage } from "@infrastructure/config/dependencies"
+import { RunWorkflow } from "@application/use-cases/run-worfklow"
 
 // Load environment variables from .env file
 dotenv.config()
@@ -37,10 +37,10 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
 	console.log(`New client connected: ${socket.id}`)
 
-	socket.on("develop", async ({ projectId, message }) => {
-		console.log(`Starting development for ${projectId} with message: ${message}`)
+	socket.on("run", async ({ projectId, message, workflowId }) => {
+		console.log(`Running workflow ${workflowId} for ${projectId} with message: ${message}`)
 
-		const developUserRequest = new DevelopUserRequest(projectStorage, codeGenerationWorkflow)
+		const worfklow = new RunWorkflow(workflowId, projectStorage)
 
 		const sendUpdate = (data: any) => {
 			console.log(`Emitting update:`, data)
@@ -54,20 +54,20 @@ io.on("connection", (socket) => {
 		}
 
 		// Attach listeners
-		developUserRequest.on("update", sendUpdate)
-		developUserRequest.on("done", sendFinal)
+		worfklow.on("update", sendUpdate)
+		worfklow.on("done", sendFinal)
 
 
 		// Clean up listeners when the client disconnects
 		socket.on("disconnect", () => {
 			console.log(`Client ${socket.id} disconnected, removing listeners...`)
-			developUserRequest.off("update", sendUpdate)
-			developUserRequest.off("done", sendFinal)
+			worfklow.off("update", sendUpdate)
+			worfklow.off("done", sendFinal)
 		})
 
 		// Execute workflow
 		try {
-			await developUserRequest.execute(projectId, message)
+			await worfklow.run(projectId, message)
 		} catch (error) {
 			console.error("Error during development workflow:", error)
 			socket.emit("error", { message: "An error occurred during development" })

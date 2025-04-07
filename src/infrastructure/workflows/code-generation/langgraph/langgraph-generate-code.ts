@@ -1,4 +1,4 @@
-import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"
+import { Workflow } from "@domain/entities/workflow"
 import { Project } from "@domain/entities/project"
 import { END, START, StateGraph } from "@langchain/langgraph"
 import { productOwner } from "./nodes/product-owner"
@@ -8,14 +8,14 @@ import { updateCode } from "./nodes/update-code"
 import { updateProject } from "./nodes/update-project-details"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { RootAnnotation } from "./state/root-annotation"
-import { EventEmitter } from "events"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
-export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerationWorkflow {
+export class LangGraphCodeGeneration extends Workflow {
+
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
 		super()
 	}
 
-	async execute(project: Project, message: string): Promise<Project> {
+	async run(project: Project, message: string): Promise<Project> {
 		
 		const workflow = new StateGraph({
 			input: RootAnnotation,
