@@ -3,7 +3,6 @@
 *.local
 *.log*
 
-dist
 node_modules
 
 # IDE
