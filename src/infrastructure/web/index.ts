@@ -1,4 +1,9 @@
 import express from "express"
+import dotenv from "dotenv"
+
+// Load environment variables from .env file
+dotenv.config()
+
 import { projectRouter } from "@infrastructure/web/routes/project-routes"
 import { ticketRouter } from "@infrastructure/web/routes/ticket-routes"
 import { corsMiddleware } from "@infrastructure/web/middleware/allow-requests"
@@ -6,12 +11,11 @@ import { serveProjectFilesMiddleware } from "@infrastructure/web/middleware/serv
 import { Server } from "socket.io"
 import http from "http"
 
-import dotenv from "dotenv"
+
 import { projectStorage } from "@infrastructure/config/dependencies"
 import { RunWorkflow } from "@application/use-cases/run-worfklow"
 
-// Load environment variables from .env file
-dotenv.config()
+
 
 const app = express()
 

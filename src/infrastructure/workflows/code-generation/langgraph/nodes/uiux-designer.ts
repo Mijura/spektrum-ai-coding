@@ -2,6 +2,7 @@ import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { RootAnnotation } from "../state/root-annotation"
+import { claude37Sonnet } from "@infrastructure/utils/ai-models"
 
 /**
  * UI/UX Designer Node
@@ -66,10 +67,7 @@ const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof
 			- Maintain **cursor position** after reopening an edited note.  
 
 			`),
-		new ChatOpenAI({
-			modelName: "o1-mini",
-			apiKey: process.env.OPENAI_API_KEY,
-		}),
+			claude37Sonnet,
 	])
 
 	const design = await chain.invoke({

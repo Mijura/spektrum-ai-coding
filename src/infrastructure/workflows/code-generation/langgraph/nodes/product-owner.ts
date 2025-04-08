@@ -8,6 +8,7 @@ import { RootAnnotation } from "../state/root-annotation"
 import { ProjectDetailsSchema } from "@application/schemas/project.schema"
 import { z } from "zod"
 import { ProjectDto } from "@domain/types/project"
+import { claude37Sonnet } from "@infrastructure/utils/ai-models"
 
 interface ProductOwnerOutput {
 	project: ProjectDto
@@ -72,10 +73,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 				"message" : "I created task and pass to the team for implementation. The team will implement note adding and displaying. "
 			}}
 			`),
-		new ChatOpenAI({
-			modelName: "o1-mini",
-			apiKey: process.env.OPENAI_API_KEY
-		}),
+			claude37Sonnet,
 		parser,
 	])
 

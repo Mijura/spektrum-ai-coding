@@ -43,9 +43,7 @@ export class LangGraphCodeGeneration extends Workflow {
 			{ streamMode: "updates" }
 		)) {
 			for (const [node, values] of Object.entries(chunk)) {
-				console.log(`Receiving update from node: ${node}`)
-				console.log(values)
-				console.log("\n====\n")
+
 				let message = (values as any).message
 				const update = { node, message }
 

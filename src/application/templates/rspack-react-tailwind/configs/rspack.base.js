@@ -1,7 +1,5 @@
 const path = require("path")
 const rspack = require("@rspack/core")
-const Dotenv = require("dotenv-webpack")
-const { TsCheckerRspackPlugin } = require('ts-checker-rspack-plugin');
 
 module.exports = {
 	entry: {
@@ -51,21 +49,7 @@ module.exports = {
 		}),
 		new rspack.HtmlRspackPlugin({
 			template: path.join(__dirname, "../index.html"),
-		}),
-		new Dotenv({
-			path: "./.env",
-			safe: true,
-		}),
-		new TsCheckerRspackPlugin({
-			typescript: {
-			  configOverwrite: {
-				compilerOptions: {
-				  jsx: "react-jsx", 
-				  allowJs: true, 
-				},
-			  },
-			},
-		  }),
+		})
 	],
 	resolve: {
 		extensions: [".jsx", ".tsx", ".ts", ".js", ".json"],
