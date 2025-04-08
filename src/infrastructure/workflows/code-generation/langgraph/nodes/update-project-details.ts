@@ -1,4 +1,5 @@
-import { projectStorage } from "@infrastructure/config/dependencies"
+
+import { projectStorage } from "@infrastructure/dependencies/web"
 import { RootAnnotation } from "../state/root-annotation"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
 

@@ -1,4 +1,3 @@
-import { BaseMessage } from "@langchain/core/messages"
 import { ProjectDto, SourceCodeDto } from "@domain/types/project"
 import { Annotation } from "@langchain/langgraph"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"

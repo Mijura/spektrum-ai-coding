@@ -9,6 +9,7 @@ import { updateProject } from "./nodes/update-project-details"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { RootAnnotation } from "./state/root-annotation"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
+import { principalDeveloper } from "./nodes/principal-js-developer"
 export class LangGraphCodeGeneration extends Workflow {
 
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
@@ -22,13 +23,15 @@ export class LangGraphCodeGeneration extends Workflow {
 			output: RootAnnotation,
 		})
 			.addNode("ProductOwner", productOwner)
+			.addNode("PrincipalDeveloper", principalDeveloper)
 			.addNode("ReactDeveloper", reactDeveloper)
 			.addNode("UiUxDesigner", uiUxDesigner)
 			.addNode("updateCode", updateCode)
 			.addNode("updateProject", updateProject)
 			.addEdge(START, "ProductOwner")
 			.addEdge("ProductOwner", "UiUxDesigner")
-			.addEdge("UiUxDesigner", "ReactDeveloper")
+			.addEdge("UiUxDesigner", "PrincipalDeveloper")
+			.addEdge("PrincipalDeveloper", "ReactDeveloper")
 			.addEdge("ReactDeveloper", "updateCode")
 			.addEdge("updateCode", "updateProject")
 			.addEdge("updateProject", END)

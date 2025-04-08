@@ -1,4 +1,3 @@
-import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
@@ -6,7 +5,7 @@ import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../state/root-annotation"
 import { SourceCodeSchema } from "@application/schemas/source-code.schema"
 import { SourceCodeDto } from "@domain/types/project"
-import { claude35Sonnet, claude37Sonnet } from "@infrastructure/utils/ai-models"
+import { reactDeveloperModel } from "@infrastructure/dependencies/ai-models"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCodeDto>(),
@@ -61,7 +60,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 
 			`),
-			claude35Sonnet,
+			reactDeveloperModel,
 		parser,
 	])
 

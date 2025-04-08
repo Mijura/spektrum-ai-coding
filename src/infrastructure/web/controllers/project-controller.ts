@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
-import { createNewProject, fetchProject, deployProject, fetchAllProjects, archiveProject } from "@infrastructure/config/dependencies"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
-
+import { createNewProject, fetchProject, deployProject, fetchAllProjects, archiveProject } from "@infrastructure/dependencies/web"
 export class ProjectController {
 
 	constructor() {}

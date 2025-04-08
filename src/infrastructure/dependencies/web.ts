@@ -1,7 +1,11 @@
+// Controllers
+import { TicketController } from "@infrastructure/web/controllers/ticket-controller"
+import { ProjectController } from "@infrastructure/web/controllers/project-controller"
+export const projectController = new ProjectController()
+export const ticketController = new TicketController()
 
 
-
-// Tools
+// Services
 import { FileSystemPort } from "@domain/persistence/file-system"
 import { PackageManager } from "@domain/utils/package-manager"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
@@ -11,15 +15,11 @@ export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
 export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopmentService(yarnPackageManager, fileSystem)
 
-// Controllers
-import { TicketController } from "@infrastructure/web/controllers/ticket-controller"
-import { ProjectController } from "@infrastructure/web/controllers/project-controller"
-export const projectController = new ProjectController()
-export const ticketController = new TicketController()
 
 // Repositories
 import { DynamoDBProjectRepository } from "@infrastructure/persistence/dynamodb/project-repository"
 import { DynamoDBTicketRepository } from "@infrastructure/persistence/dynamodb/ticket-repository"
+
 
 // Storage
 import { ProjectStorage } from "@domain/persistence/project-storage"

@@ -1,6 +1,7 @@
-import { createNewTicket, fetchAllTickets } from "@infrastructure/config/dependencies"
+
 import { Request, Response } from "express"
 import { TicketMapper } from "@domain/mappers/ticket-mapper"
+import { createNewTicket, fetchAllTickets } from "@infrastructure/dependencies/web"
 
 export class TicketController {
 

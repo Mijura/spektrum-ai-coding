@@ -1,4 +1,5 @@
-import { ticketController } from "@infrastructure/config/dependencies"
+
+import { ticketController } from "@infrastructure/dependencies/web"
 import express, { Request, Response } from "express"
 
 const router = express.Router()

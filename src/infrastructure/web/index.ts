@@ -11,9 +11,8 @@ import { serveProjectFilesMiddleware } from "@infrastructure/web/middleware/serv
 import { Server } from "socket.io"
 import http from "http"
 
-
-import { projectStorage } from "@infrastructure/config/dependencies"
 import { RunWorkflow } from "@application/use-cases/run-worfklow"
+import { projectStorage } from "@infrastructure/dependencies/web"
 
 
 

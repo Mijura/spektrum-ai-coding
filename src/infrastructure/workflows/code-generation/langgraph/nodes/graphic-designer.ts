@@ -1,8 +1,7 @@
-import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { RootAnnotation } from "@infrastructure/workflows/code-generation/langgraph/state/root-annotation"
-
+import { graphicDesignerModel } from "@infrastructure/dependencies/ai-models"
 /**
  * CURRENTLY NOT IN USE. 
  * 
@@ -58,10 +57,7 @@ const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typ
             Existing Source Code: {{sourceCode}}
 
 			`),
-		new ChatOpenAI({
-			modelName: "o1-mini",
-			apiKey: process.env.OPENAI_API_KEY,
-		}),
+            graphicDesignerModel
 	])
 
 	const design = await chain.invoke({

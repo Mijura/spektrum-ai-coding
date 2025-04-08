@@ -1,4 +1,3 @@
-import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
@@ -8,7 +7,7 @@ import { RootAnnotation } from "../state/root-annotation"
 import { ProjectDetailsSchema } from "@application/schemas/project.schema"
 import { z } from "zod"
 import { ProjectDto } from "@domain/types/project"
-import { claude37Sonnet } from "@infrastructure/utils/ai-models"
+import { productOwnerModel } from "@infrastructure/dependencies/ai-models"
 
 interface ProductOwnerOutput {
 	project: ProjectDto
@@ -73,7 +72,7 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 				"message" : "I created task and pass to the team for implementation. The team will implement note adding and displaying. "
 			}}
 			`),
-			claude37Sonnet,
+			productOwnerModel,
 		parser,
 	])
 
