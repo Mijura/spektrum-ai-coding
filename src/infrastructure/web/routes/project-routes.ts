@@ -1,4 +1,4 @@
-import { projectController } from "@infrastructure/config/dependencies"
+import { projectController } from "@infrastructure/dependencies/web"
 import express, { Request, Response } from "express"
 
 const router = express.Router()

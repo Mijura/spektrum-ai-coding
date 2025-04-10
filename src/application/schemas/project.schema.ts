@@ -1,18 +1,17 @@
+import { ProjectStatus } from "@domain/entities/project"
 import { z } from "zod"
 
-const ProjectStatusSchema = z.enum(['Active', 'Archived'])
-
-const ProjectSchema = z.object({
-	id: z.string().describe("The project id"),
+const ProjectDetailsSchema = z.object({
+	id: z.string().describe("Unique identifier of the project."),
+	ownerId: z.string().describe("Unique identifier of the project owner."),
+	created: z.string().describe("Date and time of the project creation."),
+	updated: z.string().nullable().describe("Date and time of the project last update."),
+	deploymentId: z.string().nullable().describe("Unique identifier of the project deployment."),
+	status: z.nativeEnum(ProjectStatus).describe("Current status of the project."),
 	name: z.string().describe("Short name of the project. Should be filled only if it's empty."),
-	description: z.string().describe("Short description of the project purpose. Should be filled only if it's empty."),
-	ownerId: z.string().describe("The project owner id"),
-	deploymentId: z.string().describe("Project deploymen id").nullable(),
-	created: z.string().describe("Date of project creation"),
-	updated: z.string().describe("Date of project update").nullable(),
-	status: ProjectStatusSchema
+	description: z.string().describe("Short description of the project purpose. Should be filled only if it's empty.")
 })
 
 
 
-export { ProjectSchema }
+export { ProjectDetailsSchema }

@@ -1,7 +1,7 @@
-import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { RootAnnotation } from "../state/root-annotation"
+import { uiuxDesignerModel } from "@infrastructure/dependencies/ai-models"
 
 /**
  * UI/UX Designer Node
@@ -12,7 +12,7 @@ import { RootAnnotation } from "../state/root-annotation"
  * @returns State with updated ticket
  */
 const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { tickets } = _state
+	const { ticket } = _state
 
 	//console.log(`\n\n\nUI/UX Designer:\n\nRecieved Ticket:\n\n${ticket}`)
 
@@ -66,19 +66,14 @@ const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof
 			- Maintain **cursor position** after reopening an edited note.  
 
 			`),
-		new ChatOpenAI({
-			modelName: "o1-mini",
-			apiKey: process.env.OPENAI_API_KEY,
-		}),
+			uiuxDesignerModel,
 	])
 
 	const design = await chain.invoke({
-		ticket: tickets[0]
+		ticket: ticket
 	})
 
-	const updatedTicket = `Task Description: ${tickets[0]} \n\nDesign Instructions: ${design.content.toString()}`
-
-	//console.log(`\n\n\nUI/UX Designer:\n\nUpdated Ticket:\n\n${updatedTicket}`)
+	const updatedTicket = `Task Description: ${ticket} \n\nDesign Instructions: ${design.content.toString()}`
 
 	return {
 		..._state,

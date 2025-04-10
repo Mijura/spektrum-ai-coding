@@ -1,25 +1,29 @@
-import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../state/root-annotation"
 
 
-import { ProjectSchema } from "@application/schemas/project.schema"
+import { ProjectDetailsSchema } from "@application/schemas/project.schema"
 import { z } from "zod"
 import { ProjectDto } from "@domain/types/project"
-import { ProjectStatus } from "@domain/entities/project"
+import { productOwnerModel } from "@infrastructure/dependencies/ai-models"
 
 interface ProductOwnerOutput {
 	project: ProjectDto
-	tickets: string[]
+	ticket: {
+		title: string
+		description: string
+	}
 	message: string
 }
 
 const ProductOwnerSchema = z.object({
-	project: ProjectSchema,
-	tickets: z.array(z.string()).describe("The ticket with list of features to be implemented"),
-	message: z.string().describe("Description of what you plan to do that will be shown to user")
+	projectDetails: ProjectDetailsSchema,
+	ticket: z.object({
+		title: z.string().describe("Short and concise title of the ticket."),
+		description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
+	message: z.string().describe("Concrete Comment to user about what you plan to do or what you did.")
 })
 
 
@@ -32,75 +36,70 @@ const ProductOwnerSchema = z.object({
  * @returns State with ticket
  */
 const productOwner = async (_state: typeof RootAnnotation.State): Promise<ProductOwnerOutput> => {
-	const { userRequest, project } = _state
-
-	//console.log(`\n\n\nProduct Owner:\n\nRecieved Ticket:\n\n${userRequest}`)
+	const { ticket, project } = _state
 
 	const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
 
 	const chain = RunnableSequence.from([
-		PromptTemplate.fromTemplate(`You are an product owner exper. Your task is to transform user request into the list of tickets for developers.
+		PromptTemplate.fromTemplate(`
+			
+			### Role:
+			You are an product owner expert on React project with Tailwind CSS and Framer Motion.
+			
+			### **Your Task:**
+			1) Your task is to transform refine ticket into appropriate title and description for developers.
+			- Create a concise and minimal description. If the request is too broad try to minimize the request. 
+			- Each task should be cohesive and should be enough to display functionality to user.
+			- For example if the user demand note taking app, try to figure out what is the essence for this request. 
+				** In this case you should create ticket with title "Enable user to add notes and display it after adding" and description "Implement note adding and displaying functioanlity" **
+				** You pick this set of features because note adding do not have sense without displaying it and it represents core functionality of note taking app **
+			- You should not suggest any additional improvements nor too broad features
+				** like "Improve UI/UX" or "Improve performance" nor "Add tests" nor "Add documentation" nor any technical features **
+				** also you should not suggest any additional features which represents new units of work **
 
-			Create a concise and minimal description. If the request is too broad try to minimize the request. 
-			Each task should be cohesive representing unit which have sense for user.
-			For example if the user demand note taking app, try to figure out what is the essence for this request.
+			2) If Project Details do not have appropriate name and/or description, you should populate them with appropriate values.
+				** Example of Invalid project name: "My Project" ** and ** Valid project name: "Note Taking App" **
+				** Example of Invalid project description: "Empty project..." ** and ** Valid project description: "App for taking notes. It allows user to add, edit and delete notes..." **
 
-			Good output in this case would be:
-			Feature 1: Enable user to add notes and see all added notes.
-			 
-			Bad otput:
-			Feature 1: Implement login and registration to the system
-			Feature 2: Enable user to add notes
-			Feature 3: Implement notes overview
-			Feature 4: Implement notes editin
-			Feature 5: Implement note deletion
-			Feature 6: Pay attention on performances
+			### **Project Details**
+			- **Project Details:** {project}
+			- **Ticket Details:** {ticket}
 
-			To summuarize don't suggest any additional improvements nor too broad features - just essence of user request.
-
-			User Request: {userRequest}
-			Project Context: {project}
-
-			Project Details may be incomplete in the beginning, your task is to fill it and maintain context field every new user request. You should also populate name and description fields if needed.
-
-			Example of valid response:
+			You must return JSON as response. Here is example of valid response:
 			{{
-				"tickets": ['Feature 1: Enable user to add notes and display it after adding', 'Feature 2: Implement note editing'],
-				"project": {{
-					id: 'e4cb89b1-c1e5-4e94-bc3c-2056344a1369',
+				"ticket": {{title: 'Enable user to add notes and display it after adding', description: 'Implement note adding and displaying functioanlity. Do not add any additional features nor any improvements.'}},
+				"projectDetails": {{
+					id: 'u5849j-435-345-345',
+					ownerId: '435-345-345-345',
+					created: '2021-01-01',
+					updated: '2021-01-01',
+					deploymentId: null,
+					status: 'Active',
 					name: 'Note Taking App',
 					description: 'App for taking notes',
-					ownerId: 'c8e64f96-8450-4925-8077-04bfd8e1014e',
-					created: '2025-03-13T18:08:06.653Z',
-					updated: null,
-					status: 'Active',
-					deploymentId: null
 				}},
-				"message" : "I created task and pass to the team for implementation. The team will implement note adding and displaying. "
+				"message" : "I have updated ticket deatils and created tasks for note adding and displaying."
 			}}
 			`),
-		new ChatOpenAI({
-			modelName: "o1-mini",
-			apiKey: process.env.OPENAI_API_KEY
-		}),
+			productOwnerModel,
 		parser,
 	])
 
 	const response = await chain.invoke({
-		userRequest,
+		ticket,
 		project,
 		outputSchema: parser.getFormatInstructions(),
 	})
 
-	
-	//console.log(`\n\n\nProduct Owner:\n\nTicket:\n\n${JSON.stringify(response.ticket)}`)
-
 	return {
 		..._state,
-		tickets: response.tickets,
+		ticket: {
+			...ticket,
+			...response.ticket
+		},
 		project: {
-			...response.project,
-			status: response.project.status as ProjectStatus
+			...project,
+			...response.projectDetails,
 		},
 		message: response.message
 	}

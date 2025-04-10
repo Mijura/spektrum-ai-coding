@@ -1,4 +1,3 @@
-import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
@@ -6,6 +5,7 @@ import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../state/root-annotation"
 import { SourceCodeSchema } from "@application/schemas/source-code.schema"
 import { SourceCodeDto } from "@domain/types/project"
+import { reactDeveloperModel } from "@infrastructure/dependencies/ai-models"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCodeDto>(),
@@ -22,19 +22,14 @@ const DeveloperOutputAnnotation = Annotation.Root({
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 	const { project, message, frontendDevelopmentService } = _state
 
-	//console.log(`\n\n\nDeveloper:\n\nRecieved Ticket:\n\n${ticket}`)
-
-
 	const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(project.id)
-	//console.log(`Source Code Before Generation:\n\n${JSON.stringify(sourceCodeBefore)}`)
 
 	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
 	
 	const chain = RunnableSequence.from([
-		PromptTemplate.fromTemplate(`You are an expert React Developer.
-
+		PromptTemplate.fromTemplate(`
 			### Role:
-			You are an AI React Frontend Developer working on React/Typescript project. 
+			You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
 
 			### **Your Task:**
 			1. **Analyze the current source code** to determine if the required functionality already exists.
@@ -54,7 +49,6 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 			- **Current Source Code:** {sourceCode}
 
 			Important:
-			- Pay attention on tailwind version. We are using Tailwind CSS v3, so all the classes should be compatible with this version.
 			- Double check all imports or require statements to ensure they are listed in the package.json file.
 			- Respond only in valid JSON. The JSON object you return should match the following schema:
 
@@ -66,10 +60,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 
 			`),
-		new ChatOpenAI({
-			modelName: "o1-mini",
-			openAIApiKey: process.env.OPENAI_API_KEY,
-		}),
+			reactDeveloperModel,
 		parser,
 	])
 
@@ -79,8 +70,6 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 		sourceCode: sourceCodeBefore,
 		outputSchema: parser.getFormatInstructions(),
 	})
-
-	//console.log(`Source Code After Generation:\n\n${JSON.stringify(sourceCodeAfter)}`)
 
 	return {
 		..._state,

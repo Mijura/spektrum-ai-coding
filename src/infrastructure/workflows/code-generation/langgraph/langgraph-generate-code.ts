@@ -1,33 +1,42 @@
-import { CodeGenerationWorkflow } from "@domain/workflows/code-generation"
+import { Workflow } from "@domain/entities/workflow"
 import { Project } from "@domain/entities/project"
 import { END, START, StateGraph } from "@langchain/langgraph"
 import { productOwner } from "./nodes/product-owner"
 import { reactDeveloper } from "./nodes/react-developer"
 import { uiUxDesigner } from "./nodes/uiux-designer"
 import { updateCode } from "./nodes/update-code"
-import { updateProject } from "./nodes/update-project-details"
+import { updateProject } from "./nodes/update-project"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { RootAnnotation } from "./state/root-annotation"
-import { EventEmitter } from "events"
 import { ProjectMapper } from "@domain/mappers/project-mapper"
-export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerationWorkflow {
+import { principalDeveloper } from "./nodes/principal-js-developer"
+import { Ticket } from "@domain/entities/ticket"
+import { TicketMapper } from "@domain/mappers/ticket-mapper"
+export class LangGraphCodeGeneration extends Workflow {
+
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
 		super()
 	}
 
-	async execute(project: Project, message: string): Promise<Project> {
+	async run(project: Project, ticket: Ticket): Promise<Project> {
 		
+		console.log(`Running workflow for project ${project.id} and ticket ${ticket.id}`)
+		console.log(`Project: ${JSON.stringify(project)}`)
+		console.log(`Ticket: ${JSON.stringify(ticket)}`)
+		console.log(`--------------------------------`)
 		const workflow = new StateGraph({
 			input: RootAnnotation,
 			output: RootAnnotation,
 		})
 			.addNode("ProductOwner", productOwner)
+			//.addNode("PrincipalDeveloper", principalDeveloper)
 			.addNode("ReactDeveloper", reactDeveloper)
 			.addNode("UiUxDesigner", uiUxDesigner)
 			.addNode("updateCode", updateCode)
 			.addNode("updateProject", updateProject)
 			.addEdge(START, "ProductOwner")
 			.addEdge("ProductOwner", "UiUxDesigner")
+			//.addEdge("UiUxDesigner", "PrincipalDeveloper")
 			.addEdge("UiUxDesigner", "ReactDeveloper")
 			.addEdge("ReactDeveloper", "updateCode")
 			.addEdge("updateCode", "updateProject")
@@ -36,16 +45,14 @@ export class LangGraphCodeGeneration extends EventEmitter implements CodeGenerat
 
 		for await (const chunk of await workflow.stream(
 			{
-				userRequest: message,
+				ticket: TicketMapper.toDto(ticket),
 				project: ProjectMapper.toDto(project),
 				frontendDevelopmentService: this.frontendDevelopmentService,
 			},
 			{ streamMode: "updates" }
 		)) {
 			for (const [node, values] of Object.entries(chunk)) {
-				console.log(`Receiving update from node: ${node}`)
-				console.log(values)
-				console.log("\n====\n")
+
 				let message = (values as any).message
 				const update = { node, message }
 

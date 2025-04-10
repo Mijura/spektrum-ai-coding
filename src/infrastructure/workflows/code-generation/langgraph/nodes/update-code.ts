@@ -1,9 +1,10 @@
 import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
 import { RootAnnotation } from "../state/root-annotation"
+import { TicketStatus } from "@domain/entities/ticket"
 
 
 const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { project, sourceCode, frontendDevelopmentService } = _state
+	const { ticket, project, sourceCode, frontendDevelopmentService } = _state
 	const sdk = new JigJoyActivitySDK(process.env.JIGJOY_ENDPOINT)
 
 	let buildSuccess = false
@@ -13,18 +14,20 @@ const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof R
 		await frontendDevelopmentService.updateSourceCode(project.id, sourceCode)
 		installSuccess = await frontendDevelopmentService.installDependencies(project.id)
 		buildSuccess = await frontendDevelopmentService.buildProject(project.id)
-
+		ticket.status = TicketStatus.DONE
 	} catch (error) {
 		console.error("Error writing files:", error)
+		ticket.status = TicketStatus.IN_PROGRESS
 		throw error
 	} finally {
 
 		await sdk.ingestActivity({
 			playerId: project.ownerId, 
 			gameId: 'honeycomb', 
-			type: 'development-activity', 
+			type: 'workflow-execution', 
 			data: {
 				projectId: project.id,
+				workflowId: 'code-generation',
 				buildStatus: buildSuccess && installSuccess ? "success" : "failed",
 			}
 		})

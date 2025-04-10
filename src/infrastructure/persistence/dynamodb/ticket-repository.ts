@@ -1,4 +1,4 @@
-import { DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"
+import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { TicketStorage } from "@domain/persistence/ticket-storage"
 import { Ticket } from "@domain/entities/ticket"
@@ -14,10 +14,11 @@ const ddbDocClient = DynamoDBDocumentClient.from(client)
 
 export class DynamoDBTicketRepository implements TicketStorage {
 
+
 	async save(ticket: Ticket): Promise<Ticket> {
 		const tableName = process.env.TICKET_TABLE
 
-		console.log(`User is trying to save ticket with ${ticket.id} to dynamodb table ${tableName}.`)
+		console.log(`Saving ticket with ${ticket.id} to dynamodb table ${tableName}.`)
 
 		const ticketDto: TicketDto = TicketMapper.toDto(ticket)
 
@@ -31,10 +32,29 @@ export class DynamoDBTicketRepository implements TicketStorage {
 		return ticket
 	}
 
+	async findById(id: string): Promise<Ticket | null> {
+		const tableName = process.env.TICKET_TABLE
+
+		console.log(`Fetching ticket with id ${id} from dynamodb table ${tableName}.`)
+		const params = {
+			TableName: tableName,
+			Key: { id },
+		}
+
+		const { Item: item } = await ddbDocClient.send(new GetCommand(params))
+
+		if (!item) throw new Error(`Ticket not found!`)
+
+		const ticketDto: TicketDto = item as TicketDto
+
+		return TicketMapper.toDomain(ticketDto)
+	}
+
 	async findAll(projectId: string): Promise<Ticket[]> {
 
 		const tableName = process.env.TICKET_TABLE
 
+		console.log(`Fetching all tickets for project with ${projectId} from dynamodb table ${tableName}.`)
 		const params = {
 			KeyConditionExpression: "projectId = :projectId",
 			IndexName: "projectGSI",
