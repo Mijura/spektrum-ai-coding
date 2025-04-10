@@ -38,8 +38,8 @@ const claude35Sonnet = new ChatAnthropic({
     cache: true,
 })
 
-export const productOwnerModel = gpt4oMini
-export const graphicDesignerModel = gpt4oMini
-export const uiuxDesignerModel = gpt4oMini
+export const productOwnerModel = o3Mini
+export const graphicDesignerModel = o3Mini
+export const uiuxDesignerModel = o3Mini
 export const principalDeveloperModel = o3Mini
-export const reactDeveloperModel = o1Mini
+export const reactDeveloperModel = o3Mini

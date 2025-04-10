@@ -4,6 +4,7 @@ import { ProjectStorage } from "@domain/persistence/project-storage"
 import { Workflow } from "@domain/entities/workflow"
 import EventEmitter from "events"
 import { WorkflowFactory } from "@domain/utils/workflow-factory"
+import { TicketStorage } from "@domain/persistence/ticket-storage"
 
 export class RunWorkflow extends EventEmitter implements RunWorkflowUseCase {
 
@@ -11,7 +12,8 @@ export class RunWorkflow extends EventEmitter implements RunWorkflowUseCase {
 
 	constructor(
 		private readonly workflowId: string,
-		private readonly projectStorage: ProjectStorage
+		private readonly projectStorage: ProjectStorage,
+		private readonly ticketStorage: TicketStorage
 	) {
 		super()
 
@@ -26,12 +28,16 @@ export class RunWorkflow extends EventEmitter implements RunWorkflowUseCase {
 		})
 	}
 
-	async run(projectId: string, message: string): Promise<Project> {
+	async run(projectId: string, ticketId: string): Promise<Project> {
 		const project = await this.projectStorage.findById(projectId)
+		const ticket = await this.ticketStorage.findById(ticketId)
 		if (!project) {
 			throw new Error("Project not found")
 		}
+		if (!ticket) {
+			throw new Error("Ticket not found")
+		}
 
-		return await this.workflow.run(project, message)
+		return await this.workflow.run(project, ticket)
 	}
 }

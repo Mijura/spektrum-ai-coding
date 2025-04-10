@@ -12,7 +12,7 @@ import { Server } from "socket.io"
 import http from "http"
 
 import { RunWorkflow } from "@application/use-cases/run-worfklow"
-import { projectStorage } from "@infrastructure/dependencies/web"
+import { projectStorage, ticketStorage } from "@infrastructure/dependencies/web"
 
 
 
@@ -40,10 +40,10 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
 	console.log(`New client connected: ${socket.id}`)
 
-	socket.on("run", async ({ projectId, message, workflowId }) => {
-		console.log(`Running workflow ${workflowId} for ${projectId} with message: ${message}`)
+	socket.on("run", async ({ projectId, ticketId, workflowId }) => {
+		console.log(`Running workflow ${workflowId} for ${projectId} with ticketId: ${ticketId}`)
 
-		const worfklow = new RunWorkflow(workflowId, projectStorage)
+		const worfklow = new RunWorkflow(workflowId, projectStorage, ticketStorage)
 
 		const sendUpdate = (data: any) => {
 			console.log(`Emitting update:`, data)
@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
 
 		// Execute workflow
 		try {
-			await worfklow.run(projectId, message)
+			await worfklow.run(projectId, ticketId)
 		} catch (error) {
 			console.error("Error during development workflow:", error)
 			socket.emit("error", { message: "An error occurred during development" })

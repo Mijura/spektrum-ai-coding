@@ -11,14 +11,19 @@ import { productOwnerModel } from "@infrastructure/dependencies/ai-models"
 
 interface ProductOwnerOutput {
 	project: ProjectDto
-	tickets: string[]
+	ticket: {
+		title: string
+		description: string
+	}
 	message: string
 }
 
 const ProductOwnerSchema = z.object({
 	projectDetails: ProjectDetailsSchema,
-	tickets: z.array(z.string()).describe("The ticket with list of features to be implemented"),
-	message: z.string().describe("Description of what you plan to do that will be shown to user")
+	ticket: z.object({
+		title: z.string().describe("Short and concise title of the ticket."),
+		description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
+	message: z.string().describe("Concrete Comment to user about what you plan to do or what you did.")
 })
 
 
@@ -31,45 +36,49 @@ const ProductOwnerSchema = z.object({
  * @returns State with ticket
  */
 const productOwner = async (_state: typeof RootAnnotation.State): Promise<ProductOwnerOutput> => {
-	const { userRequest, project } = _state
-
-	//console.log(`\n\n\nProduct Owner:\n\nRecieved Ticket:\n\n${userRequest}`)
+	const { ticket, project } = _state
 
 	const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
 
 	const chain = RunnableSequence.from([
-		PromptTemplate.fromTemplate(`You are an product owner exper. Your task is to transform user request into the list of tickets for developers.
+		PromptTemplate.fromTemplate(`
+			
+			### Role:
+			You are an product owner expert on React project with Tailwind CSS and Framer Motion.
+			
+			### **Your Task:**
+			1) Your task is to transform refine ticket into appropriate title and description for developers.
+			- Create a concise and minimal description. If the request is too broad try to minimize the request. 
+			- Each task should be cohesive and should be enough to display functionality to user.
+			- For example if the user demand note taking app, try to figure out what is the essence for this request. 
+				** In this case you should create ticket with title "Enable user to add notes and display it after adding" and description "Implement note adding and displaying functioanlity" **
+				** You pick this set of features because note adding do not have sense without displaying it and it represents core functionality of note taking app **
+			- You should not suggest any additional improvements nor too broad features
+				** like "Improve UI/UX" or "Improve performance" nor "Add tests" nor "Add documentation" nor any technical features **
+				** also you should not suggest any additional features which represents new units of work **
 
-			Create a concise and minimal description. If the request is too broad try to minimize the request. 
-			Each task should be cohesive representing unit which have sense for user.
-			For example if the user demand note taking app, try to figure out what is the essence for this request.
+			2) If Project Details do not have appropriate name and/or description, you should populate them with appropriate values.
+				** Example of Invalid project name: "My Project" ** and ** Valid project name: "Note Taking App" **
+				** Example of Invalid project description: "Empty project..." ** and ** Valid project description: "App for taking notes. It allows user to add, edit and delete notes..." **
 
-			Good output in this case would be:
-			Feature 1: Enable user to add notes and see all added notes.
-			 
-			Bad otput:
-			Feature 1: Implement login and registration to the system
-			Feature 2: Enable user to add notes
-			Feature 3: Implement notes overview
-			Feature 4: Implement notes editin
-			Feature 5: Implement note deletion
-			Feature 6: Pay attention on performances
-
-			To summuarize don't suggest any additional improvements nor too broad features - just essence of user request.
-
-			User Request: {userRequest}
-			Project Context: {project}
-
-			You should also populate projectDetails.name and projectDetails.description fields if needed.
+			### **Project Details**
+			- **Project Details:** {project}
+			- **Ticket Details:** {ticket}
 
 			You must return JSON as response. Here is example of valid response:
 			{{
-				"tickets": ['Feature 1: Enable user to add notes and display it after adding', 'Feature 2: Implement note editing'],
+				"ticket": {{title: 'Enable user to add notes and display it after adding', description: 'Implement note adding and displaying functioanlity. Do not add any additional features nor any improvements.'}},
 				"projectDetails": {{
+					id: 'u5849j-435-345-345',
+					ownerId: '435-345-345-345',
+					created: '2021-01-01',
+					updated: '2021-01-01',
+					deploymentId: null,
+					status: 'Active',
 					name: 'Note Taking App',
 					description: 'App for taking notes',
 				}},
-				"message" : "I created task and pass to the team for implementation. The team will implement note adding and displaying. "
+				"message" : "I have updated ticket deatils and created tasks for note adding and displaying."
 			}}
 			`),
 			productOwnerModel,
@@ -77,14 +86,17 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 	])
 
 	const response = await chain.invoke({
-		userRequest,
+		ticket,
 		project,
 		outputSchema: parser.getFormatInstructions(),
 	})
 
 	return {
 		..._state,
-		tickets: response.tickets,
+		ticket: {
+			...ticket,
+			...response.ticket
+		},
 		project: {
 			...project,
 			...response.projectDetails,

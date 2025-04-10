@@ -12,7 +12,7 @@ import { uiuxDesignerModel } from "@infrastructure/dependencies/ai-models"
  * @returns State with updated ticket
  */
 const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { tickets } = _state
+	const { ticket } = _state
 
 	//console.log(`\n\n\nUI/UX Designer:\n\nRecieved Ticket:\n\n${ticket}`)
 
@@ -70,10 +70,10 @@ const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof
 	])
 
 	const design = await chain.invoke({
-		ticket: tickets[0]
+		ticket: ticket
 	})
 
-	const updatedTicket = `Task Description: ${tickets[0]} \n\nDesign Instructions: ${design.content.toString()}`
+	const updatedTicket = `Task Description: ${ticket} \n\nDesign Instructions: ${design.content.toString()}`
 
 	return {
 		..._state,
