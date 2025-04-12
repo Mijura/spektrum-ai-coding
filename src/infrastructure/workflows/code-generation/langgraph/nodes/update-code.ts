@@ -28,6 +28,8 @@ const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof R
 			data: {
 				projectId: project.id,
 				workflowId: 'code-generation',
+				ticketId: ticket.id,
+				ticketTitle: ticket.title,
 				buildStatus: buildSuccess && installSuccess ? "success" : "failed",
 			}
 		})
