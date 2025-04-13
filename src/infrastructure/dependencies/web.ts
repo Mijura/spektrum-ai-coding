@@ -35,6 +35,7 @@ import { DeployProject } from "@application/use-cases/deploy-project"
 import { FetchAllProjects } from "@application/use-cases/fetch-all-projects"
 import { ArchiveProject } from "@application/use-cases/archive-project"
 import { CreateNewTicket } from "@application/use-cases/create-new-ticket"
+import { UpdateTicket } from "@application/use-cases/update-ticket"
 import { FetchAllTickets } from "@application/use-cases/fetch-all-tickets"
 export const createNewProject = new CreateNewProject(frontendDevelopmentService, projectStorage)
 export const fetchProject = new FetchProject(projectStorage)
@@ -42,6 +43,7 @@ export const fetchAllProjects = new FetchAllProjects(projectStorage)
 export const deployProject = new DeployProject(frontendDevelopmentService, projectStorage)
 export const archiveProject = new ArchiveProject(projectStorage)
 export const createNewTicket = new CreateNewTicket(ticketStorage)
+export const updateTicket = new UpdateTicket(ticketStorage)
 export const fetchAllTickets = new FetchAllTickets(ticketStorage)
 
 

@@ -18,7 +18,6 @@ export class CreateNewProject implements CreateProjectUseCase {
 			await this.frontendDevelopmentService.setupProject(project.id)
 
 			// Persist the project details in the database
-
 			return await this.projectStorage.save(project)
 		} catch (error) {
 			console.error("Error creating new project:", error)

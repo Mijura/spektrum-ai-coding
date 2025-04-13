@@ -1,3 +1,4 @@
+import { TicketDto } from "@application/dto/ticket"
 import { v4 as uuidv4 } from "uuid"
 
 export enum TicketStatus {
@@ -9,7 +10,7 @@ export enum TicketStatus {
 export class Ticket {
 	public readonly id: string
     public readonly created: string
-    public readonly updated: string | null
+    public updated: string | null
     public title: string
     public description: string
     public projectId: string
@@ -39,6 +40,14 @@ export class Ticket {
 		const created = new Date().toISOString() // ISO format
 	
 		return new Ticket(id, projectId, title, description, TicketStatus.TODO, created, null)
+	}
+
+	update(ticket: TicketDto): Ticket {
+		this.title = ticket.title
+		this.description = ticket.description
+		this.status = ticket.status
+		this.updated = new Date().toISOString()
+		return this
 	}
 
 	/** Restore method to rehydrate a ticket from persisted data */
