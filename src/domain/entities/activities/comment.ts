@@ -1,25 +1,28 @@
-import { Activity, ActivityType } from "./activity"
+import { ActivityInitiator } from "./initiator"
+import { TicketActivity, TicketActivityType } from "./ticket-activity"
 
-export interface CommentActivityData {
+export class Comment {
     content: string
-}
+    ticketId: string
+    edited: boolean
 
-export class Comment extends Activity<CommentActivityData> {
-    private constructor(
-        id: string,
-        date: string,
-        assignee: string,
-        projectId: string,
-        ticketId: string,
-        data: CommentActivityData
-    ) {
-        super(id, date, assignee, ActivityType.COMMENT, projectId, ticketId, data)
+    constructor(content: string, ticketId: string) {
+        this.content = content
+        this.ticketId = ticketId
+        this.edited = false
     }
 
-    static create(id: string, date: string, assignee: string, projectId: string, ticketId: string, content: string): Comment {
-        const data: CommentActivityData = {
-            content: content
-        }
-        return new Comment(id, date, assignee, projectId, ticketId, data)
+}
+
+export class CommentActivity extends TicketActivity<Comment> {
+
+    constructor(initiator: ActivityInitiator, data: Comment) {
+        super(initiator, data, TicketActivityType.COMMENT)
+    }
+
+    static create(initiator: ActivityInitiator, ticketId: string, content: string): CommentActivity {
+
+        const data: Comment = new Comment(content, ticketId)
+        return new CommentActivity(initiator, data)
     }
 }
