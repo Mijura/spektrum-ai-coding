@@ -4,7 +4,7 @@ import { TicketActivity } from "@domain/entities/activities/ticket-activity"
 import { Ticket } from "@domain/entities/ticket"
 import { TicketActivityServicePort } from "@domain/services/ticket-activity-service"
 
-export class TicketActivityManager implements TicketActivityServicePort {
+export class TicketActivityService implements TicketActivityServicePort {
     createTicket(initiatorName: string, title: string, description: string): TicketActivity<Ticket> {
         throw new Error("Method not implemented.")
     }
