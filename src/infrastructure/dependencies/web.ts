@@ -1,6 +1,6 @@
 // Controllers
-import { TicketController } from "@infrastructure/web/controllers/ticket-controller"
-import { ProjectController } from "@infrastructure/web/controllers/project-controller"
+import { TicketController } from "@infrastructure/http/controllers/ticket-controller"
+import { ProjectController } from "@infrastructure/http/controllers/project-controller"
 export const projectController = new ProjectController()
 export const ticketController = new TicketController()
 
@@ -17,8 +17,8 @@ export const frontendDevelopmentService: FrontendDevelopmentService = new Fronte
 
 
 // Repositories
-import { DynamoDBProjectRepository } from "@infrastructure/persistence/dynamodb/project-repository"
-import { DynamoDBTicketRepository } from "@infrastructure/persistence/dynamodb/ticket-repository"
+import { DynamoDBProjectRepository } from "@infrastructure/persistence/repositories/project-repository"
+import { DynamoDBTicketRepository } from "@infrastructure/persistence/repositories/ticket-repository"
 
 
 // Storage
@@ -48,5 +48,5 @@ export const fetchAllTickets = new FetchAllTickets(ticketStorage)
 
 
 // Workflow Instances
-import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generation/langgraph/langgraph-generate-code"
+import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generation/langgraph-generate-code"
 export const codeGenerationWorkflow = new LangGraphCodeGeneration(frontendDevelopmentService)

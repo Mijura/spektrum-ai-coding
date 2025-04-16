@@ -1,5 +1,5 @@
 import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
-import { RootAnnotation } from "../state/root-annotation"
+import { RootAnnotation } from "../root-annotation"
 import { TicketStatus } from "@domain/entities/ticket"
 
 

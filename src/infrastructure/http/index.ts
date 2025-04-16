@@ -4,10 +4,10 @@ import dotenv from "dotenv"
 // Load environment variables from .env file
 dotenv.config()
 
-import { projectRouter } from "@infrastructure/web/routes/project-routes"
-import { ticketRouter } from "@infrastructure/web/routes/ticket-routes"
-import { corsMiddleware } from "@infrastructure/web/middleware/allow-requests"
-import { serveProjectFilesMiddleware } from "@infrastructure/web/middleware/serve-project-files"
+import { projectRouter } from "@infrastructure/http/routes/project-routes"
+import { ticketRouter } from "@infrastructure/http/routes/ticket-routes"
+import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
+import { serveProjectFilesMiddleware } from "@infrastructure/http/middleware/serve-project-files"
 import { Server } from "socket.io"
 import http from "http"
 

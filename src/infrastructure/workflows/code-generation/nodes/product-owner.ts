@@ -1,7 +1,7 @@
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
-import { RootAnnotation } from "../state/root-annotation"
+import { RootAnnotation } from "../root-annotation"
 
 
 import { ProjectDetailsSchema } from "@application/schemas/project.schema"

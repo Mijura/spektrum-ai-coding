@@ -1,17 +1,13 @@
 import { Workflow } from "@domain/entities/workflow"
 import { Project } from "@domain/entities/project"
 import { END, START, StateGraph } from "@langchain/langgraph"
+import { FrontendDevelopmentService } from "@application/services/fronted-development"
+import { Ticket } from "@domain/entities/ticket"
+import { RootAnnotation } from "./root-annotation"
 import { productOwner } from "./nodes/product-owner"
 import { reactDeveloper } from "./nodes/react-developer"
-import { uiUxDesigner } from "./nodes/uiux-designer"
 import { updateCode } from "./nodes/update-code"
 import { updateProject } from "./nodes/update-project"
-import { FrontendDevelopmentService } from "@application/services/fronted-development"
-import { RootAnnotation } from "./state/root-annotation"
-import { ProjectMapper } from "@domain/mappers/project-mapper"
-import { principalDeveloper } from "./nodes/principal-js-developer"
-import { Ticket } from "@domain/entities/ticket"
-import { TicketMapper } from "@domain/mappers/ticket-mapper"
 export class LangGraphCodeGeneration extends Workflow {
 
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
@@ -45,8 +41,8 @@ export class LangGraphCodeGeneration extends Workflow {
 
 		for await (const chunk of await workflow.stream(
 			{
-				ticket: TicketMapper.toDto(ticket),
-				project: ProjectMapper.toDto(project),
+				ticket: ticket,
+				project: project,
 				frontendDevelopmentService: this.frontendDevelopmentService,
 			},
 			{ streamMode: "updates" }

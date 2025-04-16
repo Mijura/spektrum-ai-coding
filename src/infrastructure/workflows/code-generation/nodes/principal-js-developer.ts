@@ -2,7 +2,7 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
-import { RootAnnotation } from "../state/root-annotation"
+import { RootAnnotation } from "../root-annotation"
 import { principalDeveloperModel } from "@infrastructure/dependencies/ai-models"
 import { z } from "zod"
 export interface InstructionsDto {

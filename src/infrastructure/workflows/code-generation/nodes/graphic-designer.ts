@@ -1,6 +1,6 @@
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
-import { RootAnnotation } from "@infrastructure/workflows/code-generation/langgraph/state/root-annotation"
+import { RootAnnotation } from "../root-annotation"
 import { graphicDesignerModel } from "@infrastructure/dependencies/ai-models"
 /**
  * CURRENTLY NOT IN USE. 

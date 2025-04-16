@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "serve": "ts-node -r tsconfig-paths/register src/infrastructure/web/index.ts",
-    "start": "ts-node -r tsconfig-paths/register src/infrastructure/web/index.ts"
+    "serve": "ts-node -r tsconfig-paths/register src/infrastructure/http/index.ts",
+    "start": "ts-node -r tsconfig-paths/register src/infrastructure/http/index.ts"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,34 @@
+import { Project, ProjectStatus } from "@domain/entities/project"
+
+
+export interface ProjectDto {
+  id: string
+  ownerId: string
+  name: string
+  description: string
+  created: string
+  updated: string | null
+  deploymentId: string | null
+  status: ProjectStatus
+}
+
+export class ProjectDtoMapper {
+  /** Maps a single domain Project entity to a DTO */
+  static toDto(project: Project): ProjectDto {
+    return {
+      id: project.id,
+      ownerId: project.ownerId,
+      name: project.name,
+      description: project.description,
+      created: project.created,
+      updated: project.updated,
+      deploymentId: project.deploymentId,
+      status: project.status,
+    }
+  }
+
+  /** Maps an array of domain Project entities to DTOs */
+  static toDtos(projects: Project[]): ProjectDto[] {
+    return projects.map(this.toDto)
+  }
+}

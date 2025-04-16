@@ -1,5 +1,6 @@
 import { Ticket } from "@domain/entities/ticket"
 import { TicketDto } from "@application/dto/ticket"
+import { TicketFactory } from "@domain/factories/ticket-factory"
 export class TicketMapper {
 
 	/** Convert Ticket entity → marshalled ticket for storage/transfer */
@@ -11,7 +12,8 @@ export class TicketMapper {
 			description: ticket.description,
 			status: ticket.status,
 			created: ticket.created,
-			updated: ticket.updated
+			updated: ticket.updated,
+			activities: []
 		}
 	}
 
@@ -25,7 +27,7 @@ export class TicketMapper {
 
 	/** Convert marshalled ticket (e.g., from DB) → Ticket entity */
 	static toDomain(data: TicketDto): Ticket {
-		return Ticket.restore(data)
+		return TicketFactory.restore(data)
 	}
 
 	static toDomains(items: TicketDto[]): Ticket[] {

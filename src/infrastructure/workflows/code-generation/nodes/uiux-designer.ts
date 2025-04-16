@@ -1,6 +1,6 @@
 import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
-import { RootAnnotation } from "../state/root-annotation"
+import { RootAnnotation } from "../root-annotation"
 import { uiuxDesignerModel } from "@infrastructure/dependencies/ai-models"
 
 /**

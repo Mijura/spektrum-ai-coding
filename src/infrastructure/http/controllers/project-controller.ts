@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { ProjectMapper } from "@domain/mappers/project-mapper"
+import { ProjectDtoMapper } from "@application/mappers/project-dto-mappers"
 import { createNewProject, fetchProject, deployProject, fetchAllProjects, archiveProject } from "@infrastructure/dependencies/web"
 export class ProjectController {
 
@@ -20,7 +20,7 @@ export class ProjectController {
 		try {
 			const { projectId } = req.params
 			const project = await fetchProject.execute(projectId)
-			const projectDTO = ProjectMapper.toDto(project)
+			const projectDTO = ProjectDtoMapper.toDto(project)
 			res.json(projectDTO)
 		} catch (error) {
 			// TODO: Handle Project Not Found
@@ -35,7 +35,7 @@ export class ProjectController {
 			const { ownerId } = req.params
 			console.log(`Fetching all projects for ${ownerId}`)
 			const projects = await fetchAllProjects.execute(ownerId)
-			const projectDtos = ProjectMapper.toDtos(projects)
+			const projectDtos = ProjectDtoMapper.toDtos(projects)
 			res.json(projectDtos)
 		} catch (error) {
 			// TODO: Handle Project Not Found
