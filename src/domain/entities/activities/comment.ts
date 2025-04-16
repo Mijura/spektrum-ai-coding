@@ -1,28 +1,29 @@
-import { ActivityInitiator } from "./initiator"
+import { Actor } from "./actor"
 import { TicketActivity, TicketActivityType } from "./ticket-activity"
 
 export class Comment {
     content: string
-    ticketId: string
     edited: boolean
 
-    constructor(content: string, ticketId: string) {
+    constructor(content: string) {
         this.content = content
-        this.ticketId = ticketId
         this.edited = false
     }
 
+    editContent(content: string) {
+        this.content = content
+        this.edited = true
+    }
+    
 }
 
 export class CommentActivity extends TicketActivity<Comment> {
 
-    constructor(initiator: ActivityInitiator, data: Comment) {
-        super(initiator, data, TicketActivityType.COMMENT)
+    private constructor(actor: Actor, data: Comment) {
+        super(actor, data, TicketActivityType.COMMENT_CREATED)
     }
 
-    static create(initiator: ActivityInitiator, ticketId: string, content: string): CommentActivity {
-
-        const data: Comment = new Comment(content, ticketId)
-        return new CommentActivity(initiator, data)
+    static create(actor: Actor, comment: Comment): CommentActivity {
+        return new CommentActivity(actor, comment)
     }
 }

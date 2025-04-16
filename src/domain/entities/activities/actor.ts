@@ -2,12 +2,12 @@ export enum ActivityInitiatorType {
     HUMAN = "HUMAN",
     AI = "AI"
 }
-export abstract class ActivityInitiator {
+export abstract class Actor {
     abstract type: ActivityInitiatorType
     abstract name: string
 }
 
-export class Human extends ActivityInitiator {
+export class Human extends Actor {
 
     type: ActivityInitiatorType.HUMAN
     name: string
@@ -20,7 +20,7 @@ export class Human extends ActivityInitiator {
 
 }
 
-export class AIWorker extends ActivityInitiator {
+export class AIWorker extends Actor {
   type: ActivityInitiatorType.AI
   name: string
 

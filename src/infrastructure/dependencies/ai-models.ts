@@ -26,6 +26,20 @@ const o3Mini = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
 
+const gpt41 = new ChatOpenAI({
+    modelName: "gpt-4.1",
+    openAIApiKey: process.env.OPENAI_API_KEY,
+})
+
+const gpt41Mini = new ChatOpenAI({
+    modelName: "gpt-4.1-mini",
+    openAIApiKey: process.env.OPENAI_API_KEY,
+})
+const gpt41Nano = new ChatOpenAI({
+    modelName: "gpt-4.1-nano",
+    openAIApiKey: process.env.OPENAI_API_KEY,
+})
+
 const claude37Sonnet = new ChatAnthropic({
     modelName: "claude-3-7-sonnet-20250219",
     anthropicApiKey: process.env.ANTHROPIC_API_KEY,
@@ -38,8 +52,8 @@ const claude35Sonnet = new ChatAnthropic({
     cache: true,
 })
 
-export const productOwnerModel = o3Mini
-export const graphicDesignerModel = o3Mini
-export const uiuxDesignerModel = o3Mini
+export const productOwnerModel = gpt41Nano
+export const graphicDesignerModel = gpt41Nano
+export const uiuxDesignerModel = gpt41Nano
 export const principalDeveloperModel = o3Mini
-export const reactDeveloperModel = o3Mini
+export const reactDeveloperModel = gpt41Mini
