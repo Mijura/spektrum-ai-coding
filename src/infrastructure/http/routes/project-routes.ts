@@ -1,4 +1,4 @@
-import { projectController } from "@infrastructure/dependencies/web"
+import { projectController } from "@infrastructure/dependencies"
 import express, { Request, Response } from "express"
 
 const router = express.Router()
@@ -7,9 +7,9 @@ router.post("/", (req: Request, res: Response) => projectController.createProjec
 
 router.get("/fetch/:projectId", (req: Request, res: Response) => projectController.fetchProject(req, res))
 
-router.get("/fetch-all/:ownerId", (req: Request, res: Response) => projectController.fetchAllProjects(req, res))
+router.get("/fetch-all/:ownerId", (req: Request, res: Response) => projectController.fetchProjects(req, res))
 
-router.put("/deploy", (req: Request, res: Response) => projectController.deploy(req, res))
+router.put("/deploy", (req: Request, res: Response) => projectController.deployProject(req, res))
 
 router.put("/archive", (req: Request, res: Response) => projectController.archiveProject(req, res))
 

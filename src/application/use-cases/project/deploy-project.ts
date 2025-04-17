@@ -1,12 +1,12 @@
-import { ProjectStorage } from "@domain/persistence/project-storage"
-import { FrontendDevelopmentService } from "@application/services/fronted-development"
-import { DeployProjectUseCase } from "@domain/use-cases/deploy-project-use-case"
+import { DeployProject } from "@domain/use-cases/project/deploy-project"
 import { Project } from "@domain/entities/project"
+import { ProjectRepository } from "@domain/repositories/project-repository"
+import { FrontendDevelopment } from "@domain/services/frontend-development"
 
-export class DeployProject implements DeployProjectUseCase {
+export class DeployProjectUseCase implements DeployProject {
 	constructor(
-		private readonly frontendDevelopmentService: FrontendDevelopmentService,
-		private readonly projectStorage: ProjectStorage
+		private readonly frontendDevelopmentService: FrontendDevelopment,
+		private readonly projectStorage: ProjectRepository
 	) {}
 
 	async execute(projectId: string): Promise<Project> {

@@ -1,7 +1,7 @@
 import { Project } from "@domain/entities/project"
 import { SourceCodeDto } from "@domain/types/project"
 
-export interface FrontendDevelopmentPort {
+export interface FrontendDevelopment {
 	/**
 	 * Initializes project by copying the template (project-templates/rspack-react-tailwind), installing dependencies, and building the project
 	 * @param projectId - The ID of the project to initialize
@@ -41,4 +41,12 @@ export interface FrontendDevelopmentPort {
 	 * @param sourceCode - The source code to write to the project
 	 */
 	updateSourceCode(projectId: string, sourceCode: SourceCodeDto): Promise<void>
+
+
+	/**
+	 * Gets the path to the static files for a project
+	 * @param projectId - The ID of the project to get the static files path for
+	 * @returns The path to the static files for the project or null if the project is not found
+	 */
+	getStaticFilesPath(projectId: string): Promise<string | null>
 }

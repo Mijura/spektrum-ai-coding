@@ -7,7 +7,7 @@ import { RootAnnotation } from "../root-annotation"
 import { ProjectDetailsSchema } from "@application/schemas/project.schema"
 import { z } from "zod"
 import { ProjectDto } from "@domain/types/project"
-import { productOwnerModel } from "@infrastructure/dependencies/ai-models"
+import { productOwnerModel } from "@infrastructure/workflows/models"
 
 interface ProductOwnerOutput {
 	project: ProjectDto

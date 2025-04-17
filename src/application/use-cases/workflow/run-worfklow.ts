@@ -1,19 +1,19 @@
 import { Project } from "@domain/entities/project"
-import { RunWorkflowUseCase } from "@domain/use-cases/run-workflow-use-case"
-import { ProjectStorage } from "@domain/persistence/project-storage"
+import { RunWorkflow } from "@domain/use-cases/workflow/run-workflow"
 import { Workflow } from "@domain/entities/workflow"
 import EventEmitter from "events"
 import { WorkflowFactory } from "@domain/utils/workflow-factory"
-import { TicketStorage } from "@domain/persistence/ticket-storage"
+import { ProjectRepository } from "@domain/repositories/project-repository"
+import { TicketRepository } from "@domain/repositories/ticket-repository"
 
-export class RunWorkflow extends EventEmitter implements RunWorkflowUseCase {
+export class RunWorkflowUseCase extends EventEmitter implements RunWorkflow {
 
 	private readonly workflow: Workflow
 
 	constructor(
 		private readonly workflowId: string,
-		private readonly projectStorage: ProjectStorage,
-		private readonly ticketStorage: TicketStorage
+		private readonly projectRepository: ProjectRepository,
+		private readonly ticketRepository: TicketRepository
 	) {
 		super()
 
@@ -29,8 +29,8 @@ export class RunWorkflow extends EventEmitter implements RunWorkflowUseCase {
 	}
 
 	async run(projectId: string, ticketId: string): Promise<Project> {
-		const project = await this.projectStorage.findById(projectId)
-		const ticket = await this.ticketStorage.findById(ticketId)
+		const project = await this.projectRepository.findById(projectId)
+		const ticket = await this.ticketRepository.findById(ticketId)
 		if (!project) {
 			throw new Error("Project not found")
 		}

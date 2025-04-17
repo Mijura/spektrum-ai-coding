@@ -1,12 +1,12 @@
 import { Project } from "@domain/entities/project"
-import { ProjectStorage } from "@domain/persistence/project-storage"
-import { FrontendDevelopmentService } from "@application/services/fronted-development"
-import { CreateProjectUseCase } from "@domain/use-cases/create-project-use-case"
+import { CreateProject } from "@domain/use-cases/project/create-project"
+import { ProjectRepository } from "@domain/repositories/project-repository"
+import { FrontendDevelopment } from "@domain/services/frontend-development"
 
-export class CreateNewProject implements CreateProjectUseCase {
+export class CreateProjectUseCase implements CreateProject {
 	constructor(
-		private readonly frontendDevelopmentService: FrontendDevelopmentService,
-		private readonly projectStorage: ProjectStorage
+		private readonly frontendDevelopmentService: FrontendDevelopment,
+		private readonly projectRepository: ProjectRepository
 	) {}
 
 	async execute(owner: string): Promise<Project> {
@@ -18,7 +18,7 @@ export class CreateNewProject implements CreateProjectUseCase {
 			await this.frontendDevelopmentService.setupProject(project.id)
 
 			// Persist the project details in the database
-			return await this.projectStorage.save(project)
+			return await this.projectRepository.save(project)
 		} catch (error) {
 			console.error("Error creating new project:", error)
 			throw new Error("Failed to create new project.")

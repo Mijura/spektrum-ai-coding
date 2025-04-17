@@ -1,7 +1,7 @@
 
 import { Request, Response } from "express"
 import { TicketMapper } from "@domain/mappers/ticket-mapper"
-import { createNewTicket, fetchAllTickets, updateTicket } from "@infrastructure/dependencies/web"
+import { createTicket, fetchTickets, updateTicketTitle } from "@infrastructure/dependencies"
 import { TicketDto } from "@application/dto/ticket"
 
 export class TicketController {
@@ -11,7 +11,7 @@ export class TicketController {
 	async createTicket(req: Request, res: Response): Promise<void> {
 		try {
 			const { projectId, title, description } = req.body
-			const ticket = await createNewTicket.execute(projectId, title, description)
+			const ticket = await createTicket.execute(projectId, title, description)
 			res.status(201).json(ticket)
 		} catch (error) {
 			console.error("Error creating ticket:", error)
@@ -19,23 +19,24 @@ export class TicketController {
 		}
 	}
 
-	async updateTicket(req: Request, res: Response): Promise<void> {
+	async updateTicketTitle(req: Request, res: Response): Promise<void> {
 		try {
 			const ticketDto: TicketDto = req.body
-			const updatedTicket = await updateTicket.execute(ticketDto)
+			const updatedTicket = await updateTicketTitle.execute(ticketDto)
 			res.status(200).json(updatedTicket)
 		} catch (error) {
+			// TODO: Handle Ticket Not Found
 			console.error("Error updating ticket:", error)
 			res.status(500).json({ message: "Error updating ticket." })
 		}
     }
 
-	async fetchAllTickets(req: Request, res: Response): Promise<any> {
+	async fetchTickets(req: Request, res: Response): Promise<any> {
 
 		try {
 			const { projectId } = req.params
 			console.log(`Fetching all tickets for project: ${projectId}`)
-			const tickets = await fetchAllTickets.execute(projectId)
+			const tickets = await fetchTickets.execute(projectId)
 			const ticketDtos = TicketMapper.toDtos(tickets)
 			res.json(ticketDtos)
 		} catch (error) {

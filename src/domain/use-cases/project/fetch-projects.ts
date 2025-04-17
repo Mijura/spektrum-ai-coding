@@ -1,6 +1,6 @@
 import { Project } from "@domain/entities/project"
 
-export interface FetchAllProjectsUseCase {
+export interface FetchProjects {
     execute(ownerId: string): Promise<Project[]> 
 }
 

@@ -1,5 +1,5 @@
 import { Project } from "@domain/entities/project"
 
-export interface RunWorkflowUseCase {
+export interface RunWorkflow {
 	run(workflowId: string, projectId: string, message: string): Promise<Project>
 }

@@ -1,4 +1,4 @@
-import { frontendDevelopmentService } from "@infrastructure/dependencies/web"
+import { frontendDevelopmentService } from "@infrastructure/dependencies"
 import express, { Request, Response, NextFunction } from "express"
 
 export async function serveProjectFilesMiddleware(req: Request, res: Response, next: NextFunction) {

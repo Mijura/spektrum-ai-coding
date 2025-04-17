@@ -1,5 +1,5 @@
 import { Workflow } from '@domain/entities/workflow';
-import { codeGenerationWorkflow } from '@infrastructure/dependencies/web';
+import { codeGenerationWorkflow } from '@infrastructure/dependencies';
 export class WorkflowFactory {
   private static readonly workflows: Map<string, Workflow> = new Map([
     ['code-generation', codeGenerationWorkflow],

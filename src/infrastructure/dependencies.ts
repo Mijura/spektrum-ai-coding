@@ -1,0 +1,63 @@
+import { CreateProject } from "@domain/use-cases/project/create-project"
+import { FetchProject } from "@domain/use-cases/project/fetch-project"
+import { FetchProjects } from "@domain/use-cases/project/fetch-projects"
+import { ArchiveProject } from "@domain/use-cases/project/archive-project"
+import { DeployProject } from "@domain/use-cases/project/deploy-project"
+import { CreateTicket } from "@domain/use-cases/ticket/create-ticket"
+import { UpdateTicketTitle } from "@domain/use-cases/ticket/update-title"
+import { FetchTickets } from "@domain/use-cases/ticket/fetch-tickets"
+import { ProjectRepository } from "@domain/repositories/project-repository"
+import { TicketRepository } from "@domain/repositories/ticket-repository"
+import { FileSystemPort } from "@domain/services/file-system"
+import { PackageManager } from "@domain/utils/package-manager"
+
+import { FetchProjectsUseCase } from "@application/use-cases/project/fetch-projects"
+import { DeployProjectUseCase } from "@application/use-cases/project/deploy-project"
+import { FetchProjectUseCase } from "@application/use-cases/project/fetch-project"
+import { CreateProjectUseCase } from "@application/use-cases/project/create-project"
+import { ArchiveProjectUseCase } from "@application/use-cases/project/archive-project"
+import { CreateTicketUseCase } from "@application/use-cases/ticket/create-ticket"
+import { UpdateTicketTitleUseCase } from "@application/use-cases/ticket/update-title"
+import { FetchTicketsUseCase } from "@application/use-cases/ticket/fetch-tickets"
+import { FrontendDevelopmentService } from "@application/services/fronted-development"
+
+import { TicketController } from "@infrastructure/http/controllers/ticket-controller"
+import { ProjectController } from "@infrastructure/http/controllers/project-controller"
+import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generation/langgraph-generate-code"
+import { LocalFileSystem } from "@infrastructure/persistence/local-file-system"
+import { YarnPackageManager } from "@infrastructure/utils/yarn-package-manager"
+import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
+import { DynamoDBTicketRepository } from "@infrastructure/repositories/ticket-repository"
+import { FrontendDevelopment } from "@domain/services/frontend-development"
+
+
+// Controllers
+export const projectController = new ProjectController()
+export const ticketController = new TicketController()
+
+
+// Services
+export const fileSystem: FileSystemPort = new LocalFileSystem()
+export const yarnPackageManager: PackageManager = new YarnPackageManager()
+export const frontendDevelopmentService: FrontendDevelopment = new FrontendDevelopmentService(yarnPackageManager, fileSystem)
+
+
+// Repositories
+export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
+export const ticketRepository: TicketRepository = new DynamoDBTicketRepository()
+
+
+// Use Cases
+export const createNewProject: CreateProject = new CreateProjectUseCase(frontendDevelopmentService, projectRepository)
+export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
+export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
+export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
+export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
+
+export const createTicket: CreateTicket = new CreateTicketUseCase(ticketRepository)
+export const fetchTickets: FetchTickets = new FetchTicketsUseCase(ticketRepository)
+export const updateTicketTitle: UpdateTicketTitle = new UpdateTicketTitleUseCase(ticketRepository)
+
+
+// Workflows
+export const codeGenerationWorkflow = new LangGraphCodeGeneration(frontendDevelopmentService)

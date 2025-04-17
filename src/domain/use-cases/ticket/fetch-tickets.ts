@@ -1,6 +1,6 @@
 import { Ticket } from "@domain/entities/ticket"
 
-export interface FetchTicketsUseCase {
+export interface FetchTickets {
     execute(projectId: string): Promise<Ticket[]> 
 }
 

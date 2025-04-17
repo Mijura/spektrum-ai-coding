@@ -1,32 +1,32 @@
-export enum ActivityInitiatorType {
+export enum ActorType {
     HUMAN = "HUMAN",
     AI = "AI"
 }
 export abstract class Actor {
-    abstract type: ActivityInitiatorType
+    abstract type: ActorType
     abstract name: string
 }
 
 export class Human extends Actor {
 
-    type: ActivityInitiatorType.HUMAN
+    type: ActorType.HUMAN
     name: string
 
     constructor(name: string) {
         super()
-        this.type = ActivityInitiatorType.HUMAN
+        this.type = ActorType.HUMAN
         this.name = name
     }
 
 }
 
 export class AIWorker extends Actor {
-  type: ActivityInitiatorType.AI
+  type: ActorType.AI
   name: string
 
   constructor(name: string) {
         super()
-        this.type = ActivityInitiatorType.AI
+        this.type = ActorType.AI
         this.name = name
   }
 

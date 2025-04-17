@@ -1,6 +1,6 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
-import { TicketStorage } from "@domain/persistence/ticket-storage"
+import { TicketRepository } from "@domain/repositories/ticket-repository"
 import { Ticket } from "@domain/entities/ticket"
 import { TicketMapper } from "@domain/mappers/ticket-mapper"
 import { TicketDto } from "@application/dto/ticket"
@@ -12,7 +12,7 @@ const client = new DynamoDBClient({
 })
 const ddbDocClient = DynamoDBDocumentClient.from(client)
 
-export class DynamoDBTicketRepository implements TicketStorage {
+export class DynamoDBTicketRepository implements TicketRepository {
 
 
 	async save(ticket: Ticket): Promise<Ticket> {

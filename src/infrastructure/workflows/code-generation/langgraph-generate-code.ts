@@ -1,16 +1,16 @@
 import { Workflow } from "@domain/entities/workflow"
 import { Project } from "@domain/entities/project"
 import { END, START, StateGraph } from "@langchain/langgraph"
-import { FrontendDevelopmentService } from "@application/services/fronted-development"
 import { Ticket } from "@domain/entities/ticket"
 import { RootAnnotation } from "./root-annotation"
 import { productOwner } from "./nodes/product-owner"
 import { reactDeveloper } from "./nodes/react-developer"
 import { updateCode } from "./nodes/update-code"
 import { updateProject } from "./nodes/update-project"
+import { FrontendDevelopment } from "@domain/services/frontend-development"
 export class LangGraphCodeGeneration extends Workflow {
 
-	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
+	constructor(private readonly frontendDevelopmentService: FrontendDevelopment) {
 		super()
 	}
 

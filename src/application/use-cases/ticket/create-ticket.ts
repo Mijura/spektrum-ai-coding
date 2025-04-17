@@ -1,11 +1,11 @@
-import { CreateTicketUseCase } from "@domain/use-cases/create-ticket-use-case"
+import { CreateTicket } from "@domain/use-cases/ticket/create-ticket"
 import { Ticket } from "@domain/entities/ticket"
-import { TicketStorage } from "@domain/persistence/ticket-storage"
 import { TicketFactory } from "@domain/factories/ticket-factory"
+import { TicketRepository } from "@domain/repositories/ticket-repository"
 
-export class CreateNewTicket implements CreateTicketUseCase {
+export class CreateTicketUseCase implements CreateTicket {
 	constructor(
-		private readonly ticketStorage: TicketStorage
+		private readonly ticketRepository: TicketRepository
 	) {}
 
 	async execute(projectId: string, title: string, description: string): Promise<Ticket> {
@@ -14,7 +14,7 @@ export class CreateNewTicket implements CreateTicketUseCase {
 			const ticket: Ticket = TicketFactory.create(projectId, title, description)
 
 			// Persist the ticket in the database
-			return await this.ticketStorage.save(ticket)
+			return await this.ticketRepository.save(ticket)
 		} catch (error) {
 			console.error("Error creating new ticket:", error)
 			throw new Error("Failed to create new ticket.")

@@ -1,6 +1,6 @@
 import { Project, ProjectStatus } from "@domain/entities/project"
 
-export interface ProjectStorage {
+export interface ProjectRepository {
 	save(project: Project): Promise<Project>
 	findById(id: string): Promise<Project>
 	findAll(ownerId: string): Promise<Project[]>

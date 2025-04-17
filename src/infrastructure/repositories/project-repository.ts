@@ -1,10 +1,10 @@
-import { ProjectStorage } from "@domain/persistence/project-storage"
+
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"
 import { Project, ProjectStatus } from "@domain/entities/project"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
-import { ProjectDto } from "@domain/types/project"
-import { ProjectRecord } from "../raw/project-record"
+import { ProjectRepository } from "@domain/repositories/project-repository"
+import { ProjectRecord } from "@infrastructure/records/project"
 
 const client = new DynamoDBClient({
 	region: process.env.AWS_REGION,
@@ -12,7 +12,7 @@ const client = new DynamoDBClient({
 })
 const ddbDocClient = DynamoDBDocumentClient.from(client)
 
-export class DynamoDBProjectRepository implements ProjectStorage {
+export class DynamoDBProjectRepository implements ProjectRepository {
 
 	async save(project: Project): Promise<Project> {
 		const tableName = process.env.PROJECT_TABLE
@@ -44,7 +44,7 @@ export class DynamoDBProjectRepository implements ProjectStorage {
 
 		if (!item) throw new Error(`Project not found!`)
 
-		const projectRecord: ProjectDto = item as ProjectDto
+		const projectRecord: ProjectRecord = item as ProjectRecord
 
 		return ProjectMapper.toDomain(projectRecord)
 	}

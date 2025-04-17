@@ -1,5 +1,5 @@
 import { Project } from "@domain/entities/project"
 
-export interface DeployProjectUseCase {
+export interface ArchiveProject {
     execute(projectId: string): Promise<Project>
 }

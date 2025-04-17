@@ -3,7 +3,7 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../root-annotation"
-import { principalDeveloperModel } from "@infrastructure/dependencies/ai-models"
+import { principalDeveloperModel } from "@infrastructure/workflows/models"
 import { z } from "zod"
 export interface InstructionsDto {
 	instructions: string[]

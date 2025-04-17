@@ -11,8 +11,8 @@ import { serveProjectFilesMiddleware } from "@infrastructure/http/middleware/ser
 import { Server } from "socket.io"
 import http from "http"
 
-import { RunWorkflow } from "@application/use-cases/run-worfklow"
-import { projectStorage, ticketStorage } from "@infrastructure/dependencies/web"
+import { RunWorkflowUseCase } from "@application/use-cases/workflow/run-worfklow"
+import { projectRepository, ticketRepository } from "@infrastructure/dependencies"
 
 
 
@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
 	socket.on("run", async ({ projectId, ticketId, workflowId }) => {
 		console.log(`Running workflow ${workflowId} for ${projectId} with ticketId: ${ticketId}`)
 
-		const worfklow = new RunWorkflow(workflowId, projectStorage, ticketStorage)
+		const worfklow = new RunWorkflowUseCase(workflowId, projectRepository, ticketRepository)
 
 		const sendUpdate = (data: any) => {
 			console.log(`Emitting update:`, data)
