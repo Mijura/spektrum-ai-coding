@@ -11,6 +11,8 @@ export class UpdateTicketTitleUseCase implements UpdateTicketTitle{
 	async execute(ticketDto: TicketDto): Promise<Ticket> {
 		try {
 			// fetch the old ticket and update it
+
+			console.log(`Updating ticket title for ticket ${ticketDto.id} to ${ticketDto.title}.`)
             const ticket: Ticket | null = await this.ticketRepository.findById(ticketDto.id)
 
             if (!ticket) {
@@ -22,8 +24,8 @@ export class UpdateTicketTitleUseCase implements UpdateTicketTitle{
 			// Persist the ticket in the database
 			return await this.ticketRepository.save(ticket)
 		} catch (error) {
-			console.error("Error creating new ticket:", error)
-			throw new Error("Failed to create new ticket.")
+			console.error("Error during ticket title update:", error)
+			throw new Error("Failed to edit ticket title.")
 		}
 	}
 }

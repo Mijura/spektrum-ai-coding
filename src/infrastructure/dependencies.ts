@@ -18,6 +18,7 @@ import { CreateProjectUseCase } from "@application/use-cases/project/create-proj
 import { ArchiveProjectUseCase } from "@application/use-cases/project/archive-project"
 import { CreateTicketUseCase } from "@application/use-cases/ticket/create-ticket"
 import { UpdateTicketTitleUseCase } from "@application/use-cases/ticket/update-title"
+import { UpdateTicketDescriptionUseCase } from "@application/use-cases/ticket/update-description"
 import { FetchTicketsUseCase } from "@application/use-cases/ticket/fetch-tickets"
 import { FrontendDevelopmentService } from "@application/services/fronted-development"
 
@@ -29,6 +30,7 @@ import { YarnPackageManager } from "@infrastructure/utils/yarn-package-manager"
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTicketRepository } from "@infrastructure/repositories/ticket-repository"
 import { FrontendDevelopment } from "@domain/services/frontend-development"
+import { UpdateTicketDescription } from "@domain/use-cases/ticket/update-description"
 
 
 // Controllers
@@ -57,6 +59,7 @@ export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectR
 export const createTicket: CreateTicket = new CreateTicketUseCase(ticketRepository)
 export const fetchTickets: FetchTickets = new FetchTicketsUseCase(ticketRepository)
 export const updateTicketTitle: UpdateTicketTitle = new UpdateTicketTitleUseCase(ticketRepository)
+export const updateTicketDescription: UpdateTicketDescription = new UpdateTicketDescriptionUseCase(ticketRepository)
 
 
 // Workflows

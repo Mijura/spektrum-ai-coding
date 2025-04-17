@@ -23,6 +23,8 @@ export class Ticket {
 	public activities: TicketActivities
 	
     constructor(
+		id: string,
+		created: string,
 		projectId: string,
 		title: string,
 		description: string,
@@ -30,22 +32,14 @@ export class Ticket {
 		updated: string | null,
 		activities: TicketActivities
 	) {
-		this.id = uuidv4()
+		this.id = id
 		this.projectId = projectId
 		this.title = title
 		this.description = description
 		this.status = status
-		this.created = new Date().toISOString()
+		this.created = created
 		this.updated = updated
 		this.activities = activities
-	}
-
-	update(ticket: TicketDto): Ticket {
-		this.title = ticket.title
-		this.description = ticket.description
-		this.status = ticket.status
-		this.updated = new Date().toISOString()
-		return this
 	}
 
 	updateStatus(status: TicketStatus){

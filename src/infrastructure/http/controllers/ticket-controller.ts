@@ -1,7 +1,7 @@
 
 import { Request, Response } from "express"
 import { TicketMapper } from "@domain/mappers/ticket-mapper"
-import { createTicket, fetchTickets, updateTicketTitle } from "@infrastructure/dependencies"
+import { createTicket, fetchTickets, updateTicketTitle, updateTicketDescription } from "@infrastructure/dependencies"
 import { TicketDto } from "@application/dto/ticket"
 
 export class TicketController {
@@ -26,10 +26,22 @@ export class TicketController {
 			res.status(200).json(updatedTicket)
 		} catch (error) {
 			// TODO: Handle Ticket Not Found
-			console.error("Error updating ticket:", error)
-			res.status(500).json({ message: "Error updating ticket." })
+			console.error("Error updating ticket title:", error)
+			res.status(500).json({ message: "Error updating ticket title." })
 		}
     }
+
+	async updateTicketDescription(req: Request, res: Response): Promise<void> {
+		try {
+			const ticketDto: TicketDto = req.body
+			const updatedTicket = await updateTicketDescription.execute(ticketDto)
+			res.status(200).json(updatedTicket)
+		} catch (error) {
+			// TODO: Handle Ticket Not Found
+			console.error("Error updating ticket description:", error)
+			res.status(500).json({ message: "Error updating ticket description." })
+		}
+	}
 
 	async fetchTickets(req: Request, res: Response): Promise<any> {
 
