@@ -1,4 +1,3 @@
-import { TicketDto } from "@application/dto/ticket"
 import { TicketActivity, TicketActivityType } from "./activities/ticket-activity"
 import { Comment, CommentActivity } from "./activities/comment-activity"
 import { Actor } from "./activities/actor"
@@ -20,9 +19,9 @@ export class Ticket {
     public description: string
     public projectId: string
     public status: TicketStatus
-	public activities: TicketActivities
+	private activities: TicketActivities
 	
-    constructor(
+    private constructor(
 		id: string,
 		created: string,
 		projectId: string,
@@ -78,6 +77,28 @@ export class Ticket {
 		}
 
 		activity.data.editContent(content)
+	}
+
+	/** Rehydrate a ticket from persisted data */
+	static rehydrate(
+			id: string, 
+			created: string, 
+			projectId: string, 
+			title: string, 
+			description: string, 
+			status: TicketStatus, 
+			updated: string | null, 
+			activities: TicketActivities
+	): Ticket 
+		{
+			return new Ticket(id, created, projectId, title, description, status, updated, activities)
+	}
+
+	/** Create a new ticket */
+	static create(projectId: string, title: string, description: string): Ticket {
+		const id = uuidv4()
+		const created = new Date().toISOString()
+		return new Ticket(id, created, projectId, title, description, TicketStatus.TODO, null, [])
 	}
 
 }

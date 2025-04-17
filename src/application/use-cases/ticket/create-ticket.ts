@@ -1,6 +1,5 @@
 import { CreateTicket } from "@domain/use-cases/ticket/create-ticket"
 import { Ticket } from "@domain/entities/ticket"
-import { TicketFactory } from "@domain/factories/ticket-factory"
 import { TicketRepository } from "@domain/repositories/ticket-repository"
 
 export class CreateTicketUseCase implements CreateTicket {
@@ -11,7 +10,7 @@ export class CreateTicketUseCase implements CreateTicket {
 	async execute(projectId: string, title: string, description: string): Promise<Ticket> {
 		try {
 			// Create a new ticket
-			const ticket: Ticket = TicketFactory.create(projectId, title, description)
+			const ticket: Ticket = Ticket.create(projectId, title, description)
 
 			// Persist the ticket in the database
 			return await this.ticketRepository.save(ticket)
