@@ -1,7 +1,7 @@
 import { Project } from "@domain/entities/project"
 import { SourceCodeDto } from "@domain/types/project"
 
-export interface FrontendDevelopment {
+export interface FrontendDevelopmentService {
 	/**
 	 * Initializes project by copying the template (project-templates/rspack-react-tailwind), installing dependencies, and building the project
 	 * @param projectId - The ID of the project to initialize

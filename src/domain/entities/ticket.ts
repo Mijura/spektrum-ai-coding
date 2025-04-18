@@ -1,6 +1,5 @@
-import { TicketActivity, TicketActivityType } from "./activities/ticket-activity"
-import { Comment, CommentActivity } from "./activities/comment-activity"
-import { Actor } from "./activities/actor"
+import { Activity } from "./activity"
+import { Comment } from "./comment"
 import { v4 as uuidv4 } from 'uuid'
 
 export enum TicketStatus {
@@ -8,8 +7,6 @@ export enum TicketStatus {
     IN_PROGRESS = "IN_PROGRESS",
     DONE = "DONE",
 }
-
-export type TicketActivities = TicketActivity<Comment> []
 
 export class Ticket {
 	public readonly id: string
@@ -19,7 +16,8 @@ export class Ticket {
     public description: string
     public projectId: string
     public status: TicketStatus
-	private activities: TicketActivities
+	private comments: Comment[] = []
+  	private activities: Activity[] = []
 	
     private constructor(
 		id: string,
@@ -29,7 +27,7 @@ export class Ticket {
 		description: string,
 		status: TicketStatus,
 		updated: string | null,
-		activities: TicketActivities
+		activities: Activity[]
 	) {
 		this.id = id
 		this.projectId = projectId
@@ -41,14 +39,10 @@ export class Ticket {
 		this.activities = activities
 	}
 
-	updateStatus(status: TicketStatus){
-		this.status = status
+	updateTitle(userId: string, newTitle: string){
+		this.title = newTitle
 		this.updated = new Date().toISOString()
-	}
-
-	updateTitle(title: string){
-		this.title = title
-		this.updated = new Date().toISOString()
+		this.activities.push(Activity.titleUpdated(userId, this.id, this.title, newTitle))
 	}
 
 	updateDescription(description: string){
@@ -56,27 +50,32 @@ export class Ticket {
 		this.updated = new Date().toISOString()
 	}
 
-	addComment(actor: Actor, content: string){
-		const comment = new Comment(content)
-		this.activities.push(CommentActivity.create(actor, comment))
+	leaveComment(commentId: string, commentText: string, authorId: string) {
+		const comment = new Comment(commentId, authorId, commentText)
+		this.comments.push(comment)
+		this.activities.push(Activity.commented(authorId, this.id, commentId))
 	}
 
-	editComment(actor: Actor, activityId: string, content: string){
-		const activity = this.activities.find(activity => activity.id === activityId)
-		if(!activity) {
-			throw new Error("Comment activity not found")
+	editComment(commentId: string, newText: string, userId: string){
+		const comment = this.comments.find(c => c.id === commentId)
+		if (!comment) {
+		  throw new Error('Comment not found')
 		}
-
-		if(activity.metadata.type !== TicketActivityType.COMMENT_CREATED 
-			&& activity.metadata.type !== TicketActivityType.COMMENT_EDITED) {
-			throw new Error("Activity is not a comment")
+		if (comment.authorId !== userId) {
+		  throw new Error('Only the comment author can edit it')
 		}
+	
+		comment.edit(newText)
+		this.activities.push(Activity.commentEdited(userId, this.id, commentId))
+	
+	}
 
-		if(activity.metadata.actor.name !== actor.name) {
-			throw new Error("Actor name does not match comment author")
-		}
-
-		activity.data.editContent(content)
+	getActivityLog(): Activity[] {
+		return [...this.activities]
+	}
+	
+	getComments(): Comment[] {
+		return [...this.comments]
 	}
 
 	/** Rehydrate a ticket from persisted data */
@@ -88,7 +87,7 @@ export class Ticket {
 			description: string, 
 			status: TicketStatus, 
 			updated: string | null, 
-			activities: TicketActivities
+			activities: Activity[]
 	): Ticket 
 		{
 			return new Ticket(id, created, projectId, title, description, status, updated, activities)

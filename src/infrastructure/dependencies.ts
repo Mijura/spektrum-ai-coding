@@ -4,10 +4,15 @@ import { FetchProjects } from "@domain/use-cases/project/fetch-projects"
 import { ArchiveProject } from "@domain/use-cases/project/archive-project"
 import { DeployProject } from "@domain/use-cases/project/deploy-project"
 import { CreateTicket } from "@domain/use-cases/ticket/create-ticket"
-import { UpdateTicketTitle } from "@domain/use-cases/ticket/update-title"
 import { FetchTickets } from "@domain/use-cases/ticket/fetch-tickets"
+import { UpdateTicketTitle } from "@domain/use-cases/ticket/update-title"
+import { UpdateTicketDescription } from "@domain/use-cases/ticket/update-description"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TicketRepository } from "@domain/repositories/ticket-repository"
+
+
+
+import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { FileSystemPort } from "@domain/services/file-system"
 import { PackageManager } from "@domain/utils/package-manager"
 
@@ -20,17 +25,17 @@ import { CreateTicketUseCase } from "@application/use-cases/ticket/create-ticket
 import { UpdateTicketTitleUseCase } from "@application/use-cases/ticket/update-title"
 import { UpdateTicketDescriptionUseCase } from "@application/use-cases/ticket/update-description"
 import { FetchTicketsUseCase } from "@application/use-cases/ticket/fetch-tickets"
-import { FrontendDevelopmentService } from "@application/services/fronted-development"
 
 import { TicketController } from "@infrastructure/http/controllers/ticket-controller"
 import { ProjectController } from "@infrastructure/http/controllers/project-controller"
 import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generation/langgraph-generate-code"
-import { LocalFileSystem } from "@infrastructure/persistence/local-file-system"
+import { LocalFileSystem } from "@infrastructure/services/local-file-system"
 import { YarnPackageManager } from "@infrastructure/utils/yarn-package-manager"
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTicketRepository } from "@infrastructure/repositories/ticket-repository"
-import { FrontendDevelopment } from "@domain/services/frontend-development"
-import { UpdateTicketDescription } from "@domain/use-cases/ticket/update-description"
+import { FrontendDevelopment } from "@infrastructure/services/fronted-development"
+
+
 
 
 // Controllers
@@ -41,7 +46,7 @@ export const ticketController = new TicketController()
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
-export const frontendDevelopmentService: FrontendDevelopment = new FrontendDevelopmentService(yarnPackageManager, fileSystem)
+export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopment(yarnPackageManager, fileSystem)
 
 
 // Repositories

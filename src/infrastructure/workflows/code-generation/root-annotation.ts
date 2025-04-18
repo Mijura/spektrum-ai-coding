@@ -2,7 +2,7 @@ import { SourceCodeDto } from "@domain/types/project"
 import { Annotation } from "@langchain/langgraph"
 import { Project } from "@domain/entities/project"
 import { Ticket } from "@domain/entities/ticket"
-import { FrontendDevelopment } from "@domain/services/frontend-development"
+import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 
 export const RootAnnotation = Annotation.Root({
 	message: Annotation<string>({
@@ -17,5 +17,5 @@ export const RootAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCodeDto>({
 		reducer: (a: any, b: any) => b,
 	}),
-	frontendDevelopmentService: Annotation<FrontendDevelopment>()
+	frontendDevelopmentService: Annotation<FrontendDevelopmentService>()
 })

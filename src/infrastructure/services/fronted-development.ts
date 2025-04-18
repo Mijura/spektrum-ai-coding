@@ -2,10 +2,10 @@ import path from "path"
 import { PackageManager } from "@domain/utils/package-manager"
 import { FileSystemPort } from "@domain/services/file-system"
 import { SourceCodeDto } from "@domain/types/project"
-import { FrontendDevelopment } from "@domain/services/frontend-development"
+import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { Project } from "@domain/entities/project"
 
-export class FrontendDevelopmentService implements FrontendDevelopment {
+export class FrontendDevelopment implements FrontendDevelopmentService {
 	constructor(private readonly packageManager: PackageManager, private readonly fileSystem: FileSystemPort) {}
 
 	async setupProject(projectId: string): Promise<void> {

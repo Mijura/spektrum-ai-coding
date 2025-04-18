@@ -7,10 +7,10 @@ import { productOwner } from "./nodes/product-owner"
 import { reactDeveloper } from "./nodes/react-developer"
 import { updateCode } from "./nodes/update-code"
 import { updateProject } from "./nodes/update-project"
-import { FrontendDevelopment } from "@domain/services/frontend-development"
+import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 export class LangGraphCodeGeneration extends Workflow {
 
-	constructor(private readonly frontendDevelopmentService: FrontendDevelopment) {
+	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
 		super()
 	}
 

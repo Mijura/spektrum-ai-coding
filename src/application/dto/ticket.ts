@@ -1,4 +1,4 @@
-import { TicketActivityType } from "@domain/entities/activities/ticket-activity"
+import { TicketActivityType } from "@domain/entities/activity"
 
 
 enum TicketStatus {

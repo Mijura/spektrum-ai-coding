@@ -19,7 +19,8 @@ export class UpdateTicketTitleUseCase implements UpdateTicketTitle{
                 throw new Error("Ticket not found.")
             }
 
-            ticket.updateTitle(ticketDto.title)
+			// TODO: Get the user id from the context
+            ticket.updateTitle('User', ticketDto.title)
 
 			// Persist the ticket in the database
 			return await this.ticketRepository.save(ticket)
