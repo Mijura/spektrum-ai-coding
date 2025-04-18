@@ -1,9 +1,18 @@
 import { Ticket } from "@domain/entities/ticket"
-import { TicketDto } from "@application/dto/ticket"
+import { ActivityDto, TicketDto } from "@application/dto/ticket"
+import { Comment } from "@domain/entities/comment"
+import { Activity } from "@domain/entities/activity"
+
 export class TicketMapper {
 
 	/** Convert Ticket entity → marshalled ticket for storage/transfer */
 	static toDto(ticket: Ticket): TicketDto {
+
+		const activities: ActivityDto[] = []
+		for (const activity of ticket.getActivityLog()) {
+			activities.push(Activity.toDto(activity))
+		}
+
 		return {
 			id: ticket.id,
 			projectId: ticket.projectId,
@@ -12,7 +21,8 @@ export class TicketMapper {
 			status: ticket.status,
 			created: ticket.created,
 			updated: ticket.updated,
-			activities: []
+			comments: Comment.toDtos(ticket.getComments()),
+			activities: activities,
 		}
 	}
 
@@ -26,6 +36,17 @@ export class TicketMapper {
 
 	/** Convert marshalled ticket (e.g., from DB) → Ticket entity */
 	static toDomain(data: TicketDto): Ticket {
+
+		const comments: Comment[] = []
+		for (const dto of data.comments) {
+			comments.push(Comment.rehydrate(dto))
+		}
+
+		const activities: Activity[] = []
+		for (const dto of data.activities) {
+			activities.push(Activity.rehydrate(dto))
+		}
+
 		return Ticket.rehydrate(
 			data.id, 
 			data.created, 
@@ -33,8 +54,9 @@ export class TicketMapper {
 			data.title, 
 			data.description, 
 			data.status, 
-			data.updated, 
-			[]
+			data.updated,
+			comments,
+			activities
 		)
 	}
 

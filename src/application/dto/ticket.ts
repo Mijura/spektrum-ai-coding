@@ -1,4 +1,4 @@
-import { TicketActivityType } from "@domain/entities/activity"
+import { ActivityMetadata, ActivityType } from "@domain/entities/activity"
 
 
 enum TicketStatus {
@@ -7,27 +7,20 @@ enum TicketStatus {
     DONE = "DONE",
 }
 
-export interface ActorDto {
-	id: string
-	name: string
+export interface ActivityDto {
+	type: ActivityType
+	ticketId: string
+	userId: string
+	metadata: ActivityMetadata
+	occurredAt: string
 }
 
 export interface CommentDto {
 	id: string
-	content: string
-}
-
-export interface TicketActivityDto {
-	id: string
-	actor: ActorDto
-	data: CommentDto
-	metadata: TicketActivityMetadataDto
-}
-
-export interface TicketActivityMetadataDto {
-	created: string
-	actor: ActorDto
-	type: TicketActivityType
+	authorId: string
+	text: string
+	createdAt: string
+	editedAt?: string
 }
 
 export interface TicketDto {
@@ -38,5 +31,6 @@ export interface TicketDto {
 	created: string
 	updated: string | null
 	status: TicketStatus
-	activities: TicketActivityDto[]
+	comments: CommentDto[]
+	activities: ActivityDto[]
 }
