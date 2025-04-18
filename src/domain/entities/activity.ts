@@ -7,16 +7,29 @@ export interface CommentCreatedMetadata {
 	commentId: string;
 }
   
-interface TitleUpdateData {
+interface TitleUpdateMetadata {
 	message: string;
 	oldTitle: string;
 	newTitle: string;
 }
 
-type ActivityType = 'Assigned' | 'CommentEdited' | 'Commented' | 'TitleUpdated'
+interface DescriptionUpdateMetadata {
+	message: string;
+	oldDescription: string;
+	newDescription: string;
+}
 
-type ActivityMetadata = CommentCreatedMetadata | TitleUpdateData
-export class Activity {
+interface TicketCreatedMetadata {
+	message: string;
+	title: string;
+	description: string;
+}
+
+type ActivityType = 'TicketCreated' | 'Assigned' | 'CommentEdited' | 'Commented' | 'TitleUpdated' | 'DescriptionUpdated'
+
+type ActivityMetadata = CommentCreatedMetadata | TitleUpdateMetadata | DescriptionUpdateMetadata | TicketCreatedMetadata
+export class TicketActivity {
+
 
 	constructor(
 	  public readonly type: ActivityType,
@@ -25,16 +38,24 @@ export class Activity {
 	  public readonly metadata: ActivityMetadata,
 	  public readonly occurredAt: Date = new Date()
 	) {}
+
+	static ticketCreated(userId: string, id: string, title: string, description: string): TicketActivity {
+		return new TicketActivity('TicketCreated', id, userId, { message: "Ticket created", title: title, description: description })
+	}
   
-	static titleUpdated(userId: string, id: string, oldTitle: string, newTitle: string): Activity {
-		return new Activity('TitleUpdated', id, userId, { message: "Title updated", oldTitle: oldTitle, newTitle: newTitle })
+	static titleUpdated(userId: string, id: string, oldTitle: string, newTitle: string): TicketActivity {
+		return new TicketActivity('TitleUpdated', id, userId, { message: "Title updated", oldTitle: oldTitle, newTitle: newTitle })
 	}
 
-	static commented(userId: string, ticketId: string, commentId: string): Activity {
-	  return new Activity('Commented', ticketId, userId, { commentId })
+	static descriptionUpdated(userId: any, id: string, oldDescription: string, newDescription: string): TicketActivity {
+		return new TicketActivity('DescriptionUpdated', id, userId, { message: "Description updated", oldDescription, newDescription })
+	}
+
+	static commented(userId: string, ticketId: string, commentId: string): TicketActivity {
+	  	return new TicketActivity('Commented', ticketId, userId, { commentId })
 	}
   
-	static commentEdited(userId: string, ticketId: string, commentId: string): Activity {
-	  return new Activity('CommentEdited', ticketId, userId, { commentId })
+	static commentEdited(userId: string, ticketId: string, commentId: string): TicketActivity {
+	  	return new TicketActivity('CommentEdited', ticketId, userId, { commentId })
 	}
   }

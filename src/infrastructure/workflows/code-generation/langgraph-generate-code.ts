@@ -8,6 +8,7 @@ import { reactDeveloper } from "./nodes/react-developer"
 import { updateCode } from "./nodes/update-code"
 import { updateProject } from "./nodes/update-project"
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
+import { uiUxDesigner } from "./nodes/uiux-designer"
 export class LangGraphCodeGeneration extends Workflow {
 
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
@@ -27,13 +28,13 @@ export class LangGraphCodeGeneration extends Workflow {
 			.addNode("ProductOwner", productOwner)
 			//.addNode("PrincipalDeveloper", principalDeveloper)
 			.addNode("ReactDeveloper", reactDeveloper)
-			//.addNode("UiUxDesigner", uiUxDesigner)
+			.addNode("UiUxDesigner", uiUxDesigner)
 			.addNode("updateCode", updateCode)
 			.addNode("updateProject", updateProject)
 			.addEdge(START, "ProductOwner")
 			//.addEdge("ProductOwner", "UiUxDesigner")
-			//.addEdge("UiUxDesigner", "PrincipalDeveloper")
-			.addEdge("ProductOwner", "ReactDeveloper")
+			.addEdge("ProductOwner", "UiUxDesigner")
+			.addEdge("UiUxDesigner", "ReactDeveloper")
 			.addEdge("ReactDeveloper", "updateCode")
 			.addEdge("updateCode", "updateProject")
 			.addEdge("updateProject", END)

@@ -1,4 +1,4 @@
-import { Activity } from "./activity"
+import { TicketActivity } from "./activity"
 import { Comment } from "./comment"
 import { v4 as uuidv4 } from 'uuid'
 
@@ -17,7 +17,7 @@ export class Ticket {
     public projectId: string
     public status: TicketStatus
 	private comments: Comment[] = []
-  	private activities: Activity[] = []
+  	private activities: TicketActivity[] = []
 	
     private constructor(
 		id: string,
@@ -27,7 +27,7 @@ export class Ticket {
 		description: string,
 		status: TicketStatus,
 		updated: string | null,
-		activities: Activity[]
+		activities: TicketActivity[]
 	) {
 		this.id = id
 		this.projectId = projectId
@@ -42,18 +42,19 @@ export class Ticket {
 	updateTitle(userId: string, newTitle: string){
 		this.title = newTitle
 		this.updated = new Date().toISOString()
-		this.activities.push(Activity.titleUpdated(userId, this.id, this.title, newTitle))
+		this.activities.push(TicketActivity.titleUpdated(userId, this.id, this.title, newTitle))
 	}
 
-	updateDescription(description: string){
+	updateDescription(userId: string, description: string){
 		this.description = description
 		this.updated = new Date().toISOString()
+		this.activities.push(TicketActivity.descriptionUpdated(userId, this.id, this.description, description))
 	}
 
 	leaveComment(commentId: string, commentText: string, authorId: string) {
 		const comment = new Comment(commentId, authorId, commentText)
 		this.comments.push(comment)
-		this.activities.push(Activity.commented(authorId, this.id, commentId))
+		this.activities.push(TicketActivity.commented(authorId, this.id, commentId))
 	}
 
 	editComment(commentId: string, newText: string, userId: string){
@@ -66,11 +67,11 @@ export class Ticket {
 		}
 	
 		comment.edit(newText)
-		this.activities.push(Activity.commentEdited(userId, this.id, commentId))
+		this.activities.push(TicketActivity.commentEdited(userId, this.id, commentId))
 	
 	}
 
-	getActivityLog(): Activity[] {
+	getActivityLog(): TicketActivity[] {
 		return [...this.activities]
 	}
 	
@@ -87,17 +88,19 @@ export class Ticket {
 			description: string, 
 			status: TicketStatus, 
 			updated: string | null, 
-			activities: Activity[]
+			activities: TicketActivity[]
 	): Ticket 
 		{
 			return new Ticket(id, created, projectId, title, description, status, updated, activities)
 	}
 
 	/** Create a new ticket */
-	static create(projectId: string, title: string, description: string): Ticket {
+	static create(userId: string, projectId: string, title: string, description: string): Ticket {
 		const id = uuidv4()
 		const created = new Date().toISOString()
-		return new Ticket(id, created, projectId, title, description, TicketStatus.TODO, null, [])
+		const ticket = new Ticket(id, created, projectId, title, description, TicketStatus.TODO, null, [])
+		ticket.activities.push(TicketActivity.ticketCreated(userId, id, title, description))
+		return ticket
 	}
 
 }

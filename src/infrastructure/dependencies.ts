@@ -28,12 +28,14 @@ import { FetchTicketsUseCase } from "@application/use-cases/ticket/fetch-tickets
 
 import { TicketController } from "@infrastructure/http/controllers/ticket-controller"
 import { ProjectController } from "@infrastructure/http/controllers/project-controller"
-import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generation/langgraph-generate-code"
-import { LocalFileSystem } from "@infrastructure/services/local-file-system"
-import { YarnPackageManager } from "@infrastructure/utils/yarn-package-manager"
+
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTicketRepository } from "@infrastructure/repositories/ticket-repository"
-import { FrontendDevelopment } from "@infrastructure/services/fronted-development"
+
+import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generation/langgraph-generate-code"
+import { FrontendDevelopment } from "@infrastructure/workflows/code-generation/services/fronted-development"
+import { LocalFileSystem } from "@infrastructure/workflows/code-generation/services/local-file-system"
+import { YarnPackageManager } from "@infrastructure/workflows/code-generation/services/yarn-package-manager"
 
 
 

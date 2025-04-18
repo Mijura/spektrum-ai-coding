@@ -10,7 +10,8 @@ export class CreateTicketUseCase implements CreateTicket {
 	async execute(projectId: string, title: string, description: string): Promise<Ticket> {
 		try {
 			// Create a new ticket
-			const ticket: Ticket = Ticket.create(projectId, title, description)
+			// TODO: Get the user id from the request
+			const ticket: Ticket = Ticket.create('user', projectId, title, description)
 
 			// Persist the ticket in the database
 			return await this.ticketRepository.save(ticket)

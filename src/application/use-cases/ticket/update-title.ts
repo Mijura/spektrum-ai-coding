@@ -11,7 +11,6 @@ export class UpdateTicketTitleUseCase implements UpdateTicketTitle{
 	async execute(ticketDto: TicketDto): Promise<Ticket> {
 		try {
 			// fetch the old ticket and update it
-
 			console.log(`Updating ticket title for ticket ${ticketDto.id} to ${ticketDto.title}.`)
             const ticket: Ticket | null = await this.ticketRepository.findById(ticketDto.id)
 

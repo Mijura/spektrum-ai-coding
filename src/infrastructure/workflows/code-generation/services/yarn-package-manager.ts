@@ -1,5 +1,5 @@
 import { PackageManager } from "@domain/utils/package-manager"
-import { runCommand } from "./command-runner"
+import { runCommand } from "../utils/command-runner"
 
 export class YarnPackageManager implements PackageManager {
 	async installDependencies(projectPath: string): Promise<boolean> {

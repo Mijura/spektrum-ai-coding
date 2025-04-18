@@ -18,7 +18,8 @@ export class UpdateTicketDescriptionUseCase implements UpdateTicketDescription{
                 throw new Error("Ticket not found.")
             }
 
-            ticket.updateDescription(ticketDto.description)
+			// TODO: Get the user id from the request
+            ticket.updateDescription('user', ticketDto.description)
 
 			// Persist the ticket in the database
 			return await this.ticketRepository.save(ticket)
