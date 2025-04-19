@@ -1,5 +1,5 @@
 import { CommentDto } from "@application/dto/ticket"
-
+import { v4 as uuidv4 } from 'uuid'
 export class Comment {
 	public readonly id: string
 	public readonly authorId: string
@@ -26,30 +26,9 @@ export class Comment {
 	  this.editedAt = new Date().toISOString()
 	}
 
-	static create(id: string, authorId: string, text: string): Comment {
+	static create(authorId: string, text: string): Comment {
+		const id = uuidv4()
 		return new Comment(id, authorId, text, new Date().toISOString())
-	}
-
-	static toDto(comment: Comment): CommentDto {
-		return {
-			id: comment.id,
-			authorId: comment.authorId,
-			text: comment.text,
-			createdAt: comment.createdAt,
-			editedAt: comment.editedAt,
-		}
-	}
-
-	static toDomain(dto: CommentDto): Comment {
-		return new Comment(dto.id, dto.authorId, dto.text, dto.createdAt, dto.editedAt)
-	}
-
-	static toDtos(comments: Comment[]): CommentDto[] {
-		return comments.map(Comment.toDto)
-	}
-
-	static toDomains(dtos: CommentDto[]): Comment[] {
-		return dtos.map(Comment.toDomain)
 	}
 	
 	static rehydrate(dto: CommentDto): Comment {

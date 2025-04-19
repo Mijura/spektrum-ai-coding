@@ -9,6 +9,8 @@ import { updateCode } from "./nodes/update-code"
 import { updateProject } from "./nodes/update-project"
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { uiUxDesigner } from "./nodes/uiux-designer"
+import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
+import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
 export class LangGraphCodeGeneration extends Workflow {
 
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
@@ -42,8 +44,8 @@ export class LangGraphCodeGeneration extends Workflow {
 
 		for await (const chunk of await workflow.stream(
 			{
-				ticket: ticket,
-				project: project,
+				ticket: TicketMapper.toRecord(ticket),
+				project: ProjectMapper.toRecord(project),
 				frontendDevelopmentService: this.frontendDevelopmentService,
 			},
 			{ streamMode: "updates" }

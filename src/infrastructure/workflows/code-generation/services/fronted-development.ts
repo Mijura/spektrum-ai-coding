@@ -1,9 +1,9 @@
 import path from "path"
 import { PackageManager } from "@domain/utils/package-manager"
 import { FileSystemPort } from "@domain/services/file-system"
-import { SourceCodeDto } from "@domain/types/project"
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { Project } from "@domain/entities/project"
+import { SourceCode } from "@domain/entities/source-code"
 
 export class FrontendDevelopment implements FrontendDevelopmentService {
 	constructor(private readonly packageManager: PackageManager, private readonly fileSystem: FileSystemPort) {}
@@ -48,9 +48,9 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 
 	}
 
-	async fetchSourceCode(projectId: string): Promise<SourceCodeDto> {
+	async fetchSourceCode(projectId: string): Promise<SourceCode> {
 		const projectPath = path.join("projects", projectId)
-		const sourceCode: SourceCodeDto = {}
+		const sourceCode: SourceCode = {}
 		const blacklist = new Set(["yarn.lock", ".env.example", "node_modules", "dist"])
 
 		const readDir = async (directory: string, relativePath = "") => {
@@ -74,7 +74,7 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		return sourceCode
 	}
 
-	async updateSourceCode(projectId: string, sourceCode: SourceCodeDto): Promise<void> {
+	async updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<void> {
 		const projectPath = path.resolve(`projects/${projectId}`)
 		let promises = []
 		for (const [filePath, fileContent] of Object.entries(sourceCode)) {

@@ -3,7 +3,8 @@ import { ActivityDto, TicketDto } from "@application/dto/ticket"
 import { Comment } from "@domain/entities/comment"
 import { Activity } from "@domain/entities/activity"
 
-export class TicketMapper {
+export class TicketDtoMapper {
+
 
 	/** Convert Ticket entity → marshalled ticket for storage/transfer */
 	static toDto(ticket: Ticket): TicketDto {
@@ -21,7 +22,15 @@ export class TicketMapper {
 			status: ticket.status,
 			created: ticket.created,
 			updated: ticket.updated,
-			comments: Comment.toDtos(ticket.getComments()),
+			comments: ticket.getComments().map(comment => {
+                return {
+                    id: comment.id,
+                    authorId: comment.authorId,
+                    text: comment.text,
+                    createdAt: comment.createdAt,
+                    editedAt: comment.editedAt,
+                }
+            }),
 			activities: activities,
 		}
 	}

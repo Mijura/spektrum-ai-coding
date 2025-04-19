@@ -4,11 +4,11 @@ import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../root-annotation"
 import { SourceCodeSchema } from "@application/schemas/source-code.schema"
-import { SourceCodeDto } from "@domain/types/project"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
+import { SourceCode } from "@domain/entities/source-code"
 
 const DeveloperOutputAnnotation = Annotation.Root({
-	sourceCode: Annotation<SourceCodeDto>(),
+	sourceCode: Annotation<SourceCode>(),
 })
 
 /**

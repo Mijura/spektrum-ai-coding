@@ -6,11 +6,12 @@ import { RootAnnotation } from "../root-annotation"
 
 import { ProjectDetailsSchema } from "@application/schemas/project.schema"
 import { z } from "zod"
-import { ProjectDto } from "@domain/types/project"
+
 import { productOwnerModel } from "@infrastructure/workflows/models"
+import { ProjectRecord } from "@infrastructure/records/project"
 
 interface ProductOwnerOutput {
-	project: ProjectDto
+	project: ProjectRecord
 	ticket: {
 		title: string
 		description: string

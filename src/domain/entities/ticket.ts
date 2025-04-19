@@ -53,10 +53,10 @@ export class Ticket {
 		this.activities.push(Activity.descriptionUpdated(userId, this.id, this.description, description))
 	}
 
-	leaveComment(commentId: string, commentText: string, authorId: string) {
-		const comment = Comment.create(commentId, authorId, commentText)
+	leaveComment(commentText: string, authorId: string) {
+		const comment = Comment.create(authorId, commentText)
 		this.comments.push(comment)
-		this.activities.push(Activity.commented(authorId, this.id, commentId))
+		this.activities.push(Activity.commented(authorId, this.id, comment.id))
 	}
 
 	editComment(commentId: string, newText: string, userId: string){

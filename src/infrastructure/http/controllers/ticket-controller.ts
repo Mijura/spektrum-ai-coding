@@ -1,6 +1,6 @@
 
 import { Request, Response } from "express"
-import { TicketMapper } from "@application/mappers/ticket-dto-mapper"
+import { TicketDtoMapper } from "@application/mappers/ticket-dto-mapper"
 import { createTicket, fetchTickets, updateTicketTitle, updateTicketDescription } from "@infrastructure/dependencies"
 import { TicketDto } from "@application/dto/ticket"
 
@@ -49,7 +49,7 @@ export class TicketController {
 			const { projectId } = req.params
 			console.log(`Fetching all tickets for project: ${projectId}`)
 			const tickets = await fetchTickets.execute(projectId)
-			const ticketDtos = TicketMapper.toDtos(tickets)
+			const ticketDtos = TicketDtoMapper.toDtos(tickets)
 			res.json(ticketDtos)
 		} catch (error) {
 			// TODO: Handle Project Not Found
