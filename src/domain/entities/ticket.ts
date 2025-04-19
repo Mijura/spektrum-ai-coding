@@ -74,11 +74,11 @@ export class Ticket {
 	}
 
 	getActivityLog(): Activity[] {
-		return [...this.activities]
+		return this.activities
 	}
 	
 	getComments(): Comment[] {
-		return [...this.comments]
+		return this.comments
 	}
 
 	/** Rehydrate a ticket from persisted data */
