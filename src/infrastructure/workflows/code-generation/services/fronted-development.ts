@@ -17,7 +17,6 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 
 			console.log("Template path:", templatePath)
 
-			// Use FileSystemPort to copy files
 			await this.fileSystem.copyFolder(templatePath, projectPath)
 			console.log(`✅ Project template copied to ${projectPath}`)
 
