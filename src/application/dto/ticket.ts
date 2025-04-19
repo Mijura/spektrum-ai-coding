@@ -8,6 +8,7 @@ enum TicketStatus {
 }
 
 export interface ActivityDto {
+	id: string
 	type: ActivityType
 	ticketId: string
 	userId: string

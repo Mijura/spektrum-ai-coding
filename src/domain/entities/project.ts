@@ -44,7 +44,7 @@ export class Project {
 	}
 
 	/** Restore method to rehydrate a project from persisted data */
-	static restore(data: {
+	static rehydrate(data: {
 		id: string
 		ownerId: string
 		name: string

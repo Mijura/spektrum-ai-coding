@@ -82,7 +82,7 @@ export class Ticket {
 	}
 
 	/** Rehydrate a ticket from persisted data */
-	static rehydrate(
+	static rehydrate( data: {
 			id: string, 
 			created: string, 
 			projectId: string, 
@@ -92,9 +92,9 @@ export class Ticket {
 			updated: string | null, 
 			comments: Comment[],
 			activities: Activity[]
-	): Ticket 
-		{
-			return new Ticket(id, created, projectId, title, description, status, updated, comments, activities)
+		}
+	): Ticket {
+		return new Ticket(data.id, data.created, data.projectId, data.title, data.description, data.status, data.updated, data.comments, data.activities)
 	}
 
 	/** Create a new ticket */

@@ -1,4 +1,5 @@
 import { ActivityDto } from "@application/dto/ticket";
+import { v4 as uuidv4 } from "uuid"
 
 export enum TicketActivityType {
   LEAVE_COMMENT = 'LEAVE_COMMENT',
@@ -35,35 +36,60 @@ export class Activity {
 
 
 	constructor(
-	  public readonly type: ActivityType,
-	  public readonly ticketId: string,
-	  public readonly userId: string,
-	  public readonly metadata: ActivityMetadata,
-	  public readonly occurredAt: string
+		public readonly id: string,
+		public readonly type: ActivityType,
+		public readonly ticketId: string,
+		public readonly userId: string,
+		public readonly metadata: ActivityMetadata,
+		public readonly occurredAt: string
 	) {}
 
-	static ticketCreated(userId: string, id: string, title: string, description: string): Activity {
-		return new Activity('TicketCreated', id, userId, { message: "Ticket created", title: title, description: description }, new Date().toISOString())
+	static ticketCreated(userId: string, ticketId: string, title: string, description: string): Activity {
+
+		const metadata: TicketCreatedMetadata = {
+			message: "Ticket created",
+			title: title,
+			description: description
+		}
+
+		return new Activity(uuidv4(), 'TicketCreated', ticketId, userId, metadata, new Date().toISOString())
 	}
   
-	static titleUpdated(userId: string, id: string, oldTitle: string, newTitle: string): Activity {
-		return new Activity('TitleUpdated', id, userId, { message: "Title updated", oldTitle: oldTitle, newTitle: newTitle }, new Date().toISOString())
+	static titleUpdated(userId: string, ticketId: string, oldTitle: string, newTitle: string): Activity {
+		const metadata: TitleUpdateMetadata = {
+			message: "Title updated",
+			oldTitle: oldTitle,
+			newTitle: newTitle
+		}
+		return new Activity(uuidv4(), 'TitleUpdated', ticketId, userId, metadata, new Date().toISOString())
 	}
 
-	static descriptionUpdated(userId: any, id: string, oldDescription: string, newDescription: string): Activity {
-		return new Activity('DescriptionUpdated', id, userId, { message: "Description updated", oldDescription, newDescription }, new Date().toISOString())
+	static descriptionUpdated(userId: any, ticketId: string, oldDescription: string, newDescription: string): Activity {
+		const metadata: DescriptionUpdateMetadata = {
+			message: "Description updated",
+			oldDescription: oldDescription,
+			newDescription: newDescription
+		}
+		return new Activity(uuidv4(), 'DescriptionUpdated', ticketId, userId, metadata, new Date().toISOString())
 	}
 
 	static commented(userId: string, ticketId: string, commentId: string): Activity {
-	  	return new Activity('Commented', ticketId, userId, { commentId }, new Date().toISOString())
+		const metadata: CommentCreatedMetadata = {
+			commentId: commentId
+		}
+	  	return new Activity(uuidv4(), 'Commented', ticketId, userId, metadata, new Date().toISOString())
 	}
   
 	static commentEdited(userId: string, ticketId: string, commentId: string): Activity {
-	  	return new Activity('CommentEdited', ticketId, userId, { commentId }, new Date().toISOString())
+		const metadata: CommentCreatedMetadata = {
+			commentId: commentId
+		}
+	  	return new Activity(uuidv4(), 'CommentEdited', ticketId, userId, metadata, new Date().toISOString())
 	}
 
 	static toDto(activity: Activity): ActivityDto {
 		return {
+			id: activity.id,
 			type: activity.type,
 			ticketId: activity.ticketId,
 			userId: activity.userId,
@@ -73,6 +99,6 @@ export class Activity {
 	}
 
 	static rehydrate(dto: ActivityDto): Activity {
-		return new Activity(dto.type, dto.ticketId, dto.userId, dto.metadata, dto.occurredAt)
+		return new Activity(dto.id, dto.type, dto.ticketId, dto.userId, dto.metadata, dto.occurredAt)
 	}
   }

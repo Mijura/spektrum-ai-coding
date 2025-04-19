@@ -20,7 +20,7 @@ export class ProjectMapper {
 
   /** Converts a raw DTO back to a Project domain entity */
   static toDomain(record: ProjectRecord): Project {
-    return Project.restore({
+    return Project.rehydrate({
       id: record.id,
       ownerId: record.ownerId,
       name: record.name,

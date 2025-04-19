@@ -2,10 +2,9 @@ import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@a
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { TicketRepository } from "@domain/repositories/ticket-repository"
 import { Ticket } from "@domain/entities/ticket"
-import { TicketMapper } from "@domain/mappers/ticket-mapper"
-import { TicketDto } from "@application/dto/ticket"
+import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+import { TicketRecord } from "@infrastructure/records/ticket"
 
-// DynamoDB client setup
 const client = new DynamoDBClient({
 	region: process.env.AWS_REGION,
 	profile: process.env.AWS_PROFILE,
@@ -20,7 +19,7 @@ export class DynamoDBTicketRepository implements TicketRepository {
 
 		console.log(`Saving ticket with ${ticket.id} to dynamodb table ${tableName}.`)
 
-		const ticketDto: TicketDto = TicketMapper.toDto(ticket)
+		const ticketDto: TicketRecord = TicketMapper.toRecord(ticket)
 
 		const params = {
 			TableName: tableName,
@@ -45,7 +44,7 @@ export class DynamoDBTicketRepository implements TicketRepository {
 
 		if (!item) throw new Error(`Ticket not found!`)
 
-		const ticketDto: TicketDto = item as TicketDto
+		const ticketDto: TicketRecord = item as TicketRecord
 
 		return TicketMapper.toDomain(ticketDto)
 	}
@@ -65,7 +64,7 @@ export class DynamoDBTicketRepository implements TicketRepository {
 		}
 	
 		const data = await ddbDocClient.send(new QueryCommand(params))
-		const items = data.Items as []
+		const items = data.Items as TicketRecord[]
 	
 		return TicketMapper.toDomains(items)
 	}

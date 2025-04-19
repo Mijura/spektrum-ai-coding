@@ -1,6 +1,6 @@
 
 import { Request, Response } from "express"
-import { TicketMapper } from "@domain/mappers/ticket-mapper"
+import { TicketMapper } from "@application/mappers/ticket-dto-mapper"
 import { createTicket, fetchTickets, updateTicketTitle, updateTicketDescription } from "@infrastructure/dependencies"
 import { TicketDto } from "@application/dto/ticket"
 
