@@ -11,6 +11,7 @@ import { FrontendDevelopmentService } from "@domain/services/frontend-developmen
 import { uiUxDesigner } from "./nodes/uiux-designer"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+
 export class LangGraphCodeGeneration extends Workflow {
 
 	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
@@ -30,13 +31,12 @@ export class LangGraphCodeGeneration extends Workflow {
 			.addNode("ProductOwner", productOwner)
 			//.addNode("PrincipalDeveloper", principalDeveloper)
 			.addNode("ReactDeveloper", reactDeveloper)
-			.addNode("UiUxDesigner", uiUxDesigner)
+			//.addNode("UiUxDesigner", uiUxDesigner)
 			.addNode("updateCode", updateCode)
 			.addNode("updateProject", updateProject)
 			.addEdge(START, "ProductOwner")
 			//.addEdge("ProductOwner", "UiUxDesigner")
-			.addEdge("ProductOwner", "UiUxDesigner")
-			.addEdge("UiUxDesigner", "ReactDeveloper")
+			.addEdge("ProductOwner", "ReactDeveloper")
 			.addEdge("ReactDeveloper", "updateCode")
 			.addEdge("updateCode", "updateProject")
 			.addEdge("updateProject", END)
@@ -53,7 +53,13 @@ export class LangGraphCodeGeneration extends Workflow {
 			for (const [node, values] of Object.entries(chunk)) {
 
 				let message = (values as any).message
-				const update = { node, message }
+				let ticketRecord = (values as any).ticket
+
+				const ticket = TicketMapper.toDomain(ticketRecord)
+
+				ticket.leaveComment(message, node)
+				ticketRecord = TicketMapper.toRecord(ticket)
+				const update = { node, ticket: ticketRecord }
 
 				this.emit("update", update)
 			}

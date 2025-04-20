@@ -6,12 +6,12 @@ import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
 
 const updateProject = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
 	const { project, ticket } = _state
-	
-	console.log(`Project to save: ${JSON.stringify(project)}`)
-	console.log(`Ticket to save: ${JSON.stringify(ticket)}`)
 
-	const projectPromise = projectRepository.save(ProjectMapper.toDomain(project))
-	const ticketPromise = ticketRepository.save(TicketMapper.toDomain(ticket))
+	const projectToSave = ProjectMapper.toDomain(project)
+	const ticketToSave = TicketMapper.toDomain(ticket)
+	
+	const projectPromise = projectRepository.save(projectToSave)
+	const ticketPromise = ticketRepository.save(ticketToSave)
 
 	await Promise.all([projectPromise, ticketPromise])
 

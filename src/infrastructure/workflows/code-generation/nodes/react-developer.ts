@@ -3,7 +3,7 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../root-annotation"
-import { SourceCodeSchema } from "@application/schemas/source-code.schema"
+import { DeveloperOutputSchema, SourceCodeSchema } from "@application/schemas/source-code.schema"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
 import { SourceCode } from "@domain/entities/source-code"
 
@@ -24,7 +24,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 	const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(project.id)
 
-	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
+	const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(`
@@ -53,7 +53,10 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 			- Respond only in valid JSON. The JSON object you return should match the following schema:
 
 			{{
-				"src/App.tsx": 'export default function App() {{ return <div>Hello World</div>; }}'
+				"sourceCode": {{
+					"src/App.tsx": 'export default function App() {{ return <div>Hello World</div>; }}'
+				}},
+				"comment": "I implemented Hello World to be sure the project is working."
 			}}
 
 			Format Instructions: {outputSchema}
@@ -64,7 +67,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 		parser,
 	])
 
-	const sourceCodeAfter = await chain.invoke({
+	const developerOutput = await chain.invoke({
 		ticket: message,
 		project: project,
 		sourceCode: sourceCodeBefore,
@@ -73,8 +76,8 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 
 	return {
 		..._state,
-		sourceCode: sourceCodeAfter,
-		message: sourceCodeAfter,
+		sourceCode: developerOutput.sourceCode,
+		message: developerOutput.comment,
 	}
 }
 
