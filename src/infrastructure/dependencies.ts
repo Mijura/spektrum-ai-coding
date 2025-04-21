@@ -32,10 +32,10 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTicketRepository } from "@infrastructure/repositories/ticket-repository"
 
-import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generation/langgraph-generate-code"
-import { FrontendDevelopment } from "@infrastructure/workflows/code-generation/services/fronted-development"
-import { LocalFileSystem } from "@infrastructure/workflows/code-generation/services/local-file-system"
-import { YarnPackageManager } from "@infrastructure/workflows/code-generation/services/yarn-package-manager"
+import { LangGraphCodeGeneration } from "@infrastructure/workflows/langchain-code-generation/langgraph-generate-code"
+import { FrontendDevelopment } from "@infrastructure/workflows/services/fronted-development"
+import { LocalFileSystem } from "@infrastructure/workflows/services/local-file-system"
+import { YarnPackageManager } from "@infrastructure/workflows/services/yarn-package-manager"
 
 
 

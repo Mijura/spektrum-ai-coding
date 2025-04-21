@@ -12,6 +12,14 @@ const ProjectDetailsSchema = z.object({
 	description: z.string().describe("Short description of the project purpose. Should be filled only if it's empty.")
 })
 
+const ProductOwnerSchema = z.object({
+	projectDetails: ProjectDetailsSchema,
+	ticket: z.object({
+		title: z.string().describe("Short and concise title of the ticket."),
+		description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
+	message: z.string().describe("Concrete Comment to user about what you plan to do or what you did.")
+})
 
 
-export { ProjectDetailsSchema }
+
+export { ProjectDetailsSchema, ProductOwnerSchema }
