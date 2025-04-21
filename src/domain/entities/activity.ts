@@ -46,9 +46,9 @@ export class Activity {
 	) {}
 
 	static ticketCreated(userId: string, ticketId: string, title: string, description: string): Activity {
-
+		const message = `${userId} created ticket`
 		const metadata: TicketCreatedMetadata = {
-			message: "Ticket created",
+			message: message,
 			title: title,
 			description: description
 		}
@@ -57,17 +57,20 @@ export class Activity {
 	}
   
 	static titleUpdated(userId: string, ticketId: string, oldTitle: string, newTitle: string): Activity {
+		const message = ` changed title to "${newTitle}"`
 		const metadata: TitleUpdateMetadata = {
-			message: "Title updated",
+			message: message,
 			oldTitle: oldTitle,
 			newTitle: newTitle
 		}
 		return new Activity(uuidv4(), 'TitleUpdated', ticketId, userId, metadata, new Date().toISOString())
 	}
 
-	static descriptionUpdated(userId: any, ticketId: string, oldDescription: string, newDescription: string): Activity {
+	static descriptionUpdated(userId: string, ticketId: string, oldDescription: string, newDescription: string): Activity {
+
+		const message = ` updated description`
 		const metadata: DescriptionUpdateMetadata = {
-			message: "Description updated",
+			message: message,
 			oldDescription: oldDescription,
 			newDescription: newDescription
 		}
@@ -89,8 +92,9 @@ export class Activity {
 	}
 
 	static statusChanged(userId: string, ticketId: string, status: TicketStatus): Activity {
+		const message = ` changed status to "${status}"`
 		const metadata: StatusUpdateMetadata = {
-			message: "Status updated",
+			message: message,
 			status: status
 		}
 		return new Activity(uuidv4(), 'StatusChanged', ticketId, userId, metadata, new Date().toISOString())
