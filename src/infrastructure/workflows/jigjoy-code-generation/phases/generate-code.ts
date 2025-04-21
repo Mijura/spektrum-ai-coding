@@ -1,20 +1,17 @@
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
-import { WorkflowPhase } from "../context"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { DeveloperOutputSchema } from "@application/schemas/source-code.schema"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
-import { frontendDevelopmentService } from "@infrastructure/dependencies"
+import { State, WorkflowPhase } from "../workflow-phase"
 
 export class GenerateCode extends WorkflowPhase {
     name: string = "GenerateCode"
 
-    async execute(input: any): Promise<void> {
+    async execute(data: State): Promise<void> {
         console.log("Generating code")
         
-        const { project, message } = input
-
-        const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(project.id)
+        const { project, ticket, sourceCode } = data
 
         const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
         
@@ -59,20 +56,20 @@ export class GenerateCode extends WorkflowPhase {
             parser,
         ])
 
-        const developerOutput = await chain.invoke({
-            ticket: message,
+        const output = await chain.invoke({
+            ticket: ticket,
             project: project,
-            sourceCode: sourceCodeBefore,
+            sourceCode: sourceCode,
             outputSchema: parser.getFormatInstructions(),
         })
 
-        const data = {
-            ...input,
-            sourceCode: developerOutput.sourceCode,
-            message: developerOutput.comment,
+        const updatedState: State = {
+            project: project,
+            ticket: ticket,
+            sourceCode: output.sourceCode,
         }
 
         console.log("Transitioning to WriteCode")
-        this.transitionTo(data, "WriteCode")
+        this.transitionTo("WriteCode", updatedState)
     }
 }

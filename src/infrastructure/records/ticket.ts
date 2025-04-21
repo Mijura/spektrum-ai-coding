@@ -22,15 +22,15 @@ interface CommentRecord {
 	authorId: string
 	text: string
 	createdAt: string
-	editedAt?: string
+	editedAt: string | null
 }
 
 export interface TicketRecord {
 	id: string
-	created: string
-	projectId: string
 	title: string
 	description: string
+	projectId: string
+	created: string
 	updated: string | null
 	status: TicketStatus
 	comments: CommentRecord[]

@@ -7,6 +7,8 @@ import { DeveloperOutputSchema } from "@application/schemas/source-code.schema"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
 import { SourceCode } from "@domain/entities/source-code"
 import { frontendDevelopmentService } from "@infrastructure/dependencies"
+import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCode>(),
@@ -21,9 +23,7 @@ const DeveloperOutputAnnotation = Annotation.Root({
  * @returns State with source code
  */
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { project, message } = _state
-
-	const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(project.id)
+	const { project, ticket, sourceCode } = _state
 
 	const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	
@@ -68,17 +68,16 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 		parser,
 	])
 
-	const developerOutput = await chain.invoke({
-		ticket: message,
-		project: project,
-		sourceCode: sourceCodeBefore,
+	const output = await chain.invoke({
+		ticket: TicketMapper.toRecord(ticket),
+		project: ProjectMapper.toRecord(project),
+		sourceCode: sourceCode,
 		outputSchema: parser.getFormatInstructions(),
 	})
 
 	return {
 		..._state,
-		sourceCode: developerOutput.sourceCode,
-		message: developerOutput.comment,
+		sourceCode: output.sourceCode
 	}
 }
 

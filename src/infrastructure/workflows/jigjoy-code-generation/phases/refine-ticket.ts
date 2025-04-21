@@ -1,19 +1,37 @@
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
-import { WorkflowPhase } from "../context"
-import { ProductOwnerSchema } from "@application/schemas/project.schema"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { productOwnerModel } from "@infrastructure/workflows/models"
+import { z } from "zod"
+import { projectRepository, ticketRepository } from "@infrastructure/dependencies"
+import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
+import { State, WorkflowPhase } from "../workflow-phase"
+
+const ProjectDetailsSchema = z.object({
+	name: z.string().describe("Short name of the project. Should be filled only if it's empty."),
+	description: z.string().describe("Short description of the project purpose. Should be filled only if it's empty."),
+	updated: z.boolean().describe("Flag indicating if the project details were updated.")
+})
+
+const ProductOwnerSchema = z.object({
+	projectDetails: ProjectDetailsSchema,
+	ticket: z.object({
+		title: z.string().describe("Short and concise title of the ticket."),
+		description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
+	comment: z.string().describe("Concrete Comment to user about what you plan to do or what you did.")
+})
 
 export class RefineTicket extends WorkflowPhase {
     name: string = "RefineTicket"
 
-    async execute(input: any): Promise<void> {
+    async execute(data: State): Promise<void> {
 
         console.log("Refining ticket")
-        const { ticket, project } = input
-        
+        const { ticket, project, sourceCode } = data
+
         const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
+    
         const chain = RunnableSequence.from([
             PromptTemplate.fromTemplate(`
                 
@@ -43,14 +61,9 @@ export class RefineTicket extends WorkflowPhase {
                 {{
                     "ticket": {{title: 'Enable user to add notes and display it after adding', description: 'Implement note adding and displaying functioanlity. Do not add any additional features nor any improvements.'}},
                     "projectDetails": {{
-                        id: 'u5849j-435-345-345',
-                        ownerId: '435-345-345-345',
-                        created: '2021-01-01',
-                        updated: '2021-01-01',
-                        deploymentId: null,
-                        status: 'Active',
                         name: 'Note Taking App',
                         description: 'App for taking notes',
+                        neededUpdate: true
                     }},
                     "message" : "I have updated ticket deatils and created tasks for note adding and displaying."
                 }}
@@ -60,25 +73,28 @@ export class RefineTicket extends WorkflowPhase {
         ])
     
         const response = await chain.invoke({
-            ticket,
-            project,
+            ticket: TicketMapper.toRecord(ticket),
+            project: ProjectMapper.toRecord(project),
             outputSchema: parser.getFormatInstructions(),
         })
+    
+        if (response.projectDetails.updated) {
+            project.updateName(response.projectDetails.name)
+            project.updateDescription(response.projectDetails.description)
+            await projectRepository.save(project)
+        }
+        ticket.updateTitle(response.ticket.title, "Product Owner")
+        ticket.updateDescription(response.ticket.description, "Product Owner")
+        ticket.leaveComment(response.comment, "Product Owner")
+        await ticketRepository.save(ticket)
 
-        const data = {
-            ...input,
-            ticket: {
-                ...ticket,
-                ...response.ticket
-            },
-            project: {
-                ...project,
-                ...response.projectDetails,
-            },
-            message: response.message
+        const newState: State = {
+            ticket: ticket,
+            project: project,
+            sourceCode: sourceCode
         }
 
         console.log("Transitioning to GenerateCode")
-        this.transitionTo(data, "GenerateCode")
+        this.transitionTo("GenerateCode", newState)
     }
 }

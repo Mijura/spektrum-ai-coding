@@ -1,17 +1,13 @@
 import { Annotation } from "@langchain/langgraph"
-import { FrontendDevelopmentService } from "@domain/services/frontend-development"
-import { ProjectRecord } from "@infrastructure/records/project"
-import { TicketRecord } from "@infrastructure/records/ticket"
 import { SourceCode } from "@domain/entities/source-code"
+import { Project } from "@domain/entities/project"
+import { Ticket } from "@domain/entities/ticket"
 
 export const RootAnnotation = Annotation.Root({
-	message: Annotation<string>({
-		reducer: (x, y) => y
-	}),
-	project: Annotation<ProjectRecord>({
+	project: Annotation<Project>({
 		reducer: (a: any, b: any) => b,
 	}),
-	ticket: Annotation<TicketRecord>({
+	ticket: Annotation<Ticket>({
 		reducer: (a: any, b: any) => b,
 	}),
 	sourceCode: Annotation<SourceCode>({

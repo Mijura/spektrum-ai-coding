@@ -53,13 +53,13 @@ export class Ticket {
 		this.activities.push(Activity.descriptionUpdated(userId, this.id, this.description, description))
 	}
 
-	leaveComment(commentText: string, authorId: string) {
+	leaveComment(authorId: string, commentText: string) {
 		const comment = Comment.create(authorId, commentText)
 		this.comments.push(comment)
 		this.activities.push(Activity.commented(authorId, this.id, comment.id))
 	}
 
-	editComment(commentId: string, newText: string, userId: string){
+	editComment(userId: string, commentId: string, newText: string){
 		const comment = this.comments.find(c => c.id === commentId)
 		if (!comment) {
 		  throw new Error('Comment not found')
@@ -71,6 +71,12 @@ export class Ticket {
 		comment.edit(newText)
 		this.activities.push(Activity.commentEdited(userId, this.id, commentId))
 	
+	}
+
+	changeStatus(userId: string, status: TicketStatus) {
+		this.status = status
+		this.updated = new Date().toISOString()
+		this.activities.push(Activity.statusChanged(userId, this.id, this.status))
 	}
 
 	getActivityLog(): Activity[] {

@@ -36,6 +36,25 @@ export class Project {
 		this.status = status
 	}
 
+	updateName(name: string) {
+		if (this.name === name) {
+			return
+		}
+		if (name === "") {
+			throw new Error("Name cannot be empty")
+		}
+		this.name = name
+		this.updated = new Date().toISOString()
+	}
+
+	updateDescription(description: string) {	
+		if (this.description === description) {
+			return
+		}
+		this.description = description
+		this.updated = new Date().toISOString()
+	}
+
 	// Factory method to create a new project
 	static create(name: string, description: string, owner: string): Project {
 		const id = uuidv4() // Generate unique ID

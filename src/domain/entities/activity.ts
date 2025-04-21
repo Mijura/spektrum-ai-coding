@@ -1,10 +1,6 @@
 import { ActivityDto } from "@application/dto/ticket";
 import { v4 as uuidv4 } from "uuid"
-
-export enum TicketActivityType {
-  LEAVE_COMMENT = 'LEAVE_COMMENT',
-  TITLE_UPDATED = 'TITLE_UPDATED',
-}
+import { TicketStatus } from "./ticket";
 
 export interface CommentCreatedMetadata {
 	commentId: string;
@@ -28,9 +24,14 @@ export interface TicketCreatedMetadata {
 	description: string;
 }
 
-export type ActivityType = 'TicketCreated' | 'Assigned' | 'CommentEdited' | 'Commented' | 'TitleUpdated' | 'DescriptionUpdated'
+export interface StatusUpdateMetadata {
+	message: string;
+	status: TicketStatus;
+}
 
-export type ActivityMetadata = CommentCreatedMetadata | TitleUpdateMetadata | DescriptionUpdateMetadata | TicketCreatedMetadata
+export type ActivityType = 'TicketCreated' | 'Assigned' | 'CommentEdited' | 'Commented' | 'TitleUpdated' | 'DescriptionUpdated' | 'StatusChanged'
+
+export type ActivityMetadata = CommentCreatedMetadata | TitleUpdateMetadata | DescriptionUpdateMetadata | TicketCreatedMetadata | StatusUpdateMetadata
 
 export class Activity {
 
@@ -85,6 +86,14 @@ export class Activity {
 			commentId: commentId
 		}
 	  	return new Activity(uuidv4(), 'CommentEdited', ticketId, userId, metadata, new Date().toISOString())
+	}
+
+	static statusChanged(userId: string, ticketId: string, status: TicketStatus): Activity {
+		const metadata: StatusUpdateMetadata = {
+			message: "Status updated",
+			status: status
+		}
+		return new Activity(uuidv4(), 'StatusChanged', ticketId, userId, metadata, new Date().toISOString())
 	}
 
 	static toDto(activity: Activity): ActivityDto {
