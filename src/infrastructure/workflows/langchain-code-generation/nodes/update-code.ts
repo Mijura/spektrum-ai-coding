@@ -1,10 +1,11 @@
 import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
 import { RootAnnotation } from "../root-annotation"
 import { TicketStatus } from "@domain/entities/ticket"
+import { frontendDevelopmentService } from "@infrastructure/dependencies"
 
 
 const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { ticket, project, sourceCode, frontendDevelopmentService } = _state
+	const { ticket, project, sourceCode } = _state
 	const sdk = new JigJoyActivitySDK(process.env.JIGJOY_ENDPOINT)
 
 	let buildSuccess = false

@@ -45,8 +45,7 @@ export class LangGraphCodeGeneration extends Workflow {
 		for await (const chunk of await workflow.stream(
 			{
 				ticket: TicketMapper.toRecord(ticket),
-				project: ProjectMapper.toRecord(project),
-				frontendDevelopmentService: this.frontendDevelopmentService,
+				project: ProjectMapper.toRecord(project)
 			},
 			{ streamMode: "updates" }
 		)) {

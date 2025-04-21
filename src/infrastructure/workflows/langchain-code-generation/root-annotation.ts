@@ -16,6 +16,5 @@ export const RootAnnotation = Annotation.Root({
 	}),
 	sourceCode: Annotation<SourceCode>({
 		reducer: (a: any, b: any) => b,
-	}),
-	frontendDevelopmentService: Annotation<FrontendDevelopmentService>()
+	})
 })

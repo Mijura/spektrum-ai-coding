@@ -3,9 +3,10 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../root-annotation"
-import { DeveloperOutputSchema, SourceCodeSchema } from "@application/schemas/source-code.schema"
+import { DeveloperOutputSchema } from "@application/schemas/source-code.schema"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
 import { SourceCode } from "@domain/entities/source-code"
+import { frontendDevelopmentService } from "@infrastructure/dependencies"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCode>(),
@@ -20,7 +21,7 @@ const DeveloperOutputAnnotation = Annotation.Root({
  * @returns State with source code
  */
 const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { project, message, frontendDevelopmentService } = _state
+	const { project, message } = _state
 
 	const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(project.id)
 

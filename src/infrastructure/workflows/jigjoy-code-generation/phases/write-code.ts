@@ -1,6 +1,7 @@
 import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
 import { WorkflowPhase } from "../context"
 import { TicketStatus } from "@domain/entities/ticket"
+import { frontendDevelopmentService } from "@infrastructure/dependencies"
 
 export class WriteCode extends WorkflowPhase {
     name: string = "WriteCode"
@@ -8,7 +9,7 @@ export class WriteCode extends WorkflowPhase {
     async execute(input: any): Promise<void> {
         console.log("Writing code")
 
-        const { ticket, project, sourceCode, frontendDevelopmentService } = input
+        const { ticket, project, sourceCode } = input
         const sdk = new JigJoyActivitySDK(process.env.JIGJOY_ENDPOINT)
 
         let buildSuccess = false

@@ -5,6 +5,7 @@ import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../root-annotation"
 import { principalDeveloperModel } from "@infrastructure/workflows/models"
 import { z } from "zod"
+import { frontendDevelopmentService } from "@infrastructure/dependencies"
 export interface InstructionsDto {
 	instructions: string[]
 }
@@ -25,7 +26,7 @@ const InstructionsSchema = z.object({
  * @returns State with source code
  */
 const principalDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { project, message, frontendDevelopmentService } = _state
+	const { project, message } = _state
 
 	const sourceCode = await frontendDevelopmentService.fetchSourceCode(project.id)
 

@@ -4,6 +4,7 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { DeveloperOutputSchema } from "@application/schemas/source-code.schema"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
+import { frontendDevelopmentService } from "@infrastructure/dependencies"
 
 export class GenerateCode extends WorkflowPhase {
     name: string = "GenerateCode"
@@ -11,7 +12,7 @@ export class GenerateCode extends WorkflowPhase {
     async execute(input: any): Promise<void> {
         console.log("Generating code")
         
-        const { project, message, frontendDevelopmentService } = input
+        const { project, message } = input
 
         const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(project.id)
 
