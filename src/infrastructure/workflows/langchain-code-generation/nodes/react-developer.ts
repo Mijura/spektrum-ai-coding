@@ -6,7 +6,6 @@ import { RootAnnotation } from "../root-annotation"
 import { DeveloperOutputSchema } from "@application/schemas/source-code.schema"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
 import { SourceCode } from "@domain/entities/source-code"
-import { frontendDevelopmentService } from "@infrastructure/dependencies"
 import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 
@@ -19,11 +18,11 @@ const DeveloperOutputAnnotation = Annotation.Root({
  * 
  * This function is responsible for developing React components based on the provided source code and feature request.
  * 
- * @param _state Graph State
- * @returns State with source code
+ * @param input Graph State
+ * @returns State with ticket, project and source code
  */
-const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { project, ticket, sourceCode } = _state
+const reactDeveloper = async (input: typeof RootAnnotation.State) => {
+	const { project, ticket, sourceCode } = input
 
 	const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	
@@ -76,7 +75,7 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 	})
 
 	return {
-		..._state,
+		...input,
 		sourceCode: output.sourceCode
 	}
 }

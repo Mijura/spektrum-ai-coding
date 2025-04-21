@@ -37,11 +37,11 @@ const ProductOwnerSchema = z.object({
  *
  * This function is responsible for transforming user request into a ticket for developers.
  *
- * @param _state Graph State
+ * @param input Graph State
  * @returns State with ticket
  */
-const productOwner = async (_state: typeof RootAnnotation.State): Promise<ProductOwnerOutput> => {
-	const { ticket, project } = _state
+const productOwner = async (input: typeof RootAnnotation.State): Promise<ProductOwnerOutput> => {
+	const { ticket, project } = input
 
 	const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
 

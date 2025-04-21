@@ -10,11 +10,11 @@ import { ticketRepository } from "@infrastructure/dependencies"
  * 
  * This function is responsible for providing precise, step-by-step guidelines for implementing a specific feature in a digital product using principles inspired by Shneiderman’s Eight Golden Rules.
  * 
- * @param _state Graph State
+ * @param input Graph State
  * @returns State with updated ticket
  */
-const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { ticket } = _state
+const uiUxDesigner = async (input: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
+	const { ticket } = input
 
 	//console.log(`\n\n\nUI/UX Designer:\n\nRecieved Ticket:\n\n${ticket}`)
 
@@ -82,7 +82,7 @@ const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof
 	await ticketRepository.save(ticket)
 
 	return {
-		..._state,
+		...input,
 		ticket: ticket
 	}
 }

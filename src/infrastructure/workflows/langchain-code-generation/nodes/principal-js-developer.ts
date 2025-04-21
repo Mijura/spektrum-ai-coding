@@ -5,7 +5,7 @@ import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../root-annotation"
 import { principalDeveloperModel } from "@infrastructure/workflows/models"
 import { z } from "zod"
-import { frontendDevelopmentService } from "@infrastructure/dependencies"
+
 export interface InstructionsDto {
 	instructions: string[]
 }
@@ -22,13 +22,11 @@ const InstructionsSchema = z.object({
  * 
  * This function is responsible for translating the ticket into multiple instructions for the React Developers.
  * 
- * @param _state Graph State
+ * @param input Graph State
  * @returns State with source code
  */
-const principalDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { project, message } = _state
-
-	const sourceCode = await frontendDevelopmentService.fetchSourceCode(project.id)
+const principalDeveloper = async (input: typeof RootAnnotation.State) => {
+	const { project, ticket, sourceCode } = input
 
 	const parser = StructuredOutputParser.fromZodSchema(InstructionsSchema)
 	
@@ -69,16 +67,18 @@ const principalDeveloper = async (_state: typeof RootAnnotation.State) => {
 	])
 
 	const result = await chain.invoke({
-		ticket: message,
+		ticket: ticket,
 		project: project,
 		sourceCode: sourceCode,
 		outputSchema: parser.getFormatInstructions(),
 	})
 
 	return {
-		..._state,
-		message: result.instructions,
-		ticket: result.instructions,
+		...input,
+		ticket: {
+			...ticket,
+			description: result.instructions,
+		},
 	}
 }
 
