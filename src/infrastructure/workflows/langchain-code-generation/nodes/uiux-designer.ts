@@ -2,17 +2,19 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { RootAnnotation } from "../root-annotation"
 import { uiuxDesignerModel } from "@infrastructure/workflows/models"
+import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+import { ticketRepository } from "@infrastructure/dependencies"
 
 /**
  * UI/UX Designer Node
  * 
  * This function is responsible for providing precise, step-by-step guidelines for implementing a specific feature in a digital product using principles inspired by Shneiderman’s Eight Golden Rules.
  * 
- * @param _state Graph State
+ * @param input Graph State
  * @returns State with updated ticket
  */
-const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { ticket } = _state
+const uiUxDesigner = async (input: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
+	const { ticket } = input
 
 	//console.log(`\n\n\nUI/UX Designer:\n\nRecieved Ticket:\n\n${ticket}`)
 
@@ -70,14 +72,18 @@ const uiUxDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof
 	])
 
 	const design = await chain.invoke({
-		ticket: ticket
+		ticket: TicketMapper.toRecord(ticket)
 	})
 
-	const updatedTicket = `Task Description: ${ticket} \n\nDesign Instructions: ${design.content.toString()}`
+	const designInstructions = `Task Description: ${ticket} \n\nDesign Instructions: ${design.content.toString()}`
+	
+	ticket.updateDescription("UI/UX Designer", ticket.description + "\n\n" + designInstructions)
+	ticket.leaveComment("UI/UX Designer", designInstructions)
+	await ticketRepository.save(ticket)
 
 	return {
-		..._state,
-		message: updatedTicket,
+		...input,
+		ticket: ticket
 	}
 }
 

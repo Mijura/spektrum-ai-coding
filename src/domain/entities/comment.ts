@@ -5,14 +5,14 @@ export class Comment {
 	public readonly authorId: string
 	public text: string
 	public readonly createdAt: string
-	public editedAt?: string
+	public editedAt: string | null
 
 	constructor(
 	  id: string,
 	  authorId: string,
 	  text: string,
 	  createdAt: string,
-	  editedAt?: string
+	  editedAt: string | null
 	) {
 		this.id = id
 		this.authorId = authorId
@@ -28,7 +28,7 @@ export class Comment {
 
 	static create(authorId: string, text: string): Comment {
 		const id = uuidv4()
-		return new Comment(id, authorId, text, new Date().toISOString())
+		return new Comment(id, authorId, text, new Date().toISOString(), null)
 	}
 	
 	static rehydrate(dto: CommentDto): Comment {

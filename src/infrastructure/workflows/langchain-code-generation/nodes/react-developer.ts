@@ -3,9 +3,11 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../root-annotation"
-import { SourceCodeSchema } from "@application/schemas/source-code.schema"
+import { DeveloperOutputSchema } from "@application/schemas/source-code.schema"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
 import { SourceCode } from "@domain/entities/source-code"
+import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCode>(),
@@ -16,15 +18,13 @@ const DeveloperOutputAnnotation = Annotation.Root({
  * 
  * This function is responsible for developing React components based on the provided source code and feature request.
  * 
- * @param _state Graph State
- * @returns State with source code
+ * @param input Graph State
+ * @returns State with ticket, project and source code
  */
-const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
-	const { project, message, frontendDevelopmentService } = _state
+const reactDeveloper = async (input: typeof RootAnnotation.State) => {
+	const { project, ticket, sourceCode } = input
 
-	const sourceCodeBefore = await frontendDevelopmentService.fetchSourceCode(project.id)
-
-	const parser = StructuredOutputParser.fromZodSchema(SourceCodeSchema)
+	const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(`
@@ -53,7 +53,10 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 			- Respond only in valid JSON. The JSON object you return should match the following schema:
 
 			{{
-				"src/App.tsx": 'export default function App() {{ return <div>Hello World</div>; }}'
+				"sourceCode": {{
+					"src/App.tsx": 'export default function App() {{ return <div>Hello World</div>; }}'
+				}},
+				"comment": "I implemented Hello World to be sure the project is working."
 			}}
 
 			Format Instructions: {outputSchema}
@@ -64,17 +67,16 @@ const reactDeveloper = async (_state: typeof RootAnnotation.State) => {
 		parser,
 	])
 
-	const sourceCodeAfter = await chain.invoke({
-		ticket: message,
-		project: project,
-		sourceCode: sourceCodeBefore,
+	const output = await chain.invoke({
+		ticket: TicketMapper.toRecord(ticket),
+		project: ProjectMapper.toRecord(project),
+		sourceCode: sourceCode,
 		outputSchema: parser.getFormatInstructions(),
 	})
 
 	return {
-		..._state,
-		sourceCode: sourceCodeAfter,
-		message: sourceCodeAfter,
+		...input,
+		sourceCode: output.sourceCode
 	}
 }
 

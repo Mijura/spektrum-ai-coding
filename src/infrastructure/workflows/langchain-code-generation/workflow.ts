@@ -6,18 +6,18 @@ import { RootAnnotation } from "./root-annotation"
 import { productOwner } from "./nodes/product-owner"
 import { reactDeveloper } from "./nodes/react-developer"
 import { updateCode } from "./nodes/update-code"
-import { updateProject } from "./nodes/update-project"
-import { FrontendDevelopmentService } from "@domain/services/frontend-development"
-import { uiUxDesigner } from "./nodes/uiux-designer"
-import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+import { frontendDevelopmentService } from "@infrastructure/dependencies"
+
 export class LangGraphCodeGeneration extends Workflow {
 
-	constructor(private readonly frontendDevelopmentService: FrontendDevelopmentService) {
+	constructor() {
 		super()
 	}
 
 	async run(project: Project, ticket: Ticket): Promise<Project> {
+
+		const sourceCode = await frontendDevelopmentService.fetchSourceCode(project.id)
 		
 		console.log(`Running workflow for project ${project.id} and ticket ${ticket.id}`)
 		console.log(`Project: ${JSON.stringify(project)}`)
@@ -30,30 +30,31 @@ export class LangGraphCodeGeneration extends Workflow {
 			.addNode("ProductOwner", productOwner)
 			//.addNode("PrincipalDeveloper", principalDeveloper)
 			.addNode("ReactDeveloper", reactDeveloper)
-			.addNode("UiUxDesigner", uiUxDesigner)
+			//.addNode("UiUxDesigner", uiUxDesigner)
 			.addNode("updateCode", updateCode)
-			.addNode("updateProject", updateProject)
 			.addEdge(START, "ProductOwner")
 			//.addEdge("ProductOwner", "UiUxDesigner")
-			.addEdge("ProductOwner", "UiUxDesigner")
-			.addEdge("UiUxDesigner", "ReactDeveloper")
+			.addEdge("ProductOwner", "ReactDeveloper")
 			.addEdge("ReactDeveloper", "updateCode")
-			.addEdge("updateCode", "updateProject")
-			.addEdge("updateProject", END)
+			.addEdge("updateCode", END)
 			.compile()
 
 		for await (const chunk of await workflow.stream(
 			{
-				ticket: TicketMapper.toRecord(ticket),
-				project: ProjectMapper.toRecord(project),
-				frontendDevelopmentService: this.frontendDevelopmentService,
+				ticket: ticket,
+				project: project,
+				sourceCode: sourceCode
 			},
 			{ streamMode: "updates" }
 		)) {
 			for (const [node, values] of Object.entries(chunk)) {
 
-				let message = (values as any).message
-				const update = { node, message }
+				let ticket = (values as any).ticket
+
+				const update = { 
+					node, 
+					ticket: TicketMapper.toRecord(ticket) 
+				}
 
 				this.emit("update", update)
 			}

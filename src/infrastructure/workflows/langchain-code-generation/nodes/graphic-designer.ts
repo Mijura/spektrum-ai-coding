@@ -7,13 +7,13 @@ import { graphicDesignerModel } from "@infrastructure/workflows/models"
  * 
  * This function is responsible for creating a graphic design guideline based on the provided ticket including typography, color palette, spacing, layout, microinteractions, and motion effects.
  * 
- * @param _state Graph State
+ * @param input Graph State
  * @returns State with graphic design guidelines
  */
-const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { message } = _state
+const graphicDesigner = async (input: typeof RootAnnotation.State) => {
+	const { ticket } = input
 
-    console.log(`\n\n\nGraphic Designer:\n\nRecieved Ticket:\n\n${message}`)
+    console.log(`\n\n\nGraphic Designer:\n\nRecieved Ticket:\n\n${ticket}`)
 
 	const chain = RunnableSequence.from([
 		PromptTemplate.fromTemplate(` 
@@ -61,16 +61,19 @@ const graphicDesigner = async (_state: typeof RootAnnotation.State): Promise<typ
 	])
 
 	const design = await chain.invoke({
-		ticket: message
+		ticket: ticket
 	})
 
 	const updatedTicket = `Design Instructions: ${design.content.toString()}`
 
 	console.log(`\n\n\nUI/UX Designer:\n\nUpdated Ticket:\n\n${updatedTicket}`)
 
-	return {
-		..._state,
-		message: updatedTicket,
+    return {
+		...input,
+		ticket: {
+			...ticket,
+			description: updatedTicket,
+		},
 	}
 }
 

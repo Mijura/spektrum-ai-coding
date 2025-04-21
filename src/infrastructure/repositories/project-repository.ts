@@ -17,7 +17,7 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 	async save(project: Project): Promise<Project> {
 		const tableName = process.env.PROJECT_TABLE
 
-		console.log(`User is trying to save project with ${project.id} to dynamodb table ${tableName}.`)
+		console.log(`Saving project with ${project.id} to dynamodb table ${tableName}.`)
 
 		const projectRecord: ProjectRecord = ProjectMapper.toRecord(project)
 
@@ -34,7 +34,7 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 	async findById(id: string): Promise<Project> {
 		const tableName = process.env.PROJECT_TABLE
 
-		console.log(`User is trying to fetch project with ${id} from dynamodb table ${tableName}.`)
+		console.log(`Fetching project with ${id} from dynamodb table ${tableName}.`)
 		const params = {
 			TableName: tableName,
 			Key: { id },

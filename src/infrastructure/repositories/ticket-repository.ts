@@ -19,11 +19,11 @@ export class DynamoDBTicketRepository implements TicketRepository {
 
 		console.log(`Saving ticket with ${ticket.id} to dynamodb table ${tableName}.`)
 
-		const ticketDto: TicketRecord = TicketMapper.toRecord(ticket)
+		const ticketRecord: TicketRecord = TicketMapper.toRecord(ticket)
 
 		const params = {
 			TableName: tableName,
-			Item: ticketDto,
+			Item: ticketRecord,
 		}
 
 		await ddbDocClient.send(new PutCommand(params))
@@ -44,9 +44,9 @@ export class DynamoDBTicketRepository implements TicketRepository {
 
 		if (!item) throw new Error(`Ticket not found!`)
 
-		const ticketDto: TicketRecord = item as TicketRecord
+		const ticketRecord: TicketRecord = item as TicketRecord
 
-		return TicketMapper.toDomain(ticketDto)
+		return TicketMapper.toDomain(ticketRecord)
 	}
 
 	async findAll(projectId: string): Promise<Ticket[]> {

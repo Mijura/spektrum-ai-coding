@@ -1,10 +1,11 @@
 import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
 import { RootAnnotation } from "../root-annotation"
 import { TicketStatus } from "@domain/entities/ticket"
+import { frontendDevelopmentService, ticketRepository } from "@infrastructure/dependencies"
 
 
 const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof RootAnnotation.State> => {
-	const { ticket, project, sourceCode, frontendDevelopmentService } = _state
+	const { ticket, project, sourceCode } = _state
 	const sdk = new JigJoyActivitySDK(process.env.JIGJOY_ENDPOINT)
 
 	let buildSuccess = false
@@ -14,10 +15,10 @@ const updateCode = async (_state: typeof RootAnnotation.State): Promise<typeof R
 		await frontendDevelopmentService.updateSourceCode(project.id, sourceCode)
 		installSuccess = await frontendDevelopmentService.installDependencies(project.id)
 		buildSuccess = await frontendDevelopmentService.buildProject(project.id)
-		ticket.status = TicketStatus.DONE
+		ticket.changeStatus("React Developer", TicketStatus.DONE)
+		await ticketRepository.save(ticket)
 	} catch (error) {
 		console.error("Error writing files:", error)
-		ticket.status = TicketStatus.IN_PROGRESS
 		throw error
 	} finally {
 

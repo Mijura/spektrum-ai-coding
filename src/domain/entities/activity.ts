@@ -1,10 +1,6 @@
 import { ActivityDto } from "@application/dto/ticket";
 import { v4 as uuidv4 } from "uuid"
-
-export enum TicketActivityType {
-  LEAVE_COMMENT = 'LEAVE_COMMENT',
-  TITLE_UPDATED = 'TITLE_UPDATED',
-}
+import { TicketStatus } from "./ticket";
 
 export interface CommentCreatedMetadata {
 	commentId: string;
@@ -28,9 +24,14 @@ export interface TicketCreatedMetadata {
 	description: string;
 }
 
-export type ActivityType = 'TicketCreated' | 'Assigned' | 'CommentEdited' | 'Commented' | 'TitleUpdated' | 'DescriptionUpdated'
+export interface StatusUpdateMetadata {
+	message: string;
+	status: TicketStatus;
+}
 
-export type ActivityMetadata = CommentCreatedMetadata | TitleUpdateMetadata | DescriptionUpdateMetadata | TicketCreatedMetadata
+export type ActivityType = 'TicketCreated' | 'Assigned' | 'CommentEdited' | 'Commented' | 'TitleUpdated' | 'DescriptionUpdated' | 'StatusChanged'
+
+export type ActivityMetadata = CommentCreatedMetadata | TitleUpdateMetadata | DescriptionUpdateMetadata | TicketCreatedMetadata | StatusUpdateMetadata
 
 export class Activity {
 
@@ -45,9 +46,9 @@ export class Activity {
 	) {}
 
 	static ticketCreated(userId: string, ticketId: string, title: string, description: string): Activity {
-
+		const message = `${userId} created ticket`
 		const metadata: TicketCreatedMetadata = {
-			message: "Ticket created",
+			message: message,
 			title: title,
 			description: description
 		}
@@ -56,17 +57,20 @@ export class Activity {
 	}
   
 	static titleUpdated(userId: string, ticketId: string, oldTitle: string, newTitle: string): Activity {
+		const message = ` changed title to "${newTitle}"`
 		const metadata: TitleUpdateMetadata = {
-			message: "Title updated",
+			message: message,
 			oldTitle: oldTitle,
 			newTitle: newTitle
 		}
 		return new Activity(uuidv4(), 'TitleUpdated', ticketId, userId, metadata, new Date().toISOString())
 	}
 
-	static descriptionUpdated(userId: any, ticketId: string, oldDescription: string, newDescription: string): Activity {
+	static descriptionUpdated(userId: string, ticketId: string, oldDescription: string, newDescription: string): Activity {
+
+		const message = ` updated description`
 		const metadata: DescriptionUpdateMetadata = {
-			message: "Description updated",
+			message: message,
 			oldDescription: oldDescription,
 			newDescription: newDescription
 		}
@@ -85,6 +89,15 @@ export class Activity {
 			commentId: commentId
 		}
 	  	return new Activity(uuidv4(), 'CommentEdited', ticketId, userId, metadata, new Date().toISOString())
+	}
+
+	static statusChanged(userId: string, ticketId: string, status: TicketStatus): Activity {
+		const message = ` changed status to "${status}"`
+		const metadata: StatusUpdateMetadata = {
+			message: message,
+			status: status
+		}
+		return new Activity(uuidv4(), 'StatusChanged', ticketId, userId, metadata, new Date().toISOString())
 	}
 
 	static toDto(activity: Activity): ActivityDto {

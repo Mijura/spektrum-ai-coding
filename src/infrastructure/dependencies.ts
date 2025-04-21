@@ -9,9 +9,6 @@ import { UpdateTicketTitle } from "@domain/use-cases/ticket/update-title"
 import { UpdateTicketDescription } from "@domain/use-cases/ticket/update-description"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TicketRepository } from "@domain/repositories/ticket-repository"
-
-
-
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { FileSystemPort } from "@domain/services/file-system"
 import { PackageManager } from "@domain/utils/package-manager"
@@ -32,10 +29,12 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTicketRepository } from "@infrastructure/repositories/ticket-repository"
 
-import { LangGraphCodeGeneration } from "@infrastructure/workflows/code-generation/langgraph-generate-code"
-import { FrontendDevelopment } from "@infrastructure/workflows/code-generation/services/fronted-development"
-import { LocalFileSystem } from "@infrastructure/workflows/code-generation/services/local-file-system"
-import { YarnPackageManager } from "@infrastructure/workflows/code-generation/services/yarn-package-manager"
+import { LangGraphCodeGeneration } from "@infrastructure/workflows/langchain-code-generation/workflow"
+import { FrontendDevelopment } from "@infrastructure/workflows/services/fronted-development"
+import { LocalFileSystem } from "@infrastructure/workflows/services/local-file-system"
+import { YarnPackageManager } from "@infrastructure/workflows/services/yarn-package-manager"
+import { JigJoyCodeGeneration } from "./workflows/jigjoy-code-generation/index"
+import { Workflow } from "@domain/entities/workflow"
 
 
 
@@ -62,7 +61,6 @@ export const fetchProject: FetchProject = new FetchProjectUseCase(projectReposit
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
-
 export const createTicket: CreateTicket = new CreateTicketUseCase(ticketRepository)
 export const fetchTickets: FetchTickets = new FetchTicketsUseCase(ticketRepository)
 export const updateTicketTitle: UpdateTicketTitle = new UpdateTicketTitleUseCase(ticketRepository)
@@ -70,4 +68,5 @@ export const updateTicketDescription: UpdateTicketDescription = new UpdateTicket
 
 
 // Workflows
-export const codeGenerationWorkflow = new LangGraphCodeGeneration(frontendDevelopmentService)
+export const codeGenerationWorkflow: Workflow = new LangGraphCodeGeneration()
+export const jigJoyCodeGenerationWorkflow: Workflow = new JigJoyCodeGeneration()

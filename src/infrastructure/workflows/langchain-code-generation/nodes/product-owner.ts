@@ -3,20 +3,24 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../root-annotation"
 
-
-import { ProjectDetailsSchema } from "@application/schemas/project.schema"
 import { z } from "zod"
 
 import { productOwnerModel } from "@infrastructure/workflows/models"
-import { ProjectRecord } from "@infrastructure/records/project"
+import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
+import { projectRepository, ticketRepository } from "@infrastructure/dependencies"
+import { Project } from "@domain/entities/project"
+import { Ticket } from "@domain/entities/ticket"
 
+
+const ProjectDetailsSchema = z.object({
+	name: z.string().describe("Short name of the project. Should be filled only if it's empty."),
+	description: z.string().describe("Short description of the project purpose. Should be filled only if it's empty."),
+	updated: z.boolean().describe("Flag indicating if the project details were updated.")
+})
 interface ProductOwnerOutput {
-	project: ProjectRecord
-	ticket: {
-		title: string
-		description: string
-	}
-	message: string
+	project: Project
+	ticket: Ticket
 }
 
 const ProductOwnerSchema = z.object({
@@ -24,7 +28,7 @@ const ProductOwnerSchema = z.object({
 	ticket: z.object({
 		title: z.string().describe("Short and concise title of the ticket."),
 		description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
-	message: z.string().describe("Concrete Comment to user about what you plan to do or what you did.")
+	comment: z.string().describe("Concrete Comment to user about what you plan to do or what you did.")
 })
 
 
@@ -33,11 +37,11 @@ const ProductOwnerSchema = z.object({
  *
  * This function is responsible for transforming user request into a ticket for developers.
  *
- * @param _state Graph State
+ * @param input Graph State
  * @returns State with ticket
  */
-const productOwner = async (_state: typeof RootAnnotation.State): Promise<ProductOwnerOutput> => {
-	const { ticket, project } = _state
+const productOwner = async (input: typeof RootAnnotation.State): Promise<ProductOwnerOutput> => {
+	const { ticket, project } = input
 
 	const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
 
@@ -70,16 +74,11 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 			{{
 				"ticket": {{title: 'Enable user to add notes and display it after adding', description: 'Implement note adding and displaying functioanlity. Do not add any additional features nor any improvements.'}},
 				"projectDetails": {{
-					id: 'u5849j-435-345-345',
-					ownerId: '435-345-345-345',
-					created: '2021-01-01',
-					updated: '2021-01-01',
-					deploymentId: null,
-					status: 'Active',
 					name: 'Note Taking App',
 					description: 'App for taking notes',
+					updated: true
 				}},
-				"message" : "I have updated ticket deatils and created tasks for note adding and displaying."
+				"comment" : "I have updated ticket deatils and created tasks for note adding and displaying."
 			}}
 			`),
 			productOwnerModel,
@@ -87,22 +86,24 @@ const productOwner = async (_state: typeof RootAnnotation.State): Promise<Produc
 	])
 
 	const response = await chain.invoke({
-		ticket,
-		project,
+		ticket: TicketMapper.toRecord(ticket),
+		project: ProjectMapper.toRecord(project),
 		outputSchema: parser.getFormatInstructions(),
 	})
 
+	if (response.projectDetails.updated) {
+		project.updateName(response.projectDetails.name)
+		project.updateDescription(response.projectDetails.description)
+		await projectRepository.save(project)
+	}
+	ticket.updateTitle("Product Owner", response.ticket.title)
+	ticket.updateDescription("Product Owner", response.ticket.description)
+	ticket.leaveComment("Product Owner", response.comment)
+	await ticketRepository.save(ticket)
+
 	return {
-		..._state,
-		ticket: {
-			...ticket,
-			...response.ticket
-		},
-		project: {
-			...project,
-			...response.projectDetails,
-		},
-		message: response.message
+		ticket: ticket,
+		project: project
 	}
 }
 

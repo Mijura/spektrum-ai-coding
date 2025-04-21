@@ -21,7 +21,7 @@ export interface CommentDto {
 	authorId: string
 	text: string
 	createdAt: string
-	editedAt?: string
+	editedAt: string | null
 }
 
 export interface TicketDto {
