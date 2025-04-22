@@ -57,7 +57,7 @@ export class Activity {
 	}
   
 	static titleUpdated(userId: string, ticketId: string, oldTitle: string, newTitle: string): Activity {
-		const message = ` changed title to "${newTitle}"`
+		const message = `${userId} changed title to "${newTitle}"`
 		const metadata: TitleUpdateMetadata = {
 			message: message,
 			oldTitle: oldTitle,
@@ -68,7 +68,7 @@ export class Activity {
 
 	static descriptionUpdated(userId: string, ticketId: string, oldDescription: string, newDescription: string): Activity {
 
-		const message = ` updated description`
+		const message = `${userId} updated description`
 		const metadata: DescriptionUpdateMetadata = {
 			message: message,
 			oldDescription: oldDescription,
@@ -92,7 +92,7 @@ export class Activity {
 	}
 
 	static statusChanged(userId: string, ticketId: string, status: TicketStatus): Activity {
-		const message = ` changed status to "${status}"`
+		const message = `${userId} changed status to "${status}"`
 		const metadata: StatusUpdateMetadata = {
 			message: message,
 			status: status
