@@ -1,4 +1,3 @@
-
 import { ticketController } from "@infrastructure/dependencies"
 import express, { Request, Response } from "express"
 
@@ -12,5 +11,8 @@ router.put("/ticket/description", (req: Request, res: Response) => ticketControl
 
 router.get("/ticket/fetch-all/:projectId", (req: Request, res: Response) => ticketController.fetchTickets(req, res))
 
+router.post("/ticket/comment", (req: Request, res: Response) => ticketController.leaveComment(req, res))
+
+router.put("/ticket/comment", (req: Request, res: Response) => ticketController.editComment(req, res))
 
 export { router as ticketRouter }
