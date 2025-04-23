@@ -32,7 +32,10 @@ const reactDeveloper = async (input: typeof RootAnnotation.State) => {
 			You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
 
 			### **Your Task:**
-			1. **Analyze the current source code** to determine if the required functionality already exists.
+			1. ** Analyze ticket details, activities, and comments." Figure out what should be done to resolve the issue.
+				** You can recognize your prior activities by author name 'React Developer' **
+			
+			****Analyze the current source code** to determine if the required functionality already exists.
 			- If the functionality exists, modify it as needed.
 			- If the functionality does not exist, create new code to implement it.
 			
