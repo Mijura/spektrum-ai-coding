@@ -1,7 +1,6 @@
-
 import { Request, Response } from "express"
 import { TicketDtoMapper } from "@application/mappers/ticket-dto-mapper"
-import { createTicket, fetchTickets, updateTicketTitle, updateTicketDescription } from "@infrastructure/dependencies"
+import { createTicket, fetchTickets, updateTicketTitle, updateTicketDescription, leaveComment, editComment } from "@infrastructure/dependencies"
 import { TicketDto } from "@application/dto/ticket"
 
 export class TicketController {
@@ -59,5 +58,26 @@ export class TicketController {
 
     }
 
+	async leaveComment(req: Request, res: Response): Promise<void> {
+		try {
+			const { ticketId, authorId, commentText } = req.body
+			const ticket = await leaveComment.execute(ticketId, authorId, commentText)
+			res.status(200).json(ticket)
+		} catch (error) {
+			console.error("Error adding comment:", error)
+			res.status(500).json({ message: "Error adding comment." })
+		}
+	}
+
+	async editComment(req: Request, res: Response): Promise<void> {
+		try {
+			const { ticketId, userId, commentId, newText } = req.body
+			const ticket = await editComment.execute(ticketId, userId, commentId, newText)
+			res.status(200).json(ticket)
+		} catch (error) {
+			console.error("Error editing comment:", error)
+			res.status(500).json({ message: "Error editing comment." })
+		}
+	}
 
 }

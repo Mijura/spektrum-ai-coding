@@ -8,6 +8,8 @@ import { CreateTicket } from "@domain/use-cases/ticket/create-ticket"
 import { FetchTickets } from "@domain/use-cases/ticket/fetch-tickets"
 import { UpdateTicketTitle } from "@domain/use-cases/ticket/update-title"
 import { UpdateTicketDescription } from "@domain/use-cases/ticket/update-description"
+import { LeaveComment } from "@domain/use-cases/ticket/leave-comment"
+import { EditComment } from "@domain/use-cases/ticket/edit-comment"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TicketRepository } from "@domain/repositories/ticket-repository"
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
@@ -24,6 +26,8 @@ import { CreateTicketUseCase } from "@application/use-cases/ticket/create-ticket
 import { UpdateTicketTitleUseCase } from "@application/use-cases/ticket/update-title"
 import { UpdateTicketDescriptionUseCase } from "@application/use-cases/ticket/update-description"
 import { FetchTicketsUseCase } from "@application/use-cases/ticket/fetch-tickets"
+import { LeaveCommentUseCase } from "@application/use-cases/ticket/leave-comment"
+import { EditCommentUseCase } from "@application/use-cases/ticket/edit-comment"
 
 import { TicketController } from "@infrastructure/http/controllers/ticket-controller"
 import { ProjectController } from "@infrastructure/http/controllers/project-controller"
@@ -68,6 +72,8 @@ export const fetchTickets: FetchTickets = new FetchTicketsUseCase(ticketReposito
 export const updateTicketTitle: UpdateTicketTitle = new UpdateTicketTitleUseCase(ticketRepository)
 export const updateTicketDescription: UpdateTicketDescription = new UpdateTicketDescriptionUseCase(ticketRepository)
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
+export const leaveComment: LeaveComment = new LeaveCommentUseCase(ticketRepository)
+export const editComment: EditComment = new EditCommentUseCase(ticketRepository)
 
 // Workflows
 export const codeGenerationWorkflow: Workflow = new LangGraphCodeGeneration()
