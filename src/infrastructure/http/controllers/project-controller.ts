@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { ProjectDtoMapper } from "@application/mappers/project-dto-mappers"
-import { createNewProject, fetchProject, deployProject, fetchProjects, archiveProject } from "@infrastructure/dependencies"
+import { createNewProject, fetchProject, deployProject, fetchProjects, archiveProject, updateProjectDetails } from "@infrastructure/dependencies"
 export class ProjectController {
 
 	constructor() {}
@@ -69,4 +69,20 @@ export class ProjectController {
 			res.status(500).json({ error: `Error rebuilding project: ${error}` })
 		}
 	}
+
+	async updateProjectDetails(request: Request, response: Response): Promise<any> {
+        try {
+            const { id, name, description } = request.body
+
+            const project = await updateProjectDetails.execute(id, name, description)
+
+            return response.status(200).json(project)
+        } catch (error) {
+            console.error("Error in UpdateProjectDetailsController:", error)
+            return response.status(400).json({
+                error: error instanceof Error ? error.message : "Failed to update project details"
+            })
+        }
+    }
+
 }

@@ -1,4 +1,5 @@
 import { CreateProject } from "@domain/use-cases/project/create-project"
+import { UpdateProjectDetails } from "@domain/use-cases/project/update-details"
 import { FetchProject } from "@domain/use-cases/project/fetch-project"
 import { FetchProjects } from "@domain/use-cases/project/fetch-projects"
 import { ArchiveProject } from "@domain/use-cases/project/archive-project"
@@ -17,6 +18,7 @@ import { FetchProjectsUseCase } from "@application/use-cases/project/fetch-proje
 import { DeployProjectUseCase } from "@application/use-cases/project/deploy-project"
 import { FetchProjectUseCase } from "@application/use-cases/project/fetch-project"
 import { CreateProjectUseCase } from "@application/use-cases/project/create-project"
+import { UpdateProjectDetailsUseCase } from "@application/use-cases/project/update-details"
 import { ArchiveProjectUseCase } from "@application/use-cases/project/archive-project"
 import { CreateTicketUseCase } from "@application/use-cases/ticket/create-ticket"
 import { UpdateTicketTitleUseCase } from "@application/use-cases/ticket/update-title"
@@ -65,7 +67,7 @@ export const createTicket: CreateTicket = new CreateTicketUseCase(ticketReposito
 export const fetchTickets: FetchTickets = new FetchTicketsUseCase(ticketRepository)
 export const updateTicketTitle: UpdateTicketTitle = new UpdateTicketTitleUseCase(ticketRepository)
 export const updateTicketDescription: UpdateTicketDescription = new UpdateTicketDescriptionUseCase(ticketRepository)
-
+export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
 
 // Workflows
 export const codeGenerationWorkflow: Workflow = new LangGraphCodeGeneration()

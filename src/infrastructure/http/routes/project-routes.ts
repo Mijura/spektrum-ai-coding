@@ -5,6 +5,8 @@ const router = express.Router()
 
 router.post("/", (req: Request, res: Response) => projectController.createProject(req, res))
 
+router.put("/", (req: Request, res: Response) => projectController.updateProjectDetails(req, res))
+
 router.get("/fetch/:projectId", (req: Request, res: Response) => projectController.fetchProject(req, res))
 
 router.get("/fetch-all/:ownerId", (req: Request, res: Response) => projectController.fetchProjects(req, res))
