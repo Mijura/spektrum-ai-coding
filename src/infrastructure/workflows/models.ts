@@ -35,7 +35,7 @@ const gpt41Mini = new ChatOpenAI({
     modelName: "gpt-4.1-mini",
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
-const gpt41Nano = new ChatOpenAI({
+export const gpt41Nano = new ChatOpenAI({
     modelName: "gpt-4.1-nano",
     openAIApiKey: process.env.OPENAI_API_KEY,
 })

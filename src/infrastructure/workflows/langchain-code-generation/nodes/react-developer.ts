@@ -3,11 +3,23 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { Annotation } from "@langchain/langgraph"
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RootAnnotation } from "../root-annotation"
-import { DeveloperOutputSchema } from "@application/schemas/source-code.schema"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
 import { SourceCode } from "@domain/entities/source-code"
 import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
+import { ticketRepository } from "@infrastructure/dependencies"
+
+import { z } from "zod"
+
+const SourceCodeSchema = z.record(
+	z.string().describe("The file path as a string"),
+	z.string().describe("The source code (content) inside a file")
+)
+
+const DeveloperOutputSchema = z.object({
+	sourceCode: SourceCodeSchema,
+	comment: z.string().describe("The comment to be added to the ticket. It's a short summary of the changes you made from the user's perspective")
+})
 
 const DeveloperOutputAnnotation = Annotation.Root({
 	sourceCode: Annotation<SourceCode>(),
@@ -76,6 +88,9 @@ const reactDeveloper = async (input: typeof RootAnnotation.State) => {
 		sourceCode: sourceCode,
 		outputSchema: parser.getFormatInstructions(),
 	})
+
+	ticket.leaveComment("React Developer", output.comment)
+	await ticketRepository.save(ticket)
 
 	return {
 		...input,

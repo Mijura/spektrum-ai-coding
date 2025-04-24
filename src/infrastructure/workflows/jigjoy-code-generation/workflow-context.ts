@@ -25,6 +25,7 @@ export class WorkflowContext {
         if (data !== undefined) {
           this.currentPhase.setData(data);
         }
+        this.currentPhase.execute(data);
       }
 
   

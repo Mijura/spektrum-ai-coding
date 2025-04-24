@@ -73,5 +73,5 @@ export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetai
 export const leaveComment: LeaveComment = new LeaveCommentUseCase(ticketRepository)
 
 // Workflows
-export const codeGenerationWorkflow: Workflow = new LangGraphCodeGeneration()
+export const codeGenerationWorkflow: Workflow = new JigJoyCodeGeneration()
 export const jigJoyCodeGenerationWorkflow: Workflow = new JigJoyCodeGeneration()

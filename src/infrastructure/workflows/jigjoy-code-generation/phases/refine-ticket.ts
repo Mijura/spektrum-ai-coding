@@ -1,7 +1,7 @@
 import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
-import { productOwnerModel } from "@infrastructure/workflows/models"
+import { gpt41Nano } from "@infrastructure/workflows/models"
 import { z } from "zod"
 import { projectRepository, ticketRepository } from "@infrastructure/dependencies"
 import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
@@ -11,7 +11,7 @@ import { State, WorkflowPhase } from "../workflow-phase"
 const ProjectDetailsSchema = z.object({
 	name: z.string().describe("Short name of the project. Should be filled only if it's empty."),
 	description: z.string().describe("Short description of the project purpose. Should be filled only if it's empty."),
-	updated: z.boolean().describe("Flag indicating if the project details were updated.")
+	updated: z.boolean().optional().describe("Flag indicating if the project details were updated.")
 })
 
 const ProductOwnerSchema = z.object({
@@ -65,10 +65,10 @@ export class RefineTicket extends WorkflowPhase {
                         description: 'App for taking notes',
                         neededUpdate: true
                     }},
-                    "message" : "I have updated ticket deatils and created tasks for note adding and displaying."
+                    "comment" : "I have updated ticket deatils and created tasks for note adding and displaying."
                 }}
                 `),
-                productOwnerModel,
+                gpt41Nano,
             parser,
         ])
     
@@ -83,9 +83,9 @@ export class RefineTicket extends WorkflowPhase {
             project.updateDescription(response.projectDetails.description)
             await projectRepository.save(project)
         }
-        ticket.updateTitle(response.ticket.title, "Product Owner")
-        ticket.updateDescription(response.ticket.description, "Product Owner")
-        ticket.leaveComment(response.comment, "Product Owner")
+        ticket.updateTitle("Product Owner", response.ticket.title)
+        ticket.updateDescription("Product Owner", response.ticket.description)
+        ticket.leaveComment("Product Owner", response.comment)
         await ticketRepository.save(ticket)
 
         const newState: State = {
