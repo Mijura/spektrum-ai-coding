@@ -1,7 +1,8 @@
 import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
 import { TicketStatus } from "@domain/entities/ticket"
-import { frontendDevelopmentService } from "@infrastructure/dependencies"
+import { frontendDevelopmentService, ticketRepository } from "@infrastructure/dependencies"
 import { State, WorkflowPhase } from "../workflow-phase"
+import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
 export class WriteCode extends WorkflowPhase {
     name: string = "WriteCode"
 
@@ -18,13 +19,21 @@ export class WriteCode extends WorkflowPhase {
             await frontendDevelopmentService.updateSourceCode(project.id, sourceCode)
             installSuccess = await frontendDevelopmentService.installDependencies(project.id)
             buildSuccess = await frontendDevelopmentService.buildProject(project.id)
-            ticket.status = TicketStatus.DONE
+            ticket.leaveComment("DevOps Engineer", "Application build successfully")
         } catch (error) {
             console.error("Error writing files:", error)
-            ticket.status = TicketStatus.IN_PROGRESS
+            ticket.leaveComment("DevOps Engineer", "Error writing files: " + error)
             throw error
         } finally {
 
+            const update = { 
+                node: "DevOps Engineer", 
+                ticket: TicketMapper.toRecord(ticket) 
+            }
+
+            this.emit('update', update)
+
+            await ticketRepository.save(ticket)
             await sdk.ingestActivity({
                 playerId: project.ownerId, 
                 gameId: 'honeycomb', 

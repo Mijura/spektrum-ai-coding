@@ -3,6 +3,7 @@ import { Ticket } from "@domain/entities/ticket";
 import { SourceCode } from "@domain/entities/source-code";
 import { WorkflowContext } from "./workflow-context";
 import { PhaseRegistry } from "./phase-registry";
+import EventEmitter from "events";
 
 export interface State {
 	project: Project
@@ -10,7 +11,7 @@ export interface State {
 	sourceCode: SourceCode
 }
 
-export abstract class WorkflowPhase<T = any> {
+export abstract class WorkflowPhase<T = any>  extends EventEmitter  {
     abstract name: string;
     protected context!: WorkflowContext;
     protected data!: T;

@@ -95,6 +95,12 @@ export class RefineTicket extends WorkflowPhase {
         }
 
         console.log("Transitioning to GenerateCode")
+        const update = { 
+            node: "Product Owner", 
+            ticket: TicketMapper.toRecord(ticket) 
+        }
+
+        this.emit("update", update)
         this.transitionTo("GenerateCode", newState)
     }
 }

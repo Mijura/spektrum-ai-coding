@@ -33,6 +33,14 @@ export class JigJoyCodeGeneration extends Workflow {
             sourceCode: sourceCode
         })
 
+        context.on("update", (data: any) => {
+			this.emit("update", data)
+		})
+
+		context.on("done", (data: any) => {
+			this.emit("done", data)
+		})
+
         return project
     }
 }

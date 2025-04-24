@@ -1,17 +1,18 @@
 
-import { State, WorkflowPhase } from "./workflow-phase";
-import { PhaseRegistry } from "./phase-registry";
+import { WorkflowPhase } from "./workflow-phase";
+import EventEmitter from "events";
 
 
-export class WorkflowContext {
+export class WorkflowContext extends EventEmitter {
     private currentPhase: WorkflowPhase;
   
     constructor(initialPhase: WorkflowPhase, initialData?: any) {
-      this.currentPhase = initialPhase;
-      this.currentPhase.setContext(this);
-      if (initialData) {
-        this.currentPhase.setData(initialData);
-      }
+        super()
+        this.currentPhase = initialPhase;
+        this.currentPhase.setContext(this);
+        if (initialData) {
+            this.currentPhase.setData(initialData);
+        }
     }
   
     /**
