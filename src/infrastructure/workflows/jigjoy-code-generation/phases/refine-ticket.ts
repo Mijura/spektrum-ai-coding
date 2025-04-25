@@ -63,7 +63,7 @@ export class RefineTicket extends WorkflowPhase {
                     "projectDetails": {{
                         name: 'Note Taking App',
                         description: 'App for taking notes',
-                        neededUpdate: true
+                        updated: true
                     }},
                     "comment" : "I have updated ticket deatils and created tasks for note adding and displaying."
                 }}
