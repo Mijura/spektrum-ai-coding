@@ -27,12 +27,6 @@ export class JigJoyCodeGeneration extends Workflow {
 
         const context = new WorkflowContext(new RefineTicket());
         
-        context.execute({
-            project,
-            ticket,
-            sourceCode: sourceCode
-        })
-
         context.on("update", (data: any) => {
 			this.emit("update", data)
 		})
@@ -40,6 +34,14 @@ export class JigJoyCodeGeneration extends Workflow {
 		context.on("done", (data: any) => {
 			this.emit("done", data)
 		})
+        
+        context.execute({
+            project,
+            ticket,
+            sourceCode: sourceCode
+        })
+
+
 
         return project
     }
