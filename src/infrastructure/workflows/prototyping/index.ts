@@ -8,7 +8,7 @@ import { RefineTicket } from "./phases/refine-ticket";
 import { GenerateCode } from "./phases/generate-code";
 import { WorkflowContext } from "./workflow-context";
 
-export class JigJoyCodeGeneration extends Workflow {
+export class PrototypingWorkflow extends Workflow {
 
 
 

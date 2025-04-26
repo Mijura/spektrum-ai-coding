@@ -1,8 +1,8 @@
 import { Workflow } from '@domain/entities/workflow';
-import { codeGenerationWorkflow } from '@infrastructure/dependencies';
+import { prototypingWorkflow } from '@infrastructure/dependencies';
 export class WorkflowFactory {
   private static readonly workflows: Map<string, Workflow> = new Map([
-    ['code-generation', codeGenerationWorkflow],
+    ['prototyping', prototypingWorkflow],
   ]);
 
   static create(id: string): Workflow {

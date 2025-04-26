@@ -33,12 +33,11 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTicketRepository } from "@infrastructure/repositories/ticket-repository"
 
-import { LangGraphCodeGeneration } from "@infrastructure/workflows/langchain-code-generation/workflow"
 import { FrontendDevelopment } from "@infrastructure/workflows/services/fronted-development"
 import { LocalFileSystem } from "@infrastructure/workflows/services/local-file-system"
 import { YarnPackageManager } from "@infrastructure/workflows/services/yarn-package-manager"
-import { JigJoyCodeGeneration } from "./workflows/jigjoy-code-generation/index"
 import { Workflow } from "@domain/entities/workflow"
+import { PrototypingWorkflow } from "./workflows/prototyping"
 
 
 
@@ -73,5 +72,4 @@ export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetai
 export const leaveComment: LeaveComment = new LeaveCommentUseCase(ticketRepository)
 
 // Workflows
-export const codeGenerationWorkflow: Workflow = new JigJoyCodeGeneration()
-export const jigJoyCodeGenerationWorkflow: Workflow = new JigJoyCodeGeneration()
+export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
