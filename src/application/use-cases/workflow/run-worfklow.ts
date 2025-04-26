@@ -2,9 +2,9 @@ import { Project } from "@domain/entities/project"
 import { RunWorkflow } from "@domain/use-cases/workflow/run-workflow"
 import { Workflow } from "@domain/entities/workflow"
 import EventEmitter from "events"
-import { WorkflowFactory } from "@domain/utils/workflow-factory"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TicketRepository } from "@domain/repositories/ticket-repository"
+import { WorkflowFactory } from "@infrastructure/workflows/prototyping/interfaces/workflow-factory"
 
 export class RunWorkflowUseCase extends EventEmitter implements RunWorkflow {
 

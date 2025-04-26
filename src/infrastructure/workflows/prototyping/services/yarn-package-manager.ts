@@ -1,4 +1,5 @@
-import { PackageManager } from "@domain/utils/package-manager"
+
+import { PackageManager } from "../interfaces/package-manager"
 import { runCommand } from "../utils/command-runner"
 
 export class YarnPackageManager implements PackageManager {

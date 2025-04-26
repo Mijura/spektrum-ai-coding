@@ -13,7 +13,6 @@ import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TicketRepository } from "@domain/repositories/ticket-repository"
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { FileSystemPort } from "@domain/services/file-system"
-import { PackageManager } from "@domain/utils/package-manager"
 
 import { FetchProjectsUseCase } from "@application/use-cases/project/fetch-projects"
 import { DeployProjectUseCase } from "@application/use-cases/project/deploy-project"
@@ -33,11 +32,12 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTicketRepository } from "@infrastructure/repositories/ticket-repository"
 
-import { FrontendDevelopment } from "@infrastructure/workflows/services/fronted-development"
-import { LocalFileSystem } from "@infrastructure/workflows/services/local-file-system"
-import { YarnPackageManager } from "@infrastructure/workflows/services/yarn-package-manager"
 import { Workflow } from "@domain/entities/workflow"
 import { PrototypingWorkflow } from "./workflows/prototyping"
+import { LocalFileSystem } from "./workflows/prototyping/services/local-file-system"
+import { YarnPackageManager } from "./workflows/prototyping/services/yarn-package-manager"
+import { FrontendDevelopment } from "./workflows/prototyping/services/fronted-development"
+import { PackageManager } from "./workflows/prototyping/interfaces/package-manager"
 
 
 

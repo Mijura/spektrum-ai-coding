@@ -8,6 +8,12 @@ export enum TicketStatus {
     DONE = "DONE",
 }
 
+export enum WorkflowStatus {
+	IN_PROGRESS = "IN PROGRESS",
+	SUCCESS = "SUCCESS",
+	FAILED = "FAILED",
+}
+
 export class Ticket {
 	public readonly id: string
     public readonly created: string
@@ -71,6 +77,14 @@ export class Ticket {
 		comment.edit(newText)
 		this.activities.push(Activity.commentEdited(userId, this.id, commentId))
 	
+	}
+
+	startWorkOnTicket(phase: string) {
+		this.activities.push(Activity.startedWorkingOnTicket(phase, this.id))
+	}
+
+	finishWorkOnTicket(phase: string, status: WorkflowStatus.SUCCESS | WorkflowStatus.FAILED) {
+		this.activities.push(Activity.finishedWorkingOnTicket(phase, this.id, status))
 	}
 
 	changeStatus(userId: string, status: TicketStatus) {

@@ -1,6 +1,6 @@
 import { ActivityDto } from "@application/dto/ticket";
 import { v4 as uuidv4 } from "uuid"
-import { TicketStatus } from "./ticket";
+import { TicketStatus, WorkflowStatus } from "./ticket";
 
 export interface CommentCreatedMetadata {
 	commentId: string;
@@ -36,6 +36,7 @@ export type ActivityMetadata = CommentCreatedMetadata | TitleUpdateMetadata | De
 export class Activity {
 
 
+
 	constructor(
 		public readonly id: string,
 		public readonly type: ActivityType,
@@ -54,6 +55,20 @@ export class Activity {
 		}
 
 		return new Activity(uuidv4(), 'TicketCreated', ticketId, userId, metadata, new Date().toISOString())
+	}
+
+	static finishedWorkingOnTicket(phase: string, ticketId: string, status: WorkflowStatus.SUCCESS | WorkflowStatus.FAILED): Activity {
+		const message = `${phase} finished with status ${status}`
+		const metadata: TicketCreatedMetadata = {
+			message: message,
+			title: title,
+			description: description
+		}
+		throw new Error("Method not implemented.");
+	}
+	static startedWorkingOnTicket(phase: string, ticketId: string): Activity {
+
+		throw new Error("Method not implemented.");
 	}
   
 	static titleUpdated(userId: string, ticketId: string, oldTitle: string, newTitle: string): Activity {

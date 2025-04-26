@@ -40,7 +40,7 @@ export class WriteCode extends WorkflowPhase {
                 type: 'workflow-execution', 
                 data: {
                     projectId: project.id,
-                    workflowId: 'code-generation',
+                    workflowId: 'prototyping',
                     ticketId: ticket.id,
                     ticketTitle: ticket.title,
                     buildStatus: buildSuccess && installSuccess ? "success" : "failed",

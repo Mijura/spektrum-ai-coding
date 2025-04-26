@@ -1,5 +1,6 @@
 import path from "path"
-import { PackageManager } from "@domain/utils/package-manager"
+
+import { PackageManager } from "../interfaces/package-manager"
 import { FileSystemPort } from "@domain/services/file-system"
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { Project } from "@domain/entities/project"

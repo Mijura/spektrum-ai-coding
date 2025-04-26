@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { TicketDtoMapper } from "@application/mappers/ticket-dto-mapper"
-import { createTicket, fetchTickets, updateTicketTitle, updateTicketDescription, leaveComment, codeGenerationWorkflow, fetchProject } from "@infrastructure/dependencies"
+import { createTicket, fetchTickets, updateTicketTitle, updateTicketDescription, leaveComment, prototypingWorkflow, fetchProject } from "@infrastructure/dependencies"
 import { TicketDto } from "@application/dto/ticket"
 
 export class TicketController {
@@ -63,7 +63,7 @@ export class TicketController {
 			const { ticketId, authorId, commentText } = req.body
 			const ticket = await leaveComment.execute(ticketId, authorId, commentText)
 			const project = await fetchProject.execute(ticket.projectId)
-			await codeGenerationWorkflow.run(project, ticket)
+			await prototypingWorkflow.run(project, ticket)
 			res.status(200).json(ticket)
 		} catch (error) {
 			console.error("Error adding comment:", error)
