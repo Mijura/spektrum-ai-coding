@@ -29,9 +29,14 @@ export interface StatusUpdateMetadata {
 	status: TicketStatus;
 }
 
+export interface WorkflowStatusUpdateMetadata {
+	message: string;
+	status: WorkflowStatus;
+}
+
 export type ActivityType = 'TicketCreated' | 'Assigned' | 'CommentEdited' | 'Commented' | 'TitleUpdated' | 'DescriptionUpdated' | 'StatusChanged'
 
-export type ActivityMetadata = CommentCreatedMetadata | TitleUpdateMetadata | DescriptionUpdateMetadata | TicketCreatedMetadata | StatusUpdateMetadata
+export type ActivityMetadata = CommentCreatedMetadata | TitleUpdateMetadata | DescriptionUpdateMetadata | TicketCreatedMetadata | StatusUpdateMetadata | WorkflowStatusUpdateMetadata
 
 export class Activity {
 
@@ -57,18 +62,21 @@ export class Activity {
 		return new Activity(uuidv4(), 'TicketCreated', ticketId, userId, metadata, new Date().toISOString())
 	}
 
-	static finishedWorkingOnTicket(phase: string, ticketId: string, status: WorkflowStatus.SUCCESS | WorkflowStatus.FAILED): Activity {
-		const message = `${phase} finished with status ${status}`
-		const metadata: TicketCreatedMetadata = {
+	static finishedWorkingOnTicket(userId: string, phase: string, ticketId: string, status: WorkflowStatus.SUCCESS | WorkflowStatus.FAILED): Activity {
+		const message = `${userId} finished working on ${phase} with status ${status}`
+		const metadata: WorkflowStatusUpdateMetadata = {
 			message: message,
-			title: title,
-			description: description
+			status: status
 		}
-		throw new Error("Method not implemented.");
+		return new Activity(uuidv4(), 'StatusChanged', ticketId, userId, metadata, new Date().toISOString())
 	}
-	static startedWorkingOnTicket(phase: string, ticketId: string): Activity {
-
-		throw new Error("Method not implemented.");
+	static startedWorkingOnTicket(userId: string, phase: string, ticketId: string): Activity {
+		const message = `${userId} started working on ${phase}`
+		const metadata: WorkflowStatusUpdateMetadata = {
+			message: message,
+			status: WorkflowStatus.IN_PROGRESS
+		}
+		return new Activity(uuidv4(), 'StatusChanged', ticketId, userId, metadata, new Date().toISOString())	
 	}
   
 	static titleUpdated(userId: string, ticketId: string, oldTitle: string, newTitle: string): Activity {

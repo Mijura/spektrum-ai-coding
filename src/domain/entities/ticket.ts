@@ -79,12 +79,12 @@ export class Ticket {
 	
 	}
 
-	startWorkOnTicket(phase: string) {
-		this.activities.push(Activity.startedWorkingOnTicket(phase, this.id))
+	startWorkOnTicket(userId: string, phase: string) {
+		this.activities.push(Activity.startedWorkingOnTicket(userId, phase, this.id))
 	}
 
-	finishWorkOnTicket(phase: string, status: WorkflowStatus.SUCCESS | WorkflowStatus.FAILED) {
-		this.activities.push(Activity.finishedWorkingOnTicket(phase, this.id, status))
+	finishWorkOnTicket(userId: string, phase: string, status: WorkflowStatus.SUCCESS | WorkflowStatus.FAILED) {
+		this.activities.push(Activity.finishedWorkingOnTicket(userId, phase, this.id, status))
 	}
 
 	changeStatus(userId: string, status: TicketStatus) {
