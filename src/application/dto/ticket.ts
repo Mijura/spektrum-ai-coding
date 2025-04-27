@@ -1,4 +1,5 @@
-import { ActivityMetadata, ActivityType } from "@domain/entities/activity"
+import { ActivityType } from "@domain/entities/activity/types/activity-type"
+import { ActivityMetadata } from "@domain/entities/activity/types/activity-metadata"
 
 
 enum TicketStatus {
