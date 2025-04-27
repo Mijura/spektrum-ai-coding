@@ -1,4 +1,4 @@
-import { IssueActivity, ActivityType } from "../issue-activity"
+import { Activity, ActivityType } from "../activity"
 
 export interface TitleUpdatedMetadata {
 	message: string
@@ -6,7 +6,7 @@ export interface TitleUpdatedMetadata {
 	newTitle: string
 }
 
-export class TitleUpdated extends IssueActivity {
+export class TitleUpdated extends Activity {
 
     constructor(
         id: string, 
@@ -19,7 +19,7 @@ export class TitleUpdated extends IssueActivity {
         super(id, type, issueId, userId, metadata, occurredAt)
     }
 
-    static create(userId: string, issueId: string, oldTitle: string, newTitle: string): IssueActivity {
+    static create(userId: string, issueId: string, oldTitle: string, newTitle: string): Activity {
 		
         const id = this.generateId()
 		const type = ActivityType.TITLE_UPDATED

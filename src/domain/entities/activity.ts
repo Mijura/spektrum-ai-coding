@@ -31,7 +31,7 @@ export enum ActivityType {
     WORKFLOW_FAILED = 'WorkflowFailed',
 }
 
-export class IssueActivity {
+export class Activity {
     constructor(
       public readonly id: string,
       public readonly type: ActivityType,
@@ -41,7 +41,7 @@ export class IssueActivity {
       public readonly occurredAt: string
     ) {}
 
-    static toDto(activity: IssueActivity): ActivityDto {
+    static toDto(activity: Activity): ActivityDto {
         return {
 			id: activity.id,
 			type: activity.type,
@@ -52,8 +52,8 @@ export class IssueActivity {
         }
       }
     
-      static rehydrate(dto: ActivityDto): IssueActivity {
-        return new IssueActivity(dto.id, dto.type, dto.issueId, dto.userId, dto.metadata, dto.occurredAt)
+      static rehydrate(dto: ActivityDto): Activity {
+        return new Activity(dto.id, dto.type, dto.issueId, dto.userId, dto.metadata, dto.occurredAt)
       }
 
       protected static generateId() {

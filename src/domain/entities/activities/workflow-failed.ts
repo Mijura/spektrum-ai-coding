@@ -1,11 +1,11 @@
-import { IssueActivity, ActivityType } from "../issue-activity"
+import { Activity, ActivityType } from "../activity"
 
 export interface WorkflowFailedMetadata {
 	message: string
 	phase: string
 }
 
-export class WorkflowFailed extends IssueActivity {
+export class WorkflowFailed extends Activity {
 	constructor(
 		id: string,
 		type: ActivityType.WORKFLOW_FAILED,
@@ -17,7 +17,7 @@ export class WorkflowFailed extends IssueActivity {
         super(id, type, issueId, userId, metadata, occurredAt)
     }
     
-    static create(userId: string, issueId: string, phase: string): IssueActivity {
+    static create(userId: string, issueId: string, phase: string): Activity {
         
         const id = this.generateId()
         const type = ActivityType.WORKFLOW_FAILED

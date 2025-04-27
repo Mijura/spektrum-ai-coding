@@ -1,11 +1,11 @@
-import { CommentEditedMetadata } from "@domain/entities/activity/activities/comment-edited"
-import { CommentLeftMetadata } from "@domain/entities/activity/activities/comment-left"
-import { DescriptionUpdatedMetadata } from "@domain/entities/activity/activities/description-updated"
-import { IssueCreatedMetadata } from "@domain/entities/activity/activities/issue-created"
-import { TitleUpdatedMetadata } from "@domain/entities/activity/activities/title-updated"
-import { WorkflowFailedMetadata } from "@domain/entities/activity/activities/workflow-failed"
-import { WorkflowStartedMetadata } from "@domain/entities/activity/activities/workflow-started"
-import { WorkflowSucceededMetadata } from "@domain/entities/activity/activities/workflow-succeeded"
+import { CommentEditedMetadata } from "@domain/entities/activities/comment-edited"
+import { CommentLeftMetadata } from "@domain/entities/activities/comment-left"
+import { DescriptionUpdatedMetadata } from "@domain/entities/activities/description-updated"
+import { IssueCreatedMetadata } from "@domain/entities/activities/issue-created"
+import { TitleUpdatedMetadata } from "@domain/entities/activities/title-updated"
+import { WorkflowFailedMetadata } from "@domain/entities/activities/workflow-failed"
+import { WorkflowStartedMetadata } from "@domain/entities/activities/workflow-started"
+import { WorkflowSucceededMetadata } from "@domain/entities/activities/workflow-succeeded"
 
 export type ActivityMetadata = 
     CommentLeftMetadata | 
