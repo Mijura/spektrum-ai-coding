@@ -38,14 +38,18 @@ import { LeaveCommentUseCase } from "@application/use-cases/issue/leave-comment"
 import { UpdateIssueDescriptionUseCase } from "@application/use-cases/issue/update-description"
 import { UpdateIssueTitleUseCase } from "@application/use-cases/issue/update-title"
 import { LeaveComment } from "@domain/use-cases/issue/leave-comment"
-
-
-
+import { ActivityRepository } from "@domain/repositories/activity-repository"
+import { OpenSearchActivityRepository } from "./repositories/activity-repository"
+import { FetchIssueActivities } from "@domain/use-cases/issue/fetch-issue-activities"
+import { FetchIssueActivitiesUseCase } from "@application/use-cases/activities/fetch-issue-activities"
+import { FetchWorkflowRunTimeline } from "@domain/use-cases/issue/fetch-worfklow-run-timeline"
+import { FetchWorkflowRunTimelineUseCase } from "@application/use-cases/activities/fetch-workflow-run-timeline"
+import { ActivityController } from "./http/controllers/activity-controller"
 
 // Controllers
 export const projectController = new ProjectController()
 export const issueController = new IssueController()
-
+export const activityController = new ActivityController()
 
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
@@ -56,7 +60,7 @@ export const frontendDevelopmentService: FrontendDevelopmentService = new Fronte
 // Repositories
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const issueRepository: IssueRepository = new DynamoDBIssueRepository()
-
+export const activityRepository: ActivityRepository = new OpenSearchActivityRepository()
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(frontendDevelopmentService, projectRepository)
@@ -64,12 +68,14 @@ export const fetchProject: FetchProject = new FetchProjectUseCase(projectReposit
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
-export const createIssue: CreateIssue = new CreateIssueUseCase(issueRepository)
+export const createIssue: CreateIssue = new CreateIssueUseCase(issueRepository, activityRepository)
 export const fetchIssues: FetchIssues = new FetchIssuesUseCase(issueRepository)
 export const updateIssueTitle: UpdateIssueTitle = new UpdateIssueTitleUseCase(issueRepository)
 export const updateIssueDescription: UpdateIssueDescription = new UpdateIssueDescriptionUseCase(issueRepository)
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
 export const leaveComment: LeaveComment = new LeaveCommentUseCase(issueRepository)
+export const fetchIssueActivities: FetchIssueActivities = new FetchIssueActivitiesUseCase(activityRepository)
+export const fetchWorkflowRunTimeline: FetchWorkflowRunTimeline = new FetchWorkflowRunTimelineUseCase(activityRepository)
 
 // Workflows
 export const prototypingWorkflow: Workflow = new PrototypingWorkflow()

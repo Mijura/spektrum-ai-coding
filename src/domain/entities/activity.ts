@@ -1,47 +1,38 @@
 
 import { v4 as uuidv4 } from "uuid"
-import { CommentEditedMetadata } from "./activities/comment-edited"
 import { CommentLeftMetadata } from "./activities/comment-left"
 import { TitleUpdatedMetadata } from "./activities/title-updated"
 import { DescriptionUpdatedMetadata } from "./activities/description-updated"
 import { IssueCreatedMetadata } from "./activities/issue-created"
-import { WorkflowStartedMetadata } from "./activities/workflow-started"
-import { WorkflowSucceededMetadata } from "./activities/workflow-succeeded"
-import { WorkflowFailedMetadata } from "./activities/workflow-failed"
+import { WorkflowRunMetadata } from "./activities/workflow-run"
 import { ActivityDto } from "@application/dto/activity"
 
 export type ActivityMetadata = 
     CommentLeftMetadata | 
-    CommentEditedMetadata | 
     TitleUpdatedMetadata | 
     DescriptionUpdatedMetadata | 
-    IssueCreatedMetadata | 	
-    WorkflowStartedMetadata |
-    WorkflowSucceededMetadata |
-    WorkflowFailedMetadata
+    IssueCreatedMetadata |
+    WorkflowRunMetadata
 
 export enum ActivityType {
     ISSUE_CREATED = 'IssueCreated',
     COMMENT_LEFT = 'CommentLeft',
-    COMMENT_EDITED = 'CommentEdited',
     TITLE_UPDATED = 'TitleUpdated',
     DESCRIPTION_UPDATED = 'DescriptionUpdated',
-    WORKFLOW_STARTED = 'WorkflowStarted',
-    WORKFLOW_SUCCEEDED  = 'WorkflowSucceeded',
-    WORKFLOW_FAILED = 'WorkflowFailed',
+    WORKFLOW_RUN = 'WorkflowRun'
 }
 
-export class Activity {
+export class Activity<T> {
     constructor(
       public readonly id: string,
       public readonly type: ActivityType,
       public readonly issueId: string,
       public readonly userId: string,
-      public readonly metadata: ActivityMetadata,
+      public readonly metadata: T,
       public readonly occurredAt: string
     ) {}
 
-    static toDto(activity: Activity): ActivityDto {
+    static toDto(activity: Activity<ActivityMetadata>): ActivityDto {
         return {
 			id: activity.id,
 			type: activity.type,
@@ -52,7 +43,7 @@ export class Activity {
         }
       }
     
-      static rehydrate(dto: ActivityDto): Activity {
+      static rehydrate(dto: ActivityDto): Activity<ActivityMetadata> {
         return new Activity(dto.id, dto.type, dto.issueId, dto.userId, dto.metadata, dto.occurredAt)
       }
 

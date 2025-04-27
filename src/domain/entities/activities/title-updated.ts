@@ -6,7 +6,7 @@ export interface TitleUpdatedMetadata {
 	newTitle: string
 }
 
-export class TitleUpdated extends Activity {
+export class TitleUpdated extends Activity<TitleUpdatedMetadata> {
 
     constructor(
         id: string, 
@@ -19,7 +19,7 @@ export class TitleUpdated extends Activity {
         super(id, type, issueId, userId, metadata, occurredAt)
     }
 
-    static create(userId: string, issueId: string, oldTitle: string, newTitle: string): Activity {
+    static create(userId: string, issueId: string, oldTitle: string, newTitle: string): Activity<TitleUpdatedMetadata> {
 		
         const id = this.generateId()
 		const type = ActivityType.TITLE_UPDATED

@@ -12,6 +12,7 @@ export class IssueController {
 		try {
 			const { projectId, title, description } = req.body
 			const issue: Issue = await createIssue.execute(projectId, title, description)
+
 			res.status(201).json(issue)
 		} catch (error) {
 			console.error("Error creating issue:", error)

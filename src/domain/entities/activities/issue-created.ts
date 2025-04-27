@@ -1,12 +1,12 @@
 import { Activity, ActivityType } from "../activity"
-
+import { Issue } from "../issue"
 export interface IssueCreatedMetadata {
 	message: string
 	title: string
 	description: string
 }
 
-export class IssueCreated extends Activity {
+export class IssueCreatedActivity extends Activity<IssueCreatedMetadata> {
 	
     constructor(
         id: string,
@@ -19,19 +19,19 @@ export class IssueCreated extends Activity {
 		super(id, type, issueId, userId, metadata, occurredAt)
 	}
 
-    static create(userId: string, issueId: string, title: string, description: string): Activity {
+    static create(actorId: string, issue: Issue): Activity<IssueCreatedMetadata> {
 		
         const id = this.generateId()
 		const type = ActivityType.ISSUE_CREATED
 		const occurredAt = this.now()
 
-        const message = `${userId} created issue`
+        const message = `${actorId} created issue`
 		const metadata: IssueCreatedMetadata = {
 			message: message,
-			title: title,
-			description: description
+			title: issue.title,
+			description: issue.description
 		}
 	
-		return new IssueCreated(id, type, issueId, userId, metadata, occurredAt)
+		return new IssueCreatedActivity(id, type, issue.id, actorId, metadata, occurredAt)
     }
 }

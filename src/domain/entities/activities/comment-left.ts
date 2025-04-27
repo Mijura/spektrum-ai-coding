@@ -1,10 +1,13 @@
 import { Activity, ActivityType } from "../activity"
-
+import { Comment } from "../comment"
 export interface CommentLeftMetadata {
 	commentId: string
+    commentText: string
+    edited: boolean
+    lastEditedAt: string | null
 }
 
-export class CommentLeft extends Activity {
+export class CommentLeft extends Activity<CommentLeftMetadata> {
 
     constructor(
         id: string,
@@ -17,16 +20,25 @@ export class CommentLeft extends Activity {
         super(id, type, issueId, userId, metadata, occurredAt)
     }
 
-    static create(userId: string, issueId: string, commentId: string): Activity {
+    static create(userId: string, issueId: string, comment: Comment): Activity<CommentLeftMetadata> {
 
         const id = this.generateId()
         const type = ActivityType.COMMENT_LEFT
         const occurredAt = this.now()
 
         const metadata: CommentLeftMetadata = {
-            commentId: commentId
+            commentId: comment.id,
+            commentText: comment.text,
+            edited: false,
+            lastEditedAt: null
         }
 
         return new CommentLeft(id, type, issueId, userId, metadata, occurredAt)
+    }
+
+    edited(commentText: string): void {
+        this.metadata.commentText = commentText
+        this.metadata.edited = true
+        this.metadata.lastEditedAt = Activity.now()
     }
 }
