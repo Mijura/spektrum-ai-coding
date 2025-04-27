@@ -1,4 +1,3 @@
-// src/infrastructure/utils/CommandRunner.ts
 import { spawn } from "child_process"
 
 export interface CommandResult {

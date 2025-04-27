@@ -1,6 +1,6 @@
 import { Project } from "@domain/entities/project"
 import EventEmitter from "events"
-import { Ticket } from "./ticket"
+import { Issue } from "./issue"
 
 
 export abstract class Workflow extends EventEmitter {
@@ -8,6 +8,6 @@ export abstract class Workflow extends EventEmitter {
 		super()
 	}
 
-	abstract run(project: Project, ticket: Ticket): Promise<Project>
+	abstract run(project: Project, issue: Issue): Promise<Project>
 	
 }

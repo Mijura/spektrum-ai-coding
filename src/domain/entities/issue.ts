@@ -44,13 +44,13 @@ export class Issue {
 		this.comments = comments
 	}
 
-	updateTitle(userId: string, newTitle: string){
+	updateTitle(newTitle: string){
 		this.title = newTitle
 		this.updated = new Date().toISOString()
 	}
 
-	updateDescription(userId: string, description: string){
-		this.description = description
+	updateDescription(newDescription: string){
+		this.description = newDescription
 		this.updated = new Date().toISOString()
 	}
 
@@ -72,7 +72,7 @@ export class Issue {
 	
 	}
 
-	changeStatus(userId: string, status: IssueStatus) {
+	changeStatus(status: IssueStatus) {
 		this.status = status
 		this.updated = new Date().toISOString()
 	}
@@ -81,7 +81,7 @@ export class Issue {
 		return this.comments
 	}
 
-	/** Rehydrate a ticket from persisted data */
+	/** Rehydrate an issue from persisted data */
 	static rehydrate( data: {
 			id: string, 
 			created: string, 
@@ -96,8 +96,8 @@ export class Issue {
 		return new Issue(data.id, data.created, data.projectId, data.title, data.description, data.status, data.updated, data.comments)
 	}
 
-	/** Create a new ticket */
-	static create(userId: string, projectId: string, title: string, description: string): Issue {
+	/** Create a new issue */
+	static create(projectId: string, title: string, description: string): Issue {
 		const id = uuidv4()
 		const created = new Date().toISOString()
 		const issue = new Issue(id, created, projectId, title, description, IssueStatus.TODO, null, [])

@@ -3,9 +3,9 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
 import { State, WorkflowPhase } from "../workflow-phase"
-import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
-import { ticketRepository } from "@infrastructure/dependencies"
+import { issueRepository } from "@infrastructure/dependencies"
 
 import { z } from "zod"
 
@@ -16,7 +16,7 @@ const SourceCodeSchema = z.record(
 
 const DeveloperOutputSchema = z.object({
 	sourceCode: SourceCodeSchema,
-	comment: z.string().describe("The comment to be added to the ticket. It's a short summary of the changes you made from the user's perspective")
+	comment: z.string().describe("The comment to be added to the issue. It's a short summary of the changes you made from the user's perspective")
 })
 export class GenerateCode extends WorkflowPhase {
     name: string = "GenerateCode"
@@ -24,7 +24,7 @@ export class GenerateCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Generating code")
         
-        const { project, ticket, sourceCode } = data
+        const { project, issue, sourceCode } = data
 
         const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	
@@ -34,7 +34,7 @@ export class GenerateCode extends WorkflowPhase {
                 You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
     
                 ### **Your Task:**
-                1. ** Analyze ticket details, activities, and comments." Figure out what should be done to resolve the issue.
+                1. ** Analyze issue details, activities, and comments." Figure out what should be done to resolve the issue.
                     ** You can recognize your prior activities by author name 'React Developer' **
                 
                 ****Analyze the current source code** to determine if the required functionality already exists.
@@ -50,7 +50,7 @@ export class GenerateCode extends WorkflowPhase {
     
                 ### **Project Details**
                 - **Project Context:** {project}
-                - **Ticket Details:** {ticket}
+                - **Issue Details:** {issue}
                 - **Current Source Code:** {sourceCode}
     
                 Important:
@@ -73,18 +73,18 @@ export class GenerateCode extends WorkflowPhase {
         ])
     
         const output = await chain.invoke({
-            ticket: TicketMapper.toRecord(ticket),
+            issue: IssueMapper.toRecord(issue),
             project: ProjectMapper.toRecord(project),
             sourceCode: sourceCode,
             outputSchema: parser.getFormatInstructions(),
         })
     
-        ticket.leaveComment("React Developer", output.comment)
-        await ticketRepository.save(ticket)
+        issue.leaveComment("React Developer", output.comment)
+        await issueRepository.save(issue)
 
         const updatedState: State = {
             project: project,
-            ticket: ticket,
+            issue: issue,
             sourceCode: output.sourceCode,
         }
 
@@ -92,7 +92,7 @@ export class GenerateCode extends WorkflowPhase {
 
         const update = { 
             node: "React Developer", 
-            ticket: TicketMapper.toRecord(ticket) 
+            issue: IssueMapper.toRecord(issue) 
         }
 
         this.emit("update", update)

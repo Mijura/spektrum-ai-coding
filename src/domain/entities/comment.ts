@@ -1,4 +1,5 @@
-import { CommentDto } from "@application/dto/ticket"
+
+import { CommentDto } from '@application/dto/issue'
 import { v4 as uuidv4 } from 'uuid'
 export class Comment {
 	public readonly id: string

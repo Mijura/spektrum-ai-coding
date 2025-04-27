@@ -5,14 +5,14 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import { projectRouter } from "@infrastructure/http/routes/project-routes"
-import { ticketRouter } from "@infrastructure/http/routes/ticket-routes"
+import { issueRouter } from "@infrastructure/http/routes/issue-routes"
 import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
 import { serveProjectFilesMiddleware } from "@infrastructure/http/middleware/serve-project-files"
 import { Server } from "socket.io"
 import http from "http"
 
 import { RunWorkflowUseCase } from "@application/use-cases/workflow/run-worfklow"
-import { projectRepository, ticketRepository } from "@infrastructure/dependencies"
+import { projectRepository, issueRepository } from "@infrastructure/dependencies"
 
 
 
@@ -23,7 +23,7 @@ app.use(corsMiddleware)
 app.use(express.json())
 // Routes
 app.use("/", projectRouter)
-app.use("/", ticketRouter)
+app.use("/", issueRouter)
 app.use("/:id", serveProjectFilesMiddleware)
 
 
@@ -40,10 +40,10 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
 	console.log(`New client connected: ${socket.id}`)
 
-	socket.on("run", async ({ projectId, ticketId, workflowId }) => {
-		console.log(`Running workflow ${workflowId} for ${projectId} with ticketId: ${ticketId}`)
+	socket.on("run", async ({ projectId, issueId, workflowId }) => {
+		console.log(`Running workflow ${workflowId} for ${projectId} with issueId: ${issueId}`)
 
-		const worfklow = new RunWorkflowUseCase(workflowId, projectRepository, ticketRepository)
+		const worfklow = new RunWorkflowUseCase(workflowId, projectRepository, issueRepository)
 
 		const sendUpdate = (data: any) => {
 			console.log(`Emitting update:`, data)
@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
 
 		// Execute workflow
 		try {
-			await worfklow.run(projectId, ticketId)
+			await worfklow.run(projectId, issueId)
 		} catch (error) {
 			console.error("Error during development workflow:", error)
 			socket.emit("error", { message: "An error occurred during development" })

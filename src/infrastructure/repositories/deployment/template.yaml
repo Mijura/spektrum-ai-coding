@@ -31,10 +31,10 @@ Resources:
           Projection:
             ProjectionType: ALL
 
-  TicketTable:
+  IssueTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: Ticket
+      TableName: Issue
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: id

@@ -3,8 +3,8 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { gpt41Nano } from "@infrastructure/workflows/models"
 import { z } from "zod"
-import { projectRepository, ticketRepository } from "@infrastructure/dependencies"
-import { TicketMapper } from "@infrastructure/mappers/ticket-mapper"
+import { projectRepository, issueRepository } from "@infrastructure/dependencies"
+import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { State, WorkflowPhase } from "../workflow-phase"
 
@@ -16,19 +16,19 @@ const ProjectDetailsSchema = z.object({
 
 const ProductOwnerSchema = z.object({
 	projectDetails: ProjectDetailsSchema,
-	ticket: z.object({
-		title: z.string().describe("Short and concise title of the ticket."),
+	issue: z.object({
+		title: z.string().describe("Short and concise title of the issue."),
 		description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
 	comment: z.string().describe("Concrete Comment to user about what you plan to do or what you did.")
 })
 
-export class RefineTicket extends WorkflowPhase {
-    name: string = "RefineTicket"
+export class RefineIssue extends WorkflowPhase {
+    name: string = "RefineIssue"
 
     async execute(data: State): Promise<void> {
 
-        console.log("Refining ticket")
-        const { ticket, project, sourceCode } = data
+        console.log("Refining issue")
+        const { issue, project, sourceCode } = data
 
         const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
     
@@ -39,11 +39,11 @@ export class RefineTicket extends WorkflowPhase {
                 You are an product owner expert on React project with Tailwind CSS and Framer Motion.
                 
                 ### **Your Task:**
-                1) Your task is to transform refine ticket into appropriate title and description for developers.
+                1) Your task is to transform refine issue into appropriate title and description for developers.
                 - Create a concise and minimal description. If the request is too broad try to minimize the request. 
                 - Each task should be cohesive and should be enough to display functionality to user.
                 - For example if the user demand note taking app, try to figure out what is the essence for this request. 
-                    ** In this case you should create ticket with title "Enable user to add notes and display it after adding" and description "Implement note adding and displaying functioanlity" **
+                    ** In this case you should create issue with title "Enable user to add notes and display it after adding" and description "Implement note adding and displaying functioanlity" **
                     ** You pick this set of features because note adding do not have sense without displaying it and it represents core functionality of note taking app **
                 - You should not suggest any additional improvements nor too broad features
                     ** like "Improve UI/UX" or "Improve performance" nor "Add tests" nor "Add documentation" nor any technical features **
@@ -55,17 +55,17 @@ export class RefineTicket extends WorkflowPhase {
     
                 ### **Project Details**
                 - **Project Details:** {project}
-                - **Ticket Details:** {ticket}
+                - **Issue Details:** {issue}
     
                 You must return JSON as response. Here is example of valid response:
                 {{
-                    "ticket": {{title: 'Enable user to add notes and display it after adding', description: 'Implement note adding and displaying functioanlity. Do not add any additional features nor any improvements.'}},
+                    "issue": {{title: 'Enable user to add notes and display it after adding', description: 'Implement note adding and displaying functioanlity. Do not add any additional features nor any improvements.'}},
                     "projectDetails": {{
                         name: 'Note Taking App',
                         description: 'App for taking notes',
                         updated: true
                     }},
-                    "comment" : "I have updated ticket deatils and created tasks for note adding and displaying."
+                    "comment" : "I have updated issue deatils and created tasks for note adding and displaying."
                 }}
                 `),
                 gpt41Nano,
@@ -73,7 +73,7 @@ export class RefineTicket extends WorkflowPhase {
         ])
     
         const response = await chain.invoke({
-            ticket: TicketMapper.toRecord(ticket),
+            issue: IssueMapper.toRecord(issue),
             project: ProjectMapper.toRecord(project),
             outputSchema: parser.getFormatInstructions(),
         })
@@ -83,13 +83,19 @@ export class RefineTicket extends WorkflowPhase {
             project.updateDescription(response.projectDetails.description)
             await projectRepository.save(project)
         }
-        ticket.updateTitle("Product Owner", response.ticket.title)
-        ticket.updateDescription("Product Owner", response.ticket.description)
-        ticket.leaveComment("Product Owner", response.comment)
-        await ticketRepository.save(ticket)
+        issue.updateTitle(response.issue.title)
+        // TODO: Save activity
+
+        issue.updateDescription(response.issue.description)
+        // TODO: Save activity  
+
+        issue.leaveComment("Product Owner", response.comment)
+        // TODO: Save activity
+
+        await issueRepository.save(issue)
 
         const newState: State = {
-            ticket: ticket,
+            issue: issue,
             project: project,
             sourceCode: sourceCode
         }
@@ -97,7 +103,7 @@ export class RefineTicket extends WorkflowPhase {
         console.log("Transitioning to GenerateCode")
         const update = { 
             node: "Product Owner", 
-            ticket: TicketMapper.toRecord(ticket) 
+            issue: IssueMapper.toRecord(issue) 
         }
 
         this.emit("update", update)

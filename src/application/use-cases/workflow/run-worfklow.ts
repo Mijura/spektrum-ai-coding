@@ -3,7 +3,7 @@ import { RunWorkflow } from "@domain/use-cases/workflow/run-workflow"
 import { Workflow } from "@domain/entities/workflow"
 import EventEmitter from "events"
 import { ProjectRepository } from "@domain/repositories/project-repository"
-import { TicketRepository } from "@domain/repositories/ticket-repository"
+import { IssueRepository } from "@domain/repositories/issue-repository"
 import { WorkflowFactory } from "@infrastructure/workflows/prototyping/interfaces/workflow-factory"
 
 export class RunWorkflowUseCase extends EventEmitter implements RunWorkflow {
@@ -13,7 +13,7 @@ export class RunWorkflowUseCase extends EventEmitter implements RunWorkflow {
 	constructor(
 		private readonly workflowId: string,
 		private readonly projectRepository: ProjectRepository,
-		private readonly ticketRepository: TicketRepository
+		private readonly issueRepository: IssueRepository
 	) {
 		super()
 
@@ -28,16 +28,16 @@ export class RunWorkflowUseCase extends EventEmitter implements RunWorkflow {
 		})
 	}
 
-	async run(projectId: string, ticketId: string): Promise<Project> {
+	async run(projectId: string, issueId: string): Promise<Project> {
 		const project = await this.projectRepository.findById(projectId)
-		const ticket = await this.ticketRepository.findById(ticketId)
+		const issue = await this.issueRepository.findById(issueId)
 		if (!project) {
 			throw new Error("Project not found")
 		}
-		if (!ticket) {
-			throw new Error("Ticket not found")
+		if (!issue) {
+			throw new Error("Issue not found")
 		}
 
-		return await this.workflow.run(project, ticket)
+		return await this.workflow.run(project, issue)
 	}
 }

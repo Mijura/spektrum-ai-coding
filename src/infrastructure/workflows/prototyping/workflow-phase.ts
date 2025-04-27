@@ -1,13 +1,13 @@
-import { Project } from "@domain/entities/project";
-import { Ticket } from "@domain/entities/ticket";
-import { SourceCode } from "@domain/entities/source-code";
-import { WorkflowContext } from "./workflow-context";
-import { PhaseRegistry } from "./phase-registry";
-import EventEmitter from "events";
+import { Project } from "@domain/entities/project"
+import { Issue } from "@domain/entities/issue"
+import { SourceCode } from "@domain/entities/source-code"
+import { WorkflowContext } from "./workflow-context"
+import { PhaseRegistry } from "./phase-registry"
+import EventEmitter from "events"
 
 export interface State {
 	project: Project
-	ticket: Ticket
+	issue: Issue
 	sourceCode: SourceCode
 }
 

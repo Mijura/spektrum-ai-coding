@@ -1,23 +1,23 @@
-import { ActivityType } from "@domain/entities/activity/types/activity-type"
-import { ActivityMetadata } from "@domain/entities/activity/types/activity-metadata"
+
+import { ActivityMetadata, ActivityType } from "@domain/entities/activity"
 
 
-enum TicketStatus {
+enum IssueStatus {
     TODO = "TODO",
     IN_PROGRESS = "IN_PROGRESS",
     DONE = "DONE",
 }
 
-export interface ActivityDto {
+interface ActivityRecord {
 	id: string
 	type: ActivityType
-	ticketId: string
+	issueId: string
 	userId: string
 	metadata: ActivityMetadata
 	occurredAt: string
 }
 
-export interface CommentDto {
+interface CommentRecord {
 	id: string
 	authorId: string
 	text: string
@@ -25,14 +25,13 @@ export interface CommentDto {
 	editedAt: string | null
 }
 
-export interface TicketDto {
+export interface IssueRecord {
 	id: string
 	title: string
 	description: string
 	projectId: string
 	created: string
 	updated: string | null
-	status: TicketStatus
-	comments: CommentDto[]
-	activities: ActivityDto[]
+	status: IssueStatus
+	comments: CommentRecord[]
 }
