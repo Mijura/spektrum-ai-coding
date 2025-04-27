@@ -12,6 +12,10 @@ export class OpenSearchActivityRepository implements ActivityRepository {
         return activity
     }
 
+    async findById(id: string): Promise<Activity<ActivityMetadata> | null> {
+        return this.activities.find(activity => activity.id === id) ?? null
+    }
+
     async findAllByIssueId(issueId: string): Promise<Activity<ActivityMetadata>[]> {
         return this.activities.filter(activity => activity.issueId === issueId)
     }   
