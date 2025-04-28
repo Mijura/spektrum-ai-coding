@@ -1,12 +1,13 @@
 import { Workflow } from "@domain/entities/workflow"
 import { Project } from "@domain/entities/project"
-import { frontendDevelopmentService } from "@infrastructure/dependencies"
+import { activityRepository, frontendDevelopmentService } from "@infrastructure/dependencies"
 import { PhaseRegistry } from "./phase-registry"
 import { WriteCode } from "./phases/write-code"
 import { RefineIssue } from "./phases/refine-issue"
 import { GenerateCode } from "./phases/generate-code"
 import { WorkflowContext } from "./workflow-context"
 import { Issue } from "@domain/entities/issue"
+import { WorkflowRun } from "@domain/entities/activities/workflow-run"
 export class PrototypingWorkflow extends Workflow {
 
 
@@ -19,12 +20,15 @@ export class PrototypingWorkflow extends Workflow {
     async run(project: Project, issue: Issue): Promise<Project> {
         const sourceCode = await frontendDevelopmentService.fetchSourceCode(project.id)
 
+        
         // Register all phases
         PhaseRegistry.register(WriteCode)
         PhaseRegistry.register(GenerateCode)
         PhaseRegistry.register(RefineIssue)
 
         const context = new WorkflowContext(new RefineIssue())
+        const activity = WorkflowRun.create(project.id, "User", issue.id, "Refining Issue")
+        await activityRepository.save(activity)
         
         context.on("update", (data: any) => {
 			this.emit("update", data)

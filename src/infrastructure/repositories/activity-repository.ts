@@ -102,7 +102,7 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 					must: [{ term: { "issueId.keyword": issueId } }],
 				},
 			},
-			sort: [{ timestamp: "desc" }],
+			sort: [{ occurredAt: "desc" }],
 		}
 
 		let response = await client.search({
@@ -111,8 +111,7 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 		})
 		console.log("Search results:")
 		console.log(JSON.stringify(response.body.hits, null, "  "))
-		console.log(`Total hits: ${response.body.hits.total}`)
-		console.log("\n\n")
+		console.log("\n")
 
 		return response.body.hits.hits.map((hit: any) => hit._source) as Activity<ActivityMetadata>[]
 	}
@@ -137,7 +136,7 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 					must: [{ term: { "projectId.keyword": projectId } }, { term: { "type.keyword": ActivityType.WORKFLOW_RUN } }],
 				},
 			},
-			sort: [{ timestamp: "desc" }], // Show most recent activities first
+			sort: [{ occurredAt: "desc" }],
 		}
 
 		let response = await client.search({
@@ -146,8 +145,7 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 		})
 		console.log("Search results:")
 		console.log(JSON.stringify(response.body.hits, null, "  "))
-		console.log(`Total hits: ${response.body.hits.total}`)
-		console.log("\n\n")
+		console.log("\n")
 
 
 		return response.body.hits.hits.map((hit: any) => hit._source) as WorkflowRun[]
