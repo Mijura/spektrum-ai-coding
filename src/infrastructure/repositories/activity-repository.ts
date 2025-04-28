@@ -26,8 +26,19 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 		})
 	}
 
+	getIndex(): string {
+		const index = process.env.OPENSEARCH_COLLECTION
+
+		if (!index) {
+			throw new Error("OPENSEARCH_COLLECTION is not found")
+		}
+
+		return index
+	}
+
     async save(activity: Activity<ActivityMetadata>): Promise<Activity<ActivityMetadata>> {
-		const index = process.env.OPENSEARCH_COLLECTION || "activities"
+		const index = this.getIndex()
+
         const client = this.getClient()
 
 		// create index if it doesn't already exist
@@ -56,7 +67,7 @@ export class OpenSearchActivityRepository implements ActivityRepository {
     }
 
     async findById(id: string): Promise<Activity<ActivityMetadata> | null> {
-		const index = process.env.OPENSEARCH_COLLECTION || "activities"
+		const index = this.getIndex()
 
 		const client = this.getClient()
 
@@ -79,7 +90,7 @@ export class OpenSearchActivityRepository implements ActivityRepository {
     }
 
 	async fetchIssueActivities(issueId: string): Promise<Activity<ActivityMetadata>[]> {
-		const index = process.env.OPENSEARCH_COLLECTION || "activities"
+		const index = this.getIndex()
 
 		const client = this.getClient()
 
@@ -111,7 +122,7 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 	}
 
 	async fetchWorkflowRunTimeline(projectId: string, pagination: PaginationData = DefaultPagination): Promise<WorkflowRun[]> {
-		const index = process.env.OPENSEARCH_COLLECTION || "activities"
+		const index = this.getIndex()
 
 		const client = this.getClient()
 		const from = (pagination.pageNumber - 1) * pagination.pageSize

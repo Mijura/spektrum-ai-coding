@@ -40,9 +40,9 @@ import { UpdateIssueTitleUseCase } from "@application/use-cases/issue/update-tit
 import { LeaveComment } from "@domain/use-cases/issue/leave-comment"
 import { ActivityRepository } from "@domain/repositories/activity-repository"
 import { OpenSearchActivityRepository } from "./repositories/activity-repository"
-import { FetchIssueActivities } from "@domain/use-cases/issue/fetch-issue-activities"
+import { FetchIssueActivities } from "@domain/use-cases/activities/fetch-issue-activities"
 import { FetchIssueActivitiesUseCase } from "@application/use-cases/activities/fetch-issue-activities"
-import { FetchWorkflowRunTimeline } from "@domain/use-cases/issue/fetch-worfklow-run-timeline"
+import { FetchWorkflowRunTimeline } from "@domain/use-cases/activities/fetch-worfklow-run-timeline"
 import { FetchWorkflowRunTimelineUseCase } from "@application/use-cases/activities/fetch-workflow-run-timeline"
 import { ActivityController } from "./http/controllers/activity-controller"
 
