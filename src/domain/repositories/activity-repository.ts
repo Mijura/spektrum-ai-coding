@@ -1,9 +1,10 @@
 import { WorkflowRun } from "@domain/entities/activities/workflow-run"
-import { Activity, ActivityMetadata } from "@domain/entities/activity"
+import { Activity } from "@domain/entities/activity"
+import { Pagination, ActivityMetadata } from "@domain/types/activity"
 
 export interface ActivityRepository {
     save(activity: Activity<ActivityMetadata>): Promise<Activity<ActivityMetadata>>
     findById(id: string): Promise<Activity<ActivityMetadata> | null>
     findAllByIssueId(issueId: string): Promise<Activity<ActivityMetadata>[]>
-    findAllByIssueIdAndWorkflowRun(issueId: string): Promise<WorkflowRun[]>
+    findWorkflowRuns(projectId: string, pagination: Pagination): Promise<WorkflowRun[]>
 }

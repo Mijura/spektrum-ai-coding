@@ -6,25 +6,15 @@ export class Activity<T> {
     constructor(
       public readonly id: string,
       public readonly type: ActivityType,
+      public readonly projectId: string,
       public readonly issueId: string,
       public readonly userId: string,
       public readonly metadata: T,
       public readonly occurredAt: string
     ) {}
-
-    static toDto(activity: Activity<ActivityMetadata>): ActivityData {
-        return {
-			id: activity.id,
-			type: activity.type,
-			issueId: activity.issueId,
-			userId: activity.userId,
-			metadata: activity.metadata,
-			occurredAt: activity.occurredAt,
-        }
-    }
     
     static rehydrate(data: ActivityData): Activity<ActivityMetadata> {
-        return new Activity(data.id, data.type, data.issueId, data.userId, data.metadata, data.occurredAt)
+        return new Activity(data.id, data.type, data.projectId, data.issueId, data.userId, data.metadata, data.occurredAt)
     }
 
     protected static generateId() {

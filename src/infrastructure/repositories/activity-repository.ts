@@ -4,7 +4,7 @@ import { ActivityRepository } from "@domain/repositories/activity-repository"
 import { AwsSigv4Signer } from "@opensearch-project/opensearch/aws"
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { Client } from "@opensearch-project/opensearch"
-import { ActivityData, ActivityMetadata, ActivityType } from "@domain/types/activity"
+import { ActivityData, ActivityMetadata, ActivityType, DefaultPagination, Pagination } from "@domain/types/activity"
 
 export class OpenSearchActivityRepository implements ActivityRepository {
 
@@ -63,9 +63,31 @@ export class OpenSearchActivityRepository implements ActivityRepository {
         return this.activities.filter(activity => activity.issueId === issueId)
     }   
 
-    async findAllByIssueIdAndWorkflowRun(issueId: string): Promise<WorkflowRun[]> {
-        const workflowRuns = this.activities.filter(activity => activity.issueId === issueId && activity.type === ActivityType.WORKFLOW_RUN)
-        return workflowRuns as WorkflowRun[]
+    async findWorkflowRuns(projectId: string, pagination: Pagination = DefaultPagination): Promise<WorkflowRun[]> {
+		const index = process.env.OPENSEARCH_COLLECTION || "activities"
+
+		const client = this.getClient()
+		const from = (pagination.pageNumber - 1) * pagination.pageSize
+
+		const query: any = {
+			size: pagination.pageSize,
+			from,
+			query: {
+				bool: {
+					must: [{ term: { "projectId.keyword": projectId } }, { term: { "type.keyword": ActivityType.WORKFLOW_RUN } }],
+				},
+			},
+			sort: [{ timestamp: "desc" }], // Show most recent activities first
+		}
+
+		let response = await client.search({
+			index: index,
+			body: query,
+		})
+		console.log("Search results:")
+		console.log(JSON.stringify(response.body.hits, null, "  "))
+
+		return response.body.hits.hits.map((hit: any) => hit._source) as WorkflowRun[]
     }
     
     

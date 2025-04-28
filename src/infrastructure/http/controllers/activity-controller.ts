@@ -12,11 +12,12 @@ export class ActivityController {
         res.json(activities)
     }
 
-    async fetchActivitiesByType(req: Request, res: Response): Promise<void> {
-        const { issueId, type } = req.params
-        const activities: WorkflowRun[] = await fetchWorkflowRunTimeline.execute(issueId)
+    async fetchWorkflowRunTimeline(req: Request, res: Response): Promise<void> {
+        const { projectId, pagination } = req.body
+        const { pageNumber, pageSize } = JSON.parse(pagination)
+        const activities: WorkflowRun[] = await fetchWorkflowRunTimeline.execute(projectId, { pageNumber, pageSize })
         
         res.json(activities)
     }
     
-}   
+}

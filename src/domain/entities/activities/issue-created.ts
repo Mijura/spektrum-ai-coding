@@ -6,27 +6,28 @@ export class IssueCreatedActivity extends Activity<IssueCreatedMetadata> {
     constructor(
         id: string,
         type: ActivityType.ISSUE_CREATED,
+        projectId: string,
         issueId: string, 
         userId: string, 
         metadata: IssueCreatedMetadata, 
         occurredAt: string
     ) {
-		super(id, type, issueId, userId, metadata, occurredAt)
+		super(id, type, projectId, issueId, userId, metadata, occurredAt)
 	}
 
-    static create(actorId: string, issue: Issue): Activity<IssueCreatedMetadata> {
+    static create(userId: string, issue: Issue): Activity<IssueCreatedMetadata> {
 		
         const id = this.generateId()
 		const type = ActivityType.ISSUE_CREATED
 		const occurredAt = this.now()
 
-        const message = `${actorId} created issue`
+        const message = `${userId} created issue`
 		const metadata: IssueCreatedMetadata = {
 			message: message,
 			title: issue.title,
 			description: issue.description
 		}
 	
-		return new IssueCreatedActivity(id, type, issue.id, actorId, metadata, occurredAt)
+		return new IssueCreatedActivity(id, type, issue.projectId, issue.id, userId, metadata, occurredAt)
     }
 }

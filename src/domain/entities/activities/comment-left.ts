@@ -7,15 +7,16 @@ export class CommentLeft extends Activity<CommentLeftMetadata> {
     constructor(
         id: string,
         type: ActivityType.COMMENT_LEFT,
+        projectId: string,
         issueId: string,
         userId: string,
         metadata: CommentLeftMetadata,
         occurredAt: string
     ) {
-        super(id, type, issueId, userId, metadata, occurredAt)
+        super(id, type, projectId, issueId, userId, metadata, occurredAt)
     }
 
-    static create(userId: string, issueId: string, comment: Comment): Activity<CommentLeftMetadata> {
+    static create(projectId: string, userId: string, issueId: string, comment: Comment): Activity<CommentLeftMetadata> {
 
         const id = this.generateId()
         const type = ActivityType.COMMENT_LEFT
@@ -28,7 +29,7 @@ export class CommentLeft extends Activity<CommentLeftMetadata> {
             lastEditedAt: null
         }
 
-        return new CommentLeft(id, type, issueId, userId, metadata, occurredAt)
+        return new CommentLeft(id, type, projectId, issueId, userId, metadata, occurredAt)
     }
 
     edited(commentText: string): void {

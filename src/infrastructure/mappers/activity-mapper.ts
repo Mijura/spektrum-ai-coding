@@ -7,6 +7,7 @@ export class ActivityMapper {
         return {
             id: activity.id,
             type: activity.type,
+            projectId: activity.projectId,
             issueId: activity.issueId,
             userId: activity.userId,
             metadata: activity.metadata,
@@ -15,7 +16,7 @@ export class ActivityMapper {
     }
 
     static toDomain(data: ActivityData): Activity<ActivityMetadata> {
-        return new Activity(data.id, data.type, data.issueId, data.userId, data.metadata, data.occurredAt)
+        return new Activity(data.id, data.type, data.projectId, data.issueId, data.userId, data.metadata, data.occurredAt)
     }
 }
 

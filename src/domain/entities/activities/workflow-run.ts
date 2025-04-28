@@ -6,15 +6,16 @@ export class WorkflowRun extends Activity<WorkflowRunMetadata> {
     constructor(
         id: string, 
         type: ActivityType.WORKFLOW_RUN, 
+        projectId: string,
         issueId: string, 
         userId: string, 
         metadata: WorkflowRunMetadata, 
         occurredAt: string
     ) {
-        super(id, type, issueId, userId, metadata, occurredAt)
+        super(id, type, projectId, issueId, userId, metadata, occurredAt)
     }
 
-    static create(userId: string, issueId: string, phase: string): Activity<WorkflowRunMetadata> {
+    static create(projectId: string, userId: string, issueId: string, phase: string): Activity<WorkflowRunMetadata> {
         
         const id = this.generateId()
         const type = ActivityType.WORKFLOW_RUN
@@ -27,7 +28,7 @@ export class WorkflowRun extends Activity<WorkflowRunMetadata> {
             status: WorkflowRunStatus.RUNNING
         }
 
-        return new WorkflowRun(id, type, issueId, userId, metadata, occurredAt)
+        return new WorkflowRun(id, type, projectId, issueId, userId, metadata, occurredAt)
     }
 
     succeeded(): void {

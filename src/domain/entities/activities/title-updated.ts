@@ -6,15 +6,16 @@ export class TitleUpdated extends Activity<TitleUpdatedMetadata> {
     constructor(
         id: string, 
         type: ActivityType.TITLE_UPDATED, 
+        projectId: string,
         issueId: string, 
         userId: string, 
         metadata: TitleUpdatedMetadata, 
         occurredAt: string
     ) {
-        super(id, type, issueId, userId, metadata, occurredAt)
+        super(id, type, projectId, issueId, userId, metadata, occurredAt)
     }
 
-    static create(userId: string, issueId: string, oldTitle: string, newTitle: string): Activity<TitleUpdatedMetadata> {
+    static create(projectId: string, userId: string, issueId: string, oldTitle: string, newTitle: string): Activity<TitleUpdatedMetadata> {
 		
         const id = this.generateId()
 		const type = ActivityType.TITLE_UPDATED
@@ -27,6 +28,6 @@ export class TitleUpdated extends Activity<TitleUpdatedMetadata> {
 			newTitle: newTitle
 		}
 
-		return new TitleUpdated(id, type, issueId, userId, metadata, occurredAt)
+		return new TitleUpdated(id, type, projectId, issueId, userId, metadata, occurredAt)
     }
 }
