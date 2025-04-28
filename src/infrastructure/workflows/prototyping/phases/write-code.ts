@@ -1,4 +1,4 @@
-import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
+//import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
 import { frontendDevelopmentService, issueRepository } from "@infrastructure/dependencies"
 import { State, WorkflowPhase } from "../workflow-phase"
 import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
@@ -9,7 +9,7 @@ export class WriteCode extends WorkflowPhase {
         console.log("Writing code")
 
         const { issue, project, sourceCode } = data
-        const sdk = new JigJoyActivitySDK(process.env.JIGJOY_ENDPOINT)
+        //const sdk = new JigJoyActivitySDK(process.env.JIGJOY_ENDPOINT)
 
         let buildSuccess = false
         let installSuccess = false
@@ -33,18 +33,18 @@ export class WriteCode extends WorkflowPhase {
             this.emit('update', update)
 
             await issueRepository.save(issue)
-            await sdk.ingestActivity({
-                playerId: project.ownerId, 
-                gameId: 'honeycomb', 
-                type: 'workflow-execution', 
-                data: {
-                    projectId: project.id,
-                    workflowId: 'prototyping',
-                    issueId: issue.id,
-                    issueTitle: issue.title,
-                    buildStatus: buildSuccess && installSuccess ? "success" : "failed",
-                }
-            })
+            // await sdk.ingestActivity({
+            //     playerId: project.ownerId, 
+            //     gameId: 'honeycomb', 
+            //     type: 'workflow-execution', 
+            //     data: {
+            //         projectId: project.id,
+            //         workflowId: 'prototyping',
+            //         issueId: issue.id,
+            //         issueTitle: issue.title,
+            //         buildStatus: buildSuccess && installSuccess ? "success" : "failed",
+            //     }
+            // })
         }
 
     }

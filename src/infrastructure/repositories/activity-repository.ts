@@ -59,7 +59,7 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 
 		console.log(`response: ${JSON.stringify(response)}`)
 
-        if(response.statusCode !== 200) {
+        if(response.statusCode !== 201) {
             throw new Error(`Failed to save activity: ${JSON.stringify(response)}`)
         }
 
