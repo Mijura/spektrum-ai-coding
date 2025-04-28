@@ -4,9 +4,11 @@ import { ActivityRepository } from "@domain/repositories/activity-repository"
 import { AwsSigv4Signer } from "@opensearch-project/opensearch/aws"
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { Client } from "@opensearch-project/opensearch"
-import { ActivityData, ActivityMetadata, ActivityType, DefaultPagination, Pagination } from "@domain/types/activity"
+import { ActivityData, ActivityMetadata, ActivityType, DefaultPagination, PaginationData, TimeRangeData } from "@domain/types/activity"
+import { ActivityMapper } from "@infrastructure/mappers/activity-mapper"
 
 export class OpenSearchActivityRepository implements ActivityRepository {
+
 
 	getClient(): Client {
 		const OPENSEARCH_ENDPOINT = process.env.OPENSEARCH_ENDPOINT || ""
@@ -23,8 +25,6 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 			node: OPENSEARCH_ENDPOINT,
 		})
 	}
-
-    private activities: Activity<ActivityMetadata>[] = []	
 
     async save(activity: Activity<ActivityMetadata>): Promise<Activity<ActivityMetadata>> {
 		const index = process.env.OPENSEARCH_COLLECTION || "activities"
@@ -52,22 +52,71 @@ export class OpenSearchActivityRepository implements ActivityRepository {
             throw new Error(`Failed to save activity: ${JSON.stringify(response)}`)
         }
 
-		return response.body as unknown as ActivityData
+		return response.body as unknown as Activity<ActivityMetadata>
     }
 
     async findById(id: string): Promise<Activity<ActivityMetadata> | null> {
-        return this.activities.find(activity => activity.id === id) ?? null
+		const index = process.env.OPENSEARCH_COLLECTION || "activities"
+
+		const client = this.getClient()
+
+		console.log(`Fetching activity by id: ${id}`)
+
+
+		let response = await client.get({
+			index: index,
+			id: id,
+		})
+		
+		console.log(`Found activity: ${JSON.stringify(response.body)}`)
+		const activityData = response.body as unknown as ActivityData
+
+		if (!activityData) {
+			return null
+		}
+
+		return ActivityMapper.toDomain(activityData)
     }
 
-    async findAllByIssueId(issueId: string): Promise<Activity<ActivityMetadata>[]> {
-        return this.activities.filter(activity => activity.issueId === issueId)
-    }   
+	async fetchIssueActivities(issueId: string): Promise<Activity<ActivityMetadata>[]> {
+		const index = process.env.OPENSEARCH_COLLECTION || "activities"
 
-    async findWorkflowRuns(projectId: string, pagination: Pagination = DefaultPagination): Promise<WorkflowRun[]> {
+		const client = this.getClient()
+
+		console.log(`Fetching issue activities for issueId: ${issueId}`)
+
+		const query: any = {
+			query: {
+				bool: {
+					must: [{ term: { "issueId.keyword": issueId } }],
+				},
+			},
+			sort: [{ timestamp: "desc" }],
+		}
+
+		let response = await client.search({
+			index: index,
+			body: query,
+		})
+		console.log("Search results:")
+		console.log(JSON.stringify(response.body.hits, null, "  "))
+		console.log(`Total hits: ${response.body.hits.total}`)
+		console.log("\n\n")
+
+		return response.body.hits.hits.map((hit: any) => hit._source) as Activity<ActivityMetadata>[]
+	}
+
+	async fetchActivitiesHeatmap(userId: string, timeRange: TimeRangeData): Promise<Activity<ActivityMetadata>[]> {
+		throw new Error("Method not implemented.")
+	}
+
+	async fetchWorkflowRunTimeline(projectId: string, pagination: PaginationData = DefaultPagination): Promise<WorkflowRun[]> {
 		const index = process.env.OPENSEARCH_COLLECTION || "activities"
 
 		const client = this.getClient()
 		const from = (pagination.pageNumber - 1) * pagination.pageSize
+
+		console.log(`Fetching workflow run timeline for projectId: ${projectId} with pagination: ${JSON.stringify(pagination)}`)
 
 		const query: any = {
 			size: pagination.pageSize,
@@ -86,9 +135,12 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 		})
 		console.log("Search results:")
 		console.log(JSON.stringify(response.body.hits, null, "  "))
+		console.log(`Total hits: ${response.body.hits.total}`)
+		console.log("\n\n")
+
 
 		return response.body.hits.hits.map((hit: any) => hit._source) as WorkflowRun[]
-    }
+	}
     
     
 }

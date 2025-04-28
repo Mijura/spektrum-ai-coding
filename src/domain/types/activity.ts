@@ -51,14 +51,19 @@ export enum ActivityType {
     WORKFLOW_RUN = 'WorkflowRun'
 }
 
-export type Pagination = {
+export type PaginationData = {
     pageNumber: number
     pageSize: number
 }
 
-export const DefaultPagination: Pagination = {
+export const DefaultPagination: PaginationData = {
     pageNumber: 1,
     pageSize: 5,
+}
+
+export type TimeRangeData = {
+    startDate: string
+    endDate: string
 }
 
 export type ActivityData = {
