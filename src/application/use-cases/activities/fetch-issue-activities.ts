@@ -1,5 +1,6 @@
-import { Activity, ActivityMetadata } from "@domain/entities/activity"
+import { Activity } from "@domain/entities/activity"
 import { ActivityRepository } from "@domain/repositories/activity-repository"
+import { ActivityMetadata } from "@domain/types/activity"
 import { FetchIssueActivities } from "@domain/use-cases/issue/fetch-issue-activities"
 
 export class FetchIssueActivitiesUseCase implements FetchIssueActivities {

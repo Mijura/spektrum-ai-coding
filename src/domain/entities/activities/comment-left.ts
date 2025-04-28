@@ -1,11 +1,6 @@
-import { Activity, ActivityType } from "../activity"
+import { CommentLeftMetadata, ActivityType } from "@domain/types/activity"
+import { Activity } from "../activity"
 import { Comment } from "../comment"
-export interface CommentLeftMetadata {
-	commentId: string
-    commentText: string
-    edited: boolean
-    lastEditedAt: string | null
-}
 
 export class CommentLeft extends Activity<CommentLeftMetadata> {
 

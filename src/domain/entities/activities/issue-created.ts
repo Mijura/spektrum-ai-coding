@@ -1,11 +1,6 @@
-import { Activity, ActivityType } from "../activity"
+import { ActivityType, IssueCreatedMetadata } from "@domain/types/activity"
+import { Activity } from "../activity"
 import { Issue } from "../issue"
-export interface IssueCreatedMetadata {
-	message: string
-	title: string
-	description: string
-}
-
 export class IssueCreatedActivity extends Activity<IssueCreatedMetadata> {
 	
     constructor(

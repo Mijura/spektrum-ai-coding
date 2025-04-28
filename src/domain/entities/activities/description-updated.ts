@@ -1,10 +1,5 @@
-import { Activity, ActivityType } from "../activity"
-
-export interface DescriptionUpdatedMetadata {
-	message: string
-	oldDescription: string
-	newDescription: string
-}
+import { ActivityType, DescriptionUpdatedMetadata } from "@domain/types/activity"
+import { Activity } from "../activity"
 
 export class DescriptionUpdated extends Activity<DescriptionUpdatedMetadata> {
 

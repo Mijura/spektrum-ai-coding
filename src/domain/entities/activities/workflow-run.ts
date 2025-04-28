@@ -1,17 +1,5 @@
-import { Activity, ActivityType } from "../activity"
-
-export enum WorkflowRunStatus {
-    RUNNING = 'RUNNING',
-    SUCCEEDED = 'SUCCEEDED',
-    FAILED = 'FAILED'
-}
-
-export interface WorkflowRunMetadata {
-    status: WorkflowRunStatus;
-	message: string;
-	phase: string;
-    error?: string;
-}
+import { ActivityType, WorkflowRunMetadata, WorkflowRunStatus } from "@domain/types/activity"
+import { Activity } from "../activity"
 
 export class WorkflowRun extends Activity<WorkflowRunMetadata> {
 
