@@ -3,15 +3,9 @@ import { Comment } from "./comment"
 import { v4 as uuidv4 } from 'uuid'
 
 export enum IssueStatus {
-    TODO = "TODO",
-    IN_PROGRESS = "IN_PROGRESS",
-    DONE = "DONE",
-}
-
-export enum WorkflowStatus {
-	IN_PROGRESS = "IN PROGRESS",
-	SUCCESS = "SUCCESS",
-	FAILED = "FAILED",
+    TODO = "Todo",
+    IN_PROGRESS = "In progress",
+    DONE = "Done",
 }
 
 export class Issue {

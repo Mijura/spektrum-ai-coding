@@ -24,9 +24,9 @@ export type DescriptionUpdatedMetadata = {
 }
 
 export enum WorkflowRunStatus {
-    RUNNING = 'RUNNING',
-    SUCCEEDED = 'SUCCEEDED',
-    FAILED = 'FAILED'
+    RUNNING = 'Running',
+    SUCCEEDED = 'Succeeded',
+    FAILED = 'Failed'
 }
 
 export type WorkflowRunMetadata = {

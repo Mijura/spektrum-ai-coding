@@ -59,8 +59,6 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 			body: activity,
 		})
 
-		console.log(`Saved activity: ${JSON.stringify(response.body)}`)
-
         if(response.statusCode !== 201) {
             throw new Error(`Failed to save activity: ${JSON.stringify(response)}`)
         }
@@ -81,7 +79,6 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 			id: id,
 		})
 		
-		console.log(`Found activity: ${JSON.stringify(response.body)}`)
 		const activityData = response.body as unknown as ActivityData
 
 		if (!activityData) {
@@ -111,9 +108,6 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 			index: index,
 			body: query,
 		})
-		console.log("Search results:")
-		console.log(JSON.stringify(response.body.hits, null, "  "))
-		console.log("\n")
 
 		return response.body.hits.hits.map((hit: any) => hit._source) as Activity<ActivityMetadata>[]
 	}
@@ -145,9 +139,6 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 			index: index,
 			body: query,
 		})
-		console.log("Search results:")
-		console.log(JSON.stringify(response.body.hits, null, "  "))
-		console.log("\n")
 
 
 		return response.body.hits.hits.map((hit: any) => hit._source) as WorkflowRun[]

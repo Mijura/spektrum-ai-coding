@@ -1,8 +1,8 @@
 
 enum IssueStatus {
-    TODO = "TODO",
-    IN_PROGRESS = "IN_PROGRESS",
-    DONE = "DONE",
+    TODO = "Todo",
+    IN_PROGRESS = "In progress",
+    DONE = "Done",
 }
 interface CommentRecord {
 	id: string
