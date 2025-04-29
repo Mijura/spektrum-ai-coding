@@ -7,7 +7,6 @@ import { RefineIssue } from "./phases/refine-issue"
 import { GenerateCode } from "./phases/generate-code"
 import { WorkflowContext } from "./workflow-context"
 import { Issue } from "@domain/entities/issue"
-import { WorkflowRun } from "@domain/entities/activities/workflow-run"
 export class PrototypingWorkflow extends Workflow {
 
 
@@ -19,7 +18,7 @@ export class PrototypingWorkflow extends Workflow {
     
     async run(project: Project, issue: Issue): Promise<Project> {
         const sourceCode = await frontendDevelopmentService.fetchSourceCode(project.id)
-
+        const issueActivities = await activityRepository.fetchIssueActivities(issue.id)
         
         // Register all phases
         PhaseRegistry.register(WriteCode)
@@ -27,8 +26,6 @@ export class PrototypingWorkflow extends Workflow {
         PhaseRegistry.register(RefineIssue)
 
         const context = new WorkflowContext(new RefineIssue())
-        const activity = WorkflowRun.create("User", issue, "Prototyping", "Refining Issue")
-        await activityRepository.save(activity)
         
         context.on("update", (data: any) => {
 			this.emit("update", data)
@@ -41,7 +38,8 @@ export class PrototypingWorkflow extends Workflow {
         context.execute({
             project,
             issue,
-            sourceCode: sourceCode
+            sourceCode: sourceCode,
+            issueActivities: issueActivities
         })
 
 

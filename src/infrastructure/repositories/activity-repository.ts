@@ -41,6 +41,8 @@ export class OpenSearchActivityRepository implements ActivityRepository {
 
         const client = this.getClient()
 
+		console.log(`Saving activity: ${JSON.stringify(activity)}`)
+		
 		// create index if it doesn't already exist
 		if (!(await client.indices.exists({ index })).body) {
 

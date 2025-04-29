@@ -3,10 +3,11 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { gpt41Nano } from "@infrastructure/workflows/models"
 import { z } from "zod"
-import { projectRepository, issueRepository } from "@infrastructure/dependencies"
+import { projectRepository, issueRepository, activityRepository } from "@infrastructure/dependencies"
 import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { State, WorkflowPhase } from "../workflow-phase"
+import { WorkflowRun } from "@domain/entities/activities/workflow-run"
 
 const ProjectDetailsSchema = z.object({
 	name: z.string().describe("Short name of the project. Should be filled only if it's empty."),
@@ -28,8 +29,19 @@ export class RefineIssue extends WorkflowPhase {
     async execute(data: State): Promise<void> {
 
         console.log("Refining issue")
-        const { issue, project, sourceCode } = data
+        const { issue, project, sourceCode, issueActivities } = data
 
+        const activity = WorkflowRun.create("User", issue, "Prototyping", "Refining Issue")
+        await activityRepository.save(activity)
+
+        issueActivities.push(activity)
+
+        this.emit("update", { 
+            node: "Product Owner", 
+            activity: activity
+        })
+
+        
         const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
     
         const chain = RunnableSequence.from([
@@ -84,6 +96,7 @@ export class RefineIssue extends WorkflowPhase {
             await projectRepository.save(project)
         }
         issue.updateTitle(response.issue.title)
+        
         // TODO: Save activity
 
         issue.updateDescription(response.issue.description)
@@ -97,7 +110,8 @@ export class RefineIssue extends WorkflowPhase {
         const newState: State = {
             issue: issue,
             project: project,
-            sourceCode: sourceCode
+            sourceCode: sourceCode,
+            issueActivities: issueActivities
         }
 
         console.log("Transitioning to GenerateCode")

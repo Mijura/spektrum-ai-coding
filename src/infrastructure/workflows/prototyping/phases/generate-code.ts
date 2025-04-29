@@ -24,7 +24,7 @@ export class GenerateCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Generating code")
         
-        const { project, issue, sourceCode } = data
+        const { project, issue, sourceCode, issueActivities } = data
 
         const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	
@@ -86,6 +86,7 @@ export class GenerateCode extends WorkflowPhase {
             project: project,
             issue: issue,
             sourceCode: output.sourceCode,
+            issueActivities: issueActivities
         }
 
         console.log("Transitioning to WriteCode")
