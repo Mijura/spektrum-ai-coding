@@ -27,7 +27,7 @@ export class PrototypingWorkflow extends Workflow {
         PhaseRegistry.register(RefineIssue)
 
         const context = new WorkflowContext(new RefineIssue())
-        const activity = WorkflowRun.create(project.id, "User", issue.id, "Refining Issue")
+        const activity = WorkflowRun.create("User", issue, "Prototyping", "Refining Issue")
         await activityRepository.save(activity)
         
         context.on("update", (data: any) => {

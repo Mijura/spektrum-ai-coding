@@ -1,5 +1,6 @@
 import { ActivityType, WorkflowRunMetadata, WorkflowRunStatus } from "@domain/types/activity"
 import { Activity } from "../activity"
+import { Issue } from "../issue"
 
 export class WorkflowRun extends Activity<WorkflowRunMetadata> {
 
@@ -15,7 +16,7 @@ export class WorkflowRun extends Activity<WorkflowRunMetadata> {
         super(id, type, projectId, issueId, userId, metadata, occurredAt)
     }
 
-    static create(projectId: string, userId: string, issueId: string, phase: string): Activity<WorkflowRunMetadata> {
+    static create(userId: string, issue: Issue, workflowId: string, phase: string): Activity<WorkflowRunMetadata> {
         
         const id = this.generateId()
         const type = ActivityType.WORKFLOW_RUN
@@ -23,12 +24,14 @@ export class WorkflowRun extends Activity<WorkflowRunMetadata> {
 
         const message = `${userId} started workflow ${phase}`
         const metadata: WorkflowRunMetadata = {
+            workflowId: workflowId,
             message: message,
             phase: phase,
-            status: WorkflowRunStatus.RUNNING
+            status: WorkflowRunStatus.RUNNING,
+            title: issue.title
         }
 
-        return new WorkflowRun(id, type, projectId, issueId, userId, metadata, occurredAt)
+        return new WorkflowRun(id, type, issue.projectId, issue.id, userId, metadata, occurredAt)
     }
 
     succeeded(): void {

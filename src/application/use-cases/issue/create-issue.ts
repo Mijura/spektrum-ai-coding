@@ -18,7 +18,7 @@ export class CreateIssueUseCase implements CreateIssue {
 			// Persist the issue in the database
 			const savedIssue = await this.issueRepository.save(issue)
 
-			// TODO: Get actorId from request
+			// TODO: Get userId from request
 			const activity: IssueCreatedActivity = IssueCreatedActivity.create('User', savedIssue)
 			await this.activityRepository.save(activity)
 			

@@ -7,7 +7,7 @@ export class IssueCreatedActivity extends Activity<IssueCreatedMetadata> {
         id: string,
         type: ActivityType.ISSUE_CREATED,
         projectId: string,
-        issueId: string, 
+        issueId: string,
         userId: string, 
         metadata: IssueCreatedMetadata, 
         occurredAt: string

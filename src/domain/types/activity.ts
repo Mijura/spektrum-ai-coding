@@ -30,9 +30,11 @@ export enum WorkflowRunStatus {
 }
 
 export type WorkflowRunMetadata = {
+    workflowId: string
     status: WorkflowRunStatus
 	message: string
 	phase: string
+    title: string
     error?: string
 }
 
