@@ -15,12 +15,14 @@ export class IssueMapper {
         created: issue.created,
         updated: issue.updated,
         status: issue.status,
-        comments: issue.getComments().map(comment => ({
-            id: comment.id,
-            authorId: comment.authorId,
-            text: comment.text,
-            createdAt: comment.createdAt,
-            editedAt: comment.editedAt,
+        activities: issue.getActivityLog().map(activity => ({
+            id: activity.id,
+            type: activity.type,
+            projectId: activity.projectId,
+            issueId: activity.issueId,
+            userId: activity.userId,
+            metadata: activity.metadata,
+            occurredAt: activity.occurredAt,
         }))
     }
   }
@@ -35,12 +37,14 @@ export class IssueMapper {
         created: record.created,
         updated: record.updated,
         status: record.status,
-        comments: record.comments.map(comment => Comment.rehydrate({
-            id: comment.id,
-            authorId: comment.authorId,
-            text: comment.text,
-            createdAt: comment.createdAt,
-            editedAt: comment.editedAt,
+        activities: record.activities.map(activity => ({
+          id: activity.id,
+          type: activity.type,
+          projectId: activity.projectId,
+          issueId: activity.issueId,
+          userId: activity.userId,
+          metadata: activity.metadata,
+          occurredAt: activity.occurredAt,
         }))
     })
   }

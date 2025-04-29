@@ -1,6 +1,6 @@
 import { Workflow } from "@domain/entities/workflow"
 import { Project } from "@domain/entities/project"
-import { activityRepository, frontendDevelopmentService } from "@infrastructure/dependencies"
+import { frontendDevelopmentService } from "@infrastructure/dependencies"
 import { PhaseRegistry } from "./phase-registry"
 import { WriteCode } from "./phases/write-code"
 import { RefineIssue } from "./phases/refine-issue"
@@ -9,8 +9,6 @@ import { WorkflowContext } from "./workflow-context"
 import { Issue } from "@domain/entities/issue"
 export class PrototypingWorkflow extends Workflow {
 
-
-
     constructor() {
         super()
         
@@ -18,7 +16,6 @@ export class PrototypingWorkflow extends Workflow {
     
     async run(project: Project, issue: Issue): Promise<Project> {
         const sourceCode = await frontendDevelopmentService.fetchSourceCode(project.id)
-        const issueActivities = await activityRepository.fetchIssueActivities(issue.id)
         
         // Register all phases
         PhaseRegistry.register(WriteCode)
@@ -38,11 +35,8 @@ export class PrototypingWorkflow extends Workflow {
         context.execute({
             project,
             issue,
-            sourceCode: sourceCode,
-            issueActivities: issueActivities
+            sourceCode: sourceCode
         })
-
-
 
         return project
     }

@@ -1,3 +1,4 @@
+import { ActivityData } from "@domain/types/activity"
 
 enum IssueStatus {
     TODO = "Todo",
@@ -21,5 +22,5 @@ export interface IssueDto {
 	created: string
 	updated: string | null
 	status: IssueStatus
-	comments: CommentDto[]
+	activities: ActivityData[]
 }

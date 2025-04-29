@@ -6,6 +6,7 @@ import { State, WorkflowPhase } from "../workflow-phase"
 import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { issueRepository } from "@infrastructure/dependencies"
+import { Comment } from "@domain/entities/comment"
 
 import { z } from "zod"
 
@@ -24,7 +25,7 @@ export class GenerateCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Generating code")
         
-        const { project, issue, sourceCode, issueActivities } = data
+        const { project, issue, sourceCode } = data
 
         const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	
@@ -79,14 +80,14 @@ export class GenerateCode extends WorkflowPhase {
             outputSchema: parser.getFormatInstructions(),
         })
     
-        issue.leaveComment("React Developer", output.comment)
+        const comment = Comment.create("React Developer", output.comment)
+        issue.leaveComment(comment)
         await issueRepository.save(issue)
 
         const updatedState: State = {
             project: project,
             issue: issue,
-            sourceCode: output.sourceCode,
-            issueActivities: issueActivities
+            sourceCode: output.sourceCode
         }
 
         console.log("Transitioning to WriteCode")

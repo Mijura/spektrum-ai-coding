@@ -1,15 +1,19 @@
+import { ActivityMetadata, ActivityType } from "@domain/types/activity"
 
 enum IssueStatus {
     TODO = "Todo",
     IN_PROGRESS = "In progress",
     DONE = "Done",
 }
-interface CommentRecord {
+
+export type ActivityRecord = {
 	id: string
-	authorId: string
-	text: string
-	createdAt: string
-	editedAt: string | null
+	type: ActivityType
+	projectId: string
+	issueId: string
+	userId: string
+	metadata: ActivityMetadata
+	occurredAt: string
 }
 
 export interface IssueRecord {
@@ -20,5 +24,5 @@ export interface IssueRecord {
 	created: string
 	updated: string | null
 	status: IssueStatus
-	comments: CommentRecord[]
+	activities: ActivityRecord[]
 }

@@ -18,10 +18,8 @@ export class UpdateIssueTitleUseCase implements UpdateIssueTitle{
                 throw new Error("Issue not found.")
             }
 
-            issue.updateTitle(issueDto.title)
-
 			// TODO: Get the user id from the context
-			// TODO: Save activity
+			issue.updateTitle("User", issueDto.title)
 
 			// Persist the issue in the database
 			return await this.issueRepository.save(issue)

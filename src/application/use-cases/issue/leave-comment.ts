@@ -1,7 +1,7 @@
 import { LeaveComment } from "@domain/use-cases/issue/leave-comment"
 import { IssueRepository } from "@domain/repositories/issue-repository"
 import { Issue } from "@domain/entities/issue"
-
+import { Comment } from "@domain/entities/comment"
 export class LeaveCommentUseCase implements LeaveComment {
     constructor(
         private readonly issueRepository: IssueRepository
@@ -16,9 +16,9 @@ export class LeaveCommentUseCase implements LeaveComment {
                 throw new Error("Issue not found.")
             }
 
-            issue.leaveComment(authorId, commentText)
-
-            // TODO: Save activity
+            // TODO: Get the user id from the context
+            const comment = Comment.create(authorId, commentText)
+            issue.leaveComment(comment)
 
             return await this.issueRepository.save(issue)
         } catch (error) {

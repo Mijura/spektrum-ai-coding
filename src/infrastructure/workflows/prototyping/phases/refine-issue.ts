@@ -3,20 +3,13 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { gpt41Nano } from "@infrastructure/workflows/models"
 import { z } from "zod"
-import { projectRepository, issueRepository, activityRepository } from "@infrastructure/dependencies"
+import { issueRepository } from "@infrastructure/dependencies"
 import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { State, WorkflowPhase } from "../workflow-phase"
-import { WorkflowRun } from "@domain/entities/activities/workflow-run"
-
-const ProjectDetailsSchema = z.object({
-	name: z.string().describe("Short name of the project. Should be filled only if it's empty."),
-	description: z.string().describe("Short description of the project purpose. Should be filled only if it's empty."),
-	updated: z.boolean().optional().describe("Flag indicating if the project details were updated.")
-})
+import { Comment } from "@domain/entities/comment"
 
 const ProductOwnerSchema = z.object({
-	projectDetails: ProjectDetailsSchema,
 	issue: z.object({
 		title: z.string().describe("Short and concise title of the issue."),
 		description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
@@ -29,17 +22,7 @@ export class RefineIssue extends WorkflowPhase {
     async execute(data: State): Promise<void> {
 
         console.log("Refining issue")
-        const { issue, project, sourceCode, issueActivities } = data
-
-        const activity = WorkflowRun.create("User", issue, "Prototyping", "Refining Issue")
-        await activityRepository.save(activity)
-
-        issueActivities.push(activity)
-
-        this.emit("update", { 
-            node: "Product Owner", 
-            activity: activity
-        })
+        const { issue, project, sourceCode } = data
 
         
         const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
@@ -61,10 +44,6 @@ export class RefineIssue extends WorkflowPhase {
                     ** like "Improve UI/UX" or "Improve performance" nor "Add tests" nor "Add documentation" nor any technical features **
                     ** also you should not suggest any additional features which represents new units of work **
     
-                2) If Project Details do not have appropriate name and/or description, you should populate them with appropriate values.
-                    ** Example of Invalid project name: "My Project" ** and ** Valid project name: "Note Taking App" **
-                    ** Example of Invalid project description: "Empty project..." ** and ** Valid project description: "App for taking notes. It allows user to add, edit and delete notes..." **
-    
                 ### **Project Details**
                 - **Project Details:** {project}
                 - **Issue Details:** {issue}
@@ -72,11 +51,6 @@ export class RefineIssue extends WorkflowPhase {
                 You must return JSON as response. Here is example of valid response:
                 {{
                     "issue": {{title: 'Enable user to add notes and display it after adding', description: 'Implement note adding and displaying functioanlity. Do not add any additional features nor any improvements.'}},
-                    "projectDetails": {{
-                        name: 'Note Taking App',
-                        description: 'App for taking notes',
-                        updated: true
-                    }},
                     "comment" : "I have updated issue deatils and created tasks for note adding and displaying."
                 }}
                 `),
@@ -90,28 +64,17 @@ export class RefineIssue extends WorkflowPhase {
             outputSchema: parser.getFormatInstructions(),
         })
     
-        if (response.projectDetails.updated) {
-            project.updateName(response.projectDetails.name)
-            project.updateDescription(response.projectDetails.description)
-            await projectRepository.save(project)
-        }
-        issue.updateTitle(response.issue.title)
-        
-        // TODO: Save activity
-
-        issue.updateDescription(response.issue.description)
-        // TODO: Save activity  
-
-        issue.leaveComment("Product Owner", response.comment)
-        // TODO: Save activity
+        issue.updateTitle("Product Owner", response.issue.title)
+        issue.updateDescription("Product Owner", response.issue.description)
+        const comment = Comment.create("Product Owner", response.comment)
+        issue.leaveComment(comment)
 
         await issueRepository.save(issue)
 
         const newState: State = {
             issue: issue,
             project: project,
-            sourceCode: sourceCode,
-            issueActivities: issueActivities
+            sourceCode: sourceCode
         }
 
         console.log("Transitioning to GenerateCode")

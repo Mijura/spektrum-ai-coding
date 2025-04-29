@@ -18,11 +18,9 @@ export class UpdateIssueDescriptionUseCase implements UpdateIssueDescription{
                 throw new Error("Issue not found.")
             }
 
+			// TODO: Get the user id from the context
+            issue.updateDescription("User", issueDto.description)
 
-            issue.updateDescription(issueDto.description)
-
-			// TODO: Get the user id from the request
-			// TODO: Save activity
 
 			// Persist the issue in the database
 			return await this.issueRepository.save(issue)

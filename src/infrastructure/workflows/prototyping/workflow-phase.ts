@@ -4,14 +4,11 @@ import { SourceCode } from "@domain/entities/source-code"
 import { WorkflowContext } from "./workflow-context"
 import { PhaseRegistry } from "./phase-registry"
 import EventEmitter from "events"
-import { Activity } from "@domain/entities/activity"
-import { ActivityMetadata } from "@domain/types/activity"
 
 export interface State {
 	project: Project
 	issue: Issue
 	sourceCode: SourceCode
-	issueActivities: Activity<ActivityMetadata>[]
 }
 
 export abstract class WorkflowPhase<T = any>  extends EventEmitter  {

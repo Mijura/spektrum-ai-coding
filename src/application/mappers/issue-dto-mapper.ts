@@ -1,5 +1,4 @@
 import { Issue } from "@domain/entities/issue"
-import { Comment } from "@domain/entities/comment"
 import { IssueDto } from "@application/dto/issue"
 export class IssueDtoMapper {
 
@@ -15,13 +14,15 @@ export class IssueDtoMapper {
 			status: issue.status,
 			created: issue.created,
 			updated: issue.updated,
-			comments: issue.getComments().map(comment => {
+			activities: issue.getActivityLog().map(activity => {
                 return {
-                    id: comment.id,
-                    authorId: comment.authorId,
-                    text: comment.text,
-                    createdAt: comment.createdAt,
-                    editedAt: comment.editedAt,
+                    id: activity.id,
+                    type: activity.type,
+                    projectId: activity.projectId,
+                    issueId: activity.issueId,
+                    userId: activity.userId,
+                    metadata: activity.metadata,
+                    occurredAt: activity.occurredAt,
                 }
             })
 		}
@@ -38,11 +39,6 @@ export class IssueDtoMapper {
 	/** Convert marshalled issue (e.g., from DB) → Issue entity */
 	static toDomain(data: IssueDto): Issue {
 
-		const comments: Comment[] = []
-		for (const dto of data.comments) {
-			comments.push(Comment.rehydrate(dto))
-		}
-
 		return Issue.rehydrate({
 			id: data.id, 
 			created: data.created, 
@@ -51,7 +47,7 @@ export class IssueDtoMapper {
 			description: data.description, 
 			status: data.status, 
 			updated: data.updated,
-			comments: comments
+			activities: data.activities
 		})
 	}
 
