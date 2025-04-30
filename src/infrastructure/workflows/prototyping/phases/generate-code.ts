@@ -90,13 +90,6 @@ export class GenerateCode extends WorkflowPhase {
 
         console.log("Transitioning to WriteCode")
 
-        const update = { 
-            node: "React Developer", 
-            issue: IssueMapper.toRecord(issue) 
-        }
-
-        this.emit("update", update)
-
         this.transitionTo("WriteCode", updatedState)
 
 

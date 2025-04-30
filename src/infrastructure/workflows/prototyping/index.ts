@@ -24,14 +24,6 @@ export class PrototypingWorkflow extends Workflow {
 
         const context = new WorkflowContext(new RefineIssue())
         
-        context.on("update", (data: any) => {
-			this.emit("update", data)
-		})
-
-		context.on("done", (data: any) => {
-			this.emit("done", data)
-		})
-        
         context.execute({
             project,
             issue,

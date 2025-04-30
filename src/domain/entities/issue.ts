@@ -7,11 +7,10 @@ import { CommentLeft } from "./activities/comment-left"
 import { TitleUpdated } from "./activities/title-updated"
 import { DescriptionUpdated } from "./activities/description-updated"
 import { Comment } from "@domain/types/activity"
-import { WorkflowRun } from "./workflow-run"
-import { WorkflowPhase } from "@infrastructure/workflows/prototyping/workflow-phase"
 import { StartedWork } from "./activities/started-work"
 import { FinishedWork } from "./activities/finished-work"
 import { IssueStatus } from "@domain/types/issue"
+import { EmitIssueUpdate } from "@domain/decorators/emit-issue-update"
 
 export class Issue {
 	public readonly id: string
@@ -44,18 +43,21 @@ export class Issue {
 		this.activities = activities
 	}
 
+	@EmitIssueUpdate()
 	updateTitle(userId: string, newTitle: string){
 		this.title = newTitle
 		this.updated = new Date().toISOString()
 		this.activities.push(TitleUpdated.create(userId, this, newTitle))
 	}
 
+	@EmitIssueUpdate()
 	updateDescription(userId: string, newDescription: string){
 		this.description = newDescription
 		this.updated = new Date().toISOString()
 		this.activities.push(DescriptionUpdated.create(userId, this, newDescription))
 	}
 
+	@EmitIssueUpdate()
 	leaveComment(authorId: string, commentText: string) {
 		const comment: Comment = {
 			authorId: authorId, 
@@ -65,11 +67,13 @@ export class Issue {
 		this.activities.push(commentActivity)
 	}
 
+	@EmitIssueUpdate()
 	changeStatus(status: IssueStatus) {
 		this.status = status
 		this.updated = new Date().toISOString()
 	}
 
+	@EmitIssueUpdate()
 	startedWork(workerId: string, phase: string) {
 		if (this.status === IssueStatus.WORK_IN_PROGRESS) {
 			throw new Error("Worker is already working on a issue")
@@ -81,6 +85,7 @@ export class Issue {
 		this.assignedTo = workerId
 	}
 
+	@EmitIssueUpdate()
 	finishedWork(workerId: string, phase: string) {
 		if (!this.assignedTo) {
 			throw new Error("Worker has not started working on this issue")

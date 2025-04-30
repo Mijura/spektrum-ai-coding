@@ -25,14 +25,6 @@ export class WriteCode extends WorkflowPhase {
             issue.leaveComment("DevOps Engineer", "I encountered an error during build : " + error)
             throw error
         } finally {
-
-            const update = { 
-                node: "DevOps Engineer", 
-                issue: IssueMapper.toRecord(issue) 
-            }
-
-            this.emit('update', update)
-
             await issueRepository.save(issue)
             // await sdk.ingestActivity({
             //     playerId: project.ownerId, 

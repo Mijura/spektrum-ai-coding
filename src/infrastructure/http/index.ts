@@ -14,6 +14,7 @@ import http from "http"
 import { RunWorkflowUseCase } from "@application/use-cases/workflow/run-worfklow"
 import { projectRepository, issueRepository } from "@infrastructure/dependencies"
 import { workflowRunRouter } from "./routes/workflow-run-routes"
+import { eventBus } from "@domain/services/event-bus"
 
 
 
@@ -58,17 +59,12 @@ io.on("connection", (socket) => {
 			socket.disconnect()
 		}
 
-		// Attach listeners
-		worfklow.on("update", sendUpdate)
-		worfklow.on("done", sendFinal)
+		  // Attach global event listeners
+		  eventBus.on("issue:update", sendUpdate);
 
-
-		// Clean up listeners when the client disconnects
-		socket.on("disconnect", () => {
-			console.log(`Client ${socket.id} disconnected, removing listeners...`)
-			worfklow.off("update", sendUpdate)
-			worfklow.off("done", sendFinal)
-		})
+		  socket.on("disconnect", () => {
+			eventBus.off("issue:update", sendUpdate);
+		  });
 
 		// Execute workflow
 		try {
