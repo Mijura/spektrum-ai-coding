@@ -6,7 +6,6 @@ import { State, WorkflowPhase } from "../workflow-phase"
 import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { issueRepository } from "@infrastructure/dependencies"
-import { Comment } from "@domain/entities/comment"
 
 import { z } from "zod"
 
@@ -80,8 +79,7 @@ export class GenerateCode extends WorkflowPhase {
             outputSchema: parser.getFormatInstructions(),
         })
     
-        const comment = Comment.create("React Developer", output.comment)
-        issue.leaveComment(comment)
+        issue.leaveComment("React Developer", output.comment)
         await issueRepository.save(issue)
 
         const updatedState: State = {

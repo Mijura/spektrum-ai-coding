@@ -1,8 +1,9 @@
 
-enum IssueStatus {
-    TODO = "TODO",
-    IN_PROGRESS = "IN_PROGRESS",
-    DONE = "DONE",
+export enum IssueStatus {
+    TODO = "Todo",
+    WORK_IN_PROGRESS = "Work in progress",
+	READY_FOR_NEXT_PHASE = "Ready for next phase",
+    DONE = "Done",
 }
 
 export interface CommentData {

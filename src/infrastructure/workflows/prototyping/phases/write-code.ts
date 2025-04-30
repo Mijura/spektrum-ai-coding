@@ -2,7 +2,7 @@
 import { frontendDevelopmentService, issueRepository } from "@infrastructure/dependencies"
 import { State, WorkflowPhase } from "../workflow-phase"
 import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
-import { Comment } from "@domain/entities/comment"
+
 export class WriteCode extends WorkflowPhase {
     name: string = "WriteCode"
 
@@ -19,12 +19,10 @@ export class WriteCode extends WorkflowPhase {
             await frontendDevelopmentService.updateSourceCode(project.id, sourceCode)
             installSuccess = await frontendDevelopmentService.installDependencies(project.id)
             buildSuccess = await frontendDevelopmentService.buildProject(project.id)
-            const comment = Comment.create("DevOps Engineer", "Application is successfully deployed and now is ready to be tested.")
-            issue.leaveComment(comment)
+            issue.leaveComment("DevOps Engineer", "Application is successfully deployed and now is ready to be tested.")
         } catch (error) {
             console.error("Error writing files:", error)
-            const comment = Comment.create("DevOps Engineer", "I encountered an error during build : " + error)
-            issue.leaveComment(comment)
+            issue.leaveComment("DevOps Engineer", "I encountered an error during build : " + error)
             throw error
         } finally {
 

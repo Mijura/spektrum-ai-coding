@@ -7,7 +7,6 @@ import { issueRepository } from "@infrastructure/dependencies"
 import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { State, WorkflowPhase } from "../workflow-phase"
-import { Comment } from "@domain/entities/comment"
 
 const ProductOwnerSchema = z.object({
 	issue: z.object({
@@ -66,8 +65,7 @@ export class RefineIssue extends WorkflowPhase {
     
         issue.updateTitle("Product Owner", response.issue.title)
         issue.updateDescription("Product Owner", response.issue.description)
-        const comment = Comment.create("Product Owner", response.comment)
-        issue.leaveComment(comment)
+        issue.leaveComment("Product Owner", response.comment)
 
         await issueRepository.save(issue)
 
@@ -78,12 +76,7 @@ export class RefineIssue extends WorkflowPhase {
         }
 
         console.log("Transitioning to GenerateCode")
-        const update = { 
-            node: "Product Owner", 
-            issue: IssueMapper.toRecord(issue) 
-        }
 
-        this.emit("update", update)
         this.transitionTo("GenerateCode", newState)
     }
 }

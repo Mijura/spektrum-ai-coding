@@ -1,6 +1,6 @@
 import { Project } from "@domain/entities/project"
 import { Issue } from "@domain/entities/issue"
-import { SourceCode } from "@domain/entities/source-code"
+import { SourceCode } from "@domain/types/source-code"
 import { WorkflowContext } from "./workflow-context"
 import { PhaseRegistry } from "./phase-registry"
 import EventEmitter from "events"

@@ -1,12 +1,10 @@
 import { CreateIssue } from "@domain/use-cases/issue/create-issue"
 import { Issue } from "@domain/entities/issue"
 import { IssueRepository } from "@domain/repositories/issue-repository"
-import { ActivityRepository } from "@domain/repositories/activity-repository"
 
 export class CreateIssueUseCase implements CreateIssue {
 	constructor(
-		private readonly issueRepository: IssueRepository,
-		private readonly activityRepository: ActivityRepository
+		private readonly issueRepository: IssueRepository
 	) {}
 
 	async execute(projectId: string, title: string, description: string): Promise<Issue> {

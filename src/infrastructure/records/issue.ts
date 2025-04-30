@@ -1,10 +1,5 @@
 import { ActivityMetadata, ActivityType } from "@domain/types/activity"
-
-enum IssueStatus {
-    TODO = "Todo",
-    IN_PROGRESS = "In progress",
-    DONE = "Done",
-}
+import { IssueStatus } from "@domain/types/issue"
 
 export type ActivityRecord = {
 	id: string

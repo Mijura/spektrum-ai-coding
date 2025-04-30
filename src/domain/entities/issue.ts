@@ -1,17 +1,17 @@
 
-import { ActivityMetadata, ActivityType, CommentLeftMetadata } from "@domain/types/activity"
+import { ActivityMetadata } from "@domain/types/activity"
 import { Activity } from "./activity"
 import { v4 as uuidv4 } from 'uuid'
 import { IssueCreatedActivity } from "./activities/issue-created"
 import { CommentLeft } from "./activities/comment-left"
 import { TitleUpdated } from "./activities/title-updated"
 import { DescriptionUpdated } from "./activities/description-updated"
-import { Comment } from "./comment"
-export enum IssueStatus {
-    TODO = "Todo",
-    IN_PROGRESS = "In progress",
-    DONE = "Done",
-}
+import { Comment } from "@domain/types/activity"
+import { WorkflowRun } from "./workflow-run"
+import { WorkflowPhase } from "@infrastructure/workflows/prototyping/workflow-phase"
+import { StartedWork } from "./activities/started-work"
+import { FinishedWork } from "./activities/finished-work"
+import { IssueStatus } from "@domain/types/issue"
 
 export class Issue {
 	public readonly id: string
@@ -22,7 +22,8 @@ export class Issue {
     public projectId: string
     public status: IssueStatus
 	private activities: Activity<ActivityMetadata>[]
-	
+	private assignedTo?: string
+
     private constructor(
 		id: string,
 		created: string,
@@ -55,28 +56,42 @@ export class Issue {
 		this.activities.push(DescriptionUpdated.create(userId, this, newDescription))
 	}
 
-	leaveComment(comment: Comment) {
+	leaveComment(authorId: string, commentText: string) {
+		const comment: Comment = {
+			authorId: authorId, 
+			text: commentText
+		}
 		const commentActivity = CommentLeft.create(this, comment)
 		this.activities.push(commentActivity)
-	}
-
-	editComment(userId: string, commentId: string, newText: string){		
-		const commentActivities: CommentLeft[] = this.activities.filter(a => a.type === ActivityType.COMMENT_LEFT) as CommentLeft[]
-		let commentActivity = commentActivities.find(a => (a.metadata as CommentLeftMetadata).commentId === commentId)
-
-		if (!commentActivity) {
-		  throw new Error('Comment not found')
-		}
-		if (commentActivity.userId !== userId) {
-		  throw new Error('Only the comment author can edit it')
-		}
-	
-		commentActivity.edit(newText)
 	}
 
 	changeStatus(status: IssueStatus) {
 		this.status = status
 		this.updated = new Date().toISOString()
+	}
+
+	startedWork(workerId: string, phase: string) {
+		if (this.status === IssueStatus.WORK_IN_PROGRESS) {
+			throw new Error("Worker is already working on a issue")
+		}
+
+		const activity = StartedWork.create(workerId, this, phase)
+		
+		this.activities.push(activity)
+		this.assignedTo = workerId
+	}
+
+	finishedWork(workerId: string, phase: string) {
+		if (!this.assignedTo) {
+			throw new Error("Worker has not started working on this issue")
+		}
+
+		if (this.assignedTo !== workerId) {
+			throw new Error("Worker is not working on this issue")
+		}
+
+		this.assignedTo = undefined
+		this.activities.push(FinishedWork.create(workerId, this, phase))
 	}
 
 	getActivityLog(): Activity<ActivityMetadata>[] {

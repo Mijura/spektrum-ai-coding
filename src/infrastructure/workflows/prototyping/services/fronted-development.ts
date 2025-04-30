@@ -4,7 +4,7 @@ import { PackageManager } from "../interfaces/package-manager"
 import { FileSystemPort } from "@domain/services/file-system"
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { Project } from "@domain/entities/project"
-import { SourceCode } from "@domain/entities/source-code"
+import { SourceCode } from "@domain/types/source-code"
 
 export class FrontendDevelopment implements FrontendDevelopmentService {
 	constructor(private readonly packageManager: PackageManager, private readonly fileSystem: FileSystemPort) {}

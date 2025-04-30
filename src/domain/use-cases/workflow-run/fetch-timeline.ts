@@ -1,6 +1,6 @@
-import { WorkflowRun } from "@domain/entities/activities/workflow-run"
+import { WorkflowRun } from "@domain/entities/workflow-run"
 import { PaginationData } from "@domain/types/activity"
 
-export interface FetchWorkflowRunTimeline {
+export interface FetchWorkflowRunsTimeline {
     execute(projectId: string, pagination: PaginationData): Promise<WorkflowRun[]>
 }

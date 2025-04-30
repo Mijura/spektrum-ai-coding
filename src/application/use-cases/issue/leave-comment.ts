@@ -1,7 +1,8 @@
 import { LeaveComment } from "@domain/use-cases/issue/leave-comment"
 import { IssueRepository } from "@domain/repositories/issue-repository"
 import { Issue } from "@domain/entities/issue"
-import { Comment } from "@domain/entities/comment"
+import { Comment } from "@domain/types/activity"
+
 export class LeaveCommentUseCase implements LeaveComment {
     constructor(
         private readonly issueRepository: IssueRepository
@@ -17,8 +18,7 @@ export class LeaveCommentUseCase implements LeaveComment {
             }
 
             // TODO: Get the user id from the context
-            const comment = Comment.create(authorId, commentText)
-            issue.leaveComment(comment)
+            issue.leaveComment(authorId, commentText)
 
             return await this.issueRepository.save(issue)
         } catch (error) {

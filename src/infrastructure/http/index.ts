@@ -13,7 +13,7 @@ import http from "http"
 
 import { RunWorkflowUseCase } from "@application/use-cases/workflow/run-worfklow"
 import { projectRepository, issueRepository } from "@infrastructure/dependencies"
-import { activityRouter } from "./routes/activity-routes"
+import { workflowRunRouter } from "./routes/workflow-run-routes"
 
 
 
@@ -25,7 +25,7 @@ app.use(express.json())
 // Routes
 app.use("/", projectRouter)
 app.use("/", issueRouter)
-app.use("/", activityRouter)
+app.use("/", workflowRunRouter)
 app.use("/:id", serveProjectFilesMiddleware)
 
 

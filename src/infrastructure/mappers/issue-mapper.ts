@@ -1,5 +1,4 @@
 import { IssueRecord } from "@infrastructure/records/issue"
-import { Comment } from "@domain/entities/comment"
 import { Issue } from "@domain/entities/issue"
 
 
