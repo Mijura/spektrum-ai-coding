@@ -16,7 +16,9 @@ export function initializeIssueActivityEmitter(server: HTTPServer) {
 	io.on("connection", (socket: Socket) => {
 		console.log(`New client connected: ${socket.id}`)
 
-		socket.on("subscribe", ({ issueId }) => {
+		socket.on("subscribe", ( issueId ) => {
+
+            console.log(`Client: ${socket.id} subscribed for listening to issue: ${issueId} activity updates`)
 
 			const sendUpdate = (data: any) => {
 				console.log(`Emitting update:`, data)
