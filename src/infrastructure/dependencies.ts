@@ -43,6 +43,8 @@ import { OpenSearchWorkflowRunRepository } from "./repositories/workflow-run-rep
 import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow-run/fetch-timeline"
 import { FetchWorkflowRunsTimelineUseCase } from "@application/use-cases/workflow-run/fetch-timeline"
 import { WorkflowRunController } from "./http/controllers/workflow-run-controller"
+import { RunPrototypingWorkflowUseCase } from "@application/use-cases/workflow-run/run-prototyping-worfklow"
+import { RunPrototypingWorkflow } from "@domain/use-cases/workflow/run-workflow"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -60,6 +62,9 @@ export const projectRepository: ProjectRepository = new DynamoDBProjectRepositor
 export const issueRepository: IssueRepository = new DynamoDBIssueRepository()
 export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkflowRunRepository()
 
+// Workflows
+export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
+
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(frontendDevelopmentService, projectRepository)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
@@ -73,6 +78,4 @@ export const updateIssueDescription: UpdateIssueDescription = new UpdateIssueDes
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
 export const leaveComment: LeaveComment = new LeaveCommentUseCase(issueRepository)
 export const fetchWorkflowRunTimeline: FetchWorkflowRunsTimeline = new FetchWorkflowRunsTimelineUseCase(workflowRunRepository)
-
-// Workflows
-export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
+export const runPrototypingWorkflow: RunPrototypingWorkflow = new RunPrototypingWorkflowUseCase(issueRepository, projectRepository, prototypingWorkflow)

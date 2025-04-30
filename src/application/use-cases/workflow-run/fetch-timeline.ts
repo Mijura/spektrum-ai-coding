@@ -7,6 +7,6 @@ export class FetchWorkflowRunsTimelineUseCase implements FetchWorkflowRunsTimeli
     constructor(private readonly workflowRunRepository: WorkflowRunRepository) {}
 
     async execute(projectId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
-        return this.workflowRunRepository.getTimeline(projectId, pagination)
+        return await this.workflowRunRepository.getTimeline(projectId, pagination)
     }
 }   

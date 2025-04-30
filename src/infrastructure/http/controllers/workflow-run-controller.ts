@@ -1,5 +1,6 @@
+
 import { WorkflowRun } from "@domain/entities/workflow-run"
-import { fetchWorkflowRunTimeline } from "@infrastructure/dependencies"
+import { fetchWorkflowRunTimeline, runPrototypingWorkflow } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
 export class WorkflowRunController {
@@ -24,6 +25,24 @@ export class WorkflowRunController {
         const activities: WorkflowRun[] = await fetchWorkflowRunTimeline.execute(projectId, pagination)
         
         res.json(activities)
+    }
+
+    async runPrototypingWorkflow(req: Request, res: Response): Promise<void> {
+        
+        const issueId = req.body.issueId
+
+        if (!issueId) {
+            res.status(400).json({ error: "Missing required parameters" })
+            return
+        }
+
+		try {
+            const project = await runPrototypingWorkflow.run(issueId)
+            res.status(200).json(project)
+		} catch (error) {
+			console.error("Error during development workflow:", error)
+		}
+
     }
     
 }

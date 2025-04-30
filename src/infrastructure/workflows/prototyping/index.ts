@@ -8,11 +8,6 @@ import { GenerateCode } from "./phases/generate-code"
 import { WorkflowContext } from "./workflow-context"
 import { Issue } from "@domain/entities/issue"
 export class PrototypingWorkflow extends Workflow {
-
-    constructor() {
-        super()
-        
-    }
     
     async run(project: Project, issue: Issue): Promise<Project> {
         const sourceCode = await frontendDevelopmentService.fetchSourceCode(project.id)
