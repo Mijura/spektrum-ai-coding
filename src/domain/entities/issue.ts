@@ -10,7 +10,7 @@ import { Comment } from "@domain/types/activity"
 import { StartedWork } from "./activities/started-work"
 import { FinishedWork } from "./activities/finished-work"
 import { IssueStatus } from "@domain/types/issue"
-import { EmitIssueUpdate } from "@domain/decorators/emit-issue-update"
+import { EmitIssueActivity } from "@domain/decorators/emit-issue-update"
 
 export class Issue {
 	public readonly id: string
@@ -43,21 +43,21 @@ export class Issue {
 		this.activities = activities
 	}
 
-	@EmitIssueUpdate()
+	@EmitIssueActivity()
 	updateTitle(userId: string, newTitle: string){
 		this.title = newTitle
 		this.updated = new Date().toISOString()
 		this.activities.push(TitleUpdated.create(userId, this, newTitle))
 	}
 
-	@EmitIssueUpdate()
+	@EmitIssueActivity()
 	updateDescription(userId: string, newDescription: string){
 		this.description = newDescription
 		this.updated = new Date().toISOString()
 		this.activities.push(DescriptionUpdated.create(userId, this, newDescription))
 	}
 
-	@EmitIssueUpdate()
+	@EmitIssueActivity()
 	leaveComment(authorId: string, commentText: string) {
 		const comment: Comment = {
 			authorId: authorId, 
@@ -67,14 +67,8 @@ export class Issue {
 		this.activities.push(commentActivity)
 	}
 
-	@EmitIssueUpdate()
-	changeStatus(status: IssueStatus) {
-		this.status = status
-		this.updated = new Date().toISOString()
-	}
-
-	@EmitIssueUpdate()
-	startedWork(workerId: string, phase: string) {
+	@EmitIssueActivity()
+	startedWork(workerId: string, phase: string): StartedWork {
 		if (this.status === IssueStatus.WORK_IN_PROGRESS) {
 			throw new Error("Worker is already working on a issue")
 		}
@@ -83,10 +77,12 @@ export class Issue {
 		
 		this.activities.push(activity)
 		this.assignedTo = workerId
+		this.status = IssueStatus.WORK_IN_PROGRESS
+		return activity as StartedWork
 	}
 
-	@EmitIssueUpdate()
-	finishedWork(workerId: string, phase: string) {
+	@EmitIssueActivity()
+	finishedWork(workerId: string, phase: string): FinishedWork {
 		if (!this.assignedTo) {
 			throw new Error("Worker has not started working on this issue")
 		}
@@ -95,8 +91,11 @@ export class Issue {
 			throw new Error("Worker is not working on this issue")
 		}
 
+		const activity = FinishedWork.create(workerId, this, phase)
+		this.activities.push(activity)
 		this.assignedTo = undefined
-		this.activities.push(FinishedWork.create(workerId, this, phase))
+		this.status = IssueStatus.READY_FOR_NEXT_PHASE
+		return activity as FinishedWork
 	}
 
 	getActivityLog(): Activity<ActivityMetadata>[] {

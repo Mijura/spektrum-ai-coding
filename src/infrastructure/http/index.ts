@@ -59,12 +59,12 @@ io.on("connection", (socket) => {
 			socket.disconnect()
 		}
 
-		  // Attach global event listeners
-		  eventBus.on("issue:update", sendUpdate);
+		// Attach global event listeners
+		eventBus.on("issue:update", sendUpdate);
 
-		  socket.on("disconnect", () => {
+		socket.on("disconnect", () => {
 			eventBus.off("issue:update", sendUpdate);
-		  });
+		});
 
 		// Execute workflow
 		try {

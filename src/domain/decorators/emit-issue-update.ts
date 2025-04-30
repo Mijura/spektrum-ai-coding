@@ -1,6 +1,6 @@
 import { eventBus } from "@domain/services/event-bus";
 
-export function EmitIssueUpdate() {
+export function EmitIssueActivity() {
   return function (
     target: any,
     propertyKey: string,
