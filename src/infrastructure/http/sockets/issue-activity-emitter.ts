@@ -22,7 +22,7 @@ export function initializeIssueActivityEmitter(server: HTTPServer) {
 
 			const sendUpdate = (data: any) => {
 				console.log(`Emitting update:`, data)
-				socket.emit("update", data)
+				socket.emit("issue:update", data)
 			}
 
 			eventBus.on("issue:update", sendUpdate)
