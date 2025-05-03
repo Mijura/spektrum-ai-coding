@@ -16,25 +16,28 @@ export function initializeIssueActivityEmitter(server: HTTPServer) {
 	io.on("connection", (socket: Socket) => {
 		console.log(`New client connected: ${socket.id}`)
 
-		socket.on("subscribe", ( issueId ) => {
+		socket.on("subscribe", (projectId: string) => {
+			console.log(`Client ${socket.id} subscribed to project ${projectId}`)
 
-            console.log(`Client: ${socket.id} subscribed for listening to issue: ${issueId} activity updates`)
+			socket.join(projectId)
 
-			const sendUpdate = (data: any) => {
-				console.log(`Emitting update:`, data)
-				socket.emit("issue:update", data)
-			}
+			// Optional: send confirmation or backlog
+			socket.emit("subscribed", { projectId })
+		})
 
-			eventBus.on("issue:update", sendUpdate)
-
-			socket.on("disconnect", () => {
-				eventBus.off("issue:update", sendUpdate)
-				console.log(`Client disconnected: ${socket.id}`)
-			})
+		socket.on("unsubscribe", (projectId: string) => {
+			console.log(`Client ${socket.id} unsubscribed from project ${projectId}`)
+			socket.leave(projectId)
 		})
 
 		socket.on("disconnect", () => {
 			console.log(`Client disconnected: ${socket.id}`)
 		})
+	})
+
+	// Listen once on server-side and forward to specific room
+	eventBus.on("issue:update", ({ projectId, ...data }) => {
+		console.log(`Broadcasting issue:update to room ${projectId}`)
+		io.to(projectId).emit("issue:update", data)
 	})
 }
