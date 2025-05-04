@@ -15,14 +15,14 @@ export class FinishedWork extends Activity<FinishedWorkMetadata> {
         super(id, type, projectId, issueId, workerId, metadata, occurredAt)
     }
 
-    static create(workerId: string, issue: Issue, phase: string): Activity<ActivityMetadata> {
+    static create(workerId: string, issue: Issue, phase: string, message: string): Activity<ActivityMetadata> {
         const id = this.generateId()
         const type = ActivityType.FINISHED_WORK
         const occurredAt = this.now()
 
         const metadata: FinishedWorkMetadata = {
             workerId: workerId,
-            message: `${workerId} finished working on ${issue.title}`,
+            message: message,
             phase: phase
         }
 

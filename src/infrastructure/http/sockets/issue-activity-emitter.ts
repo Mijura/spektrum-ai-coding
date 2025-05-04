@@ -2,6 +2,7 @@
 import { Server as HTTPServer } from "http"
 import { Server as SocketIOServer, Socket } from "socket.io"
 import { eventBus } from "@domain/services/event-bus"
+import { Issue } from "@domain/entities/issue"
 
 export function initializeIssueActivityEmitter(server: HTTPServer) {
 	const io = new SocketIOServer(server, {
@@ -36,8 +37,8 @@ export function initializeIssueActivityEmitter(server: HTTPServer) {
 	})
 
 	// Listen once on server-side and forward to specific room
-	eventBus.on("issue:update", ({ projectId, ...data }) => {
-		console.log(`Broadcasting issue:update to room ${projectId}`)
-		io.to(projectId).emit("issue:update", data)
+	eventBus.on("issue:update", (issue: Issue) => {
+		console.log(`Broadcasting issue:update to room ${issue.projectId}`)
+		io.to(issue.projectId).emit("issue:update", issue)
 	})
 }

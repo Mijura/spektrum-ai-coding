@@ -26,6 +26,8 @@ export class GenerateCode extends WorkflowPhase {
         
         const { project, issue, sourceCode } = data
 
+        issue.startedWork("React Developer", "GenerateCode", "Developing the feature...")
+
         const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	
         const chain = RunnableSequence.from([
@@ -79,6 +81,7 @@ export class GenerateCode extends WorkflowPhase {
             outputSchema: parser.getFormatInstructions(),
         })
     
+        issue.finishedWork("React Developer", "GenerateCode", "Finished with coding")
         issue.leaveComment("React Developer", output.comment)
         await issueRepository.save(issue)
 

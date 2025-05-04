@@ -68,12 +68,12 @@ export class Issue {
 	}
 
 	@EmitIssueActivity()
-	startedWork(workerId: string, phase: string): StartedWork {
+	startedWork(workerId: string, phase: string, message: string): StartedWork {
 		if (this.status === IssueStatus.WORK_IN_PROGRESS) {
 			throw new Error("Worker is already working on a issue")
 		}
 
-		const activity = StartedWork.create(workerId, this, phase)
+		const activity = StartedWork.create(workerId, this, phase, message)
 		
 		this.activities.push(activity)
 		this.assignedTo = workerId
@@ -82,7 +82,7 @@ export class Issue {
 	}
 
 	@EmitIssueActivity()
-	finishedWork(workerId: string, phase: string): FinishedWork {
+	finishedWork(workerId: string, phase: string, message: string): FinishedWork {
 		if (!this.assignedTo) {
 			throw new Error("Worker has not started working on this issue")
 		}
@@ -91,8 +91,11 @@ export class Issue {
 			throw new Error("Worker is not working on this issue")
 		}
 
-		const activity = FinishedWork.create(workerId, this, phase)
-		this.activities.push(activity)
+		const activity = FinishedWork.create(workerId, this, phase, message)
+		const startedWorkActivity = this.activities.findIndex(activity => activity instanceof StartedWork)
+		if (startedWorkActivity) {
+			this.activities.splice(startedWorkActivity, 1, activity)
+		}
 		this.assignedTo = undefined
 		this.status = IssueStatus.READY_FOR_NEXT_PHASE
 		return activity as FinishedWork

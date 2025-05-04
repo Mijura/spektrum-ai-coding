@@ -12,6 +12,8 @@ export class WriteCode extends WorkflowPhase {
         const { issue, project, sourceCode } = data
         //const sdk = new JigJoyActivitySDK(process.env.JIGJOY_ENDPOINT)
 
+        issue.startedWork("DevOps Engineer", "WriteCode", "Deploying the application for testing...")
+
         let buildSuccess = false
         let installSuccess = false
         try {
@@ -25,6 +27,7 @@ export class WriteCode extends WorkflowPhase {
             issue.leaveComment("DevOps Engineer", "I encountered an error during build : " + error)
             throw error
         } finally {
+            issue.finishedWork("DevOps Engineer", "WriteCode", "Finished deploying the application for testing")
             await issueRepository.save(issue)
             // await sdk.ingestActivity({
             //     playerId: project.ownerId, 

@@ -14,11 +14,7 @@ export function EmitIssueActivity() {
       const maybePromise = result instanceof Promise ? result : Promise.resolve(result);
 
       return maybePromise.then((res) => {
-        const worker = args[0]; // Assume user is always first argument
-        eventBus.emit("issue:update", {
-          node: worker,
-          issue: this
-        });
+        eventBus.emit("issue:update", this);
         return res;
       });
     };
