@@ -4,16 +4,10 @@ import { FetchProject } from "@domain/use-cases/project/fetch-project"
 import { FetchProjects } from "@domain/use-cases/project/fetch-projects"
 import { ArchiveProject } from "@domain/use-cases/project/archive-project"
 import { DeployProject } from "@domain/use-cases/project/deploy-project"
-import { CreateTicket } from "@domain/use-cases/ticket/create-ticket"
-import { FetchTickets } from "@domain/use-cases/ticket/fetch-tickets"
-import { UpdateTicketTitle } from "@domain/use-cases/ticket/update-title"
-import { UpdateTicketDescription } from "@domain/use-cases/ticket/update-description"
-import { LeaveComment } from "@domain/use-cases/ticket/leave-comment"
 import { ProjectRepository } from "@domain/repositories/project-repository"
-import { TicketRepository } from "@domain/repositories/ticket-repository"
+import { IssueRepository } from "@domain/repositories/issue-repository"
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { FileSystemPort } from "@domain/services/file-system"
-import { PackageManager } from "@domain/utils/package-manager"
 
 import { FetchProjectsUseCase } from "@application/use-cases/project/fetch-projects"
 import { DeployProjectUseCase } from "@application/use-cases/project/deploy-project"
@@ -21,32 +15,41 @@ import { FetchProjectUseCase } from "@application/use-cases/project/fetch-projec
 import { CreateProjectUseCase } from "@application/use-cases/project/create-project"
 import { UpdateProjectDetailsUseCase } from "@application/use-cases/project/update-details"
 import { ArchiveProjectUseCase } from "@application/use-cases/project/archive-project"
-import { CreateTicketUseCase } from "@application/use-cases/ticket/create-ticket"
-import { UpdateTicketTitleUseCase } from "@application/use-cases/ticket/update-title"
-import { UpdateTicketDescriptionUseCase } from "@application/use-cases/ticket/update-description"
-import { FetchTicketsUseCase } from "@application/use-cases/ticket/fetch-tickets"
-import { LeaveCommentUseCase } from "@application/use-cases/ticket/leave-comment"
 
-import { TicketController } from "@infrastructure/http/controllers/ticket-controller"
+import { IssueController } from "@infrastructure/http/controllers/issue-controller"
 import { ProjectController } from "@infrastructure/http/controllers/project-controller"
 
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
-import { DynamoDBTicketRepository } from "@infrastructure/repositories/ticket-repository"
+import { DynamoDBIssueRepository } from "@infrastructure/repositories/issue-repository"
 
-import { LangGraphCodeGeneration } from "@infrastructure/workflows/langchain-code-generation/workflow"
-import { FrontendDevelopment } from "@infrastructure/workflows/services/fronted-development"
-import { LocalFileSystem } from "@infrastructure/workflows/services/local-file-system"
-import { YarnPackageManager } from "@infrastructure/workflows/services/yarn-package-manager"
-import { JigJoyCodeGeneration } from "./workflows/jigjoy-code-generation/index"
 import { Workflow } from "@domain/entities/workflow"
-
-
-
+import { PrototypingWorkflow } from "./workflows/prototyping"
+import { LocalFileSystem } from "./workflows/prototyping/services/local-file-system"
+import { YarnPackageManager } from "./workflows/prototyping/services/yarn-package-manager"
+import { FrontendDevelopment } from "./workflows/prototyping/services/fronted-development"
+import { PackageManager } from "./workflows/prototyping/interfaces/package-manager"
+import { CreateIssue } from "@domain/use-cases/issue/create-issue"
+import { FetchIssues } from "@domain/use-cases/issue/fetch-issues"
+import { UpdateIssueTitle } from "@domain/use-cases/issue/update-title"
+import { UpdateIssueDescription } from "@domain/use-cases/issue/update-description"
+import { CreateIssueUseCase } from "@application/use-cases/issue/create-issue"
+import { FetchIssuesUseCase } from "@application/use-cases/issue/fetch-issues"
+import { LeaveCommentUseCase } from "@application/use-cases/issue/leave-comment"
+import { UpdateIssueDescriptionUseCase } from "@application/use-cases/issue/update-description"
+import { UpdateIssueTitleUseCase } from "@application/use-cases/issue/update-title"
+import { LeaveComment } from "@domain/use-cases/issue/leave-comment"
+import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
+import { OpenSearchWorkflowRunRepository } from "./repositories/workflow-run-repository"
+import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow-run/fetch-timeline"
+import { FetchWorkflowRunsTimelineUseCase } from "@application/use-cases/workflow-run/fetch-timeline"
+import { WorkflowRunController } from "./http/controllers/workflow-run-controller"
+import { RunPrototypingWorkflowUseCase } from "@application/use-cases/workflow-run/run-prototyping-worfklow"
+import { RunPrototypingWorkflow } from "@domain/use-cases/workflow/run-workflow"
 
 // Controllers
 export const projectController = new ProjectController()
-export const ticketController = new TicketController()
-
+export const issueController = new IssueController()
+export const workflowRunController = new WorkflowRunController()
 
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
@@ -56,8 +59,11 @@ export const frontendDevelopmentService: FrontendDevelopmentService = new Fronte
 
 // Repositories
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
-export const ticketRepository: TicketRepository = new DynamoDBTicketRepository()
+export const issueRepository: IssueRepository = new DynamoDBIssueRepository()
+export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkflowRunRepository()
 
+// Workflows
+export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(frontendDevelopmentService, projectRepository)
@@ -65,13 +71,11 @@ export const fetchProject: FetchProject = new FetchProjectUseCase(projectReposit
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
-export const createTicket: CreateTicket = new CreateTicketUseCase(ticketRepository)
-export const fetchTickets: FetchTickets = new FetchTicketsUseCase(ticketRepository)
-export const updateTicketTitle: UpdateTicketTitle = new UpdateTicketTitleUseCase(ticketRepository)
-export const updateTicketDescription: UpdateTicketDescription = new UpdateTicketDescriptionUseCase(ticketRepository)
+export const createIssue: CreateIssue = new CreateIssueUseCase(issueRepository)
+export const fetchIssues: FetchIssues = new FetchIssuesUseCase(issueRepository)
+export const updateIssueTitle: UpdateIssueTitle = new UpdateIssueTitleUseCase(issueRepository)
+export const updateIssueDescription: UpdateIssueDescription = new UpdateIssueDescriptionUseCase(issueRepository)
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
-export const leaveComment: LeaveComment = new LeaveCommentUseCase(ticketRepository)
-
-// Workflows
-export const codeGenerationWorkflow: Workflow = new JigJoyCodeGeneration()
-export const jigJoyCodeGenerationWorkflow: Workflow = new JigJoyCodeGeneration()
+export const leaveComment: LeaveComment = new LeaveCommentUseCase(issueRepository)
+export const fetchWorkflowRunTimeline: FetchWorkflowRunsTimeline = new FetchWorkflowRunsTimelineUseCase(workflowRunRepository)
+export const runPrototypingWorkflow: RunPrototypingWorkflow = new RunPrototypingWorkflowUseCase(issueRepository, projectRepository, prototypingWorkflow)

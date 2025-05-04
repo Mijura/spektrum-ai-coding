@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
       "target": "es2016",  
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": false,
       "jsx": "react",               
       "module": "commonjs",                          
       "esModuleInterop": true,                            

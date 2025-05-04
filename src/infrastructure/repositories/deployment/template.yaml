@@ -1,4 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  OpenSearchCollectionName:
+    Type: String
+    Description: The name of the OpenSearch collection
+    Default: "honeycomb-activities" 
+
 Resources:
   ProjectTable:
     Type: AWS::DynamoDB::Table
@@ -31,10 +39,10 @@ Resources:
           Projection:
             ProjectionType: ALL
 
-  TicketTable:
+  IssueTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: Ticket
+      TableName: Issue
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: id
@@ -52,3 +60,44 @@ Resources:
           Projection:
             ProjectionType: ALL
 
+   # OpenSearch Serverless Collection
+  OpenSearchCollection:
+    Type: AWS::OpenSearchServerless::Collection
+    Properties:
+      Name: !Ref OpenSearchCollectionName
+      Type: SEARCH
+      Description: Collection for storing activities.
+      Tags:
+        - Key: Project
+          Value: Honeycomb
+    DependsOn: OpenSearchEncryptionPolicy
+
+  OpenSearchEncryptionPolicy:
+    Type: "AWS::OpenSearchServerless::SecurityPolicy"
+    Properties:
+      Name: activity-encryption-policy
+      Type: encryption
+      Description: Encryption policy for collections
+      Policy: >-
+        {"Rules":[{"ResourceType":"collection","Resource":["collection/honeycomb-activities*"]}],"AWSOwnedKey":true}
+
+  OpenSearchNetworkPolicy:
+    Type: "AWS::OpenSearchServerless::SecurityPolicy"
+    Properties:
+      Name: activity-network-policy
+      Type: network
+      Description: Network policy for collection
+      Policy: >-
+        [{"Rules":[{"ResourceType":"collection","Resource":["collection/honeycomb-activities*"]},
+        {"ResourceType":"dashboard","Resource":["collection/honeycomb-activities*"]}],"AllowFromPublic":true}]
+
+  OpenSearchAccessPolicy:
+    Type: "AWS::OpenSearchServerless::AccessPolicy"
+    Properties:
+      Name: activity-access-policy
+      Type: data
+      Description: Access policy to collection
+      Policy: !Sub >-
+        [{"Description":"Public access to collection","Rules":[{"ResourceType":"index","Resource":["index/*/*"],"Permission":["aoss:*"]},
+        {"ResourceType":"collection","Resource":["collection/honeycomb-activities"],"Permission":["aoss:*"]}],
+        "Principal":["arn:aws:iam::${AWS::AccountId}:root"]}]
