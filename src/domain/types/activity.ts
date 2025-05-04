@@ -56,7 +56,7 @@ export type ActivityMetadata =
 export enum ActivityType {
     ISSUE_CREATED = 'IssueCreated',
     COMMENT_LEFT = 'CommentLeft',
-    TITLE_UPDATED = 'TitleUpdated',
+    TITLE_UPDATED = 'IssueDetailsUpdated',
     DESCRIPTION_UPDATED = 'DescriptionUpdated',
     WORKFLOW_RUN = 'WorkflowRun',
     STARTED_WORK = 'StartedWork',
