@@ -46,8 +46,9 @@ export class GenerateCode extends WorkflowPhase {
                 2. **Modify or create source files as needed**:
                 - Create new components, hooks, or utilities as required.
     
-                3. **Modify package.json when you plan to use external dependencies**:
-                - If a new dependency is introduced, update package.json.
+                3. **If you are using a new dependency, you should add it to the package.json file.**:
+                - For example, if you are using react-hook-form, you should add it to the package.json file.
+                - NOTE: If you don't add the dependency to the package.json file, the project will not work.
     
     
                 ### **Details**
