@@ -22,7 +22,7 @@ export class RefineIssue extends WorkflowPhase {
         console.log("Refining issue")
         const { issue } = data
 
-        issue.startedWork("Product Owner", "RefineIssue", "Product owner is analyzing the issue and prior activities")
+        issue.startedWork("Product Owner", "RefineIssue", "Product owner is updating issue details")
 
         
         const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
@@ -37,9 +37,8 @@ export class RefineIssue extends WorkflowPhase {
                 1) Analyze issue title, issue description provided by user.
                 2) Refine issue title and description based on the user request.
     
-                ### **Project Details**
-                - **Issue Details:** {issue}
-    
+                ### **Issue Details:** {issue}
+
                 You must return JSON as response. Here is example of valid response:
                 {{
                     "issue": 
@@ -58,7 +57,7 @@ export class RefineIssue extends WorkflowPhase {
             outputSchema: parser.getFormatInstructions(),
         })
 
-        issue.finishedWork("Product Owner", "RefineIssue", "Finished figuring out what should be done")
+        issue.finishedWork("Product Owner", "RefineIssue", "Finished updating issue details")
    
         
         issue.updateTitle("Product Owner", response.issue.title)

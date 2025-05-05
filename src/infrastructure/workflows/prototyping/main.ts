@@ -1,5 +1,4 @@
 import { Workflow } from "@domain/entities/workflow/workflow"
-import { Project } from "@domain/entities/project"
 import { frontendDevelopmentService } from "@infrastructure/dependencies"
 import { WorkflowPhaseRegistry } from "../../../domain/entities/workflow/workflow-phase-registry"
 import { WriteCode } from "./phases/write-code"

@@ -46,6 +46,7 @@ import { WorkflowRunController } from "./http/controllers/workflow-run-controlle
 import { RunPrototypingWorkflowUseCase } from "@application/use-cases/workflow-run/run-prototyping-worfklow"
 import { RunPrototypingWorkflow } from "@domain/use-cases/workflow/run-workflow"
 import { IssueRefiningWorkflow } from "./workflows/issue-refining/main"
+import { ProjectRefiningWorkflow } from "./workflows/project-refining/main"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -66,13 +67,14 @@ export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkfl
 // Workflows
 export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
 export const issueRefiningWorkflow: Workflow = new IssueRefiningWorkflow()
+export const projectRefiningWorkflow: Workflow = new ProjectRefiningWorkflow()
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(frontendDevelopmentService, projectRepository)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
-export const createIssue: CreateIssue = new CreateIssueUseCase(issueRepository, issueRefiningWorkflow)
+export const createIssue: CreateIssue = new CreateIssueUseCase(issueRepository, projectRepository, issueRefiningWorkflow, projectRefiningWorkflow)
 export const fetchIssues: FetchIssues = new FetchIssuesUseCase(issueRepository)
 export const updateIssueTitle: UpdateIssueTitle = new UpdateIssueTitleUseCase(issueRepository)
 export const updateIssueDescription: UpdateIssueDescription = new UpdateIssueDescriptionUseCase(issueRepository)

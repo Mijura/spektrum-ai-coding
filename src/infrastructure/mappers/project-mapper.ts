@@ -15,6 +15,7 @@ export class ProjectMapper {
       updated: project.updated,
       deploymentId: project.deploymentId,
       status: project.status,
+      detailsUpdated: project.detailsUpdated
     };
   }
 
@@ -29,6 +30,7 @@ export class ProjectMapper {
       updated: record.updated,
       deploymentId: record.deploymentId,
       status: record.status,
+      detailsUpdated: record.detailsUpdated
     });
   }
 

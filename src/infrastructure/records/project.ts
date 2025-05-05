@@ -12,4 +12,5 @@ export interface ProjectRecord {
 	updated: string | null
 	deploymentId: string | null
 	status: ProjectStatus
+	detailsUpdated: boolean
 }

@@ -10,6 +10,7 @@ export interface ProjectDto {
   updated: string | null
   deploymentId: string | null
   status: ProjectStatus
+  detailsUpdated: boolean
 }
 
 export class ProjectDtoMapper {
@@ -24,6 +25,7 @@ export class ProjectDtoMapper {
       updated: project.updated,
       deploymentId: project.deploymentId,
       status: project.status,
+      detailsUpdated: project.detailsUpdated
     }
   }
 
