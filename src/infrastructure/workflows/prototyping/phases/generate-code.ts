@@ -26,7 +26,7 @@ export class GenerateCode extends WorkflowPhase {
         
         const { project, issue, sourceCode } = data
 
-        issue.startedWork("React Developer", "GenerateCode", "Developing the feature...")
+        issue.startedWork("React Developer", "GenerateCode", "Developer is developing the feature...")
 
         const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	

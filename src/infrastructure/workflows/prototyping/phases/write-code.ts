@@ -12,7 +12,7 @@ export class WriteCode extends WorkflowPhase {
         const { issue, project, sourceCode } = data
         //const sdk = new JigJoyActivitySDK(process.env.JIGJOY_ENDPOINT)
 
-        issue.startedWork("DevOps Engineer", "WriteCode", "Deploying the application for testing...")
+        issue.startedWork("DevOps Engineer", "WriteCode", "DevOps engineer is deploying the application for testing...")
 
         let buildSuccess = false
         let installSuccess = false

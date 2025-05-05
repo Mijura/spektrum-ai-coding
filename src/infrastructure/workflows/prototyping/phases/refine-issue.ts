@@ -24,7 +24,7 @@ export class RefineIssue extends WorkflowPhase {
         console.log("Refining issue")
         const { issue, project, sourceCode } = data
 
-        issue.startedWork("Product Owner", "RefineIssue", "Analyzing the issue and prior activities")
+        issue.startedWork("Product Owner", "RefineIssue", "Product owner is analyzing the issue and prior activities")
 
         
         const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
