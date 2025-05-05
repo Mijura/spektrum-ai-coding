@@ -2,7 +2,7 @@ import { WorkflowPhase } from "./workflow-phase"
 
 type PhaseConstructor = new () => WorkflowPhase
 
-export class PhaseRegistry {
+export class WorkflowPhaseRegistry {
   private static phases: Map<string, PhaseConstructor> = new Map()
 
   static register(phase: PhaseConstructor) {

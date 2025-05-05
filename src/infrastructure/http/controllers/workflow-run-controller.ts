@@ -1,5 +1,5 @@
 
-import { WorkflowRun } from "@domain/entities/workflow-run"
+import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
 import { fetchWorkflowRunTimeline, runPrototypingWorkflow } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
@@ -37,10 +37,11 @@ export class WorkflowRunController {
         }
 
 		try {
-            const project = await runPrototypingWorkflow.run(issueId)
-            res.status(200).json(project)
+            await runPrototypingWorkflow.run(issueId)
+            res.status(200).json({ message: "Workflow run successfully" })
 		} catch (error) {
 			console.error("Error during development workflow:", error)
+            res.status(500).json({ error: "Internal server error" })
 		}
 
     }

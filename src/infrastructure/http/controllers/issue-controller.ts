@@ -64,8 +64,7 @@ export class IssueController {
 		try {
 			const { issueId, authorId, commentText } = req.body
 			const issue = await leaveComment.execute(issueId, authorId, commentText)
-			const project = await fetchProject.execute(issue.projectId)
-			await prototypingWorkflow.run(project, issue)
+			await prototypingWorkflow.run(issue)
 			res.status(200).json(issue)
 		} catch (error) {
 			console.error("Error adding comment:", error)

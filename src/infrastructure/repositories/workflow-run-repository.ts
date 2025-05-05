@@ -3,7 +3,7 @@ import { AwsSigv4Signer } from "@opensearch-project/opensearch/aws"
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { Client } from "@opensearch-project/opensearch"
 import { ActivityMetadata, PaginationData, TimeRangeData } from "@domain/types/activity"
-import { WorkflowRun } from "@domain/entities/workflow-run"
+import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
 import { v4 as uuidv4 } from 'uuid'
 

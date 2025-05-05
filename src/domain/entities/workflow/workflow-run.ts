@@ -1,5 +1,5 @@
 import { WorkflowRunStatus } from "@domain/types/activity"
-import { Issue } from "./issue"
+import { Issue } from "../issue"
 import { v4 as uuidv4 } from "uuid"
 
 class WorkflowPhase {

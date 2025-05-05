@@ -2,11 +2,11 @@ import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
-import { State, WorkflowPhase } from "../workflow-phase"
+import { WorkflowPhase } from "../../../../domain/entities/workflow/workflow-phase"
 import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { issueRepository } from "@infrastructure/dependencies"
-
+import { State } from "../main"
 import { z } from "zod"
 
 const SourceCodeSchema = z.record(
@@ -24,7 +24,7 @@ export class GenerateCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Generating code")
         
-        const { project, issue, sourceCode } = data
+        const { issue, sourceCode } = data
 
         issue.startedWork("React Developer", "GenerateCode", "Developer is developing the feature...")
 
@@ -50,8 +50,7 @@ export class GenerateCode extends WorkflowPhase {
                 - If a new dependency is introduced, update package.json.
     
     
-                ### **Project Details**
-                - **Project Context:** {project}
+                ### **Details**
                 - **Issue Details:** {issue}
                 - **Current Source Code:** {sourceCode}
     
@@ -76,7 +75,6 @@ export class GenerateCode extends WorkflowPhase {
     
         const output = await chain.invoke({
             issue: IssueMapper.toRecord(issue),
-            project: ProjectMapper.toRecord(project),
             sourceCode: sourceCode,
             outputSchema: parser.getFormatInstructions(),
         })
@@ -86,7 +84,6 @@ export class GenerateCode extends WorkflowPhase {
         await issueRepository.save(issue)
 
         const updatedState: State = {
-            project: project,
             issue: issue,
             sourceCode: output.sourceCode
         }

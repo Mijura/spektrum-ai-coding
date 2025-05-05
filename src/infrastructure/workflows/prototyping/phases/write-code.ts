@@ -1,7 +1,6 @@
-//import { JigJoyActivitySDK } from "@honeycomb-app/jigjoy-sdk"
 import { frontendDevelopmentService, issueRepository } from "@infrastructure/dependencies"
-import { State, WorkflowPhase } from "../workflow-phase"
-import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
+import { WorkflowPhase } from "../../../../domain/entities/workflow/workflow-phase"
+import { State } from "../main"
 
 export class WriteCode extends WorkflowPhase {
     name: string = "WriteCode"
@@ -9,8 +8,7 @@ export class WriteCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Writing code")
 
-        const { issue, project, sourceCode } = data
-        //const sdk = new JigJoyActivitySDK(process.env.JIGJOY_ENDPOINT)
+        const { issue, sourceCode } = data
 
         issue.startedWork("DevOps Engineer", "WriteCode", "DevOps engineer is deploying the application for testing...")
 
@@ -18,9 +16,9 @@ export class WriteCode extends WorkflowPhase {
         let installSuccess = false
         try {
 
-            await frontendDevelopmentService.updateSourceCode(project.id, sourceCode)
-            installSuccess = await frontendDevelopmentService.installDependencies(project.id)
-            buildSuccess = await frontendDevelopmentService.buildProject(project.id)
+            await frontendDevelopmentService.updateSourceCode(issue.projectId, sourceCode)
+            installSuccess = await frontendDevelopmentService.installDependencies(issue.projectId)
+            buildSuccess = await frontendDevelopmentService.buildProject(issue.projectId)
             issue.leaveComment("DevOps Engineer", "Application is successfully deployed and now is ready to be tested.")
         } catch (error) {
             console.error("Error writing files:", error)
@@ -29,18 +27,6 @@ export class WriteCode extends WorkflowPhase {
         } finally {
             issue.finishedWork("DevOps Engineer", "WriteCode", "Finished deploying the application for testing")
             await issueRepository.save(issue)
-            // await sdk.ingestActivity({
-            //     playerId: project.ownerId, 
-            //     gameId: 'honeycomb', 
-            //     type: 'workflow-execution', 
-            //     data: {
-            //         projectId: project.id,
-            //         workflowId: 'prototyping',
-            //         issueId: issue.id,
-            //         issueTitle: issue.title,
-            //         buildStatus: buildSuccess && installSuccess ? "success" : "failed",
-            //     }
-            // })
         }
 
     }

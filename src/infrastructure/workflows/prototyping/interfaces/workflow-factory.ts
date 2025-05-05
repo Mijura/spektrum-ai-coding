@@ -1,4 +1,4 @@
-import { Workflow } from '@domain/entities/workflow';
+import { Workflow } from '@domain/entities/workflow/workflow';
 import { WorkflowType } from '@domain/types/workflow';
 import { prototypingWorkflow } from '@infrastructure/dependencies';
 export class WorkflowFactory {
