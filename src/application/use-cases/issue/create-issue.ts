@@ -4,6 +4,7 @@ import { IssueRepository } from "@domain/repositories/issue-repository"
 import { Workflow } from "@domain/entities/workflow/workflow"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { Project } from "@domain/entities/project"
+import { ProjectDetails } from "@domain/types/project-details"
 export class CreateIssueUseCase implements CreateIssue {
 	constructor(
 		private readonly issueRepository: IssueRepository,
@@ -17,15 +18,14 @@ export class CreateIssueUseCase implements CreateIssue {
 			const issue: Issue = Issue.create('User', projectId, title, description)
 
 			// Refine project details
-			
 			const project: Project = await this.projectRepository.findById(projectId)
 			if (!project) {
 				throw new Error("Project not found")
 			}
 
 			if (!project.detailsUpdated) {
-				const projectDetails = await this.projectRefiningWorkflow.run(issue)
-				project.updateDetails(projectDetails.title, projectDetails.description)
+				const projectDetails: ProjectDetails = await this.projectRefiningWorkflow.run(issue)
+				project.updateDetails(projectDetails.name, projectDetails.description)
 				await this.projectRepository.save(project)
 			}
 			// Persist the issue in the database

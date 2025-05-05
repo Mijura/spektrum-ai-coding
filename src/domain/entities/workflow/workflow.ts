@@ -1,4 +1,3 @@
-import { Project } from "@domain/entities/project"
 import { Issue } from "../issue"
 
 

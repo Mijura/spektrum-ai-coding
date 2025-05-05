@@ -3,16 +3,11 @@ import { Workflow } from "@domain/entities/workflow/workflow"
 import { WorkflowPhaseRegistry } from "@domain/entities/workflow/workflow-phase-registry"
 import { WorkflowContext } from "@domain/entities/workflow/workflow-context"
 import { RefineProjectDetails } from "../project-refining/phases/refine-project-details"
-
-export type ProjectDetails = {
-    title: string
-    description: string
-}
+import { ProjectDetails } from "@domain/types/project-details"
 
 export type Input = {
     issue: Issue
 }
-
 export class ProjectRefiningWorkflow extends Workflow {
 
     async run(issue: Issue): Promise<ProjectDetails> {

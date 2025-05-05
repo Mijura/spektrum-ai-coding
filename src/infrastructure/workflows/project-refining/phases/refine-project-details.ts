@@ -5,12 +5,13 @@ import { gpt41Nano } from "@infrastructure/workflows/models"
 import { z } from "zod"
 import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
 import { WorkflowPhase } from "../../../../domain/entities/workflow/workflow-phase"
-import { Input, ProjectDetails } from "../main"
+import { Input } from "../main"
+import { ProjectDetails } from "@domain/types/project-details"
 
 
 const ProjectDetailsSchema = z.object({
 	project: z.object({
-		title: z.string().describe("Short and concise title of the issue."),
+		name: z.string().describe("Short and concise title of the issue."),
 		description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
 })
 
@@ -42,7 +43,7 @@ export class RefineProjectDetails extends WorkflowPhase {
                 {{
                     "project": 
                         {{
-                            title: 'Note-Taking App', 
+                            name: 'Note-Taking App', 
                             description: 'A notetaking app with a focus on simplicity and ease of use.'
                         }}
                 }}
