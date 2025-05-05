@@ -8,7 +8,6 @@ export class CreateIssueUseCase implements CreateIssue {
 	constructor(
 		private readonly issueRepository: IssueRepository,
 		private readonly projectRepository: ProjectRepository,
-		private readonly issueRefiningWorkflow: Workflow,
 		private readonly projectRefiningWorkflow: Workflow
 	) {}
 
@@ -16,7 +15,6 @@ export class CreateIssueUseCase implements CreateIssue {
 		try {
 			// Create a new issue
 			const issue: Issue = Issue.create('User', projectId, title, description)
-			//const refinedIssue = await this.issueRefiningWorkflow.run(issue)
 
 			// Refine project details
 			

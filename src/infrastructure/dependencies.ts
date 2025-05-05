@@ -66,7 +66,6 @@ export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkfl
 
 // Workflows
 export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
-export const issueRefiningWorkflow: Workflow = new IssueRefiningWorkflow()
 export const projectRefiningWorkflow: Workflow = new ProjectRefiningWorkflow()
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(frontendDevelopmentService, projectRepository)
@@ -74,7 +73,7 @@ export const fetchProject: FetchProject = new FetchProjectUseCase(projectReposit
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
-export const createIssue: CreateIssue = new CreateIssueUseCase(issueRepository, projectRepository, issueRefiningWorkflow, projectRefiningWorkflow)
+export const createIssue: CreateIssue = new CreateIssueUseCase(issueRepository, projectRepository, projectRefiningWorkflow)
 export const fetchIssues: FetchIssues = new FetchIssuesUseCase(issueRepository)
 export const updateIssueTitle: UpdateIssueTitle = new UpdateIssueTitleUseCase(issueRepository)
 export const updateIssueDescription: UpdateIssueDescription = new UpdateIssueDescriptionUseCase(issueRepository)
