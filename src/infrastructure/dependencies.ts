@@ -45,7 +45,6 @@ import { FetchWorkflowRunsTimelineUseCase } from "@application/use-cases/workflo
 import { WorkflowRunController } from "./http/controllers/workflow-run-controller"
 import { RunPrototypingWorkflowUseCase } from "@application/use-cases/workflow-run/run-prototyping-worfklow"
 import { RunPrototypingWorkflow } from "@domain/use-cases/workflow/run-workflow"
-import { IssueRefiningWorkflow } from "./workflows/issue-refining/main"
 import { ProjectRefiningWorkflow } from "./workflows/project-refining/main"
 
 // Controllers
@@ -80,4 +79,4 @@ export const updateIssueDescription: UpdateIssueDescription = new UpdateIssueDes
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
 export const leaveComment: LeaveComment = new LeaveCommentUseCase(issueRepository)
 export const fetchWorkflowRunTimeline: FetchWorkflowRunsTimeline = new FetchWorkflowRunsTimelineUseCase(workflowRunRepository)
-export const runPrototypingWorkflow: RunPrototypingWorkflow = new RunPrototypingWorkflowUseCase(issueRepository, prototypingWorkflow)
+export const runPrototypingWorkflow: RunPrototypingWorkflow = new RunPrototypingWorkflowUseCase(issueRepository, workflowRunRepository, prototypingWorkflow)
