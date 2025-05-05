@@ -16,7 +16,7 @@ export class CreateIssueUseCase implements CreateIssue {
 		try {
 			// Create a new issue
 			const issue: Issue = Issue.create('User', projectId, title, description)
-			const refinedIssue = await this.issueRefiningWorkflow.run(issue)
+			//const refinedIssue = await this.issueRefiningWorkflow.run(issue)
 
 			// Refine project details
 			
@@ -26,12 +26,12 @@ export class CreateIssueUseCase implements CreateIssue {
 			}
 
 			if (!project.detailsUpdated) {
-				const projectDetails = await this.projectRefiningWorkflow.run(refinedIssue)
+				const projectDetails = await this.projectRefiningWorkflow.run(issue)
 				project.updateDetails(projectDetails.title, projectDetails.description)
 				await this.projectRepository.save(project)
 			}
 			// Persist the issue in the database
-			const savedIssue = await this.issueRepository.save(refinedIssue)
+			const savedIssue = await this.issueRepository.save(issue)
 			
 			return savedIssue
 		} catch (error) {
