@@ -17,13 +17,8 @@ export class RunPrototypingWorkflowUseCase implements RunPrototypingWorkflow {
 		if (!issue) {
 			throw new Error("Issue not found")
 		}
-		const workflowRun = WorkflowRun.create(issue, "Prototyping")
-		const [savedWorkflowRun] = await Promise.all([
-			this.workflowRunRepository.save(workflowRun),
-			this.prototypingWorkflow.run(issue)
-		])
 
-		console.log(`Workflow run ${JSON.stringify(savedWorkflowRun)}`)
+		await this.prototypingWorkflow.run(issue)
 		
 	}
 }
