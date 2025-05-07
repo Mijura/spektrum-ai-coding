@@ -79,4 +79,4 @@ export const updateIssueDescription: UpdateIssueDescription = new UpdateIssueDes
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
 export const leaveComment: LeaveComment = new LeaveCommentUseCase(issueRepository)
 export const fetchWorkflowRunTimeline: FetchWorkflowRunsTimeline = new FetchWorkflowRunsTimelineUseCase(workflowRunRepository)
-export const runPrototypingWorkflow: RunPrototypingWorkflow = new RunPrototypingWorkflowUseCase(issueRepository, workflowRunRepository, prototypingWorkflow)
+export const runPrototypingWorkflow: RunPrototypingWorkflow = new RunPrototypingWorkflowUseCase(issueRepository, prototypingWorkflow)

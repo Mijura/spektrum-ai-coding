@@ -1,14 +1,12 @@
 import { RunPrototypingWorkflow } from "@domain/use-cases/workflow/run-workflow"
 import { PrototypingWorkflow } from "@infrastructure/workflows/prototyping/main"
 import { IssueRepository } from "@domain/repositories/issue-repository"
-import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
 
 export class RunPrototypingWorkflowUseCase implements RunPrototypingWorkflow {
 
 	constructor(
 		private readonly issueRepository: IssueRepository,
-		private readonly workflowRunRepository: WorkflowRunRepository,
 		private readonly prototypingWorkflow: PrototypingWorkflow
 	) {}
 
