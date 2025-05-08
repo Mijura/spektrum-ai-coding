@@ -73,11 +73,6 @@ export const DefaultPagination: PaginationData = {
     pageSize: 5,
 }
 
-export type TimeRangeData = {
-    startDate: string
-    endDate: string
-}
-
 export type ActivityData = {
     id: string
     type: ActivityType

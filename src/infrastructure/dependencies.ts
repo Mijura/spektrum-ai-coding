@@ -46,6 +46,8 @@ import { RunPrototypingWorkflowUseCase } from "@application/use-cases/workflow-r
 import { RunPrototypingWorkflow } from "@domain/use-cases/workflow-run/run-prototyping-workflow"
 import { ProjectRefiningWorkflow } from "./workflows/project-refining/main"
 import { WorkflowPort } from "@domain/workflows/workflow-port"
+import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow-run/fetch-heatmap"
+import { FetchWorkflowRunsHeatmapUseCase } from "@application/use-cases/workflow-run/fetch-heatmap"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -79,4 +81,5 @@ export const updateTaskDescription: UpdateTaskDescription = new UpdateTaskDescri
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
 export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository)
 export const fetchWorkflowRunTimeline: FetchWorkflowRunsTimeline = new FetchWorkflowRunsTimelineUseCase(workflowRunRepository)
+export const fetchWorkflowRunsHeatmap: FetchWorkflowRunsHeatmap = new FetchWorkflowRunsHeatmapUseCase(workflowRunRepository)
 export const runPrototypingWorkflow: RunPrototypingWorkflow = new RunPrototypingWorkflowUseCase(taskRepository, prototypingWorkflow)

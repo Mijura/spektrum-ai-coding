@@ -7,4 +7,6 @@ router.post("/workflow-run/prototyping", (req: Request, res: Response) => workfl
 
 router.get("/workflow-run/timeline", (req: Request, res: Response) => workflowRunController.fetchTimeline(req, res))
 
+router.get("/workflow-run/heatmap", (req: Request, res: Response) => workflowRunController.fetchHeatmap(req, res))
+
 export { router as workflowRunRouter }
