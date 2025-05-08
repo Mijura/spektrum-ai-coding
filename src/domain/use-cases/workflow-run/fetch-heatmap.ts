@@ -1,6 +1,5 @@
-import { WorkflowRun } from "@domain/entities/workflow/workflow-run";
-import { TimeRangeData } from "@domain/types/activity";
+import { TimeRangeData, WorkflowRunHeatmap } from "@domain/types/workflow"
 
 export interface FetchWorkflowRunsHeatmap {
-    execute(userId: string, timeRange: TimeRangeData): Promise<WorkflowRun[]>
+    execute(accountId: string, timeRange: TimeRangeData): Promise<WorkflowRunHeatmap[]>
 }

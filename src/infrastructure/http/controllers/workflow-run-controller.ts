@@ -1,6 +1,7 @@
 
 import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
-import { fetchWorkflowRunTimeline, runPrototypingWorkflow } from "@infrastructure/dependencies"
+import { WorkflowRunHeatmap } from "@domain/types/workflow"
+import { fetchWorkflowRunsHeatmap, fetchWorkflowRunTimeline, runPrototypingWorkflow } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
 export class WorkflowRunController {
@@ -25,6 +26,25 @@ export class WorkflowRunController {
         const activities: WorkflowRun[] = await fetchWorkflowRunTimeline.execute(projectId, pagination)
         
         res.json(activities)
+    }
+
+    async fetchHeatmap(req: Request, res: Response): Promise<void> {
+        const accountId = req.query.accountId as string
+        const startDate = req.query.startDate as string
+        const endDate = req.query.endDate as string
+
+        if (!accountId || !startDate || !endDate) {
+            res.status(400).json({ error: "Missing required parameters" })
+            return
+        }
+
+        try {
+            const heatmap: WorkflowRunHeatmap[] = await fetchWorkflowRunsHeatmap.execute(accountId, { startDate, endDate })
+            res.status(200).json(heatmap)
+        } catch (error) {
+            console.error("Error during fetching heatmap:", error)
+            res.status(500).json({ error: "Internal server error" })
+        }
     }
 
     async triggerPrototypingWorkflow(req: Request, res: Response): Promise<void> {

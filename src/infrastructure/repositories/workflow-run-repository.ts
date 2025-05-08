@@ -1,11 +1,11 @@
-import { Activity } from "@domain/entities/activity"
 import { AwsSigv4Signer } from "@opensearch-project/opensearch/aws"
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { Client } from "@opensearch-project/opensearch"
-import { ActivityMetadata, PaginationData, TimeRangeData } from "@domain/types/activity"
+import { PaginationData } from "@domain/types/activity"
 import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
-import { v4 as uuidv4 } from 'uuid'
+import { OpenSearchHeatmapResponse, WorkflowRunMapper } from "@infrastructure/mappers/workflow-run-mapper"
+import { TimeRangeData, WorkflowRunHeatmap } from "@domain/types/workflow"
 
 export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 
@@ -120,6 +120,51 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 
 		return response.body.hits.hits.map((hit: any) => hit._source) as WorkflowRun[]
 	}
+
+
+	/**
+	 * Heatmap: Get the number of workflow run per day for a given accountId
+	 */
+	async getHeatmap(accountId: string, timeRange: TimeRangeData): Promise<WorkflowRunHeatmap[]> {
+		const index = this.getIndex()
+		const client = this.getClient()
+
+		const startDate = timeRange.startDate
+		const endDate = timeRange.endDate
+
+		console.log(`Searching for heatmap data for accountId: ${accountId}, startDate: ${startDate}, endDate: ${endDate}`)
+		const query: any = {
+			size: 0, // We only need aggregations
+			query: {
+				bool: {
+					must: [{ term: { "accountId.keyword": accountId } }],
+					...(startDate && endDate ? { filter: [{ range: { occurredAt: { gte: startDate, lte: endDate } } }] } : {}),
+				},
+			},
+			aggregations: {
+				activities_per_day: {
+					date_histogram: { 
+						field: "occurredAt", 
+						calendar_interval: "day", 
+						min_doc_count: 0, // Fills missing days with zero counts
+						extended_bounds: {
+						  min: startDate, // Start date of the range
+						  max: endDate // End date of the range
+						} },
+				},
+			},
+		}
+
+		let response = await client.search({
+			index: index,
+			body: query,
+		})
+
+		const heatmap: WorkflowRunHeatmap[] = WorkflowRunMapper.parseHistogram(response.body as OpenSearchHeatmapResponse)
+
+		return heatmap
+	}
+
     
     
 }
