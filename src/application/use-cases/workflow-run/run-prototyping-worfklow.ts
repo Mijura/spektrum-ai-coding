@@ -1,7 +1,7 @@
-import { RunPrototypingWorkflow } from "@domain/use-cases/workflow/run-workflow"
+
 import { PrototypingWorkflow } from "@infrastructure/workflows/prototyping/main"
 import { IssueRepository } from "@domain/repositories/issue-repository"
-import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
+import { RunPrototypingWorkflow } from "@domain/use-cases/workflow-run/run-prototyping-workflow"
 
 export class RunPrototypingWorkflowUseCase implements RunPrototypingWorkflow {
 
@@ -10,13 +10,14 @@ export class RunPrototypingWorkflowUseCase implements RunPrototypingWorkflow {
 		private readonly prototypingWorkflow: PrototypingWorkflow
 	) {}
 
-	async run(issueId: string): Promise<void> {
+	async run(issueId: string, accountId: string): Promise<void> {
+		console.log("Running prototyping workflow for issue:", issueId, "and account:", accountId)
 		const issue = await this.issueRepository.findById(issueId)
 		if (!issue) {
 			throw new Error("Issue not found")
 		}
 
-		await this.prototypingWorkflow.run(issue)
+		await this.prototypingWorkflow.run(issue, accountId)
 		
 	}
 }

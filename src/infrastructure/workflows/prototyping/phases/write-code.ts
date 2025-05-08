@@ -8,7 +8,7 @@ export class WriteCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Writing code")
 
-        const { issue, sourceCode, workflowRun } = data
+        const { issue, sourceCode, workflowRun, accountId } = data
 
         issue.startedWork("DevOps Engineer", "WriteCode", "DevOps engineer is deploying the application for testing...")
 

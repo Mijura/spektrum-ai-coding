@@ -1,10 +1,10 @@
 import { Issue } from "@domain/entities/issue"
-import { Workflow } from "@domain/entities/workflow/workflow"
 import { WorkflowPhaseRegistry } from "@domain/entities/workflow/workflow-phase-registry"
 import { RefineIssue } from "./phases/refine-issue"
 import { WorkflowContext } from "@domain/entities/workflow/workflow-context"
+import { WorkflowPort } from "@domain/workflows/workflow-port"
 
-export class IssueRefiningWorkflow extends Workflow {
+export class IssueRefiningWorkflow implements WorkflowPort {
 
     async run(issue: Issue): Promise<Issue> {
         

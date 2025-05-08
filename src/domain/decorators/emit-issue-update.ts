@@ -1,4 +1,4 @@
-import { eventBus } from "@domain/services/event-bus";
+import { eventBus } from "@domain/services/event-bus"
 
 export function EmitIssueActivity() {
   return function (
@@ -6,19 +6,19 @@ export function EmitIssueActivity() {
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
-    const originalMethod = descriptor.value;
+    const originalMethod = descriptor.value
 
     descriptor.value = function (...args: any[]) {
-      const result = originalMethod.apply(this, args);
+      const result = originalMethod.apply(this, args)
 
-      const maybePromise = result instanceof Promise ? result : Promise.resolve(result);
+      const maybePromise = result instanceof Promise ? result : Promise.resolve(result)
 
       return maybePromise.then((res) => {
-        eventBus.emit("issue:update", this);
-        return res;
-      });
-    };
+        eventBus.emit("issue:update", this)
+        return res
+      })
+    }
 
-    return descriptor;
-  };
+    return descriptor
+  }
 }

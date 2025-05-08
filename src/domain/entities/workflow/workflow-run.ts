@@ -1,6 +1,8 @@
 import { WorkflowRunStatus } from "@domain/types/activity"
 import { Issue } from "../issue"
 import { v4 as uuidv4 } from "uuid"
+import { EmitWorkflowRunUpdate } from "@domain/decorators/emit-workflow-run-update"
+import { EmitNewWorkflowRun } from "@domain/decorators/emit-new-workflow-run"
 
 class WorkflowPhase {
     public readonly name: string
@@ -19,9 +21,10 @@ export class WorkflowRun {
     public readonly projectId: string
     public readonly issueId: string
     public readonly workflowId: string
+    public readonly accountId: string
     public status: WorkflowRunStatus
 	public phase: WorkflowPhase | null
-    public timestamp: string
+    public occurredAt: string
     public error?: string
 
     constructor(
@@ -30,32 +33,38 @@ export class WorkflowRun {
         projectId: string,
         issueId: string,
         workflowId: string,
+        accountId: string,
         status: WorkflowRunStatus,
         phase: WorkflowPhase | null,
-        timestamp: string,
+        occurredAt: string,
         error?: string
     ) { 
         this.id = id
         this.projectId = projectId
         this.issueId = issueId
         this.workflowId = workflowId
+        this.accountId = accountId
         this.title = title
         this.status = status
         this.phase = phase
-        this.timestamp = timestamp
+        this.occurredAt = occurredAt
         this.error = error
     }
 
-    static create(issue: Issue, workflowId: string): WorkflowRun {
+    static create(issue: Issue, workflowId: string, accountId: string): WorkflowRun {
         
         const id = uuidv4()
-        const timestamp = new Date().toISOString()
+        const occurredAt = new Date().toISOString()
         const status = WorkflowRunStatus.RUNNING
         const phase = null
 
-        return new WorkflowRun(id, issue.title, issue.projectId, issue.id, workflowId, status, phase, timestamp)
+        const run = new WorkflowRun(id, issue.title, issue.projectId, issue.id, workflowId, accountId, status, phase, occurredAt)
+        EmitNewWorkflowRun.emit(run)
+        
+        return run
     }
 
+    @EmitWorkflowRunUpdate()
     finishSuccessfully(): void {
         this.status = WorkflowRunStatus.SUCCEEDED
 
@@ -65,6 +74,7 @@ export class WorkflowRun {
         this.phase = phase
     }
 
+    @EmitWorkflowRunUpdate()
     finishWithError(error: string): void {
 
         this.status = WorkflowRunStatus.FAILED

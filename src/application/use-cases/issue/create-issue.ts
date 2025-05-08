@@ -1,15 +1,15 @@
 import { CreateIssue } from "@domain/use-cases/issue/create-issue"
 import { Issue } from "@domain/entities/issue"
 import { IssueRepository } from "@domain/repositories/issue-repository"
-import { Workflow } from "@domain/entities/workflow/workflow"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { Project } from "@domain/entities/project"
 import { ProjectDetails } from "@domain/types/project-details"
+import { WorkflowPort } from "@domain/workflows/workflow-port"
 export class CreateIssueUseCase implements CreateIssue {
 	constructor(
 		private readonly issueRepository: IssueRepository,
 		private readonly projectRepository: ProjectRepository,
-		private readonly projectRefiningWorkflow: Workflow
+		private readonly projectRefiningWorkflow: WorkflowPort
 	) {}
 
 	async execute(projectId: string, title: string, description: string): Promise<Issue> {
@@ -24,7 +24,8 @@ export class CreateIssueUseCase implements CreateIssue {
 			}
 
 			if (!project.detailsUpdated) {
-				const projectDetails: ProjectDetails = await this.projectRefiningWorkflow.run(issue)
+				const accountId = "User"
+				const projectDetails: ProjectDetails = await this.projectRefiningWorkflow.run(issue, accountId)
 				project.updateDetails(projectDetails.name, projectDetails.description)
 				await this.projectRepository.save(project)
 			}
