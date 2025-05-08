@@ -7,14 +7,14 @@ export class Activity<T> {
       public readonly id: string,
       public readonly type: ActivityType,
       public readonly projectId: string,
-      public readonly issueId: string,
+      public readonly taskId: string,
       public readonly userId: string,
       public readonly metadata: T,
       public readonly occurredAt: string
     ) {}
     
     static rehydrate(data: ActivityData): Activity<ActivityMetadata> {
-        return new Activity(data.id, data.type, data.projectId, data.issueId, data.userId, data.metadata, data.occurredAt)
+        return new Activity(data.id, data.type, data.projectId, data.taskId, data.userId, data.metadata, data.occurredAt)
     }
 
     protected static generateId() {

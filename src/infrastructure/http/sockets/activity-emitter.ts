@@ -1,7 +1,7 @@
 import { Server as HTTPServer } from "http"
 import { Server as SocketIOServer, Socket } from "socket.io"
 import { eventBus } from "@domain/services/event-bus"
-import { Issue } from "@domain/entities/issue"
+import { Task } from "@domain/entities/task"
 import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
 
 export function initializeActivityEmitter(server: HTTPServer) {
@@ -15,7 +15,7 @@ export function initializeActivityEmitter(server: HTTPServer) {
 	})
 
 	io.on("connection", (socket: Socket) => {
-		console.log(`New client connected to issue activity emitter: ${socket.id}`)
+		console.log(`New client connected to task activity emitter: ${socket.id}`)
 
 		socket.on("subscribe", (room: string) => {
 			console.log(`Client ${socket.id} subscribed to room: ${room}`)
@@ -37,9 +37,9 @@ export function initializeActivityEmitter(server: HTTPServer) {
 	})
 
 	// Listen once on server-side and forward to specific room
-	eventBus.on("issue:update", (issue: Issue) => {
-		console.log(`Broadcasting issue:update to room ${issue.projectId}`)
-		io.to(issue.projectId).emit("issue:update", issue)
+	eventBus.on("task:update", (task: Task) => {
+		console.log(`Broadcasting task:update to room ${task.projectId}`)
+		io.to(task.projectId).emit("task:update", task)
 	})
 
 		// Listen once on server-side and forward to specific room

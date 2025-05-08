@@ -1,21 +1,21 @@
 import { ActivityMetadata, ActivityType, FinishedWorkMetadata } from "@domain/types/activity";
 import { Activity } from "../activity";
-import { Issue } from "../issue";
+import { Task } from "../task";
 
 export class FinishedWork extends Activity<FinishedWorkMetadata> {
     constructor(
         id: string,
         type: ActivityType.FINISHED_WORK,
         projectId: string,
-        issueId: string,
+        taskId: string,
         workerId: string,
         metadata: FinishedWorkMetadata,
         occurredAt: string
     ) {
-        super(id, type, projectId, issueId, workerId, metadata, occurredAt)
+        super(id, type, projectId, taskId, workerId, metadata, occurredAt)
     }
 
-    static create(workerId: string, issue: Issue, phase: string, message: string): Activity<ActivityMetadata> {
+    static create(workerId: string, task: Task, phase: string, message: string): Activity<ActivityMetadata> {
         const id = this.generateId()
         const type = ActivityType.FINISHED_WORK
         const occurredAt = this.now()
@@ -26,6 +26,6 @@ export class FinishedWork extends Activity<FinishedWorkMetadata> {
             phase: phase
         }
 
-        return new FinishedWork(id, type, issue.projectId, issue.id, workerId, metadata, occurredAt)
+        return new FinishedWork(id, type, task.projectId, task.id, workerId, metadata, occurredAt)
     }
 }

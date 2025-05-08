@@ -1,7 +1,7 @@
 import { CommentLeftMetadata, ActivityType } from "@domain/types/activity"
 import { Activity } from "../activity"
 import { Comment } from "../../types/activity"
-import { Issue } from "../issue"
+import { Task } from "../task"
 
 export class CommentLeft extends Activity<CommentLeftMetadata> {
 
@@ -9,15 +9,15 @@ export class CommentLeft extends Activity<CommentLeftMetadata> {
         id: string,
         type: ActivityType.COMMENT_LEFT,
         projectId: string,
-        issueId: string,
+        taskId: string,
         userId: string,
         metadata: CommentLeftMetadata,
         occurredAt: string
     ) {
-        super(id, type, projectId, issueId, userId, metadata, occurredAt)
+        super(id, type, projectId, taskId, userId, metadata, occurredAt)
     }
 
-    static create(issue: Issue, comment: Comment): Activity<CommentLeftMetadata> {
+    static create(task: Task, comment: Comment): Activity<CommentLeftMetadata> {
 
         const id = this.generateId()
         const type = ActivityType.COMMENT_LEFT
@@ -28,7 +28,7 @@ export class CommentLeft extends Activity<CommentLeftMetadata> {
             authorId: comment.authorId
         }
 
-        return new CommentLeft(id, type, issue.projectId, issue.id, comment.authorId, metadata, occurredAt)
+        return new CommentLeft(id, type, task.projectId, task.id, comment.authorId, metadata, occurredAt)
     }
 
 }

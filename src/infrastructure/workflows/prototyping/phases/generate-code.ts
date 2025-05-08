@@ -3,9 +3,9 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
 import { WorkflowPhase } from "../../../../domain/entities/workflow/workflow-phase"
-import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
+import { TaskMapper } from "@infrastructure/mappers/task-mapper"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
-import { issueRepository } from "@infrastructure/dependencies"
+import { taskRepository } from "@infrastructure/dependencies"
 import { State } from "../main"
 import { z } from "zod"
 
@@ -16,7 +16,7 @@ const SourceCodeSchema = z.record(
 
 const DeveloperOutputSchema = z.object({
 	sourceCode: SourceCodeSchema,
-	comment: z.string().describe("The comment to be added to the issue. It's a short summary of the changes you made from the user's perspective")
+	comment: z.string().describe("The comment to be added to the task. It's a short summary of the changes you made from the user's perspective")
 })
 export class GenerateCode extends WorkflowPhase {
     name: string = "GenerateCode"
@@ -24,9 +24,9 @@ export class GenerateCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Generating code")
         
-        const { issue, sourceCode, workflowRun, accountId } = data
+        const { task, sourceCode, workflowRun, accountId } = data
 
-        issue.startedWork("React Developer", "GenerateCode", "Developer is developing the feature...")
+        task.startedWork("React Developer", "GenerateCode", "Developer is developing the feature...")
 
         const parser = StructuredOutputParser.fromZodSchema(DeveloperOutputSchema)
 	
@@ -36,7 +36,7 @@ export class GenerateCode extends WorkflowPhase {
                 You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
     
                 ### **Your Task:**
-                1. ** Analyze issue details, activities, and comments." Figure out what should be done to resolve the issue.
+                1. ** Analyze task details, activities, and comments." Figure out what should be done to resolve the task.
                     ** You can recognize your prior activities by author name 'React Developer' **
                 
                 ****Analyze the current source code** to determine if the required functionality already exists.
@@ -52,7 +52,7 @@ export class GenerateCode extends WorkflowPhase {
     
     
                 ### **Details**
-                - **Issue Details:** {issue}
+                - **Task Details:** {task}
                 - **Current Source Code:** {sourceCode}
     
                 Important:
@@ -75,17 +75,17 @@ export class GenerateCode extends WorkflowPhase {
         ])
     
         const output = await chain.invoke({
-            issue: IssueMapper.toRecord(issue),
+            task: TaskMapper.toRecord(task),
             sourceCode: sourceCode,
             outputSchema: parser.getFormatInstructions(),
         })
     
-        issue.finishedWork("React Developer", "GenerateCode", "Finished with coding")
-        issue.leaveComment("React Developer", output.comment)
-        await issueRepository.save(issue)
+        task.finishedWork("React Developer", "GenerateCode", "Finished with coding")
+        task.leaveComment("React Developer", output.comment)
+        await taskRepository.save(task)
 
         const updatedState: State = {
-            issue,
+            task,
             sourceCode: output.sourceCode,
             workflowRun,
             accountId

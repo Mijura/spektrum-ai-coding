@@ -1,6 +1,6 @@
 import { eventBus } from "@domain/services/event-bus"
 
-export function EmitIssueActivity() {
+export function EmitTaskActivity() {
   return function (
     target: any,
     propertyKey: string,
@@ -14,7 +14,7 @@ export function EmitIssueActivity() {
       const maybePromise = result instanceof Promise ? result : Promise.resolve(result)
 
       return maybePromise.then((res) => {
-        eventBus.emit("issue:update", this)
+        eventBus.emit("task:update", this)
         return res
       })
     }

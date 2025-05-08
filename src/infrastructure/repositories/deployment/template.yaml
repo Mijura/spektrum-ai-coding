@@ -39,10 +39,10 @@ Resources:
           Projection:
             ProjectionType: ALL
 
-  IssueTable:
+  TaskTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: Issue
+      TableName: Task
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: id

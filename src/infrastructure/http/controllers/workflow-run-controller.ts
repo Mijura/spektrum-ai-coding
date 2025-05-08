@@ -29,17 +29,17 @@ export class WorkflowRunController {
 
     async triggerPrototypingWorkflow(req: Request, res: Response): Promise<void> {
         
-        const issueId = req.body.issueId
+        const taskId = req.body.taskId
         const accountId = req.body.accountId
 
-        console.log("Running prototyping workflow for issue:", issueId, "and account:", accountId)
-        if (!issueId || !accountId) {
+        console.log("Running prototyping workflow for task:", taskId, "and account:", accountId)
+        if (!taskId || !accountId) {
             res.status(400).json({ error: "Missing required parameters" })
             return
         }
 
 		try {
-            runPrototypingWorkflow.run(issueId, accountId)
+            runPrototypingWorkflow.run(taskId, accountId)
             res.status(200).json({ message: "Workflow run initiated" })
 		} catch (error) {
 			console.error("Error during development workflow:", error)

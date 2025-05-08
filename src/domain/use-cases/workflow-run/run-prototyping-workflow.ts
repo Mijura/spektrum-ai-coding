@@ -1,3 +1,3 @@
 export interface RunPrototypingWorkflow {
-	run(issueId: string, accountId: string): Promise<void>
+	run(taskId: string, accountId: string): Promise<void>
 }

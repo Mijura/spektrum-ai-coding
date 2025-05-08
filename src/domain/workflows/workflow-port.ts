@@ -1,5 +1,5 @@
-import { Issue } from "@domain/entities/issue"
+import { Task } from "@domain/entities/task"
 
 export interface WorkflowPort {
-	run(issue: Issue, accountId?: string): Promise<any>
+	run(task: Task, accountId?: string): Promise<any>
 }

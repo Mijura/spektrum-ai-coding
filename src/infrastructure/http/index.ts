@@ -4,7 +4,7 @@ dotenv.config()
 
 
 import { projectRouter } from "@infrastructure/http/routes/project-routes"
-import { issueRouter } from "@infrastructure/http/routes/issue-routes"
+import { taskRouter } from "@infrastructure/http/routes/task-routes"
 import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
 import { serveProjectFilesMiddleware } from "@infrastructure/http/middleware/serve-project-files"
 import { workflowRunRouter } from "./routes/workflow-run-routes"
@@ -20,7 +20,7 @@ app.use(corsMiddleware)
 app.use(express.json())
 // Routes
 app.use("/", projectRouter)
-app.use("/", issueRouter)
+app.use("/", taskRouter)
 app.use("/", workflowRunRouter)
 app.use("/:id", serveProjectFilesMiddleware)
 

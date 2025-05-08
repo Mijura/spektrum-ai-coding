@@ -3,22 +3,22 @@ import { WorkflowPhaseRegistry } from "../../../domain/entities/workflow/workflo
 import { WriteCode } from "./phases/write-code"
 import { GenerateCode } from "./phases/generate-code"
 import { WorkflowContext } from "../../../domain/entities/workflow/workflow-context"
-import { Issue } from "@domain/entities/issue"
+import { Task } from "@domain/entities/task"
 import { SourceCode } from "@domain/types/source-code"
 import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
 import { WorkflowPort } from "@domain/workflows/workflow-port"
 export interface State {
-	issue: Issue
+	task: Task
 	sourceCode: SourceCode
     workflowRun: WorkflowRun
     accountId: string
 }
 export class PrototypingWorkflow implements WorkflowPort {
     
-    async run(issue: Issue, accountId: string): Promise<void> {
-        const sourceCode = await frontendDevelopmentService.fetchSourceCode(issue.projectId)
+    async run(task: Task, accountId: string): Promise<void> {
+        const sourceCode = await frontendDevelopmentService.fetchSourceCode(task.projectId)
         
-		const workflowRun = WorkflowRun.create(issue, "Prototyping", accountId)
+		const workflowRun = WorkflowRun.create(task, "Prototyping", accountId)
 
 		await workflowRunRepository.save(workflowRun)
         // Register all phases
@@ -28,7 +28,7 @@ export class PrototypingWorkflow implements WorkflowPort {
         const context = new WorkflowContext(new GenerateCode())
         
         await context.execute({
-            issue,
+            task,
             sourceCode: sourceCode,
             workflowRun,
             accountId

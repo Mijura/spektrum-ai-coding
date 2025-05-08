@@ -3,26 +3,26 @@ import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { gpt41Nano } from "@infrastructure/workflows/models"
 import { z } from "zod"
-import { IssueMapper } from "@infrastructure/mappers/issue-mapper"
+import { TaskMapper } from "@infrastructure/mappers/task-mapper"
 import { WorkflowPhase } from "../../../../domain/entities/workflow/workflow-phase"
 import { State } from "../../prototyping/main"
-import { Issue } from "@domain/entities/issue"
+import { Task } from "@domain/entities/task"
 
 const ProductOwnerSchema = z.object({
-	issue: z.object({
-		title: z.string().describe("Short and concise title of the issue."),
+	task: z.object({
+		title: z.string().describe("Short and concise title of the task."),
 		description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
 })
 
-export class RefineIssue extends WorkflowPhase {
-    name: string = "RefineIssue"
+export class RefineTask extends WorkflowPhase {
+    name: string = "RefineTask"
 
-    async execute(data: State): Promise<Issue> {
+    async execute(data: State): Promise<Task> {
 
-        console.log("Refining issue")
-        const { issue } = data
+        console.log("Refining task")
+        const { task } = data
 
-        issue.startedWork("Product Owner", "RefineIssue", "Product owner is updating issue details")
+        task.startedWork("Product Owner", "RefineTask", "Product owner is updating task details")
 
         
         const parser = StructuredOutputParser.fromZodSchema(ProductOwnerSchema)
@@ -34,14 +34,14 @@ export class RefineIssue extends WorkflowPhase {
                 You are an product owner expert on React project with Tailwind CSS and Framer Motion.
                 
                 ### **Your Task:**
-                1) Analyze issue title, issue description provided by user.
-                2) Refine issue title and description based on the user request.
+                1) Analyze task title, task description provided by user.
+                2) Refine task title and description based on the user request.
     
-                ### **Issue Details:** {issue}
+                ### **Task Details:** {task}
 
                 You must return JSON as response. Here is example of valid response:
                 {{
-                    "issue": 
+                    "task": 
                         {{
                             title: 'Enable user to add notes and display it after adding', 
                             description: 'Implement note adding and displaying functioanlity.'
@@ -53,17 +53,17 @@ export class RefineIssue extends WorkflowPhase {
         ])
     
         const response = await chain.invoke({
-            issue: IssueMapper.toRecord(issue),
+            task: TaskMapper.toRecord(task),
             outputSchema: parser.getFormatInstructions(),
         })
 
-        issue.finishedWork("Product Owner", "RefineIssue", "Finished updating issue details")
+        task.finishedWork("Product Owner", "RefineTask", "Finished updating task details")
    
         
-        issue.updateTitle("Product Owner", response.issue.title)
-        issue.updateDescription("Product Owner", response.issue.description)
+        task.updateTitle("Product Owner", response.task.title)
+        task.updateDescription("Product Owner", response.task.description)
 
-        return issue
+        return task
 
 
     }

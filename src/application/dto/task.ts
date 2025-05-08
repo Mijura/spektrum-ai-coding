@@ -1,12 +1,12 @@
 import { ActivityData } from "@domain/types/activity"
-import { IssueStatus } from "@domain/types/issue"
-export interface IssueDto {
+import { TaskStatus } from "@domain/types/task"
+export interface TaskDto {
 	id: string
 	title: string
 	description: string
 	projectId: string
 	created: string
 	updated: string | null
-	status: IssueStatus
+	status: TaskStatus
 	activities: ActivityData[]
 }

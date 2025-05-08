@@ -1,23 +1,23 @@
 import { ActivityMetadata, ActivityType } from "@domain/types/activity"
-import { IssueStatus } from "@domain/types/issue"
+import { TaskStatus } from "@domain/types/task"
 
 export type ActivityRecord = {
 	id: string
 	type: ActivityType
 	projectId: string
-	issueId: string
+	taskId: string
 	userId: string
 	metadata: ActivityMetadata
 	occurredAt: string
 }
 
-export interface IssueRecord {
+export interface TaskRecord {
 	id: string
 	title: string
 	description: string
 	projectId: string
 	created: string
 	updated: string | null
-	status: IssueStatus
+	status: TaskStatus
 	activities: ActivityRecord[]
 }

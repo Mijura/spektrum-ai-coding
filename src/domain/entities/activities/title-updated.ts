@@ -1,6 +1,6 @@
 import { ActivityType, TitleUpdatedMetadata } from "@domain/types/activity"
 import { Activity } from "../activity"
-import { Issue } from "../issue"
+import { Task } from "../task"
 
 export class TitleUpdated extends Activity<TitleUpdatedMetadata> {
 
@@ -8,15 +8,15 @@ export class TitleUpdated extends Activity<TitleUpdatedMetadata> {
         id: string, 
         type: ActivityType.TITLE_UPDATED, 
         projectId: string,
-        issueId: string,
+        taskId: string,
         userId: string, 
         metadata: TitleUpdatedMetadata, 
         occurredAt: string
     ) {
-        super(id, type, projectId, issueId, userId, metadata, occurredAt)
+        super(id, type, projectId, taskId, userId, metadata, occurredAt)
     }
 
-    static create(userId: string, issue: Issue, newTitle: string): Activity<TitleUpdatedMetadata> {
+    static create(userId: string, task: Task, newTitle: string): Activity<TitleUpdatedMetadata> {
 		
         const id = this.generateId()
 		const type = ActivityType.TITLE_UPDATED
@@ -25,10 +25,10 @@ export class TitleUpdated extends Activity<TitleUpdatedMetadata> {
         const message = `${userId} changed title to "${newTitle}"`
 		const metadata: TitleUpdatedMetadata = {
 			message: message,
-			oldTitle: issue.title,
+			oldTitle: task.title,
 			newTitle: newTitle
 		}
 
-		return new TitleUpdated(id, type, issue.projectId, issue.id, userId, metadata, occurredAt)
+		return new TitleUpdated(id, type, task.projectId, task.id, userId, metadata, occurredAt)
     }
 }

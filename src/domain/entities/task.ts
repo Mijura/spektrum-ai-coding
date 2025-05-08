@@ -2,24 +2,24 @@
 import { ActivityMetadata } from "@domain/types/activity"
 import { Activity } from "./activity"
 import { v4 as uuidv4 } from 'uuid'
-import { IssueCreatedActivity } from "./activities/issue-created"
+import { TaskCreatedActivity } from "./activities/task-created"
 import { CommentLeft } from "./activities/comment-left"
 import { TitleUpdated } from "./activities/title-updated"
 import { DescriptionUpdated } from "./activities/description-updated"
 import { Comment } from "@domain/types/activity"
 import { StartedWork } from "./activities/started-work"
 import { FinishedWork } from "./activities/finished-work"
-import { IssueStatus } from "@domain/types/issue"
-import { EmitIssueActivity } from "@domain/decorators/emit-issue-update"
+import { TaskStatus } from "@domain/types/task"
+import { EmitTaskActivity } from "@domain/decorators/emit-task-update"
 
-export class Issue {
+export class Task {
 	public readonly id: string
     public readonly created: string
     public updated: string | null
     public title: string
     public description: string
     public projectId: string
-    public status: IssueStatus
+    public status: TaskStatus
 	private activities: Activity<ActivityMetadata>[]
 	private assignedTo?: string
 
@@ -29,7 +29,7 @@ export class Issue {
 		projectId: string,
 		title: string,
 		description: string,
-		status: IssueStatus,
+		status: TaskStatus,
 		updated: string | null,
 		activities: Activity<ActivityMetadata>[]
 	) {
@@ -43,21 +43,21 @@ export class Issue {
 		this.activities = activities
 	}
 
-	@EmitIssueActivity()
+	@EmitTaskActivity()
 	updateTitle(userId: string, newTitle: string){
 		this.title = newTitle
 		this.updated = new Date().toISOString()
 		this.activities.push(TitleUpdated.create(userId, this, newTitle))
 	}
 
-	@EmitIssueActivity()
+	@EmitTaskActivity()
 	updateDescription(userId: string, newDescription: string){
 		this.description = newDescription
 		this.updated = new Date().toISOString()
 		this.activities.push(DescriptionUpdated.create(userId, this, newDescription))
 	}
 
-	@EmitIssueActivity()
+	@EmitTaskActivity()
 	leaveComment(authorId: string, commentText: string) {
 		const comment: Comment = {
 			authorId: authorId, 
@@ -67,28 +67,28 @@ export class Issue {
 		this.activities.push(commentActivity)
 	}
 
-	@EmitIssueActivity()
+	@EmitTaskActivity()
 	startedWork(workerId: string, phase: string, message: string): StartedWork {
-		if (this.status === IssueStatus.WORK_IN_PROGRESS) {
-			throw new Error("Worker is already working on a issue")
+		if (this.status === TaskStatus.WORK_IN_PROGRESS) {
+			throw new Error("Worker is already working on a task")
 		}
 
 		const activity = StartedWork.create(workerId, this, phase, message)
 		
 		this.activities.push(activity)
 		this.assignedTo = workerId
-		this.status = IssueStatus.WORK_IN_PROGRESS
+		this.status = TaskStatus.WORK_IN_PROGRESS
 		return activity as StartedWork
 	}
 
-	@EmitIssueActivity()
+	@EmitTaskActivity()
 	finishedWork(workerId: string, phase: string, message: string): FinishedWork {
 		if (!this.assignedTo) {
-			throw new Error("Worker has not started working on this issue")
+			throw new Error("Worker has not started working on this task")
 		}
 
 		if (this.assignedTo !== workerId) {
-			throw new Error("Worker is not working on this issue")
+			throw new Error("Worker is not working on this task")
 		}
 
 		const activity = FinishedWork.create(workerId, this, phase, message)
@@ -97,7 +97,7 @@ export class Issue {
 			this.activities.splice(startedWorkActivity, 1, activity)
 		}
 		this.assignedTo = undefined
-		this.status = IssueStatus.READY_FOR_NEXT_PHASE
+		this.status = TaskStatus.READY_FOR_NEXT_PHASE
 		return activity as FinishedWork
 	}
 
@@ -105,28 +105,28 @@ export class Issue {
 		return this.activities
 	}
 
-	/** Rehydrate an issue from persisted data */
+	/** Rehydrate an task from persisted data */
 	static rehydrate( data: {
 			id: string, 
 			created: string, 
 			projectId: string, 
 			title: string, 
 			description: string, 
-			status: IssueStatus, 
+			status: TaskStatus, 
 			updated: string | null, 
 			activities: Activity<ActivityMetadata>[]
 		}
-	): Issue {
-		return new Issue(data.id, data.created, data.projectId, data.title, data.description, data.status, data.updated, data.activities)
+	): Task {
+		return new Task(data.id, data.created, data.projectId, data.title, data.description, data.status, data.updated, data.activities)
 	}
 
-	/** Create a new issue */
-	static create(userId: string, projectId: string, title: string, description: string): Issue {
+	/** Create a new task */
+	static create(userId: string, projectId: string, title: string, description: string): Task {
 		const id = uuidv4()
 		const created = new Date().toISOString()
-		const issue = new Issue(id, created, projectId, title, description, IssueStatus.TODO, null, [])
-		issue.activities.push(IssueCreatedActivity.create(userId, issue))
-		return issue
+		const task = new Task(id, created, projectId, title, description, TaskStatus.TODO, null, [])
+		task.activities.push(TaskCreatedActivity.create(userId, task))
+		return task
 	}
 
 }

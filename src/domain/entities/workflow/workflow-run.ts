@@ -1,5 +1,5 @@
 import { WorkflowRunStatus } from "@domain/types/activity"
-import { Issue } from "../issue"
+import { Task } from "../task"
 import { v4 as uuidv4 } from "uuid"
 import { EmitWorkflowRunUpdate } from "@domain/decorators/emit-workflow-run-update"
 import { EmitNewWorkflowRun } from "@domain/decorators/emit-new-workflow-run"
@@ -19,7 +19,7 @@ export class WorkflowRun {
     public readonly id: string
     public title: string
     public readonly projectId: string
-    public readonly issueId: string
+    public readonly taskId: string
     public readonly workflowId: string
     public readonly accountId: string
     public status: WorkflowRunStatus
@@ -31,7 +31,7 @@ export class WorkflowRun {
         id: string,
         title: string,
         projectId: string,
-        issueId: string,
+        taskId: string,
         workflowId: string,
         accountId: string,
         status: WorkflowRunStatus,
@@ -41,7 +41,7 @@ export class WorkflowRun {
     ) { 
         this.id = id
         this.projectId = projectId
-        this.issueId = issueId
+        this.taskId = taskId
         this.workflowId = workflowId
         this.accountId = accountId
         this.title = title
@@ -51,14 +51,14 @@ export class WorkflowRun {
         this.error = error
     }
 
-    static create(issue: Issue, workflowId: string, accountId: string): WorkflowRun {
+    static create(task: Task, workflowId: string, accountId: string): WorkflowRun {
         
         const id = uuidv4()
         const occurredAt = new Date().toISOString()
         const status = WorkflowRunStatus.RUNNING
         const phase = null
 
-        const run = new WorkflowRun(id, issue.title, issue.projectId, issue.id, workflowId, accountId, status, phase, occurredAt)
+        const run = new WorkflowRun(id, task.title, task.projectId, task.id, workflowId, accountId, status, phase, occurredAt)
         EmitNewWorkflowRun.emit(run)
         
         return run

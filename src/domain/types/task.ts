@@ -1,5 +1,5 @@
 
-export enum IssueStatus {
+export enum TaskStatus {
     TODO = "Todo",
     WORK_IN_PROGRESS = "Work in progress",
 	READY_FOR_NEXT_PHASE = "Ready for next phase",
@@ -14,13 +14,13 @@ export interface CommentData {
 	editedAt: string | null
 }
 
-export interface IssueDto {
+export interface TaskDto {
 	id: string
 	title: string
 	description: string
 	projectId: string
 	created: string
 	updated: string | null
-	status: IssueStatus
+	status: TaskStatus
 	comments: CommentData[]
 }
