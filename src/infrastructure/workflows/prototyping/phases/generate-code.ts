@@ -24,7 +24,7 @@ export class GenerateCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Generating code")
         
-        const { issue, sourceCode, workflowRun } = data
+        const { issue, sourceCode, workflowRun, accountId } = data
 
         issue.startedWork("React Developer", "GenerateCode", "Developer is developing the feature...")
 
@@ -87,7 +87,8 @@ export class GenerateCode extends WorkflowPhase {
         const updatedState: State = {
             issue,
             sourceCode: output.sourceCode,
-            workflowRun
+            workflowRun,
+            accountId
         }
 
         console.log("Transitioning to WriteCode")

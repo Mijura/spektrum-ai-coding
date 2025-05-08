@@ -22,7 +22,6 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBIssueRepository } from "@infrastructure/repositories/issue-repository"
 
-import { Workflow } from "@domain/entities/workflow/workflow"
 import { PrototypingWorkflow } from "./workflows/prototyping/main"
 import { LocalFileSystem } from "./workflows/prototyping/services/local-file-system"
 import { YarnPackageManager } from "./workflows/prototyping/services/yarn-package-manager"
@@ -44,8 +43,9 @@ import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow-run/fetch-
 import { FetchWorkflowRunsTimelineUseCase } from "@application/use-cases/workflow-run/fetch-timeline"
 import { WorkflowRunController } from "./http/controllers/workflow-run-controller"
 import { RunPrototypingWorkflowUseCase } from "@application/use-cases/workflow-run/run-prototyping-worfklow"
-import { RunPrototypingWorkflow } from "@domain/use-cases/workflow/run-workflow"
+import { RunPrototypingWorkflow } from "@domain/use-cases/workflow-run/run-prototyping-workflow"
 import { ProjectRefiningWorkflow } from "./workflows/project-refining/main"
+import { WorkflowPort } from "@domain/workflows/workflow-port"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -64,8 +64,8 @@ export const issueRepository: IssueRepository = new DynamoDBIssueRepository()
 export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkflowRunRepository()
 
 // Workflows
-export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
-export const projectRefiningWorkflow: Workflow = new ProjectRefiningWorkflow()
+export const prototypingWorkflow: WorkflowPort = new PrototypingWorkflow()
+export const projectRefiningWorkflow: WorkflowPort = new ProjectRefiningWorkflow()
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(frontendDevelopmentService, projectRepository)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)

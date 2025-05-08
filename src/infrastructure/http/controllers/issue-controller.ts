@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { IssueDtoMapper } from "@application/mappers/issue-dto-mapper"
-import { leaveComment, prototypingWorkflow, fetchProject, updateIssueDescription, fetchIssues, createIssue, updateIssueTitle } from "@infrastructure/dependencies"
+import { leaveComment, prototypingWorkflow, updateIssueDescription, fetchIssues, createIssue, updateIssueTitle } from "@infrastructure/dependencies"
 import { IssueDto } from "@application/dto/issue"
 import { Issue } from "@domain/entities/issue"
 
@@ -60,11 +60,11 @@ export class IssueController {
 
     }
 
-	async leaveComment(req: Request, res: Response): Promise<void> {
+	async leaveCommentAndRunPrototypingWorkflow(req: Request, res: Response): Promise<void> {
 		try {
 			const { issueId, authorId, commentText } = req.body
 			const issue = await leaveComment.execute(issueId, authorId, commentText)
-			await prototypingWorkflow.run(issue)
+			prototypingWorkflow.run(issue, authorId)
 			res.status(200).json(issue)
 		} catch (error) {
 			console.error("Error adding comment:", error)

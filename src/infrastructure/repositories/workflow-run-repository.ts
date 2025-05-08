@@ -35,32 +35,44 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		return index
 	}
 
+	private async createIndexIfNotExists(index: string) {
+		const client = this.getClient();
+	
+		const exists = await client.indices.exists({ index });
+		if (!(exists.body ?? exists)) {
+			const response = await client.indices.create({ index });
+			console.log(`Index created: ${JSON.stringify(response.body)}`);
+		}
+	}
+
     async save(workflowRun: WorkflowRun): Promise<WorkflowRun> {
 		const index = this.getIndex()
 
         const client = this.getClient()
 
-		console.log(`Saving workflow run: ${JSON.stringify(workflowRun)}`)
+		console.log(`Creating workflow run: ${JSON.stringify(workflowRun)}`)
 		
 		// create index if it doesn't already exist
-		if (!(await client.indices.exists({ index })).body) {
+		await this.createIndexIfNotExists(index);
 
-            const createIndexResponse = await client.indices.create({
-                index,
-            })
-
-			console.log(createIndexResponse.body)
+		if (!workflowRun.id) {
+			throw new Error("workflowRun.id is required for saving. Missing ID may cause unintended document creation.");
 		}
 
-		const response = await client.index({
-			id: uuidv4(),
-			index,
-			body: workflowRun,
-		})
+		console.log(`Saving workflow run: ${JSON.stringify(workflowRun)}`);
 
-        if(response.statusCode !== 201) {
-            throw new Error(`Failed to save activity: ${JSON.stringify(response)}`)
-        }
+		const response = await client.update({
+			index,
+			id: workflowRun.id,
+			body: {
+				doc: workflowRun,
+				doc_as_upsert: true
+			}
+		});
+	
+		if (response.statusCode !== 200 && response.statusCode !== 201) {
+			throw new Error(`Failed to save workflow run: ${JSON.stringify(response)}`);
+		}
 
 		return response.body as unknown as WorkflowRun
     }
