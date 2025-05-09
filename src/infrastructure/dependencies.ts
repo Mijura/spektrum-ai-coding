@@ -40,7 +40,6 @@ import { LeaveComment } from "@domain/use-cases/task/leave-comment"
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
 import { OpenSearchWorkflowRunRepository } from "./repositories/workflow-run-repository"
 import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow-run/fetch-timeline"
-import { FetchWorkflowRunsTimelineUseCase } from "@application/use-cases/workflow-run/fetch-timeline"
 import { WorkflowRunController } from "./http/controllers/workflow-run-controller"
 import { RunPrototypingWorkflowUseCase } from "@application/use-cases/workflow-run/run-prototyping-worfklow"
 import { RunPrototypingWorkflow } from "@domain/use-cases/workflow-run/run-prototyping-workflow"
@@ -48,6 +47,8 @@ import { ProjectRefiningWorkflow } from "./workflows/project-refining/main"
 import { WorkflowPort } from "@domain/workflows/workflow-port"
 import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow-run/fetch-heatmap"
 import { FetchWorkflowRunsHeatmapUseCase } from "@application/use-cases/workflow-run/fetch-heatmap"
+import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/workflow-run/fetch-project-timeline"
+import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/workflow-run/fetch-account-timeline"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -80,6 +81,7 @@ export const updateTaskTitle: UpdateTaskTitle = new UpdateTaskTitleUseCase(taskR
 export const updateTaskDescription: UpdateTaskDescription = new UpdateTaskDescriptionUseCase(taskRepository)
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
 export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository)
-export const fetchWorkflowRunTimeline: FetchWorkflowRunsTimeline = new FetchWorkflowRunsTimelineUseCase(workflowRunRepository)
+export const fetchTimelineByProjectId: FetchWorkflowRunsTimeline = new FetchTimelineByProjectIdUseCase(workflowRunRepository)
+export const fetchTimelineByAccountId: FetchWorkflowRunsTimeline = new FetchTimelineByAccountIdUseCase(workflowRunRepository)
 export const fetchWorkflowRunsHeatmap: FetchWorkflowRunsHeatmap = new FetchWorkflowRunsHeatmapUseCase(workflowRunRepository)
 export const runPrototypingWorkflow: RunPrototypingWorkflow = new RunPrototypingWorkflowUseCase(taskRepository, prototypingWorkflow)

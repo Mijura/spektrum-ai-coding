@@ -93,7 +93,7 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		return response.body as unknown as WorkflowRun
     }
 
-	async getTimeline(projectId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
+	async getTimelineByProjectId(projectId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
 		const index = this.getIndex()
 
 		const client = this.getClient()
@@ -120,6 +120,34 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 
 		return response.body.hits.hits.map((hit: any) => hit._source) as WorkflowRun[]
 	}
+
+	async getTimelineByAccountId(accountId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
+		const index = this.getIndex()
+
+		const client = this.getClient()
+		const from = (pagination.pageNumber - 1) * pagination.pageSize
+
+		console.log(`Fetching workflow run timeline for accountId: ${accountId} with pagination: ${JSON.stringify(pagination)}`)
+
+		const query: any = {
+			size: pagination.pageSize,
+			from,
+			query: {
+				bool: {
+					must: [{ term: { "accountId.keyword": accountId } }],
+				},
+			},
+			sort: [{ occurredAt: "desc" }],
+		}
+
+		let response = await client.search({
+			index: index,
+			body: query,
+		})
+
+
+		return response.body.hits.hits.map((hit: any) => hit._source) as WorkflowRun[]
+	}	
 
 
 	/**
