@@ -1,14 +1,14 @@
 
 import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
 import { WorkflowRunHeatmap } from "@domain/types/workflow"
-import { fetchWorkflowRunsHeatmap, fetchWorkflowRunTimeline, runPrototypingWorkflow } from "@infrastructure/dependencies"
+import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchWorkflowRunsHeatmap, runPrototypingWorkflow } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
 export class WorkflowRunController {
 
     constructor() {}
 
-    async fetchTimeline(req: Request, res: Response): Promise<void> {
+    async fetchTimelineByProjectId(req: Request, res: Response): Promise<void> {
         const projectId  = req.query.projectId as string
         const page = req.query.page as string
         const size = req.query.size as string
@@ -23,11 +23,31 @@ export class WorkflowRunController {
             pageSize: parseInt(size)
         }
 
-        const activities: WorkflowRun[] = await fetchWorkflowRunTimeline.execute(projectId, pagination)
+        const activities: WorkflowRun[] = await fetchTimelineByProjectId.execute(projectId, pagination)
         
         res.json(activities)
     }
 
+    async fetchTimelineByAccountId(req: Request, res: Response): Promise<void> {
+        const accountId = req.query.accountId as string
+        const page = req.query.page as string
+        const size = req.query.size as string
+
+        if (!accountId || !page || !size) {
+            res.status(400).json({ error: "Missing required parameters" })
+            return
+        }
+        
+        const pagination = {
+            pageNumber: parseInt(page),
+            pageSize: parseInt(size)
+        }
+
+        const activities: WorkflowRun[] = await fetchTimelineByAccountId.execute(accountId, pagination)
+        
+        res.json(activities)
+        
+    }
     async fetchHeatmap(req: Request, res: Response): Promise<void> {
         const accountId = req.query.accountId as string
         const startDate = req.query.startDate as string

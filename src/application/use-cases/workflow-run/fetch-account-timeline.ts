@@ -3,10 +3,10 @@ import { WorkflowRunRepository } from "@domain/repositories/workflow-run-reposit
 import { PaginationData } from "@domain/types/activity"
 import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow-run/fetch-timeline"
 
-export class FetchWorkflowRunsTimelineUseCase implements FetchWorkflowRunsTimeline {
+export class FetchTimelineByAccountIdUseCase implements FetchWorkflowRunsTimeline {
     constructor(private readonly workflowRunRepository: WorkflowRunRepository) {}
 
-    async execute(projectId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
-        return await this.workflowRunRepository.getTimeline(projectId, pagination)
+    async execute(accountId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
+        return await this.workflowRunRepository.getTimelineByAccountId(accountId, pagination)
     }
-}   
+}
