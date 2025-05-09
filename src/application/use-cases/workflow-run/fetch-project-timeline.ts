@@ -9,4 +9,4 @@ export class FetchTimelineByProjectIdUseCase implements FetchWorkflowRunsTimelin
     async execute(projectId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
         return await this.workflowRunRepository.getTimelineByProjectId(projectId, pagination)
     }
-}   
+}
