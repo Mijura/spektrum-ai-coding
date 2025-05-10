@@ -35,21 +35,24 @@ export class GenerateCode extends WorkflowPhase {
                 ### Role:
                 You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
     
-                ### **Your Task:**
+                ### **Your Tasks:**
                 1. ** Analyze task details, activities, and comments." Figure out what should be done to resolve the task.
                     ** You can recognize your prior activities by author name 'React Developer' **
                 
                 ****Analyze the current source code** to determine if the required functionality already exists.
                 - If the functionality exists, modify it as needed.
-                - If the functionality does not exist, create new code to implement it.
+                - If the functionality does not exist, create new components, hooks, or utilities as required.
                 
                 2. **Modify or create source files as needed**:
                 - Create new components, hooks, or utilities as required.
     
-                3. **If you are using a new dependency, you should add it to the package.json file.**:
+                3. ** Create a reusable components in the src/components folder if needed**:
+                - Create a reusable components in the separate files.
+                - Use the components in the source code.
+
+                4. **If you are using a new dependency, you should add it to the package.json file.**:
                 - For example, if you are using react-hook-form, you should add it to the package.json file.
                 - NOTE: If you don't add the dependency to the package.json file, the project will not work.
-    
     
                 ### **Details**
                 - **Task Details:** {task}
@@ -61,10 +64,14 @@ export class GenerateCode extends WorkflowPhase {
     
                 {{
                     "sourceCode": {{
-                        "src/App.tsx": 'export default function App() {{ return <div>Hello World</div>; }}'
-                    }},
-                    "comment": "I implemented Hello World to be sure the project is working."
+                            "src/components/HelloWorld.tsx": "import {{ motion }} from 'framer-motion';\nimport {{ format }} from 'date-fns';\n\nexport default function HelloWorld() {{\n  const today = format(new Date(), 'eeee, MMMM do, yyyy');\n\n  return (\n    <motion.div \n      className=\"p-4 text-center text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-lg\"\n      initial={{ opacity: 0, y: -10 }} \n      animate={{ opacity: 1, y: 0 }} \n      transition={{ duration: 0.5 }}\n    >\n      Hello World! Today is {{today}}\n    </motion.div>\n  );\n}}",
+                            "src/App.tsx": "import HelloWorld from './components/HelloWorld';\n\nexport default function App() {{\n  return (\n    <div className=\"min-h-screen flex items-center justify-center bg-gray-100\">\n      <HelloWorld />\n    </div>\n  );\n}}",
+                            "src/main.tsx": "import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\nimport './index.css';\n\nReactDOM.createRoot(document.getElementById('root')!).render(\n  <React.StrictMode>\n    <App />\n  </React.StrictMode>\n);",
+                            "package.json": "{{\n  \"dependencies\": {{\n    \"framer-motion\": \"^10.11.1\",\n    \"date-fns\": \"^3.6.0\"\n  }}\n}}"
+                        }},
+                    "comment": "I created a HelloWorld component that uses Framer Motion for animation and date-fns to display today's date in a readable format."
                 }}
+
     
                 Format Instructions: {outputSchema}
     
