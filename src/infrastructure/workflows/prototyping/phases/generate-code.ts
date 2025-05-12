@@ -60,8 +60,17 @@ export class GenerateCode extends WorkflowPhase {
     
                 Important:
                 - Double check all imports or require statements to ensure they are listed in the package.json file.
-                - Respond only in valid JSON. The JSON object you return should match the following schema:
-    
+                - Respond only in valid JSON. The JSON object you return should match the following schema.
+
+                Format Instructions: {outputSchema}
+                
+                ### Example:
+
+                User Request:
+                Ticket Title: Create a hello world example
+                Ticket Description: Create a hello world example using React, Tailwind CSS and Framer Motion.
+                
+                Good Output will be something like this:
                 {{
                     "sourceCode": {{
                             "src/components/HelloWorld.tsx": "import {{ motion }} from 'framer-motion';\nimport {{ format }} from 'date-fns';\n\nexport default function HelloWorld() {{\n  const today = format(new Date(), 'eeee, MMMM do, yyyy');\n\n  return (\n    <motion.div \n      className=\"p-4 text-center text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-lg\"\n      initial={{ opacity: 0, y: -10 }} \n      animate={{ opacity: 1, y: 0 }} \n      transition={{ duration: 0.5 }}\n    >\n      Hello World! Today is {{today}}\n    </motion.div>\n  );\n}}",
@@ -71,9 +80,6 @@ export class GenerateCode extends WorkflowPhase {
                         }},
                     "comment": "I created a HelloWorld component that uses Framer Motion for animation and date-fns to display today's date in a readable format."
                 }}
-
-    
-                Format Instructions: {outputSchema}
     
     
                 `),
