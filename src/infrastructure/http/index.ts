@@ -29,7 +29,7 @@ const server = http.createServer(app)
 
 initializeActivityEmitter(server)
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 80
 server.listen(port, () => {
 	console.log(`Server running on http://localhost:${port}`)
 })
