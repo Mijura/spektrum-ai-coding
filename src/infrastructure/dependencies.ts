@@ -7,7 +7,6 @@ import { DeployProject } from "@domain/use-cases/project/deploy-project"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
 import { FrontendDevelopmentService } from "@domain/services/frontend-development"
-import { FileSystemPort } from "@domain/services/file-system"
 
 import { FetchProjectsUseCase } from "@application/use-cases/project/fetch-projects"
 import { DeployProjectUseCase } from "@application/use-cases/project/deploy-project"
@@ -49,6 +48,7 @@ import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow-run/fetch-h
 import { FetchWorkflowRunsHeatmapUseCase } from "@application/use-cases/workflow-run/fetch-heatmap"
 import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/workflow-run/fetch-project-timeline"
 import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/workflow-run/fetch-account-timeline"
+import { FileSystemPort } from "./workflows/prototyping/interfaces/file-system"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -70,7 +70,7 @@ export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkfl
 export const prototypingWorkflow: WorkflowPort = new PrototypingWorkflow()
 export const projectRefiningWorkflow: WorkflowPort = new ProjectRefiningWorkflow()
 // Use Cases
-export const createNewProject: CreateProject = new CreateProjectUseCase(frontendDevelopmentService, projectRepository)
+export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)

@@ -1,6 +1,6 @@
-import { ActivityMetadata, ActivityType, StartedWorkMetadata } from "@domain/types/activity";
-import { Activity } from "../activity";
-import { Task } from "../task";
+import { ActivityMetadata, ActivityType, StartedWorkMetadata } from "@domain/types/activity"
+import { Activity } from "../activity"
+import { Task } from "../task"
 
 export class StartedWork extends Activity<StartedWorkMetadata> {
     constructor(

@@ -1,8 +1,8 @@
 import { Server as HTTPServer } from "http"
 import { Server as SocketIOServer, Socket } from "socket.io"
-import { eventBus } from "@domain/services/event-bus"
 import { Task } from "@domain/entities/task"
 import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
+import { eventBus } from "@domain/events/event-bus"
 
 export function initializeActivityEmitter(server: HTTPServer) {
 	const io = new SocketIOServer(server, {

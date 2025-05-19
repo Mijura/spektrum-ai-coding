@@ -10,7 +10,7 @@ import { Comment } from "@domain/types/activity"
 import { StartedWork } from "./activities/started-work"
 import { FinishedWork } from "./activities/finished-work"
 import { TaskStatus } from "@domain/types/task"
-import { EmitTaskActivity } from "@domain/decorators/emit-task-update"
+import { EmitTaskUpdate } from "@domain/events/emitters/task-update"
 
 export class Task {
 	public readonly id: string
@@ -43,21 +43,21 @@ export class Task {
 		this.activities = activities
 	}
 
-	@EmitTaskActivity()
+	@EmitTaskUpdate()
 	updateTitle(userId: string, newTitle: string){
 		this.title = newTitle
 		this.updated = new Date().toISOString()
 		this.activities.push(TitleUpdated.create(userId, this, newTitle))
 	}
 
-	@EmitTaskActivity()
+	@EmitTaskUpdate()
 	updateDescription(userId: string, newDescription: string){
 		this.description = newDescription
 		this.updated = new Date().toISOString()
 		this.activities.push(DescriptionUpdated.create(userId, this, newDescription))
 	}
 
-	@EmitTaskActivity()
+	@EmitTaskUpdate()
 	leaveComment(authorId: string, commentText: string) {
 		const comment: Comment = {
 			authorId: authorId, 
@@ -67,7 +67,7 @@ export class Task {
 		this.activities.push(commentActivity)
 	}
 
-	@EmitTaskActivity()
+	@EmitTaskUpdate()
 	startedWork(workerId: string, phase: string, message: string): StartedWork {
 		if (this.status === TaskStatus.WORK_IN_PROGRESS) {
 			throw new Error("Worker is already working on a task")
@@ -81,7 +81,7 @@ export class Task {
 		return activity as StartedWork
 	}
 
-	@EmitTaskActivity()
+	@EmitTaskUpdate()
 	finishedWork(workerId: string, phase: string, message: string): FinishedWork {
 		if (!this.assignedTo) {
 			throw new Error("Worker has not started working on this task")

@@ -1,6 +1,6 @@
-import { eventBus } from "@domain/services/event-bus"
+import { eventBus } from "@domain/events/event-bus"
 
-export function EmitTaskActivity() {
+export function EmitTaskUpdate() {
   return function (
     target: any,
     propertyKey: string,
