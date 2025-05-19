@@ -9,7 +9,7 @@
       "forceConsistentCasingInFileNames": true,  
       "strict": true, 
       "skipLibCheck": true,
-      "outDir": "build",
+      "outDir": "dist",
       "baseUrl": "./",
       "paths": {
         "@domain/*": ["src/domain/*"],
@@ -18,5 +18,6 @@
         "@project-templates/*": ["templates/*"]
       }                    
     },
+    "include": ["src/**/*"],
     "exclude": ["node_modules", "dist", "src/application/templates/*", "projects", "build"]
   }

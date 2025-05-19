@@ -1,16 +1,20 @@
 FROM node:16-alpine
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Install app dependencies
 COPY package.json package-lock.json ./
 RUN npm install
 
-RUN npm install -g ts-node typescript
+# Install ts-node, TypeScript and tsconfig-paths globally
+RUN npm install -g ts-node typescript tsconfig-paths
 
-# Copy the rest of your code into the container
+# Copy app source
 COPY . .
 
-# Run your main TypeScript file using ts-node
-CMD ["ts-node", "./server.ts"]
+# Expose the port your app runs on
+EXPOSE 8080
+
+# Start the app
+CMD ["ts-node", "-r", "tsconfig-paths/register", "src/infrastructure/http/index.ts"]

@@ -1,8 +1,8 @@
 import { Task } from "@domain/entities/task"
 import { WorkflowPhaseRegistry } from "@domain/entities/workflow/workflow-phase-registry"
-import { RefineTask } from "./phases/refine-task"
 import { WorkflowContext } from "@domain/entities/workflow/workflow-context"
 import { WorkflowPort } from "@domain/workflows/workflow-port"
+import { RefineTask } from "./phases/refine-task"
 
 export class TaskRefiningWorkflow implements WorkflowPort {
 
