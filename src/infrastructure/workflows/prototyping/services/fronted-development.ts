@@ -48,7 +48,12 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 
 	}
 
-	async fetchSourceCode(projectId: string): Promise<SourceCode> {
+	async fetchSourceCode(projectId: string, initialize?: boolean): Promise<SourceCode> {
+		
+		if (initialize) {
+			await this.setupProject(projectId)
+		}
+
 		const projectPath = path.join("projects", projectId)
 		const sourceCode: SourceCode = {}
 		const blacklist = new Set(["yarn.lock", ".env.example", "node_modules", "dist"])

@@ -1,4 +1,4 @@
-import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
+import { WorkflowRun } from "@domain/entities/workflow-run"
 import { PaginationData } from "@domain/types/activity"
 import { TimeRangeData, WorkflowRunHeatmap } from "@domain/types/workflow"
 

@@ -1,4 +1,4 @@
-import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
+import { WorkflowRun } from "@domain/entities/workflow-run"
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
 import { PaginationData } from "@domain/types/activity"
 import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow/fetch-timeline"

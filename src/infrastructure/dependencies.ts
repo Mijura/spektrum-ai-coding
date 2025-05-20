@@ -43,12 +43,15 @@ import { WorkflowController } from "./http/controllers/workflow-controller"
 import { RunWorkflowUseCase } from "@application/use-cases/workflow/run-workflow"
 import { RunWorkflow } from "@domain/use-cases/workflow/run-workflow"
 import { ProjectRefiningWorkflow } from "./workflows/project-refining/main"
-import { Workflow } from "@domain/entities/workflow/workflow"
 import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow/fetch-heatmap"
 import { FetchWorkflowRunsHeatmapUseCase } from "@application/use-cases/workflow/fetch-heatmap"
 import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/workflow/fetch-project-timeline"
 import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/workflow/fetch-account-timeline"
 import { FileSystemPort } from "./workflows/prototyping/interfaces/file-system"
+import { Workflow } from "@domain/workflow/workflow"
+import { WorkflowRegistry } from "@domain/repositories/workflow-registry"
+import { InMemoryWorkflowRegistry } from "./repositories/workflow-registry"
+import { WorkflowType } from "@domain/types/workflow"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -65,10 +68,15 @@ export const frontendDevelopmentService: FrontendDevelopmentService = new Fronte
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const taskRepository: TaskRepository = new DynamoDBTaskRepository()
 export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkflowRunRepository()
+export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 
 // Workflows
 export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
 export const projectRefiningWorkflow: Workflow = new ProjectRefiningWorkflow()
+
+// Register workflows
+workflowRegistry.registerWorkflow(WorkflowType.PROTOTYPING, prototypingWorkflow)
+
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
@@ -84,4 +92,4 @@ export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository
 export const fetchTimelineByProjectId: FetchWorkflowRunsTimeline = new FetchTimelineByProjectIdUseCase(workflowRunRepository)
 export const fetchTimelineByAccountId: FetchWorkflowRunsTimeline = new FetchTimelineByAccountIdUseCase(workflowRunRepository)
 export const fetchWorkflowRunsHeatmap: FetchWorkflowRunsHeatmap = new FetchWorkflowRunsHeatmapUseCase(workflowRunRepository)
-export const runWorkflow: RunWorkflow = new RunWorkflowUseCase(taskRepository)
+export const runWorkflow: RunWorkflow = new RunWorkflowUseCase(taskRepository, workflowRegistry)

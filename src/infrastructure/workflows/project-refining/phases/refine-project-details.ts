@@ -4,9 +4,9 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { gpt41Nano } from "@infrastructure/workflows/models"
 import { z } from "zod"
 import { TaskMapper } from "@infrastructure/mappers/task-mapper"
-import { WorkflowPhase } from "../../../../domain/entities/workflow/workflow-phase"
 import { Input } from "../main"
 import { ProjectDetails } from "@domain/types/project-details"
+import { WorkflowPhase } from "@domain/workflow/workflow-phase"
 
 
 const ProjectDetailsSchema = z.object({

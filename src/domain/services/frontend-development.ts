@@ -32,7 +32,7 @@ export interface FrontendDevelopmentService {
 	 * @param projectId - The ID of the project to fetch the source code for
 	 * @returns The source code for the project
 	 */
-	fetchSourceCode(projectId: string): Promise<SourceCode>
+	fetchSourceCode(projectId: string, initialize?: boolean): Promise<SourceCode>
 
 	/**
 	 * Writes the source code to the project

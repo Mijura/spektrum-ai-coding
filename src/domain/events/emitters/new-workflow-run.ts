@@ -1,5 +1,5 @@
 import { eventBus } from "@domain/events/event-bus"
-import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
+import { WorkflowRun } from "@domain/entities/workflow-run"
 
 export class EmitNewWorkflowRun {
 

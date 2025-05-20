@@ -1,9 +1,9 @@
 import { Task } from "@domain/entities/task"
-import { WorkflowPhaseRegistry } from "@domain/entities/workflow/workflow-phase-registry"
-import { WorkflowContext } from "@domain/entities/workflow/workflow-context"
 import { RefineProjectDetails } from "../project-refining/phases/refine-project-details"
 import { ProjectDetails } from "@domain/types/project-details"
-import { Workflow } from "@domain/entities/workflow/workflow"
+import { Workflow } from "@domain/workflow/workflow"
+import { WorkflowPhaseRegistry } from "@domain/workflow/workflow-phase-registry"
+import { WorkflowContext } from "@domain/workflow/workflow-context"
 
 export type Input = {
     task: Task

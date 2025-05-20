@@ -1,6 +1,6 @@
 import { frontendDevelopmentService, taskRepository, workflowRunRepository } from "@infrastructure/dependencies"
-import { WorkflowPhase } from "../../../../domain/entities/workflow/workflow-phase"
 import { State } from "../main"
+import { WorkflowPhase } from "@domain/workflow/workflow-phase"
 
 export class WriteCode extends WorkflowPhase {
     name: string = "WriteCode"

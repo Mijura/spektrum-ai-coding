@@ -1,5 +1,5 @@
 import { WorkflowRunStatus } from "@domain/types/activity"
-import { Task } from "../task"
+import { Task } from "./task"
 import { v4 as uuidv4 } from "uuid"
 import { EmitNewWorkflowRun } from "@domain/events/emitters/new-workflow-run"
 import { EmitWorkflowRunUpdate } from "@domain/events/emitters/workflow-run-update"

@@ -4,7 +4,7 @@ import { TaskRepository } from "@domain/repositories/task-repository"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { Project } from "@domain/entities/project"
 import { ProjectDetails } from "@domain/types/project-details"
-import { Workflow } from "@domain/entities/workflow/workflow"
+import { Workflow } from "@domain/workflow/workflow"
 export class CreateTaskUseCase implements CreateTask {
 	constructor(
 		private readonly taskRepository: TaskRepository,

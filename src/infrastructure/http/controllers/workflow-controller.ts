@@ -1,5 +1,5 @@
 
-import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
+import { WorkflowRun } from "@domain/entities/workflow-run"
 import { WorkflowRunHeatmap } from "@domain/types/workflow"
 import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchWorkflowRunsHeatmap, runWorkflow } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
@@ -73,6 +73,7 @@ export class WorkflowController {
         const workflowId = req.body.workflowId
         const accountId = req.body.accountId
 
+        console.log("Received workflowId:", workflowId, "Type:", typeof workflowId)
         console.log("Running prototyping workflow for task:", taskId, "and account:", accountId)
         if (!taskId || !accountId) {
             res.status(400).json({ error: "Missing required parameters" })

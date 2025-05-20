@@ -2,12 +2,11 @@ import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import { RunnableSequence } from "@langchain/core/runnables"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
-import { WorkflowPhase } from "../../../../domain/entities/workflow/workflow-phase"
 import { TaskMapper } from "@infrastructure/mappers/task-mapper"
-import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { taskRepository } from "@infrastructure/dependencies"
 import { State } from "../main"
 import { z } from "zod"
+import { WorkflowPhase } from "@domain/workflow/workflow-phase"
 
 const SourceCodeSchema = z.record(
 	z.string().describe("The file path as a string"),
