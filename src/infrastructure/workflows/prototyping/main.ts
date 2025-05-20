@@ -6,14 +6,14 @@ import { WorkflowContext } from "../../../domain/entities/workflow/workflow-cont
 import { Task } from "@domain/entities/task"
 import { SourceCode } from "@domain/types/source-code"
 import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
-import { WorkflowPort } from "@domain/workflows/workflow-port"
+import { Workflow } from "@domain/entities/workflow/workflow"
 export interface State {
 	task: Task
 	sourceCode: SourceCode
     workflowRun: WorkflowRun
     accountId: string
 }
-export class PrototypingWorkflow implements WorkflowPort {
+export class PrototypingWorkflow implements Workflow {
     
     async run(task: Task, accountId: string): Promise<void> {
         const sourceCode = await frontendDevelopmentService.fetchSourceCode(task.projectId)

@@ -1,6 +1,6 @@
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
 import { TimeRangeData, WorkflowRunHeatmap } from "@domain/types/workflow"
-import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow-run/fetch-heatmap"
+import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow/fetch-heatmap"
 
 export class FetchWorkflowRunsHeatmapUseCase implements FetchWorkflowRunsHeatmap{
 

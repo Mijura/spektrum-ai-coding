@@ -7,7 +7,7 @@ import { projectRouter } from "@infrastructure/http/routes/project-routes"
 import { taskRouter } from "@infrastructure/http/routes/task-routes"
 import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
 import { serveProjectFilesMiddleware } from "@infrastructure/http/middleware/serve-project-files"
-import { workflowRunRouter } from "./routes/workflow-run-routes"
+import { workflowRouter } from "./routes/workflow-routes"
 import { initializeActivityEmitter } from "./sockets/activity-emitter"
 import express from "express"
 import http from "http"
@@ -21,7 +21,7 @@ app.use(express.json())
 // Routes
 app.use("/", projectRouter)
 app.use("/", taskRouter)
-app.use("/", workflowRunRouter)
+app.use("/", workflowRouter)
 app.use("/:id", serveProjectFilesMiddleware)
 
 

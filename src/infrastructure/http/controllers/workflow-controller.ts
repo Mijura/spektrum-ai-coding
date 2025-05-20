@@ -1,10 +1,10 @@
 
 import { WorkflowRun } from "@domain/entities/workflow/workflow-run"
 import { WorkflowRunHeatmap } from "@domain/types/workflow"
-import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchWorkflowRunsHeatmap, runPrototypingWorkflow } from "@infrastructure/dependencies"
+import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchWorkflowRunsHeatmap, runWorkflow } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
-export class WorkflowRunController {
+export class WorkflowController {
 
     constructor() {}
 
@@ -67,9 +67,10 @@ export class WorkflowRunController {
         }
     }
 
-    async triggerPrototypingWorkflow(req: Request, res: Response): Promise<void> {
+    async runWorkflow(req: Request, res: Response): Promise<void> {
         
         const taskId = req.body.taskId
+        const workflowId = req.body.workflowId
         const accountId = req.body.accountId
 
         console.log("Running prototyping workflow for task:", taskId, "and account:", accountId)
@@ -79,7 +80,7 @@ export class WorkflowRunController {
         }
 
 		try {
-            runPrototypingWorkflow.run(taskId, accountId)
+            runWorkflow.execute(taskId, workflowId, accountId)
             res.status(200).json({ message: "Workflow run initiated" })
 		} catch (error) {
 			console.error("Error during development workflow:", error)

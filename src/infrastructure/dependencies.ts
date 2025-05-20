@@ -38,22 +38,22 @@ import { UpdateTaskTitleUseCase } from "@application/use-cases/task/update-title
 import { LeaveComment } from "@domain/use-cases/task/leave-comment"
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
 import { OpenSearchWorkflowRunRepository } from "./repositories/workflow-run-repository"
-import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow-run/fetch-timeline"
-import { WorkflowRunController } from "./http/controllers/workflow-run-controller"
-import { RunPrototypingWorkflowUseCase } from "@application/use-cases/workflow-run/run-prototyping-worfklow"
-import { RunPrototypingWorkflow } from "@domain/use-cases/workflow-run/run-prototyping-workflow"
+import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow/fetch-timeline"
+import { WorkflowController } from "./http/controllers/workflow-controller"
+import { RunWorkflowUseCase } from "@application/use-cases/workflow/run-workflow"
+import { RunWorkflow } from "@domain/use-cases/workflow/run-workflow"
 import { ProjectRefiningWorkflow } from "./workflows/project-refining/main"
-import { WorkflowPort } from "@domain/workflows/workflow-port"
-import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow-run/fetch-heatmap"
-import { FetchWorkflowRunsHeatmapUseCase } from "@application/use-cases/workflow-run/fetch-heatmap"
-import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/workflow-run/fetch-project-timeline"
-import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/workflow-run/fetch-account-timeline"
+import { Workflow } from "@domain/entities/workflow/workflow"
+import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow/fetch-heatmap"
+import { FetchWorkflowRunsHeatmapUseCase } from "@application/use-cases/workflow/fetch-heatmap"
+import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/workflow/fetch-project-timeline"
+import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/workflow/fetch-account-timeline"
 import { FileSystemPort } from "./workflows/prototyping/interfaces/file-system"
 
 // Controllers
 export const projectController = new ProjectController()
 export const taskController = new TaskController()
-export const workflowRunController = new WorkflowRunController()
+export const workflowRunController = new WorkflowController()
 
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
@@ -67,8 +67,8 @@ export const taskRepository: TaskRepository = new DynamoDBTaskRepository()
 export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkflowRunRepository()
 
 // Workflows
-export const prototypingWorkflow: WorkflowPort = new PrototypingWorkflow()
-export const projectRefiningWorkflow: WorkflowPort = new ProjectRefiningWorkflow()
+export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
+export const projectRefiningWorkflow: Workflow = new ProjectRefiningWorkflow()
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
@@ -84,4 +84,4 @@ export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository
 export const fetchTimelineByProjectId: FetchWorkflowRunsTimeline = new FetchTimelineByProjectIdUseCase(workflowRunRepository)
 export const fetchTimelineByAccountId: FetchWorkflowRunsTimeline = new FetchTimelineByAccountIdUseCase(workflowRunRepository)
 export const fetchWorkflowRunsHeatmap: FetchWorkflowRunsHeatmap = new FetchWorkflowRunsHeatmapUseCase(workflowRunRepository)
-export const runPrototypingWorkflow: RunPrototypingWorkflow = new RunPrototypingWorkflowUseCase(taskRepository, prototypingWorkflow)
+export const runWorkflow: RunWorkflow = new RunWorkflowUseCase(taskRepository)

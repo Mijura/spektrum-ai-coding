@@ -1,5 +1,5 @@
 import { Task } from "@domain/entities/task"
 
-export interface WorkflowPort {
+export interface Workflow {
 	run(task: Task, accountId?: string): Promise<any>
 }

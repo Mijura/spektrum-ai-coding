@@ -3,12 +3,12 @@ import { WorkflowPhaseRegistry } from "@domain/entities/workflow/workflow-phase-
 import { WorkflowContext } from "@domain/entities/workflow/workflow-context"
 import { RefineProjectDetails } from "../project-refining/phases/refine-project-details"
 import { ProjectDetails } from "@domain/types/project-details"
-import { WorkflowPort } from "@domain/workflows/workflow-port"
+import { Workflow } from "@domain/entities/workflow/workflow"
 
 export type Input = {
     task: Task
 }
-export class ProjectRefiningWorkflow implements WorkflowPort {
+export class ProjectRefiningWorkflow implements Workflow {
 
     async run(task: Task): Promise<ProjectDetails> {
         
