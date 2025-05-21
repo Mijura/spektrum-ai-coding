@@ -78,7 +78,7 @@ export const projectRefiningWorkflow: Workflow = new ProjectRefiningWorkflow()
 workflowRegistry.registerWorkflow(WorkflowType.PROTOTYPING, prototypingWorkflow)
 
 // Use Cases
-export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository)
+export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
