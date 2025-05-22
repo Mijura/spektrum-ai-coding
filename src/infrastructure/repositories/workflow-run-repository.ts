@@ -35,13 +35,28 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		return index
 	}
 
+	private async indexExists(index: string): Promise<boolean> {
+		const client = this.getClient()
+		const exists = await client.indices.exists({ index })
+		return exists.body ?? exists
+	}
+
 	private async createIndexIfNotExists(index: string) {
-		const client = this.getClient();
-	
-		const exists = await client.indices.exists({ index });
-		if (!(exists.body ?? exists)) {
-			const response = await client.indices.create({ index });
-			console.log(`Index created: ${JSON.stringify(response.body)}`);
+		const client = this.getClient()
+
+		if (!this.indexExists(index)) {
+			const response = await client.indices.create({ index, 			
+				body: {
+					mappings: {
+						properties: {
+							projectId: { type: 'keyword' },
+							accountId: { type: 'keyword' },
+							occurredAt: { type: 'date' }
+						}
+					}
+				} 
+			})
+			console.log(`Index created: ${JSON.stringify(response.body)}`)
 		}
 	}
 
@@ -53,7 +68,7 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		console.log(`Creating workflow run: ${JSON.stringify(workflowRun)}`)
 		
 		// create index if it doesn't already exist
-		await this.createIndexIfNotExists(index);
+		await this.createIndexIfNotExists(index)
 
 		if (!workflowRun.id) {
 			throw new Error("workflowRun.id is required for saving. Missing ID may cause unintended document creation.");
@@ -84,6 +99,12 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 
 		console.log(`Fetching workflow run by id: ${id}`)
 
+		const indexExists = await this.indexExists(index)
+		if (!indexExists) {
+			console.log(`Index ${index} does not exist`)
+			return null
+		}
+
 
 		let response = await client.get({
 			index: index,
@@ -100,6 +121,12 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		const from = (pagination.pageNumber - 1) * pagination.pageSize
 
 		console.log(`Fetching workflow run timeline for projectId: ${projectId} with pagination: ${JSON.stringify(pagination)}`)
+
+		const indexExists = await this.indexExists(index)
+		if (!indexExists) {
+			console.log(`Index ${index} does not exist`)
+			return []
+		}
 
 		const query: any = {
 			size: pagination.pageSize,
@@ -128,6 +155,13 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		const from = (pagination.pageNumber - 1) * pagination.pageSize
 
 		console.log(`Fetching workflow run timeline for accountId: ${accountId} with pagination: ${JSON.stringify(pagination)}`)
+
+		// check if index exists
+		const indexExists = await this.indexExists(index)
+		if (!indexExists) {
+			console.log(`Index ${index} does not exist`)
+			return []
+		}
 
 		const query: any = {
 			size: pagination.pageSize,
@@ -161,6 +195,13 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		const endDate = timeRange.endDate
 
 		console.log(`Searching for heatmap data for accountId: ${accountId}, startDate: ${startDate}, endDate: ${endDate}`)
+
+		const indexExists = await this.indexExists(index)
+		if (!indexExists) {
+			console.log(`Index ${index} does not exist`)
+			return []
+		}
+
 		const query: any = {
 			size: 0, // We only need aggregations
 			query: {

@@ -16,10 +16,13 @@ lint = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
-s3_prefix = "repositories-deployment"
+s3_prefix = "honeycomb-repositories"
 region = "eu-west-1"
-profile = "Development"
+profile = "Production"
 image_repositories = []
+stack_name = "honeycomb-repositories"
+disable_rollback = true
+parameter_overrides = "OpenSearchCollectionName=\"honeycomb-activities\""
 
 [default.package.parameters]
 resolve_s3 = true
