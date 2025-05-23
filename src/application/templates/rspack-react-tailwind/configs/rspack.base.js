@@ -49,6 +49,9 @@ module.exports = {
 		}),
 		new rspack.HtmlRspackPlugin({
 			template: path.join(__dirname, "../index.html"),
+		}),
+		new rspack.CopyRspackPlugin({
+			patterns: [{ from: "manifest.json" }, { from: "./public/favicon.ico" }],
 		})
 	],
 	resolve: {
