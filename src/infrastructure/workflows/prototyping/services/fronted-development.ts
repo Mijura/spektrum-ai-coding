@@ -48,11 +48,7 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 
 	}
 
-	async fetchSourceCode(projectId: string, initialize?: boolean): Promise<SourceCode> {
-		
-		if (initialize) {
-			await this.setupProject(projectId)
-		}
+	async fetchSourceCode(projectId: string): Promise<SourceCode> {
 
 		const projectPath = path.join("projects", projectId)
 		const sourceCode: SourceCode = {}
