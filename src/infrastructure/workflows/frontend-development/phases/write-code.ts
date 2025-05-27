@@ -8,7 +8,7 @@ export class WriteCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Writing code")
 
-        const { task, sourceCode, workflowRun, accountId } = data
+        const { task, sourceCode, workflowRun } = data
 
         task.startedWork("DevOps Engineer", "WriteCode", "DevOps engineer is deploying the application for testing...")
 
@@ -19,6 +19,7 @@ export class WriteCode extends WorkflowPhase {
             await frontendDevelopmentService.updateSourceCode(task.projectId, sourceCode)
             installSuccess = await frontendDevelopmentService.installDependencies(task.projectId)
             buildSuccess = await frontendDevelopmentService.buildProject(task.projectId)
+            await frontendDevelopmentService.deployToDevEnvironment(task.projectId)
             task.leaveComment("DevOps Engineer", "Application is successfully deployed and now is ready to be tested.")
             workflowRun.finishSuccessfully()
         } catch (error) {

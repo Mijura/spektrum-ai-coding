@@ -5,7 +5,7 @@ export interface FrontendDevelopmentService {
 	 * Initializes project by copying the template (project-templates/rspack-react-tailwind), installing dependencies, and building the project
 	 * @param projectId - The ID of the project to initialize
 	 */
-	setupProject(projectId: string): Promise<void>
+	setupProject(project: Project): Promise<void>
 
 	/**
 	 * Installs dependencies for the project
@@ -18,6 +18,12 @@ export interface FrontendDevelopmentService {
 	 * @param projectId - The ID of the project to build
 	 */
 	buildProject(projectId: string): Promise<boolean>
+
+	/**
+	 * Deploy the project to the dev environment
+	 * @param projectId - The ID of the project to deploy
+	 */
+	deployToDevEnvironment(projectId: string): Promise<void>
 
 	/**
 	 * Deploy the project

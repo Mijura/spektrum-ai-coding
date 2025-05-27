@@ -13,9 +13,9 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		private readonly fileSystem: FileSystemPort, 
 		private readonly deploymentTarget: DeploymentTargetPort) {}
 
-	async setupProject(projectId: string): Promise<void> {
+	async setupProject(project: Project): Promise<void> {
 		try {
-			const projectPath: string = path.join("projects", projectId)
+			const projectPath: string = path.join("projects", project.id)
 
 			const templateName = "rspack-react-tailwind"
 			const templatePath = path.resolve(`src/application/templates/${templateName}`)
@@ -25,12 +25,11 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 			await this.fileSystem.copyFolder(templatePath, projectPath)
 			console.log(`✅ Project template copied to ${projectPath}`)
 
-			const sourceCodeFolder = `${projectPath}/dist`
-			await this.uploadFiles(sourceCodeFolder, projectId)
+			await this.deployToDevEnvironment(project.id)
 
-			console.log(`Project ${projectId} initialized and built successfully!`)
+			console.log(`Project ${project.id} initialized and built successfully!`)
 		} catch (error) {
-			console.error(`Error initializing project ${projectId}:`, error)
+			console.error(`Error initializing project ${project.id}:`, error)
 			throw new Error("Project initialization failed.")
 		}
 	}
@@ -47,11 +46,26 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		return buildSuccess
 	}
 
+	async deployToDevEnvironment(projectId: string): Promise<void> {
+		const buildPath: string = path.resolve(`projects/${projectId}/dist`)
+		const folderName = projectId
+
+		if (!buildPath || !folderName) {
+			throw new Error("Deplyment failed")
+		}
+
+		await this.uploadFiles(buildPath, folderName)
+	}
+
 	async deployProject(project: Project): Promise<void> {
 		const buildPath: string = path.resolve(`projects/${project.id}/dist`)
+		const folderName = project.deploymentId
 
-		const productionFolder = path.resolve(`projects/${project.deploymentId}/dist`)
-		await this.fileSystem.copyFolder(buildPath, productionFolder)
+		if (!buildPath || !folderName) {
+			throw new Error("Deplyment failed")
+		}
+
+		await this.uploadFiles(buildPath, folderName)
 
 	}
 
