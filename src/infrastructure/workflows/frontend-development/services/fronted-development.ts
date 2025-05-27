@@ -25,6 +25,9 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 			await this.fileSystem.copyFolder(templatePath, projectPath)
 			console.log(`✅ Project template copied to ${projectPath}`)
 
+			const sourceCodeFolder = `${projectPath}/dist`
+			await this.uploadFiles(sourceCodeFolder, projectId)
+
 			console.log(`Project ${projectId} initialized and built successfully!`)
 		} catch (error) {
 			console.error(`Error initializing project ${projectId}:`, error)
@@ -52,13 +55,13 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 
 	}
 
-	private async uploadFiles(localFolder: string) {
-		const allFiles = await this.fileSystem.readDirectory(localFolder)
+	private async uploadFiles(sourceCodeFolder: string, destinationFolder: string) {
+		const allFiles = await this.fileSystem.readDirectory(sourceCodeFolder)
 
-		for (const relativePath of allFiles) {
-			const fullPath = path.join(localFolder, relativePath)
+		for (const fileName of allFiles) {
+			const fullPath = path.join(sourceCodeFolder, fileName)
 			const stream = this.fileSystem.createReadStream(fullPath)
-			await this.deploymentTarget.uploadFile(relativePath, stream)
+			await this.deploymentTarget.uploadFile(fileName, stream, destinationFolder)
 		}
 	}
 	
