@@ -5,9 +5,13 @@ import { FrontendDevelopmentService } from "@domain/services/frontend-developmen
 import { Project } from "@domain/entities/project"
 import { SourceCode } from "@domain/types/source-code"
 import { FileSystemPort } from "../interfaces/file-system"
+import { DeploymentTargetPort } from "../interfaces/deployment-target"
 
 export class FrontendDevelopment implements FrontendDevelopmentService {
-	constructor(private readonly packageManager: PackageManager, private readonly fileSystem: FileSystemPort) {}
+	constructor(
+		private readonly packageManager: PackageManager, 
+		private readonly fileSystem: FileSystemPort, 
+		private readonly deploymentTarget: DeploymentTargetPort) {}
 
 	async setupProject(projectId: string): Promise<void> {
 		try {
@@ -47,6 +51,17 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		await this.fileSystem.copyFolder(buildPath, productionFolder)
 
 	}
+
+	private async uploadFiles(localFolder: string) {
+		const allFiles = await this.fileSystem.readDirectory(localFolder)
+
+		for (const relativePath of allFiles) {
+			const fullPath = path.join(localFolder, relativePath)
+			const stream = this.fileSystem.createReadStream(fullPath)
+			await this.deploymentTarget.uploadFile(relativePath, stream)
+		}
+	}
+	
 
 	async fetchSourceCode(projectId: string): Promise<SourceCode> {
 

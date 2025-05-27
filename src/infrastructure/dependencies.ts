@@ -22,7 +22,6 @@ import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-
 import { DynamoDBTaskRepository } from "@infrastructure/repositories/task-repository"
 
 import { PrototypingWorkflow } from "./workflows/prototyping/main"
-import { LocalFileSystem } from "./workflows/prototyping/services/local-file-system"
 import { YarnPackageManager } from "./workflows/prototyping/services/yarn-package-manager"
 import { FrontendDevelopment } from "./workflows/prototyping/services/fronted-development"
 import { PackageManager } from "./workflows/prototyping/interfaces/package-manager"
@@ -52,6 +51,9 @@ import { Workflow } from "@domain/workflow/workflow"
 import { WorkflowRegistry } from "@domain/repositories/workflow-registry"
 import { InMemoryWorkflowRegistry } from "./repositories/workflow-registry"
 import { WorkflowType } from "@domain/types/workflow"
+import { NodeFileSystem } from "./workflows/prototyping/services/node-file-system"
+import { S3DeploymentTargetAdapter } from "./workflows/prototyping/services/s3-deployment-target"
+import { DeploymentTargetPort } from "./workflows/prototyping/interfaces/deployment-target"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -59,9 +61,10 @@ export const taskController = new TaskController()
 export const workflowRunController = new WorkflowController()
 
 // Services
-export const fileSystem: FileSystemPort = new LocalFileSystem()
+export const fileSystem: FileSystemPort = new NodeFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
-export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopment(yarnPackageManager, fileSystem)
+export const deploymentTarget: DeploymentTargetPort = new S3DeploymentTargetAdapter()
+export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopment(yarnPackageManager, fileSystem, deploymentTarget)
 
 
 // Repositories

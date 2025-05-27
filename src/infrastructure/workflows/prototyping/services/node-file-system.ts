@@ -2,7 +2,7 @@
 import fs from "fs-extra"
 import { FileSystemPort } from "../interfaces/file-system"
 
-export class LocalFileSystem implements FileSystemPort {
+export class NodeFileSystem implements FileSystemPort {
 	
     async copyFolder(source: string, destination: string): Promise<void> {
 		// Ensure the destination directory exists
@@ -30,5 +30,9 @@ export class LocalFileSystem implements FileSystemPort {
 
 	async exists(filePath: string): Promise<boolean> {
 		return await fs.exists(filePath)
+	}
+
+	createReadStream(filePath: string): NodeJS.ReadableStream {
+		return fs.createReadStream(filePath)
 	}
 }
