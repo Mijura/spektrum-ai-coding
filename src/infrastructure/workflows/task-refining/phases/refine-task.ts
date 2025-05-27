@@ -4,7 +4,7 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { gpt41Nano } from "@infrastructure/workflows/models"
 import { z } from "zod"
 import { TaskMapper } from "@infrastructure/mappers/task-mapper"
-import { State } from "../../prototyping/main"
+import { State } from "../../frontend-development/main"
 import { Task } from "@domain/entities/task"
 import { WorkflowPhase } from "@domain/workflow/workflow-phase"
 

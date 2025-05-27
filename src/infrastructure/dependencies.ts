@@ -21,10 +21,10 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTaskRepository } from "@infrastructure/repositories/task-repository"
 
-import { PrototypingWorkflow } from "./workflows/prototyping/main"
-import { YarnPackageManager } from "./workflows/prototyping/services/yarn-package-manager"
-import { FrontendDevelopment } from "./workflows/prototyping/services/fronted-development"
-import { PackageManager } from "./workflows/prototyping/interfaces/package-manager"
+import { FrontendDevelopmentWorkflow } from "./workflows/frontend-development/main"
+import { YarnPackageManager } from "./workflows/frontend-development/services/yarn-package-manager"
+import { FrontendDevelopment } from "./workflows/frontend-development/services/fronted-development"
+import { PackageManager } from "./workflows/frontend-development/interfaces/package-manager"
 import { CreateTask } from "@domain/use-cases/task/create-task"
 import { FetchTasks } from "@domain/use-cases/task/fetch-tasks"
 import { UpdateTaskTitle } from "@domain/use-cases/task/update-title"
@@ -46,14 +46,14 @@ import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow/fetch-heatm
 import { FetchWorkflowRunsHeatmapUseCase } from "@application/use-cases/workflow/fetch-heatmap"
 import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/workflow/fetch-project-timeline"
 import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/workflow/fetch-account-timeline"
-import { FileSystemPort } from "./workflows/prototyping/interfaces/file-system"
+import { FileSystemPort } from "./workflows/frontend-development/interfaces/file-system"
 import { Workflow } from "@domain/workflow/workflow"
 import { WorkflowRegistry } from "@domain/repositories/workflow-registry"
 import { InMemoryWorkflowRegistry } from "./repositories/workflow-registry"
 import { WorkflowType } from "@domain/types/workflow"
-import { NodeFileSystem } from "./workflows/prototyping/services/node-file-system"
-import { S3DeploymentTargetAdapter } from "./workflows/prototyping/services/s3-deployment-target"
-import { DeploymentTargetPort } from "./workflows/prototyping/interfaces/deployment-target"
+import { NodeFileSystem } from "./workflows/frontend-development/services/node-file-system"
+import { S3DeploymentTargetAdapter } from "./workflows/frontend-development/services/s3-deployment-target"
+import { DeploymentTargetPort } from "./workflows/frontend-development/interfaces/deployment-target"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -74,11 +74,11 @@ export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkfl
 export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 
 // Workflows
-export const prototypingWorkflow: Workflow = new PrototypingWorkflow()
+export const frontendDevelopmentWorkflow: Workflow = new FrontendDevelopmentWorkflow()
 export const projectRefiningWorkflow: Workflow = new ProjectRefiningWorkflow()
 
 // Register workflows
-workflowRegistry.registerWorkflow(WorkflowType.PROTOTYPING, prototypingWorkflow)
+workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentWorkflow)
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)

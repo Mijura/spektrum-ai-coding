@@ -11,7 +11,7 @@ export class RunWorkflowUseCase implements RunWorkflow {
 	) {}
 
 	async execute(taskId: string, workflowId: string, accountId: string): Promise<void> {
-		console.log("Running prototyping workflow for task:", taskId, "and account:", accountId)
+		console.log("Running frontend development workflow for task:", taskId, "and account:", accountId)
 		const task = await this.taskRepository.findById(taskId)
 		if (!task) {
 			throw new Error("Task not found")

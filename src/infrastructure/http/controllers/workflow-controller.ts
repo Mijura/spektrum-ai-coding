@@ -74,7 +74,7 @@ export class WorkflowController {
         const accountId = req.body.accountId
 
         console.log("Received workflowId:", workflowId, "Type:", typeof workflowId)
-        console.log("Running prototyping workflow for task:", taskId, "and account:", accountId)
+        console.log("Running frontend development workflow for task:", taskId, "and account:", accountId)
         if (!taskId || !accountId) {
             res.status(400).json({ error: "Missing required parameters" })
             return

@@ -11,6 +11,6 @@ router.put("/task/description", (req: Request, res: Response) => taskController.
 
 router.get("/task/fetch-all/:projectId", (req: Request, res: Response) => taskController.fetchTasks(req, res))
 
-router.post("/task/add-comment-and-run-workflow", (req: Request, res: Response) => taskController.leaveCommentAndRunPrototypingWorkflow(req, res))
+router.post("/task/add-comment-and-run-workflow", (req: Request, res: Response) => taskController.leaveCommentAndRunFrontendDevelopmentWorkflow(req, res))
 
 export { router as taskRouter }

@@ -1,5 +1,5 @@
 export enum WorkflowType {
-    PROTOTYPING = 'Prototyping',
+    FRONTEND_DEVELOPMENT = 'Frontend Development',
 }
 
 export type TimeRangeData = {

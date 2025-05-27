@@ -13,12 +13,12 @@ export interface State {
     workflowRun: WorkflowRun
     accountId: string
 }
-export class PrototypingWorkflow implements Workflow {
+export class FrontendDevelopmentWorkflow implements Workflow {
     
     async run(task: Task, accountId: string): Promise<void> {
         const sourceCode = await frontendDevelopmentService.fetchSourceCode(task.projectId)
         
-		const workflowRun = WorkflowRun.create(task, "Prototyping", accountId)
+		const workflowRun = WorkflowRun.create(task, "Frontend Development", accountId)
 
 		await workflowRunRepository.save(workflowRun)
         // Register all phases
