@@ -15,7 +15,8 @@ export class CreateProjectUseCase implements CreateProject {
 			const project: Project = Project.create("My Project", "Empty project...", owner)
 
 			// Initialize and run project
-			await this.frontendDevelopmentService.setupProject(project)
+			const sourceCode = await this.frontendDevelopmentService.setupProject(project)
+			project.setArtifact(sourceCode)
 			
 			// Persist the project details in the database
 			return await this.projectRepository.save(project)

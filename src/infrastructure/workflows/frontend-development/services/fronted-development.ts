@@ -13,7 +13,7 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		private readonly fileSystem: FileSystemPort, 
 		private readonly deploymentTarget: DeploymentTargetPort) {}
 
-	async setupProject(project: Project): Promise<void> {
+	async setupProject(project: Project): Promise<SourceCode> {
 		try {
 			const projectPath: string = path.join("projects", project.id)
 
@@ -28,6 +28,8 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 			await this.deployToDevEnvironment(project.id)
 
 			console.log(`Project ${project.id} initialized and built successfully!`)
+
+			return await this.fetchSourceCode(project.id)
 		} catch (error) {
 			console.error(`Error initializing project ${project.id}:`, error)
 			throw new Error("Project initialization failed.")

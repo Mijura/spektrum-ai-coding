@@ -1,3 +1,4 @@
+import { SourceCode } from "@domain/types/source-code"
 import { v4 as uuidv4 } from "uuid"
 
 export enum ProjectStatus {
@@ -16,7 +17,7 @@ export class Project {
 	public status: ProjectStatus
 	public detailsUpdated: boolean
 	private _deploymentId: string | null
-
+	public artifact: SourceCode | null
 
 	private constructor(
 		id: string,
@@ -27,7 +28,8 @@ export class Project {
 		updated: string | null,
 		deploymentId: string | null,
 		status: ProjectStatus,
-		detailsUpdated: boolean
+		detailsUpdated: boolean,
+		artifact: SourceCode | null
 	) {
 		this.id = id
 		this.ownerId = ownerId
@@ -38,6 +40,7 @@ export class Project {
 		this._deploymentId = deploymentId
 		this.status = status
 		this.detailsUpdated = detailsUpdated
+		this.artifact = artifact
 	}
 
 	updateName(name: string) {
@@ -70,7 +73,7 @@ export class Project {
 	static create(name: string, description: string, owner: string): Project {
 		const id = uuidv4() // Generate unique ID
 		const created = new Date().toISOString() // ISO format
-		return new Project(id, owner, name, description, created, null, null, ProjectStatus.ACTIVE, false)
+		return new Project(id, owner, name, description, created, null, null, ProjectStatus.ACTIVE, false, null)
 	}
 
 	/** Restore method to rehydrate a project from persisted data */
@@ -83,13 +86,18 @@ export class Project {
 		updated: string | null
 		deploymentId: string | null
 		status: ProjectStatus
-		detailsUpdated: boolean
+		detailsUpdated: boolean	
+		artifact: SourceCode | null
 	}): Project {
-		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.deploymentId, data.status, data.detailsUpdated)
+		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.deploymentId, data.status, data.detailsUpdated, data.artifact)
 	}
 
 	public get deploymentId(): string | null {
 		return this._deploymentId
+	}
+
+	public setArtifact(artifact: SourceCode | null) {
+		this.artifact = artifact
 	}
 
 	archive() {

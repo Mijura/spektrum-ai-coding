@@ -15,7 +15,8 @@ export class ProjectMapper {
       updated: project.updated,
       deploymentId: project.deploymentId,
       status: project.status,
-      detailsUpdated: project.detailsUpdated
+      detailsUpdated: project.detailsUpdated,
+      artifact: project.artifact
     };
   }
 
@@ -30,7 +31,8 @@ export class ProjectMapper {
       updated: record.updated,
       deploymentId: record.deploymentId,
       status: record.status,
-      detailsUpdated: record.detailsUpdated
+      detailsUpdated: record.detailsUpdated,
+      artifact: record.artifact
     });
   }
 

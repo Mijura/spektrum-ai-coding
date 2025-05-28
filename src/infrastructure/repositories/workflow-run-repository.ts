@@ -63,18 +63,13 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
     async save(workflowRun: WorkflowRun): Promise<WorkflowRun> {
 		const index = this.getIndex()
 
-        const client = this.getClient()
-
-		console.log(`Creating workflow run: ${JSON.stringify(workflowRun)}`)
-		
+        const client = this.getClient()		
 		// create index if it doesn't already exist
 		await this.createIndexIfNotExists(index)
 
 		if (!workflowRun.id) {
-			throw new Error("workflowRun.id is required for saving. Missing ID may cause unintended document creation.");
+			throw new Error("workflowRun.id is required for saving. Missing ID may cause unintended document creation.")
 		}
-
-		console.log(`Saving workflow run: ${JSON.stringify(workflowRun)}`);
 
 		const response = await client.update({
 			index,

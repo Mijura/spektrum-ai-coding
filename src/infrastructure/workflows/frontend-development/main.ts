@@ -1,4 +1,4 @@
-import { frontendDevelopmentService, workflowRunRepository } from "@infrastructure/dependencies"
+import { frontendDevelopmentService, projectRepository, workflowRunRepository } from "@infrastructure/dependencies"
 import { WriteCode } from "./phases/write-code"
 import { GenerateCode } from "./phases/generate-code"
 import { Task } from "@domain/entities/task"
@@ -16,7 +16,8 @@ export interface State {
 export class FrontendDevelopmentWorkflow implements Workflow {
     
     async run(task: Task, accountId: string): Promise<void> {
-        const sourceCode = await frontendDevelopmentService.fetchSourceCode(task.projectId)
+        const project = await projectRepository.findById(task.projectId)
+        const sourceCode = project.artifact
         
 		const workflowRun = WorkflowRun.create(task, "Frontend Development", accountId)
 

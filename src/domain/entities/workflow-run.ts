@@ -3,6 +3,7 @@ import { Task } from "./task"
 import { v4 as uuidv4 } from "uuid"
 import { EmitNewWorkflowRun } from "@domain/events/emitters/new-workflow-run"
 import { EmitWorkflowRunUpdate } from "@domain/events/emitters/workflow-run-update"
+import { SourceCode } from "@domain/types/source-code"
 
 class WorkflowPhase {
     public readonly name: string
@@ -24,6 +25,7 @@ export class WorkflowRun {
     public readonly accountId: string
     public status: WorkflowRunStatus
 	public phase: WorkflowPhase | null
+    public artifact: SourceCode | null
     public occurredAt: string
     public error?: string
 
@@ -37,7 +39,8 @@ export class WorkflowRun {
         status: WorkflowRunStatus,
         phase: WorkflowPhase | null,
         occurredAt: string,
-        error?: string
+        artifact: SourceCode | null,
+        error?: string,
     ) { 
         this.id = id
         this.projectId = projectId
@@ -49,6 +52,7 @@ export class WorkflowRun {
         this.phase = phase
         this.occurredAt = occurredAt
         this.error = error
+        this.artifact = artifact
     }
 
     static create(task: Task, workflowId: string, accountId: string): WorkflowRun {
@@ -58,16 +62,16 @@ export class WorkflowRun {
         const status = WorkflowRunStatus.RUNNING
         const phase = null
 
-        const run = new WorkflowRun(id, task.title, task.projectId, task.id, workflowId, accountId, status, phase, occurredAt)
+        const run = new WorkflowRun(id, task.title, task.projectId, task.id, workflowId, accountId, status, phase, occurredAt, null)
         EmitNewWorkflowRun.emit(run)
         
         return run
     }
 
     @EmitWorkflowRunUpdate()
-    finishSuccessfully(): void {
+    finishSuccessfully(artifact: SourceCode): void {
         this.status = WorkflowRunStatus.SUCCEEDED
-
+        this.artifact = artifact
     }
 
     switchPhase(phase:WorkflowPhase): void {
@@ -75,9 +79,10 @@ export class WorkflowRun {
     }
 
     @EmitWorkflowRunUpdate()
-    finishWithError(error: string): void {
+    finishWithError(error: string, artifact: SourceCode | null): void {
 
         this.status = WorkflowRunStatus.FAILED
         this.error = error
+        this.artifact = artifact
     }
 }

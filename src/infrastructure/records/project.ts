@@ -1,3 +1,5 @@
+import { SourceCode } from "@domain/types/source-code"
+
 export enum ProjectStatus {
 	ACTIVE = "Active",
 	ARCHIVED = "Archived",
@@ -13,4 +15,5 @@ export interface ProjectRecord {
 	deploymentId: string | null
 	status: ProjectStatus
 	detailsUpdated: boolean
+	artifact: SourceCode | null
 }
