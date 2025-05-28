@@ -3,7 +3,7 @@ const rspack = require("@rspack/core")
 
 module.exports = {
 	entry: {
-		main: path.join(__dirname, "../src/main.tsx"),
+		main: path.join(__dirname, "../src/index.tsx"),
 	},
 	output: {
 		publicPath: "auto",
@@ -21,7 +21,6 @@ module.exports = {
 				use: {
 					loader: "builtin:swc-loader",
 					options: {
-						sourceMap: true,
 						jsc: {
 							parser: {
 								syntax: "typescript",
@@ -47,8 +46,8 @@ module.exports = {
 		new rspack.CssExtractRspackPlugin({
 			filename: "[name].[contenthash].css",
 		}),
-		new rspack.HtmlRspackPlugin({
-			template: path.join(__dirname, "../index.html"),
+				new rspack.HtmlRspackPlugin({
+			template: path.join(__dirname, "../public/index.html"),
 		}),
 		new rspack.CopyRspackPlugin({
 			patterns: [{ from: "manifest.json" }, { from: "./public/favicon.ico" }],

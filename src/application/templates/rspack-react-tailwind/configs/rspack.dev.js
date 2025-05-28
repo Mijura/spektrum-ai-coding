@@ -17,7 +17,7 @@ const devConfig = {
 		hot: true,
 		compress: false,
 		historyApiFallback: true,
-		open: false
+		open: true,
 	},
 }
 

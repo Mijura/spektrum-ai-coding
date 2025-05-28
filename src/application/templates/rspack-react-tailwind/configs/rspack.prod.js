@@ -2,9 +2,11 @@ const path = require("path")
 const { merge } = require("webpack-merge")
 const rspackBaseConfig = require("./rspack.base")
 
+// @ts-ignore
 module.exports = merge(rspackBaseConfig, {
 	mode: "production",
 	cache: false,
+	devtool: 'source-map',
 	optimization: {
 		minimize: true,
 	},
