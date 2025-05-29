@@ -59,8 +59,28 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		await this.uploadFiles(buildPath, folderName)
 	}
 
+	async restoreProject(project: Project): Promise<void> {
+		const distFolder: string = `projects/${project.id}/dist`
+		if(!await this.fileSystem.exists(distFolder)) {
+
+			if(!project.artifact) {
+				throw new Error("Project doesn't have associated source code")
+			}
+
+			console.log("Project doesn't have a dist folder, creating it...")
+			await this.updateSourceCode(project.id, project.artifact)
+			await this.installDependencies(project.id)
+			await this.buildProject(project.id)
+			console.log("Project built successfully")
+		}
+	}
+
 	async deployProject(project: Project): Promise<void> {
-		const buildPath: string = path.resolve(`projects/${project.id}/dist`)
+		await this.restoreProject(project)
+		const distFolder: string = `projects/${project.id}/dist`
+		
+		console.log("Uploading project to dev environment...")
+		const buildPath: string = path.resolve(distFolder)
 		const folderName = project.deploymentId
 
 		if (!buildPath || !folderName) {
@@ -109,7 +129,7 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		return sourceCode
 	}
 
-	async updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<void> {
+	async updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<SourceCode> {
 		const projectPath = path.resolve(`projects/${projectId}`)
 		let promises = []
 		for (const [filePath, fileContent] of Object.entries(sourceCode)) {
@@ -120,6 +140,7 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		}
 
 		await Promise.all(promises)
+		return await this.fetchSourceCode(projectId)
 	}
 
 	async getStaticFilesPath(projectId: string): Promise<string | null> {

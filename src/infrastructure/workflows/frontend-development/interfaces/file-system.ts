@@ -3,6 +3,7 @@ export interface FileSystemPort {
 	writeFile(path: string, content: string): Promise<void>
     exists(path: string): Promise<boolean>
 	ensureFile(path: string): Promise<void>
+	ensureDir(path: string): Promise<void>
 	readDirectory(path: string): Promise<string[]>
 	isDirectory(path: string): Promise<boolean>
 	readFile(path: string, encoding: string): Promise<string>

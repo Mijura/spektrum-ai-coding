@@ -23,7 +23,7 @@ export class GenerateCode extends WorkflowPhase {
     async execute(data: State): Promise<void> {
         console.log("Generating code")
         
-        const { task, sourceCode, workflowRun, accountId } = data
+        const { task, sourceCode, workflowRun, accountId, project } = data
 
         task.startedWork("React Developer", "GenerateCode", "Developer is developing the feature...")
 
@@ -62,23 +62,6 @@ export class GenerateCode extends WorkflowPhase {
                 - Respond only in valid JSON. The JSON object you return should match the following schema.
 
                 Format Instructions: {outputSchema}
-
-                ### Example:
-
-                User Request:
-                Ticket Title: Create a hello world example
-                Ticket Description: Create a hello world example using React, Tailwind CSS and Framer Motion.
-                
-                Good output for the example request:
-                {{
-                    "sourceCode": {{
-                            "src/components/HelloWorld.tsx": "import {{ motion }} from 'framer-motion';\nimport {{ format }} from 'date-fns';\n\nexport default function HelloWorld() {{\n  const today = format(new Date(), 'eeee, MMMM do, yyyy');\n\n  return (\n    <motion.div \n      className=\"p-4 text-center text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-lg\"\n      initial={{ opacity: 0, y: -10 }} \n      animate={{ opacity: 1, y: 0 }} \n      transition={{ duration: 0.5 }}\n    >\n      Hello World! Today is {{today}}\n    </motion.div>\n  );\n}}",
-                            "src/App.tsx": "import HelloWorld from './components/HelloWorld';\n\nexport default function App() {{\n  return (\n    <div className=\"min-h-screen flex items-center justify-center bg-gray-100\">\n      <HelloWorld />\n    </div>\n  );\n}}",
-                            "src/main.tsx": "import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\nimport './index.css';\n\nReactDOM.createRoot(document.getElementById('root')!).render(\n  <React.StrictMode>\n    <App />\n  </React.StrictMode>\n);",
-                            "package.json": "{{\n  \"dependencies\": {{\n    \"framer-motion\": \"^10.11.1\",\n    \"date-fns\": \"^3.6.0\"\n  }}\n}}"
-                        }},
-                    "comment": "I created a HelloWorld component that uses Framer Motion for animation and date-fns to display today's date in a readable format."
-                }}
     
     
                 `),
@@ -100,12 +83,13 @@ export class GenerateCode extends WorkflowPhase {
             task,
             sourceCode: output.sourceCode,
             workflowRun,
+            project,
             accountId
         }
 
-        console.log("Transitioning to WriteCode")
+        console.log("Transitioning to UpdateCode")
 
-        this.transitionTo("WriteCode", updatedState)
+        this.transitionTo("UpdateCode", updatedState)
 
 
     }
