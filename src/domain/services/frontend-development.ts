@@ -45,8 +45,13 @@ export interface FrontendDevelopmentService {
 	 * @param projectId - The ID of the project to write the source code to
 	 * @param sourceCode - The source code to write to the project
 	 */
-	updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<void>
+	updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<SourceCode>
 
+	/**
+	 * Restores the project from the source code if not exists on filesystem
+	 * @param project - The project to restore
+	 */
+	restoreProject(project: Project): Promise<void>
 
 	/**
 	 * Gets the path to the static files for a project
