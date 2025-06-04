@@ -23,9 +23,14 @@ export class WorkflowController {
             pageSize: parseInt(size)
         }
 
-        const activities: WorkflowRun[] = await fetchTimelineByProjectId.execute(projectId, pagination)
+        try {
+            const activities: WorkflowRun[] = await fetchTimelineByProjectId.execute(projectId, pagination)
+            res.json(activities)
+        } catch (error) {
+            console.error("Error during fetching timeline by projectId:", error)
+            res.status(500).json({ error: "Internal server error" })
+        }
         
-        res.json(activities)
     }
 
     async fetchTimelineByAccountId(req: Request, res: Response): Promise<void> {
@@ -42,10 +47,14 @@ export class WorkflowController {
             pageNumber: parseInt(page),
             pageSize: parseInt(size)
         }
-
-        const activities: WorkflowRun[] = await fetchTimelineByAccountId.execute(accountId, pagination)
         
-        res.json(activities)
+        try {
+            const activities: WorkflowRun[] = await fetchTimelineByAccountId.execute(accountId, pagination)
+            res.json(activities)
+        } catch (error) {
+            console.error("Error during fetching timeline by accountId:", error)
+            res.status(500).json({ error: "Internal server error" })
+        }
         
     }
     async fetchHeatmap(req: Request, res: Response): Promise<void> {
