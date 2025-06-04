@@ -1,15 +1,15 @@
 import { WorkflowType } from '@domain/types/workflow'
-import { Workflow } from '../../domain/workflow/workflow'
+import { WorkflowRunner } from '../../domain/ports/workflow-runner'
 import { WorkflowRegistry } from '@domain/repositories/workflow-registry'
 
 export class InMemoryWorkflowRegistry implements WorkflowRegistry {
-    private workflows: Map<WorkflowType, Workflow> = new Map()
+    private workflows: Map<WorkflowType, WorkflowRunner> = new Map()
 
-    registerWorkflow(type: WorkflowType, workflow: Workflow): void {
+    registerWorkflow(type: WorkflowType, workflow: WorkflowRunner): void {
         this.workflows.set(type, workflow)
     }
 
-    async get(id: string): Promise<Workflow> {
+    async get(id: string): Promise<WorkflowRunner> {
         // Convert string to enum value
         const workflowType = Object.values(WorkflowType).find(type => type === id)
         if (!workflowType) {

@@ -1,6 +1,6 @@
 import { frontendDevelopmentService, taskRepository, workflowRunRepository, projectRepository } from "@infrastructure/dependencies"
-import { State } from "../main"
-import { WorkflowPhase } from "@domain/workflow/workflow-phase"
+import { State } from "../runner"
+import { WorkflowPhase } from "@honeycomb-app/hexacore"
 
 export class UpdateCode extends WorkflowPhase {
     name: string = "UpdateCode"

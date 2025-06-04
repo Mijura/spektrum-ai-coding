@@ -1,7 +1,7 @@
 import { DeployProject } from "@domain/use-cases/project/deploy-project"
 import { Project } from "@domain/entities/project"
 import { ProjectRepository } from "@domain/repositories/project-repository"
-import { FrontendDevelopmentService } from "@domain/services/frontend-development"
+import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
 
 export class DeployProjectUseCase implements DeployProject {
 	constructor(

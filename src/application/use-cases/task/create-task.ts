@@ -4,12 +4,12 @@ import { TaskRepository } from "@domain/repositories/task-repository"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { Project } from "@domain/entities/project"
 import { ProjectDetails } from "@domain/types/project-details"
-import { Workflow } from "@domain/workflow/workflow"
+import { WorkflowRunner } from "@domain/ports/workflow-runner"
 export class CreateTaskUseCase implements CreateTask {
 	constructor(
 		private readonly taskRepository: TaskRepository,
 		private readonly projectRepository: ProjectRepository,
-		private readonly projectRefiningWorkflow: Workflow
+		private readonly projectRefiningWorkflow: WorkflowRunner
 	) {}
 
 	async execute(projectId: string, title: string, description: string): Promise<Task> {

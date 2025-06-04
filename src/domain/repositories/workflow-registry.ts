@@ -1,4 +1,4 @@
-import { Workflow } from "@domain/workflow/workflow"
+import { Workflow } from "@domain/ports/workflow-runner"
 import { WorkflowType } from "@domain/types/workflow"
 
 export interface WorkflowRegistry {

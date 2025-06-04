@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { TaskDtoMapper } from "@application/mappers/task-dto-mapper"
-import { leaveComment, frontendDevelopmentWorkflow, updateTaskDescription, fetchTasks, createTask, updateTaskTitle } from "@infrastructure/dependencies"
+import { leaveComment, frontendDevelopmentRunner, updateTaskDescription, fetchTasks, createTask, updateTaskTitle } from "@infrastructure/dependencies"
 import { TaskDto } from "@application/dto/task"
 import { Task } from "@domain/entities/task"
 
@@ -64,7 +64,7 @@ export class TaskController {
 		try {
 			const { taskId, authorId, commentText } = req.body
 			const task = await leaveComment.execute(taskId, authorId, commentText)
-			frontendDevelopmentWorkflow.run(task, authorId)
+			frontendDevelopmentRunner.run(task, authorId)
 			res.status(200).json(task)
 		} catch (error) {
 			console.error("Error adding comment:", error)

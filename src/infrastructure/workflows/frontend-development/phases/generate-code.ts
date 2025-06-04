@@ -4,9 +4,9 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import { reactDeveloperModel } from "@infrastructure/workflows/models"
 import { TaskMapper } from "@infrastructure/mappers/task-mapper"
 import { taskRepository } from "@infrastructure/dependencies"
-import { State } from "../main"
+import { State } from "../runner"
 import { z } from "zod"
-import { WorkflowPhase } from "@domain/workflow/workflow-phase"
+import { WorkflowPhase } from "@honeycomb-app/hexacore"
 
 const SourceCodeSchema = z.record(
 	z.string().describe("The file path as a string"),

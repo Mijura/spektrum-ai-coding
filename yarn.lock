@@ -928,6 +928,11 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@honeycomb-app/hexacore@^0.0.2":
+  version "0.0.2"
+  resolved "https://npm.pkg.github.com/download/@honeycomb-app/hexacore/0.0.2/7c2c2c19143ab025d4919736750cf492e5fc3c7b#7c2c2c19143ab025d4919736750cf492e5fc3c7b"
+  integrity sha512-3WaIta84nSvnLmqvmfMcfAtndnCdXY6zZV5sW3aJUFPld0PvuJrtBMc2KYJ/V28nGZ9yuZxWyvdPjWam6xKI9w==
+
 "@jridgewell/resolve-uri@^3.0.3":
   version "3.1.2"
   resolved "https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz"

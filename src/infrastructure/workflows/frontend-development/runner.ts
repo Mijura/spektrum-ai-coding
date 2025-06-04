@@ -4,10 +4,9 @@ import { GenerateCode } from "./phases/generate-code"
 import { Task } from "@domain/entities/task"
 import { SourceCode } from "@domain/types/source-code"
 import { WorkflowRun } from "@domain/entities/workflow-run"
-import { Workflow } from "@domain/workflow/workflow"
-import { WorkflowPhaseRegistry } from "@domain/workflow/workflow-phase-registry"
-import { WorkflowContext } from "@domain/workflow/workflow-context"
+import { WorkflowRunner } from "@domain/ports/workflow-runner"
 import { Project } from "@domain/entities/project"
+import { Workflow, WorkflowPhaseRegistry } from "@honeycomb-app/hexacore"
 export interface State {
 	task: Task
 	sourceCode: SourceCode
@@ -15,7 +14,7 @@ export interface State {
     project: Project
     accountId: string
 }
-export class FrontendDevelopmentWorkflow implements Workflow {
+export class FrontendDevelopmentRunner implements WorkflowRunner {
     
     async run(task: Task, accountId: string): Promise<void> {
         const project = await projectRepository.findById(task.projectId)
@@ -28,7 +27,7 @@ export class FrontendDevelopmentWorkflow implements Workflow {
         WorkflowPhaseRegistry.register(UpdateCode)
         WorkflowPhaseRegistry.register(GenerateCode)
 
-        const context = new WorkflowContext(new GenerateCode())
+        const context = new Workflow(new GenerateCode())
         
         await context.execute({
             task,

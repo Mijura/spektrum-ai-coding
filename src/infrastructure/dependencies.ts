@@ -6,7 +6,7 @@ import { ArchiveProject } from "@domain/use-cases/project/archive-project"
 import { DeployProject } from "@domain/use-cases/project/deploy-project"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
-import { FrontendDevelopmentService } from "@domain/services/frontend-development"
+import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
 
 import { FetchProjectsUseCase } from "@application/use-cases/project/fetch-projects"
 import { DeployProjectUseCase } from "@application/use-cases/project/deploy-project"
@@ -21,7 +21,6 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTaskRepository } from "@infrastructure/repositories/task-repository"
 
-import { FrontendDevelopmentWorkflow } from "./workflows/frontend-development/main"
 import { YarnPackageManager } from "./workflows/frontend-development/services/yarn-package-manager"
 import { FrontendDevelopment } from "./workflows/frontend-development/services/fronted-development"
 import { PackageManager } from "./workflows/frontend-development/interfaces/package-manager"
@@ -41,19 +40,20 @@ import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow/fetch-time
 import { WorkflowController } from "./http/controllers/workflow-controller"
 import { RunWorkflowUseCase } from "@application/use-cases/workflow/run-workflow"
 import { RunWorkflow } from "@domain/use-cases/workflow/run-workflow"
-import { ProjectRefiningWorkflow } from "./workflows/project-refining/main"
 import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow/fetch-heatmap"
 import { FetchWorkflowRunsHeatmapUseCase } from "@application/use-cases/workflow/fetch-heatmap"
 import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/workflow/fetch-project-timeline"
 import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/workflow/fetch-account-timeline"
 import { FileSystemPort } from "./workflows/frontend-development/interfaces/file-system"
-import { Workflow } from "@domain/workflow/workflow"
+import { WorkflowRunner } from "@domain/ports/workflow-runner"
 import { WorkflowRegistry } from "@domain/repositories/workflow-registry"
 import { InMemoryWorkflowRegistry } from "./repositories/workflow-registry"
 import { WorkflowType } from "@domain/types/workflow"
 import { NodeFileSystem } from "./workflows/frontend-development/services/node-file-system"
 import { S3DeploymentTargetAdapter } from "./workflows/frontend-development/services/s3-deployment-target"
 import { DeploymentTargetPort } from "./workflows/frontend-development/interfaces/deployment-target"
+import { FrontendDevelopmentRunner } from "./workflows/frontend-development/runner"
+import { ProjectRefiningRunner } from "./workflows/project-refining/runner"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -74,11 +74,11 @@ export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkfl
 export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 
 // Workflows
-export const frontendDevelopmentWorkflow: Workflow = new FrontendDevelopmentWorkflow()
-export const projectRefiningWorkflow: Workflow = new ProjectRefiningWorkflow()
+export const frontendDevelopmentRunner: WorkflowRunner = new FrontendDevelopmentRunner()
+export const projectRefiningRunner: WorkflowRunner = new ProjectRefiningRunner()
 
 // Register workflows
-workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentWorkflow)
+workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentRunner)
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)
@@ -86,7 +86,7 @@ export const fetchProject: FetchProject = new FetchProjectUseCase(projectReposit
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
-export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, projectRepository, projectRefiningWorkflow)
+export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, projectRepository, projectRefiningRunner)
 export const fetchTasks: FetchTasks = new FetchTasksUseCase(taskRepository)
 export const updateTaskTitle: UpdateTaskTitle = new UpdateTaskTitleUseCase(taskRepository)
 export const updateTaskDescription: UpdateTaskDescription = new UpdateTaskDescriptionUseCase(taskRepository)
