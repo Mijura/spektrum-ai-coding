@@ -90,7 +90,7 @@ export class WorkflowController {
         }
 
 		try {
-            runWorkflow.execute(taskId, workflowId, accountId)
+            await runWorkflow.execute(taskId, workflowId, accountId)
             res.status(200).json({ message: "Workflow run initiated" })
 		} catch (error) {
 			console.error("Error during development workflow:", error)

@@ -64,7 +64,7 @@ export class TaskController {
 		try {
 			const { taskId, authorId, commentText } = req.body
 			const task = await leaveComment.execute(taskId, authorId, commentText)
-			frontendDevelopmentRunner.run(task, authorId)
+			await frontendDevelopmentRunner.run(task, authorId)
 			res.status(200).json(task)
 		} catch (error) {
 			console.error("Error adding comment:", error)

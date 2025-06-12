@@ -100,13 +100,12 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 			return null
 		}
 
-
 		let response = await client.get({
 			index: index,
 			id: id,
 		})
 
-		return response.body as unknown as WorkflowRun
+		return response.body._source as WorkflowRun
     }
 
 	async getTimelineByProjectId(projectId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
