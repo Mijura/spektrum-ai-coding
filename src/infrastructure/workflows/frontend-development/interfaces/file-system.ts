@@ -8,4 +8,5 @@ export interface FileSystemPort {
 	isDirectory(path: string): Promise<boolean>
 	readFile(path: string, encoding: string): Promise<string>
 	createReadStream(filePath: string): NodeJS.ReadableStream
+	removeDir(path: string): Promise<void>
 }

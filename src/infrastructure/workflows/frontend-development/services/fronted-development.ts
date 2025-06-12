@@ -13,6 +13,12 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		private readonly fileSystem: FileSystemPort, 
 		private readonly deploymentTarget: DeploymentTargetPort) {}
 
+
+	removeSourceCodeFromFileSystem(projectId: string): Promise<void> {
+		const projectPath = path.resolve(`projects/${projectId}`)
+		return this.fileSystem.removeDir(projectPath)
+	}
+
 	async setupProject(project: Project): Promise<SourceCode> {
 		try {
 			const projectPath: string = path.join("projects", project.id)
@@ -60,19 +66,15 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 	}
 
 	async restoreProject(project: Project): Promise<void> {
-		const distFolder: string = `projects/${project.id}/dist`
-		if(!await this.fileSystem.exists(distFolder)) {
-
-			if(!project.artifact) {
-				throw new Error("Project doesn't have associated source code")
-			}
-
-			console.log("Project doesn't have a dist folder, creating it...")
-			await this.updateSourceCode(project.id, project.artifact)
-			await this.installDependencies(project.id)
-			await this.buildProject(project.id)
-			console.log("Project built successfully")
+		if(!project.artifact) {
+			throw new Error("Project doesn't have associated source code")
 		}
+
+		console.log("Project doesn't have a dist folder, creating it...")
+		await this.updateSourceCode(project.id, project.artifact)
+		await this.installDependencies(project.id)
+		await this.buildProject(project.id)
+		console.log("Project built successfully")
 	}
 
 	async deployProject(project: Project): Promise<void> {

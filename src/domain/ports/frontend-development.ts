@@ -54,6 +54,12 @@ export interface FrontendDevelopmentService {
 	restoreProject(project: Project): Promise<void>
 
 	/**
+	 * Removes the source code from the filesystem
+	 * @param projectId - The ID of the project to remove the source code from
+	 */
+	removeSourceCodeFromFileSystem(projectId: string): Promise<void>
+
+	/**
 	 * Gets the path to the static files for a project
 	 * @param projectId - The ID of the project to get the static files path for
 	 * @returns The path to the static files for the project or null if the project is not found

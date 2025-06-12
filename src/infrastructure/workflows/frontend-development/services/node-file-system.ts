@@ -29,6 +29,9 @@ export class NodeFileSystem implements FileSystemPort {
 	async exists(filePath: string): Promise<boolean> {
 		return await fs.exists(filePath)
 	}
+	async removeDir(path: string): Promise<void> {
+		await fs.remove(path)
+	}
 	createReadStream(filePath: string): NodeJS.ReadableStream {
 		return fs.createReadStream(filePath)
 	}
