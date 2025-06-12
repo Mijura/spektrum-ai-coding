@@ -21,6 +21,7 @@ export class UpdateCode extends WorkflowPhase {
             installSuccess = await frontendDevelopmentService.installDependencies(task.projectId)
             buildSuccess = await frontendDevelopmentService.buildProject(task.projectId)
             await frontendDevelopmentService.deployToDevEnvironment(task.projectId)
+            await frontendDevelopmentService.removeSourceCodeFromFileSystem(task.projectId)
             task.leaveComment("DevOps Engineer", "Application is successfully deployed and now is ready to be tested.")
             project.setArtifact(wholeCode)
             await projectRepository.save(project)
