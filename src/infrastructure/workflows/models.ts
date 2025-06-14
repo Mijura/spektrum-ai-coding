@@ -1,37 +1,37 @@
 import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatOpenAI } from "@langchain/openai";
 
-const o1Mini = new ChatOpenAI({
+export const o1Mini = new ChatOpenAI({
     modelName: "o1-mini",
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
 
-const o1 = new ChatOpenAI({
+export const o1 = new ChatOpenAI({
     modelName: "o1",
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
 
-const gpt4o = new ChatOpenAI({
+export const gpt4o = new ChatOpenAI({
     modelName: "gpt-4o",
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
 
-const gpt4oMini = new ChatOpenAI({
+export const gpt4oMini = new ChatOpenAI({
     modelName: "gpt-4o-mini",
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
 
-const o3Mini = new ChatOpenAI({
+export const o3Mini = new ChatOpenAI({
     modelName: "o3-mini",
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
 
-const gpt41 = new ChatOpenAI({
+export const gpt41 = new ChatOpenAI({
     modelName: "gpt-4.1",
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
 
-const gpt41Mini = new ChatOpenAI({
+export const gpt41Mini = new ChatOpenAI({
     modelName: "gpt-4.1-mini",
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
@@ -40,13 +40,13 @@ export const gpt41Nano = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
 })
 
-const claude37Sonnet = new ChatAnthropic({
+export const claude37Sonnet = new ChatAnthropic({
     modelName: "claude-3-7-sonnet-20250219",
     anthropicApiKey: process.env.ANTHROPIC_API_KEY,
     cache: true,
 })
 
-const claude35Sonnet = new ChatAnthropic({
+export const claude35Sonnet = new ChatAnthropic({
     modelName: "claude-3-5-sonnet-20241022",
     anthropicApiKey: process.env.ANTHROPIC_API_KEY,
     cache: true,
