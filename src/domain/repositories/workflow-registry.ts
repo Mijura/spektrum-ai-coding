@@ -1,7 +1,7 @@
-import { Workflow } from "@domain/ports/workflow-runner"
+import { WorkflowRunner  } from "@domain/ports/workflow-runner"
 import { WorkflowType } from "@domain/types/workflow"
 
 export interface WorkflowRegistry {
-    get(workflowId: string): Promise<Workflow>
-    registerWorkflow(type: WorkflowType, workflow: Workflow): void
+    get(workflowId: string): Promise<WorkflowRunner>
+    registerWorkflow(type: WorkflowType, workflow: WorkflowRunner): void
 }
