@@ -54,6 +54,7 @@ import { S3DeploymentTargetAdapter } from "./workflows/frontend-development/serv
 import { DeploymentTargetPort } from "./workflows/frontend-development/interfaces/deployment-target"
 import { FrontendDevelopmentRunner } from "./workflows/frontend-development/runner"
 import { ProjectRefiningRunner } from "./workflows/project-refining/runner"
+import { KeyboardPriceSyncRunner } from "./workflows/scraping-workflow/runner"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -76,9 +77,9 @@ export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 // Workflows
 export const frontendDevelopmentRunner: WorkflowRunner = new FrontendDevelopmentRunner()
 export const projectRefiningRunner: WorkflowRunner = new ProjectRefiningRunner()
-
+export const scrapingRunner: WorkflowRunner = new KeyboardPriceSyncRunner()
 // Register workflows
-workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentRunner)
+workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, scrapingRunner)
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)
