@@ -77,9 +77,9 @@ export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 // Workflows
 export const frontendDevelopmentRunner: WorkflowRunner = new FrontendDevelopmentRunner()
 export const projectRefiningRunner: WorkflowRunner = new ProjectRefiningRunner()
-export const scrapingRunner: WorkflowRunner = new KeyboardPriceSyncRunner()
+//export const scrapingRunner: WorkflowRunner = new KeyboardPriceSyncRunner()
 // Register workflows
-workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, scrapingRunner)
+workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentRunner)
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)

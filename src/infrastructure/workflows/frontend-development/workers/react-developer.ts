@@ -5,12 +5,7 @@ import { ProjectRepository } from "@domain/repositories/project-repository";
 import { TaskRepository } from "@domain/repositories/task-repository";
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository";
 import { AIWorker, Brain } from "@infrastructure/workflows/ai-worker";
-import z from "zod";
-
-const SourceCodeSchema = z.record(
-	z.string().describe("The file path as a string"),
-	z.string().describe("The source code (content) inside a file")
-)
+import z from "zod"; 
 
 export class ReactDeveloper extends AIWorker {
 
@@ -18,7 +13,10 @@ export class ReactDeveloper extends AIWorker {
     brain = Brain.GPT_41_MINI;
     
     thoughtShape = z.object({
-        sourceCode: SourceCodeSchema,
+        sourceCode: z.record(
+            z.string().describe("The file path as a string"),
+            z.string().describe("The source code (content) inside a file")
+        ),
         comment: z.string().describe("The comment to be added to the task. It's a short summary of the changes you made from the user's perspective")
     })
 
@@ -43,7 +41,9 @@ export class ReactDeveloper extends AIWorker {
         this.project = await this.projectRepository.findById(task.projectId)
     }
 
-    setContext(): string {
+    loadContext(): string {
+
+        const task = JSON.stringify(this.task)
 
         return `### Role:
             You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
@@ -68,12 +68,15 @@ export class ReactDeveloper extends AIWorker {
                 - NOTE: If you don't add the dependency to the package.json file, the project will not work.
     
                 ### **Details**
-                - **Task Details:** ${this.task}
-                - **Current Source Code:** ${this.project.artifact}
+                - **Task Details:** ${task}
+                - **Current Source Code:** ${JSON.stringify(this.project.artifact)}
     
                 Important:
                 - Double check all imports or require statements to ensure they are listed in the package.json file.
                 - Respond only in valid JSON. The JSON object you return should match the following schema.
+
+                ### **Output Format**
+                ${JSON.stringify(this.thoughtShape.shape)}
         `
     }
     

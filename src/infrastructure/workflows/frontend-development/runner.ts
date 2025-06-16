@@ -22,7 +22,7 @@ export class FrontendDevelopmentRunner implements WorkflowRunner {
         try {
             
             const reactDeveloper = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, workflowRunRepository, task)
-            const sourceCode = await reactDeveloper.think(task)
+            const sourceCode = await reactDeveloper.execute(task)
             workflowRun.finishSuccessfully(sourceCode)
 
         } catch (error: any) {

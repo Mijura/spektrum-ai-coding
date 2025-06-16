@@ -29,7 +29,7 @@ export abstract class AIWorker{
     /**
     * The function to call to set the context of the AI
     */
-    abstract setContext(): string
+    abstract loadContext(): string
 
     /**
      * The function to call after the AI has thought
@@ -42,24 +42,28 @@ export abstract class AIWorker{
      * @param task T
      * @returns The response of the afterThought function
      */
-    async think(task: any): Promise<any> {
+    async execute(task: any): Promise<any> {
         await this.preThought(task)
 
         const client = new OpenAI()
 
 
-        const response = await client.chat.completions.parse({
+        const response = await client.chat.completions.create({
             model: this.brain,
             messages: [
-                { role: "system", content: this.setContext() },
-                { role: "user", content: task }
-            ],
-            response_format: zodResponseFormat(this.thoughtShape, "json_object")
+                { role: "system", content: this.loadContext() },
+                { role: "user", content: task.toString() }
+            ]
         })
 
-        const result = response.choices[0].message.parsed;
+        const raw = response.choices[0].message.content || ""
 
-        return await this.afterThought(result)
+
+        console.log(raw)
+
+        const parsed = this.thoughtShape.parse()
+
+        return await this.afterThought(JSON.parse(raw))
     }
     
     
