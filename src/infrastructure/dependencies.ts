@@ -76,7 +76,6 @@ export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 // Workflows
 export const frontendDevelopmentRunner: WorkflowRunner = new FrontendDevelopmentRunner()
 export const projectRefiningRunner: WorkflowRunner = new ProjectRefiningRunner()
-
 // Register workflows
 workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentRunner)
 
