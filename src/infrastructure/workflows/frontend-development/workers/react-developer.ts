@@ -36,6 +36,7 @@ export class ReactDeveloper extends AIWorker {
         this.task = task
 
     }
+
     async preThought(task:Task): Promise<any> {
         task.startedWork("React Developer", "Code Generation", "React Developer is generating the code...")
         this.project = await this.projectRepository.findById(task.projectId)
@@ -87,8 +88,7 @@ export class ReactDeveloper extends AIWorker {
 
         this.task.finishedWork("React Developer", "Code Generation", "Finished with coding")
         this.task.leaveComment("React Developer", comment)
-
-        this.task.startedWork("React Engineer", "Code Deployment", "React engineer deploying the application...")
+        this.task.startedWork("React Developer", "Code Deployment", "React engineer deploying the application...")
 
         try {
 

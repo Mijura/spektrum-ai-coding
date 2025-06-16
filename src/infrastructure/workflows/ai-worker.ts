@@ -1,7 +1,5 @@
 import OpenAI from "openai"
 import { z } from "zod"
-import { zodResponseFormat } from "openai/helpers/zod"
-
 
 export enum Brain {
     GPT_41 = "gpt-4.1",
@@ -24,7 +22,9 @@ export abstract class AIWorker{
     /**
      * The function to call before the AI has thought. It's useful to supplying data for the context since it's happens before the context is set.
      */
-    abstract preThought(input: any): Promise<void>
+    async preThought(input: any): Promise<void> {
+        return
+    }
 
     /**
     * The function to call to set the context of the AI
@@ -34,7 +34,9 @@ export abstract class AIWorker{
     /**
      * The function to call after the AI has thought
      */
-    abstract afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any>
+    async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any> {
+        return tought
+    }
 
 
     /**
@@ -57,11 +59,6 @@ export abstract class AIWorker{
         })
 
         const raw = response.choices[0].message.content || ""
-
-
-        console.log(raw)
-
-        const parsed = this.thoughtShape.parse()
 
         return await this.afterThought(JSON.parse(raw))
     }
