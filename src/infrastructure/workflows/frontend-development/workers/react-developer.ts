@@ -1,11 +1,12 @@
-import { Project } from "@domain/entities/project";
-import { Task } from "@domain/entities/task";
-import { FrontendDevelopmentService } from "@domain/ports/frontend-development";
-import { ProjectRepository } from "@domain/repositories/project-repository";
-import { TaskRepository } from "@domain/repositories/task-repository";
-import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository";
-import { AIWorker, Brain } from "@infrastructure/workflows/ai-worker";
-import z from "zod"; 
+import { Project } from "@domain/entities/project"
+import { Task } from "@domain/entities/task"
+import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
+import { ProjectRepository } from "@domain/repositories/project-repository"
+import { TaskRepository } from "@domain/repositories/task-repository"
+import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
+import { SourceCode } from "@domain/types/source-code"
+import { AIWorker, Brain } from "@honeycomb-app/hexacore"
+import z from "zod"
 
 export class ReactDeveloper extends AIWorker {
 
@@ -81,7 +82,7 @@ export class ReactDeveloper extends AIWorker {
         `
     }
     
-    async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any> {
+    async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<SourceCode> {
         console.log("Writing code")
 
         const { sourceCode, comment } = tought
@@ -107,7 +108,7 @@ export class ReactDeveloper extends AIWorker {
             this.task.leaveComment("React Engineer", "I encountered an error during build : " + error)
             throw error
         } finally {
-            this.task.finishedWork("React Engineer", "Code Deployment", "Finished updating the application")
+            this.task.finishedWork("React Developer", "Code Deployment", "Finished updating the application")
             await this.taskRepository.save(this.task)
         }
 

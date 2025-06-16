@@ -1,8 +1,7 @@
 import { Task } from "@domain/entities/task"
-import { RefineProjectDetails } from "./phases/refine-project-details"
 import { ProjectDetails } from "@domain/types/project-details"
 import { WorkflowRunner } from "@domain/ports/workflow-runner"
-import { Workflow, WorkflowPhaseRegistry } from "@honeycomb-app/hexacore"
+import { ProjectRefiner } from "./phases/project-refiner"
 
 export type Input = {
     task: Task
@@ -11,13 +10,11 @@ export class ProjectRefiningRunner implements WorkflowRunner {
 
     async run(task: Task): Promise<ProjectDetails> {
         
-        WorkflowPhaseRegistry.register(RefineProjectDetails)
+        const worker = new ProjectRefiner(task)
 
-        const context = new Workflow(new RefineProjectDetails())
+        const projectDetails: ProjectDetails = await worker.execute(task)
 
-        const projectDetails: ProjectDetails = await context.execute({
-            task
-        })
+        console.log("Project details: ", projectDetails)
 
         return projectDetails
     }
