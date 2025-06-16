@@ -16,7 +16,7 @@
     "@aws-sdk/credential-provider-node": "^3.797.0",
     "@aws-sdk/lib-dynamodb": "^3.398.0",
     "@aws-sdk/lib-storage": "^3.817.0",
-    "@honeycomb-app/hexacore": "^0.0.4",
+    "@honeycomb-app/hexacore": "^0.0.5",
     "@opensearch-project/opensearch": "^3.5.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

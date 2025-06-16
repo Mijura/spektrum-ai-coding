@@ -1,7 +1,7 @@
 import { Task } from "@domain/entities/task"
 import { ProjectDetails } from "@domain/types/project-details"
 import { WorkflowRunner } from "@domain/ports/workflow-runner"
-import { ProjectRefiner } from "./phases/project-refiner"
+import { ProjectRefiner } from "./workers/project-refiner"
 
 export type Input = {
     task: Task
