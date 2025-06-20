@@ -5,12 +5,13 @@ import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
 import { SourceCode } from "@domain/types/source-code"
-import { AIWorker, Brain } from "@honeycomb-app/hexacore"
+import { Contributor, Brain } from "@infrastructure/workflows/contributor"
 import z from "zod"
 
-export class ReactDeveloper extends AIWorker {
-
+export class ReactDeveloper extends Contributor {
     
+    name: string = "React Developer"
+
     brain = Brain.GPT_41_MINI;
     
     thoughtShape = z.object({
@@ -25,27 +26,25 @@ export class ReactDeveloper extends AIWorker {
     projectRepository: ProjectRepository
     taskRepository: TaskRepository
     workflowRunRepository: WorkflowRunRepository
-    task: Task;
+    task!: Task;
     project!: Project;
 
-    constructor(frontendDevelopmentService: FrontendDevelopmentService, projectRepository: ProjectRepository, taskRepository: TaskRepository, workflowRunRepository: WorkflowRunRepository, task: Task) {
+    constructor(frontendDevelopmentService: FrontendDevelopmentService, projectRepository: ProjectRepository, taskRepository: TaskRepository, workflowRunRepository: WorkflowRunRepository) {
         super();
         this.frontendDevelopmentService = frontendDevelopmentService
         this.projectRepository = projectRepository
         this.taskRepository = taskRepository
         this.workflowRunRepository = workflowRunRepository
-        this.task = task
 
     }
 
-    async preThought(task:Task): Promise<any> {
-        task.startedWork("React Developer", "Code Generation", "React Developer is generating the code...")
+    async preThought(task: Task): Promise<any> {
+        this.task = task
+        this.task.startedWork("React Developer", "Code Generation", "React Developer is generating the code...")
         this.project = await this.projectRepository.findById(task.projectId)
     }
 
     loadContext(): string {
-
-        const task = JSON.stringify(this.task)
 
         return `### Role:
             You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
@@ -70,7 +69,7 @@ export class ReactDeveloper extends AIWorker {
                 - NOTE: If you don't add the dependency to the package.json file, the project will not work.
     
                 ### **Details**
-                - **Task Details:** ${task}
+                - **Task Details:** ${JSON.stringify(this.task)}
                 - **Current Source Code:** ${JSON.stringify(this.project.artifact)}
     
                 Important:

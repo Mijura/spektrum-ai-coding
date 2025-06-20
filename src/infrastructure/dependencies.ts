@@ -54,6 +54,9 @@ import { S3DeploymentTargetAdapter } from "./workflows/frontend-development/serv
 import { DeploymentTargetPort } from "./workflows/frontend-development/interfaces/deployment-target"
 import { FrontendDevelopmentRunner } from "./workflows/frontend-development/runner"
 import { ProjectRefiningRunner } from "./workflows/project-refining/runner"
+import { ReactDeveloper } from "./workflows/frontend-development/workers/react-developer"
+import { Contributor } from "./workflows/contributor"
+import { ProductOwner } from "./workflows/frontend-development/workers/product-owner"
 
 // Controllers
 export const projectController = new ProjectController()

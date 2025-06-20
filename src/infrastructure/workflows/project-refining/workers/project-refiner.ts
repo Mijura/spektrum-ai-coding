@@ -35,6 +35,14 @@ export class ProjectRefiner extends AIWorker {
 
             Important:
                 - Respond only in valid JSON. The JSON object you return should match the following schema.
+
+            ### **Output Example**
+            {
+                "project": {
+                    "name": "Simple Note-taking app",
+                    "description": "A simple note-taking app that allows you to create, edit, and delete notes."
+                }
+            }
             
             ### **Output Format** 
             ${JSON.stringify(this.thoughtShape.shape)}
