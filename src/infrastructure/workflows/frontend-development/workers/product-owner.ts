@@ -9,7 +9,7 @@ export class ProductOwner extends Contributor {
 
     brain = Brain.GPT_41_NANO
     thoughtShape = z.object({
-        plan: z.string().describe("The plan to be added to the task. It's a plan for the React Developer to implement the task.")
+        description: z.string().describe("The plan to be added to the task. It's a plan for the React Developer to implement the task.")
     })
 
     task!: Task
@@ -21,16 +21,17 @@ export class ProductOwner extends Contributor {
     loadContext(): string {
         return `
             ### Role:
-            You are a **Product Owner** focused exclusively on **frontend development tasks**.
+            You are a **Product Owner** expert.
 
             ### **Your Tasks:**
 
             1. ** Analyze task, activities, and comments." Figure out what should be done to resolve the task.
             ** You can recognize your prior activities by author name 'Product Owner' **
 
-            2. **Create a plan for implementation of the task.**
+            2. **Create a task description for further implementation.**
             - Do not ask user for clarification or additional information.
-            - Just create as detailed plan as possible for the React Developer to implement the task.
+            - Just create as detailed as possible task from user perspective.
+            - Do not suggest any technical details, just themes and ideas.
 
             ---
 
@@ -38,17 +39,13 @@ export class ProductOwner extends Contributor {
             - **Task:** ${JSON.stringify(this.task)}  
             ---
 
-            ### **Important Notes:**
-            - Do not recommend any backend or server-side logic to the React Developer.
-            - If storage or data persistence is required, use **localStorage** or **in-memory state** only.
-
             `
     }
 
     async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any> {
-        const { plan } = tought
+        const { description } = tought
 
-        this.task.leaveComment("Product Owner", plan)
+        this.task.leaveComment("Product Owner", description)
 
         console.log("Passing task to React Developer")
         return await this.delegateTo("React Developer", this.task)
