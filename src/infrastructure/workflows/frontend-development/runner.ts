@@ -25,12 +25,12 @@ export class FrontendDevelopmentRunner implements WorkflowRunner {
         try {
 
             const reactDeveloper: Contributor = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, workflowRunRepository)
-            const productOwner: Contributor = new ProductOwner(task)
+            // const productOwner: Contributor = new ProductOwner(task)
 
-            Team.addContributor(productOwner)
-            Team.addContributor(reactDeveloper)
+            // Team.addContributor(productOwner)
+            // Team.addContributor(reactDeveloper)
             
-            const artifact = await productOwner.execute(task)
+            const artifact = await reactDeveloper.execute(task)
             workflowRun.finishSuccessfully(artifact)
 
         } catch (error: any) {

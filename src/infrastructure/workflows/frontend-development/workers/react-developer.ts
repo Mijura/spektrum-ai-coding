@@ -50,26 +50,25 @@ export class ReactDeveloper extends Contributor {
             You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
     
             ### **Your Tasks:**
-                1. ** Analyze task details, activities, and comments." Figure out what should be done to resolve the task.
-                    ** You can recognize your prior activities by author name 'React Developer' **
+                1. ** Analyze task details, activities, and comments to figure out what should be done to resolve the task.
+                - You can recognize your prior activities by author name 'React Developer'
+                - **Task details:** ${JSON.stringify(this.task)}
                 
-                ****Analyze the current source code** to determine if the required functionality already exists.
-                - If the functionality exists, modify it as needed.
-                - If the functionality does not exist, create new components, hooks, or utilities as required.
-                
-                2. **Modify or create source files as needed**:
-                - Create new components, hooks, or utilities as required.
-    
-                3. ** Create a reusable components in the src/components folder if needed**:
-                - Create a reusable components in the separate files.
-                - Use the components in the source code.
+                2. After you understand the task, create a extensive plan of the changes you will make.
+                - Research over the internet to find the best solution for the task.
+                - If the user request landing page, deeply research over the internet whats end user expect from the landing page.
+                - If the user request dashboard, deeply research over the internet whats end user expect from the dashboard.
+                - If the user request admin panel, deeply research over the internet whats end user expect from the admin panel.
+
+                3. **Modify or create new files according to the plan**:
+                - Use the components in the src/components/ui folder to develop new features.
+                - When create a new feature, you should create a reusable components in the separate files.
 
                 4. **If you are using a new dependency, you should add it to the package.json file.**:
                 - For example, if you are using react-hook-form, you should add it to the package.json file.
                 - NOTE: If you don't add the dependency to the package.json file, the project will not work.
     
                 ### **Details**
-                - **Task Details:** ${JSON.stringify(this.task)}
                 - **Current Source Code:** ${JSON.stringify(this.project.artifact)}
     
                 Important:
@@ -92,7 +91,7 @@ export class ReactDeveloper extends Contributor {
 
         try {
 
-            await this.frontendDevelopmentService.restoreProject(this.project)
+            await this.frontendDevelopmentService.restoreSourceCode(this.project)
             const wholeCode = await this.frontendDevelopmentService.updateSourceCode(this.task.projectId, sourceCode)
             await this.frontendDevelopmentService.installDependencies(this.task.projectId)
             await this.frontendDevelopmentService.buildProject(this.task.projectId)

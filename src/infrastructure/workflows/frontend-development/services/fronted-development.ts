@@ -23,7 +23,7 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		try {
 			const projectPath: string = path.join("projects", project.id)
 
-			const templateName = "rspack-react-tailwind"
+			const templateName = "react-shadcn"
 			const templatePath = path.resolve(`src/application/templates/${templateName}`)
 
 			console.log("Template path:", templatePath)
@@ -70,11 +70,20 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 			throw new Error("Project doesn't have associated source code")
 		}
 
-		console.log("Project doesn't have a dist folder, creating it...")
 		await this.updateSourceCode(project.id, project.artifact)
 		await this.installDependencies(project.id)
 		await this.buildProject(project.id)
 		console.log("Project built successfully")
+	}
+
+	async restoreSourceCode(project: Project): Promise<void> {
+
+		if(!project.artifact) {
+			throw new Error("Project doesn't have associated source code")
+		}
+
+		await this.updateSourceCode(project.id, project.artifact)
+		console.log("Project restored to the disk")
 	}
 
 	async deployProject(project: Project): Promise<void> {
