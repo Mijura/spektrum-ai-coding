@@ -673,10 +673,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@honeycomb-app/hexacore@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@honeycomb-app/hexacore/-/hexacore-0.0.5.tgz#80b9dc6f9343f84a75a79a11f8203725503b25c5"
-  integrity sha512-SXPB59fdILhzDzMZWeiqAq7BNsLu087LMY8HpEbgy837m7iEQK5xlrKS2mFi0XTpVz582XiO1gQ+CLFpz6wAPQ==
+"@honeycomb-app/hexacore@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@honeycomb-app/hexacore/-/hexacore-0.1.0.tgz#d8f012147448a0db2b594c478c21f16fb550a46a"
+  integrity sha512-t+T75TmbHFnbscLU3E+JikcwE0hP7mYAk+4VeXq7vCXomLNcAzsGsW+mpha1Nkh0uDyBzlo597Mw8njM3oKDxA==
   dependencies:
     openai "^5.3.0"
     zod "^3.25.64"

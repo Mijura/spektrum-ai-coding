@@ -1,6 +1,6 @@
-import { Task } from "@domain/entities/task";
-import { Contributor, Brain } from "@infrastructure/workflows/contributor";
-import z from "zod";
+import { Task } from "@domain/entities/task"
+import { Contributor, Brain } from "@honeycomb-app/hexacore"
+import z from "zod"
 
 
 export class ProductOwner extends Contributor {
@@ -8,8 +8,9 @@ export class ProductOwner extends Contributor {
     name: string = "Product Owner"
 
     brain = Brain.GPT_41_NANO
+
     thoughtShape = z.object({
-        description: z.string().describe("The plan to be added to the task. It's a plan for the React Developer to implement the task.")
+        description: z.string().describe("The task description for the further implementation.")
     })
 
     task!: Task
@@ -25,11 +26,11 @@ export class ProductOwner extends Contributor {
 
             ### **Your Tasks:**
 
-            1. ** Analyze task, activities, and comments." Figure out what should be done to resolve the task.
-            ** You can recognize your prior activities by author name 'Product Owner' **
+            1. ** Analyze task, activities, and comments." 
+            - Figure out what user wants to achieve.
 
-            2. **Create a task description for further implementation.**
-            - Do not ask user for clarification or additional information.
+            2. **Translate user's request into a task description.**
+            - Do not ask user or other contributors for clarification or additional information.
             - Just create as detailed as possible task from user perspective.
             - Do not suggest any technical details, just themes and ideas.
 

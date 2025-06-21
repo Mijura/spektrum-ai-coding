@@ -4,10 +4,9 @@ import { SourceCode } from "@domain/types/source-code"
 import { WorkflowRun } from "@domain/entities/workflow-run"
 import { WorkflowRunner } from "@domain/ports/workflow-runner"
 import { Project } from "@domain/entities/project"
-import { Team } from "../team"
 import { ReactDeveloper } from "./workers/react-developer"
-import { Contributor } from "../contributor"
 import { ProductOwner } from "./workers/product-owner"
+import { Contributor, Team } from "@honeycomb-app/hexacore"
 export interface State {
 	task: Task
 	sourceCode: SourceCode

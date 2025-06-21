@@ -5,14 +5,14 @@ import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
 import { SourceCode } from "@domain/types/source-code"
-import { Contributor, Brain } from "@infrastructure/workflows/contributor"
+import { Brain, Contributor } from "@honeycomb-app/hexacore"
 import z from "zod"
 
 export class ReactDeveloper extends Contributor {
     
     name: string = "React Developer"
 
-    brain = Brain.GPT_41_MINI;
+    brain = Brain.GPT_41_MINI
     
     thoughtShape = z.object({
         sourceCode: z

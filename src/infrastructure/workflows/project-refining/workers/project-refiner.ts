@@ -1,10 +1,11 @@
 import { z } from "zod"
 import { ProjectDetails } from "@domain/types/project-details"
-import { AIWorker, Brain } from "@honeycomb-app/hexacore"
 import { Task } from "@domain/entities/task" 
+import { Contributor, Brain } from "@honeycomb-app/hexacore"
 
-export class ProjectRefiner extends AIWorker {
-
+export class ProjectRefiner extends Contributor {
+    
+    name: string = "Project Refiner"
 
     brain = Brain.GPT_41_NANO
 
