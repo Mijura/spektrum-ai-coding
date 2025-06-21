@@ -9,14 +9,12 @@ export class ProductOwner extends Contributor {
 
     brain = Brain.GPT_41_NANO
     thoughtShape = z.object({
-        comment: z.string().describe("The comment to be added to the task. It's a either guidance for the React Developer or the answer to the User."),
-        recipient: z.string().describe("Describe does the task needs to be passed to the React Developer or the User")
+        plan: z.string().describe("The plan to be added to the task. It's a plan for the React Developer to implement the task.")
     })
 
-    task: Task
+    task!: Task
 
-    constructor(task: Task) {
-        super()
+    async preThought(task: Task): Promise<void> {
         this.task = task
     }
 
@@ -27,44 +25,33 @@ export class ProductOwner extends Contributor {
 
             ### **Your Tasks:**
 
-            1. ** Analyze task title, details, activities, and comments." Figure out what should be done to resolve the task.
+            1. ** Analyze task, activities, and comments." Figure out what should be done to resolve the task.
             ** You can recognize your prior activities by author name 'Product Owner' **
 
-            2. **Create a comment with the answer to the User or the guidance for the React Developer.**
-            - Create a comment for React Developer with the rich details to implement the task.
-            - If the user ask something off topic, create a comment to the user, but do not pass the task to the React Developer.
+            2. **Create a plan for implementation of the task.**
+            - Do not ask user for clarification or additional information.
+            - Just create as detailed plan as possible for the React Developer to implement the task.
 
             ---
 
             ### **Details**
-            - **Task Details:** ${JSON.stringify(this.task)}  
+            - **Task:** ${JSON.stringify(this.task)}  
             ---
 
             ### **Important Notes:**
             - Do not recommend any backend or server-side logic to the React Developer.
             - If storage or data persistence is required, use **localStorage** or **in-memory state** only.
-            - Respond only in valid JSON. The JSON object you return should match the following schema:
 
-            ### **Output Example**
-            {
-                "comment": "Implement a landing page with a header, hero section with the clear call to action and punchline, service section, pricing section, testimonials section, vision statement, and a footer.",
-                "recipient": "React Developer"
-            }
-
-            ### **Output Format**
-            ${JSON.stringify(this.thoughtShape.shape)}`
+            `
     }
 
     async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any> {
-        const { comment, recipient } = tought
+        const { plan } = tought
 
-        this.task.leaveComment("Product Owner", comment)
+        this.task.leaveComment("Product Owner", plan)
 
-        if (recipient === "React Developer") {
-            console.log("Passing task to React Developer")
-            console.log(this.task)
-            return await this.delegateTo("React Developer", this.task)
-        }
+        console.log("Passing task to React Developer")
+        return await this.delegateTo("React Developer", this.task)
     }
     
     

@@ -1,6 +1,7 @@
-import OpenAI from "openai"
+import OpenAI from "openai/index"
 import { z } from "zod"
 import { Team } from "./team"
+import { zodResponseFormat } from "openai/helpers/zod"
 
 export enum Brain {
     GPT_41 = "gpt-4.1",
@@ -51,20 +52,20 @@ export abstract class Contributor {
     async execute(task: any): Promise<any> {
         await this.preThought(task)
     
-        const client = new OpenAI()
+        const client = new OpenAI();
     
     
-        const response = await client.chat.completions.create({
+        const completion = await client.chat.completions.parse({
             model: this.brain,
             messages: [
                 { role: "system", content: this.loadContext() },
                 { role: "user", content: task.toString() }
-            ]
+            ],
+            response_format: zodResponseFormat(this.thoughtShape, "thoughtShape")
         })
     
-        const raw = response.choices[0].message.content || ""
     
-        return await this.afterThought(JSON.parse(raw))
+        return await this.afterThought(completion.choices[0].message.parsed);
     }
     
     

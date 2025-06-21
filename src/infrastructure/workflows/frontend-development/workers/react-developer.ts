@@ -15,10 +15,10 @@ export class ReactDeveloper extends Contributor {
     brain = Brain.GPT_41_MINI;
     
     thoughtShape = z.object({
-        sourceCode: z.record(
-            z.string().describe("The file path as a string"),
-            z.string().describe("The source code (content) inside a file")
-        ),
+        sourceCode: z
+            .object({})
+            .catchall(z.string().describe("The source code (content) inside a file"))
+            .describe("A map where each key is a file path and the value is the source code for that file"),
         comment: z.string().describe("The comment to be added to the task. It's a short summary of the changes you made from the user's perspective")
     })
 
@@ -50,33 +50,17 @@ export class ReactDeveloper extends Contributor {
             You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
     
             ### **Your Tasks:**
-                1. ** Analyze task details, activities, and comments to figure out what should be done to resolve the task.
-                - You can recognize your prior activities by author name 'React Developer'
-                - **Task details:** ${JSON.stringify(this.task)}
-                
-                2. After you understand the task, create a extensive plan of the changes you will make.
-                - Research over the internet to find the best solution for the task.
-                - If the user request landing page, deeply research over the internet whats end user expect from the landing page.
-                - If the user request dashboard, deeply research over the internet whats end user expect from the dashboard.
-                - If the user request admin panel, deeply research over the internet whats end user expect from the admin panel.
 
-                3. **Modify or create new files according to the plan**:
-                - Use the components in the src/components/ui folder to develop new features.
+                1. **Modify or create new files according the latest plan from the Product Owner**:
                 - When create a new feature, you should create a reusable components in the separate files.
+                - You should use the components in the src/components/ui folder to develop new features.
 
-                4. **If you are using a new dependency, you should add it to the package.json file.**:
-                - For example, if you are using react-hook-form, you should add it to the package.json file.
-                - NOTE: If you don't add the dependency to the package.json file, the project will not work.
+                **Task with plan:**
+                ${JSON.stringify(this.task)}
     
                 ### **Details**
                 - **Current Source Code:** ${JSON.stringify(this.project.artifact)}
     
-                Important:
-                - Double check all imports or require statements to ensure they are listed in the package.json file.
-                - Respond only in valid JSON. The JSON object you return should match the following schema.
-
-                ### **Output Format**
-                ${JSON.stringify(this.thoughtShape.shape)}
         `
     }
     
