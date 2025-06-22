@@ -57,6 +57,10 @@ export class ReactDeveloper extends Contributor {
 
                 **Task with plan:**
                 ${JSON.stringify(this.task)}
+
+                MOST IMPORTANT:
+                - You should always double check all imports or require statements to ensure they are listed in the package.json file
+                - If they are not listed, you should add them into dependencies in the package.json file.
     
                 ### **Details**
                 - **Current Source Code:** ${JSON.stringify(this.project.artifact)}

@@ -14,10 +14,12 @@
     "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/components/*": ["components/*"],
+      "@/lib/*": ["lib/*"],
+      "@/hooks/*": ["hooks/*"]
     }
   },
-  "include": ["src", "lib"],
+  "include": ["src", "components", "lib", "../hooks"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"

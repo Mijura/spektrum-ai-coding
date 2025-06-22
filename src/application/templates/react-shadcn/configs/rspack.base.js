@@ -77,8 +77,10 @@ module.exports = {
 	},
 	resolve: {
 		alias: {
-			"@": path.resolve(__dirname, "/"),
-		  },
+			"@/lib": path.resolve(__dirname, "../lib"),
+			"@/components": path.resolve(__dirname, "../components"),
+			"@/hooks": path.resolve(__dirname, "../hooks")
+		},
 		extensions: [".jsx", ".tsx", ".ts", ".js", ".json"],
 	},
 	experiments: {
