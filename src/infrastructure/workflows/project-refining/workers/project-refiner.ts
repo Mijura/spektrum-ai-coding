@@ -11,8 +11,8 @@ export class ProjectRefiner extends Contributor {
 
     thoughtShape = z.object({
         project: z.object({
-            name: z.string().describe("Short and concise title of the task."),
-            description: z.string().describe("Concrete description what should be implemented, why it should be implemented and what shouldn't be implemented.")}),
+            name: z.string().describe("Short and concise title of the project."),
+            description: z.string().describe("Project description withtout technical details in single sentence.")}),
     })
 
     task: Task
@@ -24,12 +24,9 @@ export class ProjectRefiner extends Contributor {
 
     loadContext(): string {
         return `
-            ### Role:
-            You are an product owner expert on React project with Tailwind CSS and Framer Motion.
                 
             ### **Your Task:**
-            1) Analyze task title, task description provided by user.
-            2) Based on the task details, create a project name and description.
+            1) Based on the task details, create a project name and description.
     
             ### **Task Details:** ${JSON.stringify(this.task)}
 
