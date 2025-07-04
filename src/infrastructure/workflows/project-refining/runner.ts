@@ -14,8 +14,6 @@ export class ProjectRefiningRunner implements WorkflowRunner {
 
         const projectDetails: ProjectDetails = await worker.execute(task)
 
-        console.log("Project details: ", projectDetails)
-
         return projectDetails
     }
 }

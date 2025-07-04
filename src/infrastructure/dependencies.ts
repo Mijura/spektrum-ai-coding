@@ -54,6 +54,7 @@ import { S3DeploymentTargetAdapter } from "./workflows/frontend-development/serv
 import { DeploymentTargetPort } from "./workflows/frontend-development/interfaces/deployment-target"
 import { FrontendDevelopmentRunner } from "./workflows/frontend-development/runner"
 import { ProjectRefiningRunner } from "./workflows/project-refining/runner"
+import { MockWorkflowRunRepository } from "./repositories/mock-workflow-run-repository"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -70,7 +71,7 @@ export const frontendDevelopmentService: FrontendDevelopmentService = new Fronte
 // Repositories
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const taskRepository: TaskRepository = new DynamoDBTaskRepository()
-export const workflowRunRepository: WorkflowRunRepository = new OpenSearchWorkflowRunRepository()
+export const workflowRunRepository: WorkflowRunRepository = new MockWorkflowRunRepository()
 export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 
 // Workflows

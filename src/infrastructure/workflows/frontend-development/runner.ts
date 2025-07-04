@@ -1,10 +1,12 @@
-import { frontendDevelopmentService, projectRepository, taskRepository, workflowRunRepository } from "@infrastructure/dependencies"
+import { workflowRunRepository, frontendDevelopmentService, projectRepository, taskRepository } from "@infrastructure/dependencies"
 import { Task } from "@domain/entities/task"
 import { SourceCode } from "@domain/types/source-code"
 import { WorkflowRun } from "@domain/entities/workflow-run"
 import { WorkflowRunner } from "@domain/ports/workflow-runner"
 import { Project } from "@domain/entities/project"
 import { ReactDeveloper } from "./workers/react-developer"
+import { ProductOwner } from "./workers/product-owner"
+import { Contributor, Team } from "@honeycomb-app/hexacore"
 export interface State {
 	task: Task
 	sourceCode: SourceCode
@@ -20,12 +22,18 @@ export class FrontendDevelopmentRunner implements WorkflowRunner {
         const workflowRun = WorkflowRun.create(task, "Frontend Development", accountId)
 
         try {
+
+            const reactDeveloper: Contributor = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, workflowRunRepository)
+            //const productOwner: Contributor = new ProductOwner()
+
+            //Team.addContributor(productOwner)
+            Team.addContributor(reactDeveloper)
             
-            const reactDeveloper = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, workflowRunRepository, task)
-            const sourceCode = await reactDeveloper.execute(task)
-            workflowRun.finishSuccessfully(sourceCode)
+            const artifact = await reactDeveloper.execute(task)
+            workflowRun.finishSuccessfully(artifact)
 
         } catch (error: any) {
+            console.error(error)
             workflowRun.finishWithError(error as string, null)
             throw error
         } finally {

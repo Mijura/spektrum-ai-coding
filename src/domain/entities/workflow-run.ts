@@ -69,7 +69,7 @@ export class WorkflowRun {
     }
 
     @EmitWorkflowRunUpdate()
-    finishSuccessfully(artifact: SourceCode): void {
+    finishSuccessfully(artifact: any): void {
         this.status = WorkflowRunStatus.SUCCEEDED
         this.artifact = artifact
     }
@@ -79,7 +79,7 @@ export class WorkflowRun {
     }
 
     @EmitWorkflowRunUpdate()
-    finishWithError(error: string, artifact: SourceCode | null): void {
+    finishWithError(error: string, artifact: any): void {
         this.status = WorkflowRunStatus.FAILED
         this.error = error
         this.artifact = artifact

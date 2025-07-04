@@ -71,6 +71,11 @@ export class Project {
 
 	// Factory method to create a new project
 	static create(name: string, description: string, owner: string): Project {
+
+		if(owner === "") {
+			throw new Error("Owner cannot be empty")
+		}
+
 		const id = uuidv4() // Generate unique ID
 		const created = new Date().toISOString() // ISO format
 		return new Project(id, owner, name, description, created, null, null, ProjectStatus.ACTIVE, false, null)
