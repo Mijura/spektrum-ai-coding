@@ -49,6 +49,23 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 		return ProjectMapper.toDomain(projectRecord)
 	}
 
+	async queryAllPages(queryParams: any, ddbDocClient: any): Promise<any[]> {
+		let allItems: any[] = []
+		let lastEvaluatedKey
+
+		do {
+			const result: any = await ddbDocClient.send(new QueryCommand({
+			...queryParams,
+			ExclusiveStartKey: lastEvaluatedKey,
+			}))
+
+			allItems = allItems.concat(result.Items || [])
+			lastEvaluatedKey = result.LastEvaluatedKey
+		} while (lastEvaluatedKey)
+
+		return allItems
+	}
+
 	async findAll(ownerId: string): Promise<Project[]> {
 
 		const tableName = process.env.PROJECT_TABLE
@@ -61,12 +78,13 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 			},
 			TableName: tableName,
 		}
-	
-		const data = await ddbDocClient.send(new QueryCommand(params))
-		const items = data.Items as []
+	  
+		const items = await this.queryAllPages(params, ddbDocClient)
 	
 		return ProjectMapper.toDomains(items)
 	}
+
+
 
 	async findAllByStatus(ownerId: string, status: ProjectStatus): Promise<Project[]> {
 		const tableName = process.env.PROJECT_TABLE;
@@ -82,12 +100,13 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 			":status": status,  
 		  },
 		  TableName: tableName,
-		};
+		}
 	  
-		const data = await ddbDocClient.send(new QueryCommand(params));
-		const items = data.Items as [];
+		const items = await this.queryAllPages(params, ddbDocClient)
+
+		console.log(`Found ${items.length} projects with status ${status} for owner ${ownerId}.`)
 	  
-		return ProjectMapper.toDomains(items);
+		return ProjectMapper.toDomains(items)
 	  }
 	  
 }

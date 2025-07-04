@@ -23,7 +23,7 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		try {
 			const projectPath: string = path.join("projects", project.id)
 
-			const templateName = "react-shadcn"
+			const templateName = "rspack-react-tailwind"
 			const templatePath = path.resolve(`src/application/templates/${templateName}`)
 
 			console.log("Template path:", templatePath)

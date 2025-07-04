@@ -61,6 +61,7 @@ export class ReactDeveloper extends Contributor {
                 MOST IMPORTANT:
                 - You should always double check all imports or require statements to ensure they are listed in the package.json file
                 - If they are not listed, you should add them into dependencies in the package.json file.
+                - Alway use classes from the index.css file to style the components
     
                 ### **Details**
                 - **Current Source Code:** ${JSON.stringify(this.project.artifact)}

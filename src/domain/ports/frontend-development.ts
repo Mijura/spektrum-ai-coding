@@ -2,7 +2,7 @@ import { Project } from "@domain/entities/project"
 import { SourceCode } from "@domain/types/source-code"
 export interface FrontendDevelopmentService {
 	/**
-	 * Initializes project by copying the template (project-templates/react-shadcn), installing dependencies, and building the project
+	 * Initializes project by copying the template, installing dependencies, and building the project
 	 * @param projectId - The ID of the project to initialize
 	 */
 	setupProject(project: Project): Promise<SourceCode>
