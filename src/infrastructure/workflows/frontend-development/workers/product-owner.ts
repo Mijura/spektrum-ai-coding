@@ -46,7 +46,7 @@ export class ProductOwner extends Contributor {
         - Create a detailed list of features that needs to be implemented to create a rich and engaging user experience.
         - For each task, write:
             - **Title:** A short and descriptive title.
-            - **Description:** A clear explanation of the task and its goal.
+            - **Description:** A clear explanation of the feature and its goal.
         - Think like a Product Owner — focus on what needs to be done, not how it should be implemented.
 
         ---
