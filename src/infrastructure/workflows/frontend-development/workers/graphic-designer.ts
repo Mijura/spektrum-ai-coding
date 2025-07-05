@@ -11,12 +11,12 @@ export class GraphicDesigner extends Contributor {
 
     name: string = "Graphic Designer"
 
-    brain = Brain.GPT_41
+    brain = Brain.GPT_41_MINI
 
     thoughtShape = z.object({
         indexCss: z.string().describe("The full content of the index.css file with Tailwind directives and custom styles."),
-        guidelines: z.array(z.string()).describe("A list of concrete recommendations: which class to use for each part of the feature (e.g., buttons, layouts, inputs, cards)."),
-        comment: z.string().describe("The comment to be added to the task. It's a short summary of the changes you made from the user's perspective")
+        components: z.array(z.string()).describe("A list of components that should be created or updated."),
+        comment: z.string().describe("The comment to be added to the task. It should contain a list of components with super short description.")
     })
 
     frontendDevelopmentService: FrontendDevelopmentService
@@ -101,8 +101,10 @@ export class GraphicDesigner extends Contributor {
                - Provide Tailwind classes for layout & styling of each section/component (e.g., Hero Section, Button, Card, Footer).
                - When appropriate, create custom utility classes in the index.css file (e.g., .btn-primary, .layout-hero, .card-sm, etc.).
 
-            2. Provide **clear instructions to developers** which classes to use for each part of the requested feature.  
-               - Output concrete class names that the developer can copy-paste directly into their HTML/React components.
+            2. Split main task into list of components that should be created or updated.
+                - Provide a component path (e.g., src/components/ui/button.tsx)
+                - Each component should have a super detailed concrete design guidelines. Which layout, colors, sizes, classes from index.css to use...
+                    If in the list one component should be used in another component, you should provide exact import path to the component.
 
             ### **User Request (Task):**
             ${JSON.stringify(this.task)}
@@ -114,7 +116,7 @@ export class GraphicDesigner extends Contributor {
     }
 
     async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any> {
-        const { indexCss, guidelines, comment } = tought
+        const { indexCss, components, comment } = tought
 
         this.task.finishedWork("Graphic Designer", "Design Generation", "Graphic Designer has finished the design generation...")
 
@@ -132,7 +134,7 @@ export class GraphicDesigner extends Contributor {
 
         const design = {
             task: this.task,
-            guidelines: guidelines,
+            guidelines: components,
         }
         console.log("Passing task to React Developer")
         return await this.delegateTo("React Developer", design)
