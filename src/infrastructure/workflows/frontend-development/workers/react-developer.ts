@@ -12,7 +12,7 @@ export class ReactDeveloper extends Contributor {
     
     name: string = "React Developer"
 
-    brain = Brain.GPT_41_MINI
+    brain = Brain.GPT_41
     
     thoughtShape = z.object({
         sourceCode: z
@@ -26,8 +26,9 @@ export class ReactDeveloper extends Contributor {
     projectRepository: ProjectRepository
     taskRepository: TaskRepository
     workflowRunRepository: WorkflowRunRepository
-    task!: Task;
-    project!: Project;
+    task!: Task
+    project!: Project
+    designGuidelines: any
 
     constructor(frontendDevelopmentService: FrontendDevelopmentService, projectRepository: ProjectRepository, taskRepository: TaskRepository, workflowRunRepository: WorkflowRunRepository) {
         super();
@@ -38,10 +39,11 @@ export class ReactDeveloper extends Contributor {
 
     }
 
-    async preThought(task: Task): Promise<any> {
-        this.task = task
+    async preThought(design: any): Promise<any> {
+        this.task = design.task
+        this.designGuidelines = design.guidelines
         this.task.startedWork("React Developer", "Code Generation", "React Developer is generating the code...")
-        this.project = await this.projectRepository.findById(task.projectId)
+        this.project = await this.projectRepository.findById(this.task.projectId)
     }
 
     loadContext(): string {
@@ -58,9 +60,11 @@ export class ReactDeveloper extends Contributor {
                 **Task with plan:**
                 ${JSON.stringify(this.task)}
 
+                **Design Guidelines:**
+                ${JSON.stringify(this.designGuidelines)}
+
                 MOST IMPORTANT:
-                - You should always double check all imports or require statements to ensure they are listed in the package.json file
-                - If they are not listed, you should add them into dependencies in the package.json file.
+                - Update package.json if you plan to import new dependencies. (e.g. "chart.js" should be added to the dependencies)
                 - Alway use classes from the index.css file to style the components
     
                 ### **Details**
@@ -76,7 +80,7 @@ export class ReactDeveloper extends Contributor {
 
         this.task.finishedWork("React Developer", "Code Generation", "Finished with coding")
         this.task.leaveComment("React Developer", comment)
-        this.task.startedWork("React Developer", "Code Deployment", "React engineer deploying the application...")
+        this.task.startedWork("React Developer", "Code Deployment", "React developer deploying the application...")
 
         try {
 
@@ -85,14 +89,14 @@ export class ReactDeveloper extends Contributor {
             await this.frontendDevelopmentService.installDependencies(this.task.projectId)
             await this.frontendDevelopmentService.buildProject(this.task.projectId)
             await this.frontendDevelopmentService.deployToDevEnvironment(this.task.projectId)
-            await this.frontendDevelopmentService.removeSourceCodeFromFileSystem(this.task.projectId)
-            this.task.leaveComment("React Engineer", "Application is successfully deployed and now is ready to be tested.")
+            //await this.frontendDevelopmentService.removeSourceCodeFromFileSystem(this.task.projectId)
+            this.task.leaveComment("React Developer", "Application is successfully deployed and now is ready to be tested.")
             this.project.setArtifact(wholeCode)
             await this.projectRepository.save(this.project)
             return sourceCode
         } catch (error) {
             console.error("Error writing files:", error)
-            this.task.leaveComment("React Engineer", "I encountered an error during build : " + error)
+            this.task.leaveComment("React Developer", "I encountered an error during build : " + error)
             throw error
         } finally {
             this.task.finishedWork("React Developer", "Code Deployment", "Finished updating the application")

@@ -673,10 +673,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@honeycomb-app/hexacore@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@honeycomb-app/hexacore/-/hexacore-0.1.0.tgz#d8f012147448a0db2b594c478c21f16fb550a46a"
-  integrity sha512-t+T75TmbHFnbscLU3E+JikcwE0hP7mYAk+4VeXq7vCXomLNcAzsGsW+mpha1Nkh0uDyBzlo597Mw8njM3oKDxA==
+"@honeycomb-app/hexacore@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@honeycomb-app/hexacore/-/hexacore-0.1.1.tgz#a467495f6380cf2730ddfc6322d4286199215cd2"
+  integrity sha512-1cSVTXXxpZBzJITIM6UebopSdMxNDDUIgDFMJygA9YsuBLd0H+yzAUFEtSB4Nxtg2QXtPaURI2B19prZ5Lps2Q==
   dependencies:
     openai "^5.3.0"
     zod "^3.25.64"
@@ -1887,9 +1887,9 @@ on-finished@2.4.1:
     ee-first "1.1.1"
 
 openai@^5.3.0:
-  version "5.6.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-5.6.0.tgz#2fefc93d2862da8ea1a3c311fca2d07fe48adf5f"
-  integrity sha512-jNH5z+hYAdOMZXyEt0yZ7246s+UZjg2AwFQqkAhZIPPjxNtHHO5mykOefau6FkOqj16aC94MOdJl/rZBcKj/cQ==
+  version "5.8.2"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-5.8.2.tgz#b12f968618deb87f6231b35a21b590d0b529d70b"
+  integrity sha512-8C+nzoHYgyYOXhHGN6r0fcb4SznuEn1R7YZMvlqDbnCuE0FM2mm3T1HiYW6WIcMS/F1Of2up/cSPjLPaWt0X9Q==
 
 parseurl@~1.3.3:
   version "1.3.3"
@@ -2210,6 +2210,6 @@ yn@3.1.1:
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 
 zod@^3.25.64:
-  version "3.25.67"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.67.tgz#62987e4078e2ab0f63b491ef0c4f33df24236da8"
-  integrity sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==
+  version "3.25.74"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.74.tgz#9368a3986fe756bd94b9a5baad9919660ff3f250"
+  integrity sha512-J8poo92VuhKjNknViHRAIuuN6li/EwFbAC8OedzI8uxpEPGiXHGQu9wemIAioIpqgfB4SySaJhdk0mH5Y4ICBg==
