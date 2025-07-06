@@ -15,8 +15,7 @@ export class ProductOwner extends Contributor {
                 title: z.string().describe("Title of the task"),
                 description: z.string().describe("Detailed explanation of the task")
             })
-        ).describe("A list of clearly defined tasks needed to implement the product."),
-        comment: z.string().describe("A comment to be added to the task")
+        ).describe("A list of clearly defined tasks needed to implement the product.")
     })
 
     task!: Task
@@ -51,8 +50,7 @@ export class ProductOwner extends Contributor {
 
         MOST IMPORTANT:
         - Do not suggest any technical features, only the features that are needed to create a rich and engaging user experience.
-        - Do not suggest design features like create a responsive design, create a mobile version of the website, etc, since the Designer will handle this.
-        - Suggest only the features that solve the user's problem or achieve the user's goal.
+        - Add a number to the title of the task to indicate the order of the task execution.
         
         ---
 
@@ -64,17 +62,20 @@ export class ProductOwner extends Contributor {
     }
 
     async afterThought(thought: z.infer<typeof this.thoughtShape>): Promise<any> {
-        const { tasks, comment } = thought
+        const { tasks } = thought
 
-        this.task.leaveComment("Product Owner", comment)
         const taskPromises = []
+        const createdTasks = []
         for (const task of tasks) {
             const t = Task.create('Product Owner', this.task.projectId, task.title, task.description)
             const taskPromise = this.taskRepository.save(t)
             taskPromises.push(taskPromise)
+            createdTasks.push(t)
         }
 
         await Promise.all(taskPromises)
+
+        return createdTasks
     }
 
 }

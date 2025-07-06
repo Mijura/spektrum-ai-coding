@@ -11,7 +11,7 @@ export class GraphicDesigner extends Contributor {
 
     name: string = "Graphic Designer"
 
-    brain = Brain.GPT_41
+    brain = Brain.GPT_41_MINI
 
     thoughtShape = z.object({
         indexCss: z.string().describe("The full content of the index.css file with Tailwind directives and custom styles."),

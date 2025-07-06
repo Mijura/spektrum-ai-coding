@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { ProjectDtoMapper } from "@application/mappers/project-dto-mappers"
-import { createNewProject, fetchProject, deployProject, fetchProjects, archiveProject, updateProjectDetails } from "@infrastructure/dependencies"
+import { createNewProject, fetchProject, deployProject, fetchProjects, archiveProject, updateProjectDetails, planTasksWithAI } from "@infrastructure/dependencies"
 export class ProjectController {
 
 	constructor() {}
@@ -13,6 +13,17 @@ export class ProjectController {
 		} catch (error) {
 			console.error("Error creating project:", error)
 			res.status(500).json({ message: "Error creating project." })
+		}
+	}
+
+	async planTasksWithAI(req: Request, res: Response): Promise<void> {
+		try {
+			const { projectId, projectDescription } = req.body
+			const tasks = await planTasksWithAI.execute(projectId, projectDescription)
+			res.status(200).json(tasks)
+		} catch (error) {
+			console.error("Error planning tasks with AI:", error)
+			res.status(500).json({ message: "Error planning tasks with AI." })
 		}
 	}
 

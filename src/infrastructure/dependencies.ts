@@ -1,4 +1,5 @@
 import { CreateProject } from "@domain/use-cases/project/create-project"
+import { PlanTasksWithAI } from "@domain/use-cases/project/plan-tasks-with-ai"
 import { UpdateProjectDetails } from "@domain/use-cases/project/update-details"
 import { FetchProject } from "@domain/use-cases/project/fetch-project"
 import { FetchProjects } from "@domain/use-cases/project/fetch-projects"
@@ -35,7 +36,6 @@ import { UpdateTaskDescriptionUseCase } from "@application/use-cases/task/update
 import { UpdateTaskTitleUseCase } from "@application/use-cases/task/update-title"
 import { LeaveComment } from "@domain/use-cases/task/leave-comment"
 import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
-import { OpenSearchWorkflowRunRepository } from "./repositories/workflow-run-repository"
 import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow/fetch-timeline"
 import { WorkflowController } from "./http/controllers/workflow-controller"
 import { RunWorkflowUseCase } from "@application/use-cases/workflow/run-workflow"
@@ -55,6 +55,8 @@ import { DeploymentTargetPort } from "./workflows/frontend-development/interface
 import { FrontendDevelopmentRunner } from "./workflows/frontend-development/runner"
 import { ProjectRefiningRunner } from "./workflows/project-refining/runner"
 import { MockWorkflowRunRepository } from "./repositories/mock-workflow-run-repository"
+import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
+import { TaskPlanningRunner } from "./workflows/task-planning/runner"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -77,11 +79,13 @@ export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 // Workflows
 export const frontendDevelopmentRunner: WorkflowRunner = new FrontendDevelopmentRunner()
 export const projectRefiningRunner: WorkflowRunner = new ProjectRefiningRunner()
+export const taskPlanningRunner: WorkflowRunner = new TaskPlanningRunner()
 // Register workflows
 workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentRunner)
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)
+export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(taskPlanningRunner)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
