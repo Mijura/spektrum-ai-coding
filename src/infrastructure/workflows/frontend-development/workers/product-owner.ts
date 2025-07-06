@@ -49,6 +49,11 @@ export class ProductOwner extends Contributor {
             - **Description:** A clear explanation of the feature and its goal.
         - Think like a Product Owner — focus on what needs to be done, not how it should be implemented.
 
+        MOST IMPORTANT:
+        - Do not suggest any technical features, only the features that are needed to create a rich and engaging user experience.
+        - Do not suggest design features like create a responsive design, create a mobile version of the website, etc, since the Designer will handle this.
+        - Suggest only the features that solve the user's problem or achieve the user's goal.
+        
         ---
 
         ### Task Input:

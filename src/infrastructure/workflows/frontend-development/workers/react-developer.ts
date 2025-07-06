@@ -65,7 +65,7 @@ export class ReactDeveloper extends Contributor {
 
                 MOST IMPORTANT:
                 - Update package.json if you plan to import new dependencies. (e.g. "chart.js" should be added to the dependencies)
-                - Alway use classes from the index.css file to style the components
+                - Always use suggested classes from the design guidelines, except something is not mentioned in the design guidelines.
     
                 ### **Details**
                 - **Current Source Code:** ${JSON.stringify(this.project.artifact)}
