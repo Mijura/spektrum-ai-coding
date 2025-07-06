@@ -11,11 +11,11 @@ export class GraphicDesigner extends Contributor {
 
     name: string = "Graphic Designer"
 
-    brain = Brain.GPT_41_MINI
+    brain = Brain.GPT_41
 
     thoughtShape = z.object({
         indexCss: z.string().describe("The full content of the index.css file with Tailwind directives and custom styles."),
-        components: z.array(z.string()).describe("A list of components that should be created or updated."),
+        guidelines: z.string().describe("Concret design guidelines for developer"),
         comment: z.string().describe("The comment to be added to the task. It should contain a list of components with super short description.")
     })
 
@@ -71,14 +71,6 @@ export class GraphicDesigner extends Contributor {
             - **Typography Scale:**  
             - **Headers** (\`text-2xl\`, \`text-3xl\`), **Body** (\`text-base\`), **Captions** (\`text-sm\`) aligned semantically.  
             - **Hit Areas:** Ensure all interactive elements meet a minimum 44×44 px size (\`w-11 h-11\`).  
-
-            ## Background Patterns & Animations
-            - Pages should feature a subtle, barely noticeable background pattern or animation to keep the design engaging without distracting from primary content.
-            - Low Opacity & Gentle Motion: Use patterns or particle systems with opacity below 10%, moving slowly (e.g., 5–15 px/s), so the effect remains calm and non-intrusive.
-            - Canvas or SVG-Based: Implement with lightweight Canvas or SVG to minimize performance impact and ensure smooth playback across devices.
-            - Looped & Randomized: Create an infinite loop with slight randomized offsets in timing or position to avoid jerky repeats.
-            - User Preference Respect: Detect prefers-reduced-motion and disable or simplify the background animation for users who opt out.
-            - Example Reference: Emulate the gentle particle/swirling effect seen on LynxJS (https://lynxjs.org/) for inspiration, using very low contrast and speed to maintain focus on content.
                             
             ## Animations  
             Use motion sparingly to provide feedback and context without distraction.  
@@ -101,10 +93,12 @@ export class GraphicDesigner extends Contributor {
                - Provide Tailwind classes for layout & styling of each section/component (e.g., Hero Section, Button, Card, Footer).
                - When appropriate, create custom utility classes in the index.css file (e.g., .btn-primary, .layout-hero, .card-sm, etc.).
 
-            2. Split main task into list of components that should be created or updated.
-                - Provide a component path (e.g., src/components/ui/button.tsx)
-                - Each component should have a super detailed concrete design guidelines. Which layout, colors, sizes, classes from index.css to use...
-                    If in the list one component should be used in another component, you should provide exact import path to the component.
+            2. Provide **clear instructions to developers** which classes to use for each part of the requested feature.  
+               Example:
+               - Use \`btn-primary\` for the **Add New Note** button.
+               - Use \`layout-wrapper\` to arrange the page layout.
+               - Use \`input-sm\` for note titles.
+             
 
             ### **User Request (Task):**
             ${JSON.stringify(this.task)}
@@ -116,7 +110,7 @@ export class GraphicDesigner extends Contributor {
     }
 
     async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any> {
-        const { indexCss, components, comment } = tought
+        const { indexCss, guidelines, comment } = tought
 
         this.task.finishedWork("Graphic Designer", "Design Generation", "Graphic Designer has finished the design generation...")
 
@@ -134,7 +128,7 @@ export class GraphicDesigner extends Contributor {
 
         const design = {
             task: this.task,
-            guidelines: components,
+            guidelines: guidelines,
         }
         console.log("Passing task to React Developer")
         return await this.delegateTo("React Developer", design)

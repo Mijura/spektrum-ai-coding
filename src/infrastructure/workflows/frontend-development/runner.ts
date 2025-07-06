@@ -5,7 +5,6 @@ import { WorkflowRun } from "@domain/entities/workflow-run"
 import { WorkflowRunner } from "@domain/ports/workflow-runner"
 import { Project } from "@domain/entities/project"
 import { ReactDeveloper } from "./workers/react-developer"
-import { ProductOwner } from "./workers/product-owner"
 import { Contributor, Team } from "@honeycomb-app/hexacore"
 import { GraphicDesigner } from "./workers/graphic-designer"
 export interface State {
@@ -26,9 +25,7 @@ export class FrontendDevelopmentRunner implements WorkflowRunner {
 
             const reactDeveloper: Contributor = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, workflowRunRepository)
             const designer: Contributor = new GraphicDesigner(frontendDevelopmentService, projectRepository, taskRepository, workflowRunRepository)
-            //const productOwner: Contributor = new ProductOwner()
 
-            //Team.addContributor(productOwner)
             Team.addContributor(reactDeveloper)
             Team.addContributor(designer)
             const artifact = await designer.execute(task)

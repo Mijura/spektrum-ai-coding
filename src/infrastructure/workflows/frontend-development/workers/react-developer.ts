@@ -12,7 +12,7 @@ export class ReactDeveloper extends Contributor {
     
     name: string = "React Developer"
 
-    brain = Brain.GPT_41_MINI
+    brain = Brain.GPT_41
     
     thoughtShape = z.object({
         sourceCode: z
@@ -64,8 +64,7 @@ export class ReactDeveloper extends Contributor {
                 ${JSON.stringify(this.designGuidelines)}
 
                 MOST IMPORTANT:
-                - You should always double check all imports or require statements to ensure they are listed in the package.json file
-                - If they are not listed, you should add them into dependencies in the package.json file.
+                - Update package.json if you plan to import new dependencies. (e.g. "chart.js" should be added to the dependencies)
                 - Alway use classes from the index.css file to style the components
     
                 ### **Details**
