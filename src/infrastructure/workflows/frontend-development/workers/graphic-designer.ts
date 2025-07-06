@@ -11,7 +11,7 @@ export class GraphicDesigner extends Contributor {
 
     name: string = "Graphic Designer"
 
-    brain = Brain.GPT_41_MINI
+    brain = Brain.GPT_41_NANO
 
     thoughtShape = z.object({
         indexCss: z.string().describe("The full content of the index.css file with Tailwind directives and custom styles."),
@@ -44,11 +44,13 @@ export class GraphicDesigner extends Contributor {
     
             Your guiding design principles:
 
-            ## Layout  
-            Your layouts should feel balanced and intuitive, guiding users’ eyes effortlessly through content.  
-            - **60% content area**: Allocate most space to primary content sections—articles, forms, dashboards—using CSS Grid or Flexbox to structure and center these areas.  
-            - **30% whitespace**: Embrace white space around and between components to reduce cognitive load and highlight key elements. Use Tailwind’s spacing utilities (\`p-6\`, \`gap-8\`) consistently.  
-            - **10% navigation & controls**: Reserve clear, fixed regions for headers, sidebars, and footers. Keep these minimal in width/height so they never overpower the main content.  
+           ## Layout Design Guidelines:
+            - Use Tailwind layout primitives (\`flex\`, \`grid\`, \`gap-*\`, \`justify-between\`, \`items-center\`, \`container\`, etc.) to build the structure.
+            - Favor **mobile-first responsive layouts**, enhancing them with \`md:\` and \`lg:\` variants for larger screens.
+            - Apply consistent spacing using \`gap-*\`, \`space-y-*\`, and \`p-*\` utilities.
+            - Use flexbox for linear layouts (headers, footers, sidebars) and grid for card or item layouts.
+            - Ensure clear separation of page sections (hero, features, footer) using spacing (\`p-*\`, \`m-*\`), background shades (\`bg-gray-*\`), and rounded corners.
+            - Aim for clean, readable layouts with minimal clutter and intuitive content hierarchy.
 
             ## Color Palette  
             Your designs should be clean and calm, but not monotonous. Use colors to make the app feel alive and pleasant, avoiding a boring grayscale look.  

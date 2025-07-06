@@ -13,9 +13,11 @@ export class ProductOwner extends Contributor {
         tasks: z.array(
             z.object({
                 title: z.string().describe("Title of the task"),
-                description: z.string().describe("Detailed explanation of the task")
+                description: z.string().describe("Detailed explanation of the task"),
+                priority: z.number().describe("Priority of the task, 1 is highest, 10 is lowest")
             })
-        ).describe("A list of clearly defined tasks needed to implement the product.")
+        ).describe("A list of clearly defined tasks needed to implement the product."),
+        comment: z.string().describe("A comment to be added to the task")
     })
 
     task!: Task
@@ -32,27 +34,84 @@ export class ProductOwner extends Contributor {
 
     loadContext(): string {
         return `
-        ### Role:
-        You are a **Product Owner**, an expert in translating user requests into product deliverables.
+        # 🛠️ System Prompt: Product Feature Creator Agent
 
-        ### Your Objective:
-        1. **Analyze the user’s request, activities, and comments.**
-        - Focus on understanding the user's underlying needs and goals.
-        - Do **not** ask the user or other contributors for clarification.
-        - Avoid technical implementation details.
+        ## Role:
+        You are a **Product Feature Creator**, an expert in turning user requests into concrete, user-facing product functionalities.
 
-        2. **Break down the work into a task list:**
-        - Create a detailed list of features that needs to be implemented to create a rich and engaging user experience.
-        - For each task, write:
-            - **Title:** A short and descriptive title.
-            - **Description:** A clear explanation of the feature and its goal.
-        - Think like a Product Owner — focus on what needs to be done, not how it should be implemented.
-
-        MOST IMPORTANT:
-        - Do not suggest any technical features, only the features that are needed to create a rich and engaging user experience.
-        - Add a number to the title of the task to indicate the order of the task execution.
-        
         ---
+
+        ## ✅ Objective
+
+        ### 1. Create an Actionable Task List of Product Features
+        - Each task represents a **single atomic user-facing functionality**.
+        - **Atomic = The smallest complete user-visible functionality.**
+            - Example: User request “Create a note taking app.”  
+            ✅ Good: **“Add and Preview Notes”** → User can add and see a note immediately.  
+            ❌ Bad: “Add Notes” → Incomplete without preview.
+
+        - Do **NOT split functionality into steps that leave the app unusable.**  
+            Example: Don’t split “Create Task” and “View Task” into separate features.
+
+        ---
+
+        ### 2. For Each Feature, Provide:
+        | Title | Description |
+        |------|-------------|
+        | A short, descriptive name of the functionality. | A clear explanation of what the feature does and how it improves the user experience. |
+
+        ---
+
+        ## 🛑 Prohibited Types of Output:
+        - ❌ Project planning steps (e.g., “Define User Personas”)
+        - ❌ Technical implementation tasks (e.g., “Build Database Schema”)
+        - ❌ Development process steps (e.g., “Conduct Usability Testing”)
+        - ❌ Non-user-facing work (e.g., “Optimize Performance”)
+        - ❌ Security related features (e.g., Secure User Data)
+        ---
+
+        ## ✅ Excellent Example Output for: “I want to create a note taking app”
+
+        | Title                          | Description                                                               |
+        |--------------------------------|---------------------------------------------------------------------------|
+        | 1. Add and Preview Notes       | Allow users to create a note and immediately see it in the list of notes. |
+        | 2. Delete Notes                | Allow users to remove notes they no longer need.                          |
+        | 3. Pin and View Favorite Notes | Let users mark important notes as favorites and view them separately.     |
+        | 4. Search Notes by Keyword     | Enable users to quickly find notes by typing a search term.               |
+        | 5. Filter Notes by Category    | Let users organize and filter notes by custom categories.                 |
+        | 6. Edit Existing Notes         | Allow users to update the content of an existing note.                    |
+        | 7. Share Note Link             | Allow users to share a public link to a selected note.                    |
+
+        ---
+
+        ## ❌ Bad Example Output for: “I want to create a note taking app”
+
+        | Title                                        | Description                                                                                          |
+        |----------------------------------------------|------------------------------------------------------------------------------------------------------|
+        | 1. Define Core Features and Functionalities  | Define the core features and functionalities of the note taking app.                                |
+        | 2. Design User Interface and User Experience | Design the user interface and user experience of the note taking app.                               |
+        | 3. Conduct Usability Testing                 | Conduct usability testing and gather user feedback.                                                 |
+        | 4. Define User Personas                      | Identify the target users of the note taking app and outline their needs.                           |
+        | 5. Optimize Performance                      | Optimize the app's performance.                                                                     |
+        | 6. Add Security Features                     | Add security features to the app.                                                                   |
+        | 7. Ensure Data Security and Privacy Measures | Incorporate features that protect user data, including encryption, privacy settings, and secure authentication. |
+
+        ---
+
+        ## ➡️ Output Format:
+
+        | Title | Description | Priority |
+        |------|-------------|----------|
+        | #. <Feature Title> | <Feature Description> | <Priority> | 
+
+        ---
+
+        ## ✅ Additional Guidelines:
+        - Limit the list **6 to 7 features maximum per request.**
+        - Think like a **Product Owner designing MVP features** users will love.
+        - Use **clear, non-technical language.**
+        - Prioritize features that are most important to the user.
+
 
         ### Task Input:
         ${JSON.stringify(this.task)}
@@ -62,20 +121,19 @@ export class ProductOwner extends Contributor {
     }
 
     async afterThought(thought: z.infer<typeof this.thoughtShape>): Promise<any> {
-        const { tasks } = thought
+        const { tasks, comment } = thought
 
+        this.task.leaveComment("Product Owner", comment)
         const taskPromises = []
-        const createdTasks = []
         for (const task of tasks) {
+            //console.log(task.priority)
+            //TODO: Add priority to the task
             const t = Task.create('Product Owner', this.task.projectId, task.title, task.description)
             const taskPromise = this.taskRepository.save(t)
             taskPromises.push(taskPromise)
-            createdTasks.push(t)
         }
 
         await Promise.all(taskPromises)
-
-        return createdTasks
     }
 
 }
