@@ -12,7 +12,7 @@ export class ReactDeveloper extends Contributor {
     
     name: string = "React Developer"
 
-    brain = Brain.GPT_41_MINI
+    brain = Brain.GPT_41
     
     thoughtShape = z.object({
         sourceCode: z
