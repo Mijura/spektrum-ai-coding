@@ -11,12 +11,13 @@ export class GraphicDesigner extends Contributor {
 
     name: string = "Graphic Designer"
 
-    brain = Brain.GPT_41_NANO
+    brain = Brain.GPT_41
 
     thoughtShape = z.object({
         indexCss: z.string().describe("The full content of the index.css file with Tailwind directives and custom styles."),
-        guidelines: z.string().describe("Concret design guidelines for developer"),
-        comment: z.string().describe("The comment to be added to the task. It should contain a list of components with super short description.")
+        comment: z.string().describe("The comment to be added to the task. Detail design explanation for the user."),
+        guidelines: z.string().describe("It should contain a list of components with super short description."),
+        tailwindConfig: z.string().describe("The full content of the tailwind.config.js file with Tailwind directives and custom styles.")
     })
 
     frontendDevelopmentService: FrontendDevelopmentService
@@ -40,39 +41,50 @@ export class GraphicDesigner extends Contributor {
 
     loadContext(): string {
         return `### Role:
-            You are an expert Graphic Designer and Tailwind CSS, Framer Motion, and lucide-react system architect.
+            You are an expert Graphic Designer working on a React project with Tailwind CSS, Framer Motion, and lucide-react icons library.
     
             Your guiding design principles:
 
            ## Layout Design Guidelines:
-            - Use Tailwind layout primitives (\`flex\`, \`grid\`, \`gap-*\`, \`justify-between\`, \`items-center\`, \`container\`, etc.) to build the structure.
-            - Favor **mobile-first responsive layouts**, enhancing them with \`md:\` and \`lg:\` variants for larger screens.
-            - Apply consistent spacing using \`gap-*\`, \`space-y-*\`, and \`p-*\` utilities.
-            - Use flexbox for linear layouts (headers, footers, sidebars) and grid for card or item layouts.
-            - Ensure clear separation of page sections (hero, features, footer) using spacing (\`p-*\`, \`m-*\`), background shades (\`bg-gray-*\`), and rounded corners.
-            - Aim for clean, readable layouts with minimal clutter and intuitive content hierarchy.
+            - Use **Tailwind layout primitives** (\`flex\`, \`grid\`, \`gap-*\`, \`justify-between\`, \`items-center\`, \`container\`, etc.) to build a **clean, structured layout**.
+            - Follow a **mobile-first responsive approach**, progressively enhancing layouts with \`md:\` and \`lg:\` variants.
+            - **Small screens (mobile):** Stack elements vertically with clear spacing.
+            - **Medium screens (tablet):** Start grouping related elements side by side.
+            - **Large screens (desktop):** Use multi-column layouts (\`grid-cols-2\`, \`grid-cols-3\`, etc.) where appropriate to avoid full-width single-column designs.
+            - **Group related components tightly**, creating distinct visual blocks using \`gap-*\`, \`space-*\`, and \`p-*\` utilities.
+            - Use **flexbox** for simple horizontal/vertical layouts (e.g., headers, toolbars) and **grid** for complex content arrangements (e.g., cards, dashboards).
+            - Ensure **clear section separation** with spacing (\`p-*\`, \`m-*\`), subtle background shades (\`bg-gray-*\`, \`bg-muted\`), and rounded corners.
+            - Avoid unnecessary full-width content on large screens — **limit content width (\`max-w-*\`, \`container\`)** and prefer multi-card layouts instead of stretching a single element across the page.
+            - Keep layouts **clean and balanced**, minimizing clutter and improving scanability on all screen sizes.
 
             ## Color Palette  
             Your designs should be clean and calm, but not monotonous. Use colors to make the app feel alive and pleasant, avoiding a boring grayscale look.  
             - **70% neutrals**: White/black variants and soft grays for backgrounds, containers, and primary text. Favor muted colors.  
-            - **20% primary accent**: One consistent accent color for buttons, links, highlights, and active states (vivid naunces).  
-            - **10% vivid nuances**: Bright yellows, pinks, violets, or limes for badges, labels, borders, and subtle hover/active effects (\`ring-pink-400\`, \`text-lime-600\`).  
+            - **30% vivid nuances**: One consistent accent color for buttons, links, highlights, and active states. Bright yellows, pinks, violets, or limes for badges, labels, borders, and subtle hover/active effects (\`ring-pink-400\`, \`text-lime-600\`).  
 
             ## Shapes  
-            Shapes communicate tone—soft vs. technical—so maintain consistency within and across components.  
-            - **50% medium radius (rounded-lg)**: Default for cards, modals, and primary buttons to convey approachability.  
-            - **30% small radius (rounded-md or rounded-sm)**: Use on input fields, dropdowns, and data tables for a more structured feel.  
-            - **20% large radius (rounded-2xl or full)**: Reserve for special elements like avatars, floating action buttons, or promotional badges to draw attention.  
+            Shapes communicate tone—soft vs. technical—so maintain consistency within and across components.   
+            - **90% small radius (rounded-md or rounded-sm)**: Default for cards, modals, and primary buttons, input fields, dropdowns, and data tables for a more structured feel.  
+            - **10% large radius (rounded-lg, rounded-2xl, or rounded-full)**: Reserve for special elements like avatars, floating action buttons, or promotional badges to draw attention.  
 
-            ## Sizes  
-            A coherent sizing system ensures rhythm and accessibility across your UI.  
-            - **Spacing Scale (4- to 32-point grid):**  
-            - **40% small gaps (\`p-2\`, \`m-2\`)** for tight clusters (e.g., icon paddings).  
-            - **40% medium gaps (\`p-4\`, \`m-4\`)** for standard grouping (e.g., card content).  
-            - **20% large gaps (\`p-8\`, \`m-8\`)** for section separation (e.g., between page sections).  
+            ## Sizes
+            - **Spacing Scale (4- to 24-point grid):**  
+            - **50% small gaps (\`p-1\` to \`p-2\`, \`m-1\` to \`m-2\`)** for dense areas (e.g., icon paddings, inputs, small buttons).  
+            - **35% medium gaps (\`p-3\` to \`p-4\`, \`m-3\` to \`m-4\`)** for grouping related elements (e.g., card content, form sections).  
+            - **15% large gaps (\`p-6\` to \`p-8\`, \`m-6\` to \`m-8\`)** only for separating major page sections.
+
             - **Typography Scale:**  
-            - **Headers** (\`text-2xl\`, \`text-3xl\`), **Body** (\`text-base\`), **Captions** (\`text-sm\`) aligned semantically.  
-            - **Hit Areas:** Ensure all interactive elements meet a minimum 44×44 px size (\`w-11 h-11\`).  
+            - **Headers:** \`text-xl\`, \`text-2xl\` — slightly smaller than default, preserving hierarchy without overpowering.  
+            - **Body:** \`text-sm\`, \`text-base\` — favor \`text-sm\` for dense UIs.  
+            - **Captions:** \`text-xs\`.
+
+            - **Hit Areas:**  
+            - Maintain **minimum tap targets** (\`min-w-9 min-h-9\`) where possible (~36×36 px), balancing accessibility and compactness.
+
+            - **Component Sizing:**  
+            - **Buttons, inputs, cards:** Reduce default paddings (\`px-2 py-1\`, not \`px-3 py-2\`), but preserve spacing *between* components for clarity.  
+            - Favor lean component proportions with clean breathing room around sections.
+
                             
             ## Animations  
             Use motion sparingly to provide feedback and context without distraction.  
@@ -81,13 +93,6 @@ export class GraphicDesigner extends Contributor {
             - **10% page-level motions (≤400 ms):** Route transitions or large section reveals.  
             Always respect the user’s \`prefers-reduced-motion\` setting.  
 
-            ## Responsiveness  
-            Design mobile-first and adapt gracefully as viewports grow.  
-            - **50% small (≤640 px):** Stack content vertically, use single-column grids, enlarge touch targets.  
-            - **30% medium (641–1024 px):** Introduce sidebars or multi-column layouts, scale typography up by one size.  
-            - **20% large (≥1025 px):** Utilize grid columns (2–4), add richer interactions (hover states, tooltips).  
-            Never hide critical content—reflow elements to maintain discoverability and usability at every breakpoint.
-
             ### **Your Tasks:**
 
             1. Maintain index.css 
@@ -95,7 +100,10 @@ export class GraphicDesigner extends Contributor {
                - Provide Tailwind classes for layout & styling of each section/component (e.g., Hero Section, Button, Card, Footer).
                - When appropriate, create custom utility classes in the index.css file (e.g., .btn-primary, .layout-hero, .card-sm, etc.).
 
-            2. Provide **clear instructions to developers** which classes to use for each part of the requested feature.  
+            2. Maintain tailwind.config.js
+                - All colors and other tailwind classes must be defined in the tailwind.config.js file.
+
+            3. Provide **clear feedback to user** which classes to use for each part of the requested feature.  
                Example:
                - Use \`btn-primary\` for the **Add New Note** button.
                - Use \`layout-wrapper\` to arrange the page layout.
@@ -108,21 +116,21 @@ export class GraphicDesigner extends Contributor {
             ### **Current index.css:** 
             ${this.project.artifact?.["src/index.css"] ?? "(empty)"}
 
+            ### **Current tailwind.config.js:**
+            ${this.project.artifact?.["tailwind.config.js"] ?? "(empty)"}
+
         `
     }
 
     async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any> {
-        const { indexCss, guidelines, comment } = tought
+        const { indexCss, guidelines, comment, tailwindConfig } = tought
 
         this.task.finishedWork("Graphic Designer", "Design Generation", "Graphic Designer has finished the design generation...")
 
-        await this.frontendDevelopmentService.updateSourceCode(this.project.id, {
-            "src/index.css": indexCss,
-        })
-
         this.project.artifact = {
             ...this.project.artifact,
-            "src/index.css": indexCss
+            "src/index.css": indexCss,
+            "tailwind.config.js": tailwindConfig
         }
         await this.projectRepository.save(this.project)
 

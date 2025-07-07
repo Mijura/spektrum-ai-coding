@@ -53,7 +53,7 @@ export class ReactDeveloper extends Contributor {
     
             ### **Your Tasks:**
 
-                1. **Modify or create new files according the latest plan from the Product Owner**:
+                1. **Modify or create new files according the design guidelines**:
                 - When create a new feature, you should create a reusable components in the separate files.
                 - You should use the components in the src/components/ui folder to develop new features.
 
@@ -65,7 +65,7 @@ export class ReactDeveloper extends Contributor {
 
                 MOST IMPORTANT:
                 - Update package.json if you plan to import new dependencies. (e.g. "chart.js" should be added to the dependencies)
-                - Always use suggested classes from the design guidelines, except something is not mentioned in the design guidelines.
+                - Always use classes from the index.css and tailwind.config.js files.
     
                 ### **Details**
                 - **Current Source Code:** ${JSON.stringify(this.project.artifact)}
