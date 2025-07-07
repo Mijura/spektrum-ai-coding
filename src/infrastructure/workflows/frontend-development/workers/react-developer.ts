@@ -12,7 +12,7 @@ export class ReactDeveloper extends Contributor {
     
     name: string = "React Developer"
 
-    brain = Brain.GPT_41
+    brain = Brain.GPT_41_MINI
     
     thoughtShape = z.object({
         sourceCode: z
@@ -28,7 +28,6 @@ export class ReactDeveloper extends Contributor {
     workflowRunRepository: WorkflowRunRepository
     task!: Task
     project!: Project
-    designGuidelines: any
 
     constructor(frontendDevelopmentService: FrontendDevelopmentService, projectRepository: ProjectRepository, taskRepository: TaskRepository, workflowRunRepository: WorkflowRunRepository) {
         super();
@@ -39,9 +38,8 @@ export class ReactDeveloper extends Contributor {
 
     }
 
-    async preThought(design: any): Promise<any> {
-        this.task = design.task
-        this.designGuidelines = design.guidelines
+    async preThought(task: Task): Promise<any> {
+        this.task = task
         this.task.startedWork("React Developer", "Code Generation", "React Developer is generating the code...")
         this.project = await this.projectRepository.findById(this.task.projectId)
     }
@@ -53,15 +51,12 @@ export class ReactDeveloper extends Contributor {
     
             ### **Your Tasks:**
 
-                1. **Modify or create new files according the design guidelines**:
+                1. **Modify or create new files according the task description and activities**:
                 - When create a new feature, you should create a reusable components in the separate files.
                 - You should use the components in the src/components/ui folder to develop new features.
 
                 **Task with plan:**
                 ${JSON.stringify(this.task)}
-
-                **Design Guidelines:**
-                ${JSON.stringify(this.designGuidelines)}
 
                 MOST IMPORTANT:
                 - Update package.json if you plan to import new dependencies. (e.g. "chart.js" should be added to the dependencies)
