@@ -125,15 +125,19 @@ export class ProductOwner extends Contributor {
 
         this.task.leaveComment("Product Owner", comment)
         const taskPromises = []
+        const createdTasks = []
         for (const task of tasks) {
             //console.log(task.priority)
             //TODO: Add priority to the task
             const t = Task.create('Product Owner', this.task.projectId, task.title, task.description)
             const taskPromise = this.taskRepository.save(t)
             taskPromises.push(taskPromise)
+            createdTasks.push(t)
         }
 
         await Promise.all(taskPromises)
+
+        return createdTasks
     }
 
 }
