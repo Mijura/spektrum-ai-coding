@@ -7,6 +7,7 @@ import { Project } from "@domain/entities/project"
 import { ReactDeveloper } from "./workers/react-developer"
 import { Contributor, Team } from "@honeycomb-app/hexacore"
 import { GraphicDesigner } from "./workers/graphic-designer"
+import { ScrumMaster } from "./workers/scrum-master"
 export interface State {
 	task: Task
 	sourceCode: SourceCode
@@ -25,10 +26,11 @@ export class FrontendDevelopmentRunner implements WorkflowRunner {
 
             const reactDeveloper: Contributor = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, workflowRunRepository)
             const designer: Contributor = new GraphicDesigner(frontendDevelopmentService, projectRepository, taskRepository, workflowRunRepository)
-
+            const scrumMaster: Contributor = new ScrumMaster()
             Team.addContributor(reactDeveloper)
             Team.addContributor(designer)
-            const artifact = await designer.execute(task)
+            Team.addContributor(scrumMaster)
+            const artifact = await scrumMaster.execute(task)
             workflowRun.finishSuccessfully(artifact)
 
         } catch (error: any) {

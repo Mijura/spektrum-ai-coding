@@ -11,12 +11,11 @@ export class GraphicDesigner extends Contributor {
 
     name: string = "Graphic Designer"
 
-    brain = Brain.GPT_41
+    brain = Brain.GPT_41_MINI
 
     thoughtShape = z.object({
         indexCss: z.string().describe("The full content of the index.css file with Tailwind directives and custom styles."),
         comment: z.string().describe("The comment to be added to the task. Detail design explanation for the user."),
-        guidelines: z.string().describe("It should contain a list of components with super short description."),
         tailwindConfig: z.string().describe("The full content of the tailwind.config.js file with Tailwind directives and custom styles.")
     })
 
@@ -60,7 +59,8 @@ export class GraphicDesigner extends Contributor {
             ## Color Palette  
             Your designs should be clean and calm, but not monotonous. Use colors to make the app feel alive and pleasant, avoiding a boring grayscale look.  
             - **70% neutrals**: White/black variants and soft grays for backgrounds, containers, and primary text. Favor muted colors.  
-            - **30% vivid nuances**: One consistent accent color for buttons, links, highlights, and active states. Bright yellows, pinks, violets, or limes for badges, labels, borders, and subtle hover/active effects (\`ring-pink-400\`, \`text-lime-600\`).  
+            - **20% primary color for buttons, highlights, and active states (choose a single consistent accent color).
+            - **10% vivid colorful nuances (yellow, pink, violet, lime) for badges, labels, and subtle hover/active effects.
 
             ## Shapes  
             Shapes communicate tone—soft vs. technical—so maintain consistency within and across components.   
@@ -99,6 +99,7 @@ export class GraphicDesigner extends Contributor {
                - Define Tailwind CSS class combinations and reusable CSS utility classes (in index.css):
                - Provide Tailwind classes for layout & styling of each section/component (e.g., Hero Section, Button, Card, Footer).
                - When appropriate, create custom utility classes in the index.css file (e.g., .btn-primary, .layout-hero, .card-sm, etc.).
+               - Don't add color classes to the index.css, but use the tailwind.config.js file to define the colors.
 
             2. Maintain tailwind.config.js
                 - All colors and other tailwind classes must be defined in the tailwind.config.js file.
@@ -123,7 +124,7 @@ export class GraphicDesigner extends Contributor {
     }
 
     async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any> {
-        const { indexCss, guidelines, comment, tailwindConfig } = tought
+        const { indexCss, comment, tailwindConfig } = tought
 
         this.task.finishedWork("Graphic Designer", "Design Generation", "Graphic Designer has finished the design generation...")
 
@@ -136,12 +137,9 @@ export class GraphicDesigner extends Contributor {
 
         this.task.leaveComment("Graphic Designer", comment)
 
-        const design = {
-            task: this.task,
-            guidelines: guidelines,
-        }
+
         console.log("Passing task to React Developer")
-        return await this.delegateTo("React Developer", design)
+        return await this.delegateTo("React Developer", this.task)
     }
 
 }

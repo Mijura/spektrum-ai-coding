@@ -8,6 +8,7 @@ export class YarnPackageManager implements PackageManager {
 		console.log(result.stdout)
 		if (!result.success) {
 			console.error(result.stderr)
+			throw new Error("Install dependencies failed: " + result.stderr)
 		}
 		return result.success
 	}
@@ -17,6 +18,7 @@ export class YarnPackageManager implements PackageManager {
 		console.log(result.stdout)
 		if (!result.success) {
 			console.error(result.stderr)
+			throw new Error("Build failed: " + result.stderr)
 		}
 		return result.success
 	}
