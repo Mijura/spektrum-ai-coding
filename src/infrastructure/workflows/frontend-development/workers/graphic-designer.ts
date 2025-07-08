@@ -34,7 +34,7 @@ export class GraphicDesigner extends Contributor {
 
     async preThought(task: Task): Promise<any> {
         this.task = task
-        this.task.startedWork("Graphic Designer", "Design Generation", "Graphic Designer is generating the new styles and layout...")
+        this.task.startedWork("Graphic Designer", "Graphic Designer is generating the new styles and layout...")
         this.project = await this.projectRepository.findById(task.projectId)
     }
 
@@ -126,7 +126,7 @@ export class GraphicDesigner extends Contributor {
     async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<any> {
         const { indexCss, comment, tailwindConfig } = tought
 
-        this.task.finishedWork("Graphic Designer", "Design Generation", "Graphic Designer has finished the design generation...")
+        this.task.finishedWork("Graphic Designer", "Graphic Designer has finished the design generation...")
 
         this.project.artifact = {
             ...this.project.artifact,

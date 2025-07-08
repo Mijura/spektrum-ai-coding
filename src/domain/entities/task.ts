@@ -68,12 +68,12 @@ export class Task {
 	}
 
 	@EmitTaskUpdate()
-	startedWork(workerId: string, phase: string, message: string): StartedWork {
-		if (this.status === TaskStatus.WORK_IN_PROGRESS) {
-			throw new Error("Worker is already working on a task")
-		}
+	startedWork(workerId: string, message: string): StartedWork {
+		// if (this.status === TaskStatus.WORK_IN_PROGRESS) {
+		// 	throw new Error("Worker is already working on a task")
+		// }
 
-		const activity = StartedWork.create(workerId, this, phase, message)
+		const activity = StartedWork.create(workerId, this, message)
 		
 		this.activities.push(activity)
 		this.assignedTo = workerId
@@ -82,16 +82,16 @@ export class Task {
 	}
 
 	@EmitTaskUpdate()
-	finishedWork(workerId: string, phase: string, message: string): FinishedWork {
-		if (!this.assignedTo) {
-			throw new Error("Worker has not started working on this task")
-		}
+	finishedWork(workerId: string, message: string): FinishedWork {
+		// if (!this.assignedTo) {
+		// 	throw new Error("Worker has not started working on this task")
+		// }
 
-		if (this.assignedTo !== workerId) {
-			throw new Error("Worker is not working on this task")
-		}
+		// if (this.assignedTo !== workerId) {
+		// 	throw new Error("Worker is not working on this task")
+		// }
 
-		const activity = FinishedWork.create(workerId, this, phase, message)
+		const activity = FinishedWork.create(workerId, this, message)
 		const startedWorkActivity = this.activities.findIndex(activity => activity instanceof StartedWork)
 		if (startedWorkActivity) {
 			this.activities.splice(startedWorkActivity, 1, activity)
