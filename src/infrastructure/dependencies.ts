@@ -57,7 +57,8 @@ import { ProjectRefiningRunner } from "./workflows/project-refining/runner"
 import { MockWorkflowRunRepository } from "./repositories/mock-workflow-run-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { TaskPlanningRunner } from "./workflows/task-planning/runner"
-import { ProjectService } from "@application/services/project-service"
+import { ProjectService } from "@domain/ports/project-service"
+import { DefaultProjectService } from "@application/services/project-service"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -85,7 +86,7 @@ export const taskPlanningRunner: WorkflowRunner = new TaskPlanningRunner()
 workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentRunner)
 
 // Services
-export const projectService: ProjectService = new ProjectService(projectRepository, projectRefiningRunner)
+export const projectService: ProjectService = new DefaultProjectService(projectRepository, projectRefiningRunner)
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)
