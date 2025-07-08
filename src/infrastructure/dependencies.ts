@@ -57,6 +57,7 @@ import { ProjectRefiningRunner } from "./workflows/project-refining/runner"
 import { MockWorkflowRunRepository } from "./repositories/mock-workflow-run-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { TaskPlanningRunner } from "./workflows/task-planning/runner"
+import { ProjectService } from "@application/services/project-service"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -83,14 +84,17 @@ export const taskPlanningRunner: WorkflowRunner = new TaskPlanningRunner()
 // Register workflows
 workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentRunner)
 
+// Services
+export const projectService: ProjectService = new ProjectService(projectRepository, projectRefiningRunner)
+
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)
-export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(taskPlanningRunner)
+export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(taskPlanningRunner, projectService)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
-export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, projectRepository, projectRefiningRunner)
+export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, projectService)
 export const fetchTasks: FetchTasks = new FetchTasksUseCase(taskRepository)
 export const updateTaskTitle: UpdateTaskTitle = new UpdateTaskTitleUseCase(taskRepository)
 export const updateTaskDescription: UpdateTaskDescription = new UpdateTaskDescriptionUseCase(taskRepository)
