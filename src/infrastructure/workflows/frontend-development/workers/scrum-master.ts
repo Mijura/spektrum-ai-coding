@@ -1,4 +1,5 @@
 import { Task } from "@domain/entities/task"
+import { ActivityType, CommentLeftMetadata } from "@domain/types/activity"
 import { Brain, Contributor } from "@honeycomb-app/hexacore"
 import z from "zod"
 
@@ -20,10 +21,15 @@ export class ScrumMaster extends Contributor {
 
     loadContext(): string {
 
-        const lastActivity: any = this.task.getActivityLog().at(-1)?.metadata;
-        const inputText = lastActivity?.commentText || this.task.title
+        let input = ''
+        const lastActivity  = this.task.getActivityLog().at(-1)
+        if (lastActivity?.type === ActivityType.COMMENT_LEFT) {
+            const comment = lastActivity.metadata as CommentLeftMetadata
+            return comment.commentText
+        }else{
+            input = JSON.stringify(this.task)
+        }
 
-        console.log("Scrum Master", "Input Text", inputText)
         return `
         ## 🌟 Role
 
@@ -41,12 +47,11 @@ export class ScrumMaster extends Contributor {
         - Improvement — If the input contains words like "improve," "refactor," "optimize," "enhance," or similar, classify as "Improvement".
         - Feature — If the input contains words like "add," "create," "implement," "build," "develop," "introduce," or similar, classify as "Feature".
 
-
         ---
 
-        ## Input task
+        ## Input Task
 
-        ${inputText}
+        ${input}
 
         ---
         `
