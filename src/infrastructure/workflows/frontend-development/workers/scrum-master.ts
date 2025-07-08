@@ -9,7 +9,7 @@ export class ScrumMaster extends Contributor {
     brain = Brain.GPT_41_NANO
 
     thoughtShape = z.object({
-        status: z.enum(["Feature", "Bug", "Improvement"])
+        label: z.enum(["Feature", "Bug", "Improvement"]).describe("The label of the input")
     })
 
     task!: Task
@@ -19,25 +19,44 @@ export class ScrumMaster extends Contributor {
     }
 
     loadContext(): string {
+
+        const lastActivity: any = this.task.getActivityLog().at(-1)?.metadata;
+        const inputText = lastActivity?.commentText || this.task.title
+
+        console.log("Scrum Master", "Input Text", inputText)
         return `
-        You are a scrum master. Your task is to figure out the task status based on the last activity.
+        ## 🌟 Role
 
-        ### ** Your Tasks:**
+        You are a **Scrum Master AI Agent**.
+        Your job is to 
 
-        1. **Review the task description and activities** to figure out last activite.
-        2. **Based on the last activity** output the type of the activity (Feature, Bug, or Improvement).
+        ---
 
-        ### **Task**
-        ${this.task}
+        ## Your Responsibilities
+
+        ### 1. Analyze the task input.
+        ### 2. Classify the task:
+
+        - Bug — If the input contains words like "error," "fail," "crash," "fix," "bug," "issue," "complain," "problem," or similar, classify as "Bug".
+        - Improvement — If the input contains words like "improve," "refactor," "optimize," "enhance," or similar, classify as "Improvement".
+        - Feature — If the input contains words like "add," "create," "implement," "build," "develop," "introduce," or similar, classify as "Feature".
 
 
+        ---
+
+        ## Input task
+
+        ${inputText}
+
+        ---
         `
     }
 
     async afterThought(thought: z.infer<typeof this.thoughtShape>): Promise<void> {
-        const { status } = thought
+        const { label } = thought
         
-        switch (status) {
+        console.log("Scrum Master", "Task Label", label)
+        switch (label) {
             case "Feature":
                 await this.delegateTo("Graphic Designer", this.task)
                 break
