@@ -24,13 +24,11 @@ export type DescriptionUpdatedMetadata = {
 export type StartedWorkMetadata = {
     workerId: string
     message: string
-    phase: string
 }
 
 export type FinishedWorkMetadata = {
     workerId: string
     message: string
-    phase: string
 }
 
 export type Comment = {

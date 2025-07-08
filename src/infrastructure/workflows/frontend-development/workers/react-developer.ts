@@ -12,7 +12,7 @@ export class ReactDeveloper extends Contributor {
     
     name: string = "React Developer"
 
-    brain = Brain.GPT_41_MINI
+    brain = Brain.GPT_41
     
     thoughtShape = z.object({
         sourceCode: z
@@ -28,6 +28,8 @@ export class ReactDeveloper extends Contributor {
     workflowRunRepository: WorkflowRunRepository
     task!: Task
     project!: Project
+    private retryCount: number = 0
+    private readonly MAX_RETRIES: number = 4
 
     constructor(frontendDevelopmentService: FrontendDevelopmentService, projectRepository: ProjectRepository, taskRepository: TaskRepository, workflowRunRepository: WorkflowRunRepository) {
         super();
@@ -40,7 +42,7 @@ export class ReactDeveloper extends Contributor {
 
     async preThought(task: Task): Promise<any> {
         this.task = task
-        this.task.startedWork("React Developer", "Code Generation", "React Developer is generating the code...")
+        this.task.startedWork("React Developer", "React Developer is generating the code...")
         this.project = await this.projectRepository.findById(this.task.projectId)
     }
 
@@ -54,6 +56,8 @@ export class ReactDeveloper extends Contributor {
                 1. **Modify or create new files according the task description and activities**:
                 - When create a new feature, you should create a reusable components in the separate files.
                 - You should use the components in the src/components/ui folder to develop new features.
+                - You should keep all previous features visible and working.
+                - When new feature is requested, you should ensure that its visible to the user, along with all previous features.
 
                 **Task with plan:**
                 ${JSON.stringify(this.task)}
@@ -73,30 +77,39 @@ export class ReactDeveloper extends Contributor {
 
         const { sourceCode, comment } = tought
 
-        this.task.finishedWork("React Developer", "Code Generation", "Finished with coding")
+        this.task.finishedWork("React Developer", "Finished with coding")
         this.task.leaveComment("React Developer", comment)
-        this.task.startedWork("React Developer", "Code Deployment", "React developer deploying the application...")
+        this.task.startedWork("React Developer", "React developer deploying the application...")
+
+        await this.frontendDevelopmentService.restoreSourceCode(this.project)
+        const wholeCode = await this.frontendDevelopmentService.updateSourceCode(this.task.projectId, sourceCode)
 
         try {
-
-            await this.frontendDevelopmentService.restoreSourceCode(this.project)
-            const wholeCode = await this.frontendDevelopmentService.updateSourceCode(this.task.projectId, sourceCode)
             await this.frontendDevelopmentService.installDependencies(this.task.projectId)
             await this.frontendDevelopmentService.buildProject(this.task.projectId)
-            await this.frontendDevelopmentService.deployToDevEnvironment(this.task.projectId)
-            //await this.frontendDevelopmentService.removeSourceCodeFromFileSystem(this.task.projectId)
-            this.task.leaveComment("React Developer", "Application is successfully deployed and now is ready to be tested.")
-            this.project.setArtifact(wholeCode)
-            await this.projectRepository.save(this.project)
-            return sourceCode
         } catch (error) {
-            console.error("Error writing files:", error)
-            this.task.leaveComment("React Developer", "I encountered an error during build : " + error)
-            throw error
+            this.retryCount++
+            
+            if (this.retryCount >= this.MAX_RETRIES) {
+                this.task.leaveComment("React Developer", `Failed to resolve the issue after ${this.MAX_RETRIES} attempts. Error: ${error}.`)
+                this.task.finishedWork("React Developer", "Failed after maximum retry attempts")
+                throw new Error(`Maximum retry attempts (${this.MAX_RETRIES}) exceeded. Last error: ${error}`)
+            }
+
+            this.task.leaveComment("React Developer", `Attempt ${this.retryCount}/${this.MAX_RETRIES}: I encountered an error during build: ${error}. Retrying with a different approach...`)            
+            this.task.finishedWork("React Developer", "Failed to build the application")
+            return this.execute(this.task)
         } finally {
-            this.task.finishedWork("React Developer", "Code Deployment", "Finished updating the application")
+            this.task.finishedWork("React Developer", "Finished updating the application")
             await this.taskRepository.save(this.task)
         }
+
+        await this.frontendDevelopmentService.deployToDevEnvironment(this.task.projectId)
+        //await this.frontendDevelopmentService.removeSourceCodeFromFileSystem(this.task.projectId)
+        this.task.leaveComment("React Developer", "Application is successfully deployed and now is ready to be tested.")
+        this.project.setArtifact(wholeCode)
+        await this.projectRepository.save(this.project)
+        return sourceCode
 
     }
 
