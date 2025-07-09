@@ -4,7 +4,7 @@ import { TimeRangeData, WorkflowRunHeatmap } from "@domain/types/workflow"
 
 export interface WorkflowRunRepository {
     save(workflowRun: WorkflowRun): Promise<WorkflowRun>
-    findById(id: string): Promise<WorkflowRun | null>
+    get(workflowRunId: string): Promise<WorkflowRun | null>
     getTimelineByProjectId(projectId: string, pagination: PaginationData): Promise<WorkflowRun[]>
     getTimelineByAccountId(accountId: string, pagination: PaginationData): Promise<WorkflowRun[]>
     getHeatmap(accountId: string, timeRange: TimeRangeData): Promise<WorkflowRunHeatmap[]> 

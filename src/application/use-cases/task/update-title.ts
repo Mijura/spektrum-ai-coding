@@ -12,7 +12,7 @@ export class UpdateTaskTitleUseCase implements UpdateTaskTitle{
 		try {
 			// fetch the old task and update it
 			console.log(`Updating task title for task ${taskDto.id} to ${taskDto.title}.`)
-            const task: Task | null = await this.taskRepository.findById(taskDto.id)
+            const task: Task | null = await this.taskRepository.get(taskDto.id)
 
             if (!task) {
                 throw new Error("Task not found.")

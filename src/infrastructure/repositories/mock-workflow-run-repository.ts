@@ -18,10 +18,10 @@ export class MockWorkflowRunRepository implements WorkflowRunRepository {
         return workflowRun
     }
 
-    async findById(id: string): Promise<WorkflowRun | null> {
-        console.log(`Mock: Fetching workflow run by id: ${id}`)
+    async get(workflowRunId: string): Promise<WorkflowRun | null> {
+        console.log(`Mock: Fetching workflow run by id: ${workflowRunId}`)
         
-        const workflowRun = this.workflowRuns.get(id)
+        const workflowRun = this.workflowRuns.get(workflowRunId)
         return workflowRun || null
     }
 

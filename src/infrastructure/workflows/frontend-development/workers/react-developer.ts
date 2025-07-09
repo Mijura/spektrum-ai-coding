@@ -43,7 +43,7 @@ export class ReactDeveloper extends Contributor {
     async preThought(task: Task): Promise<any> {
         this.task = task
         this.task.startedWork("React Developer", "React Developer is generating the code...")
-        this.project = await this.projectRepository.findById(this.task.projectId)
+        this.project = await this.projectRepository.get(this.task.projectId)
     }
 
     loadContext(): string {

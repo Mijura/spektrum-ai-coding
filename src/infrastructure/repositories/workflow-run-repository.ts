@@ -87,12 +87,12 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		return response.body as unknown as WorkflowRun
     }
 
-    async findById(id: string): Promise<WorkflowRun | null> {
+    async get(workflowRunId: string): Promise<WorkflowRun | null> {
 		const index = this.getIndex()
 
 		const client = this.getClient()
 
-		console.log(`Fetching workflow run by id: ${id}`)
+		console.log(`Fetching workflow run by id: ${workflowRunId}`)
 
 		const indexExists = await this.indexExists(index)
 		if (!indexExists) {
@@ -102,7 +102,7 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 
 		let response = await client.get({
 			index: index,
-			id: id,
+			id: workflowRunId,
 		})
 
 		return response.body._source as WorkflowRun

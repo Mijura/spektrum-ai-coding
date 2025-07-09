@@ -31,13 +31,13 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 		return project
 	}
 
-	async findById(id: string): Promise<Project> {
+	async get(projectId: string): Promise<Project> {
 		const tableName = process.env.PROJECT_TABLE
 
-		console.log(`Fetching project with ${id} from dynamodb table ${tableName}.`)
+		console.log(`Fetching project with ${projectId} from dynamodb table ${tableName}.`)
 		const params = {
 			TableName: tableName,
-			Key: { id },
+			Key: { id: projectId },
 		}
 
 		const { Item: item } = await ddbDocClient.send(new GetCommand(params))
@@ -66,7 +66,7 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 		return allItems
 	}
 
-	async findAll(ownerId: string): Promise<Project[]> {
+	async getAll(ownerId: string): Promise<Project[]> {
 
 		const tableName = process.env.PROJECT_TABLE
 
@@ -86,7 +86,7 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 
 
 
-	async findAllByStatus(ownerId: string, status: ProjectStatus): Promise<Project[]> {
+	async getAllByStatus(ownerId: string, status: ProjectStatus): Promise<Project[]> {
 		const tableName = process.env.PROJECT_TABLE;
 	  
 		const params = {

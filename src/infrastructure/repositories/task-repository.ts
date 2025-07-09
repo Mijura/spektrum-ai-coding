@@ -31,13 +31,13 @@ export class DynamoDBTaskRepository implements TaskRepository {
 		return task
 	}
 
-	async findById(id: string): Promise<Task | null> {
+	async get(taskId: string): Promise<Task | null> {
 		const tableName = process.env.TASK_TABLE
 
-		console.log(`Fetching task with id ${id} from dynamodb table ${tableName}.`)
+		console.log(`Fetching task with id ${taskId} from dynamodb table ${tableName}.`)
 		const params = {
 			TableName: tableName,
-			Key: { id },
+			Key: { id: taskId },
 		}
 
 		const { Item: item } = await ddbDocClient.send(new GetCommand(params))
@@ -49,7 +49,7 @@ export class DynamoDBTaskRepository implements TaskRepository {
 		return TaskMapper.toDomain(taskRecord)
 	}
 
-	async findAll(projectId: string): Promise<Task[]> {
+	async getAll(projectId: string): Promise<Task[]> {
 
 		const tableName = process.env.TASK_TABLE
 

@@ -6,6 +6,6 @@ export class FetchTasksUseCase implements FetchTasks {
 	constructor(private readonly taskRepository: TaskRepository) {}
 
 	async execute(projectId: string): Promise<Task[]> {
-		return await this.taskRepository.findAll(projectId)
+		return await this.taskRepository.getAll(projectId)
 	}
 }

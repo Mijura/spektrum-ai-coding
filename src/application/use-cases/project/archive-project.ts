@@ -6,7 +6,7 @@ export class ArchiveProjectUseCase implements ArchiveProject {
 	constructor(private readonly projectRepository: ProjectRepository) {}
 
 	async execute(projectId: string): Promise<Project> {
-		const project = await this.projectRepository.findById(projectId)
+		const project = await this.projectRepository.get(projectId)
 		project.archive()
 		return await this.projectRepository.save(project)
 	}

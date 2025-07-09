@@ -11,7 +11,7 @@ export class DefaultProjectService implements ProjectService {
     ) {}
 
     async updateProjectDetails(task: Task) {
-        const project = await this.projectRepository.findById(task.projectId)
+        const project = await this.projectRepository.get(task.projectId)
         if (!project) {
             throw new Error("Project not found")
         }

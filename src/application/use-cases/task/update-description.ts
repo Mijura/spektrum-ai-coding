@@ -12,7 +12,7 @@ export class UpdateTaskDescriptionUseCase implements UpdateTaskDescription{
 		try {
 			// fetch the old task and update it
 			console.log(`Updating task description for task ${taskDto.id} to ${taskDto.description}.`)
-            const task: Task | null = await this.taskRepository.findById(taskDto.id)
+            const task: Task | null = await this.taskRepository.get(taskDto.id)
 
             if (!task) {
                 throw new Error("Task not found.")

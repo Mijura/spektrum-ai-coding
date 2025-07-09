@@ -6,11 +6,11 @@ import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
 export class DeployProjectUseCase implements DeployProject {
 	constructor(
 		private readonly frontendDevelopmentService: FrontendDevelopmentService,
-		private readonly projectStorage: ProjectRepository
+		private readonly projectRepository: ProjectRepository
 	) {}
 
 	async execute(projectId: string): Promise<Project> {
-		const project = await this.projectStorage.findById(projectId)
+		const project = await this.projectRepository.get(projectId)
 
 		if (!project) {
 			throw new Error("Project not found")
@@ -25,7 +25,7 @@ export class DeployProjectUseCase implements DeployProject {
 
 			// Only persist if a new deployment ID was assigned
 			if (wasUpdated) {
-				await this.projectStorage.save(project)
+				await this.projectRepository.save(project)
 			}
 
 			return project

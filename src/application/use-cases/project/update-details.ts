@@ -11,7 +11,7 @@ export class UpdateProjectDetailsUseCase implements UpdateProjectDetails {
         try {
             
             console.log(`Updating project details for project ${projectId}`)
-            const project: Project | null = await this.projectRepository.findById(projectId)
+            const project: Project | null = await this.projectRepository.get(projectId)
 
             if (!project) {
                 throw new Error("Project not found.")

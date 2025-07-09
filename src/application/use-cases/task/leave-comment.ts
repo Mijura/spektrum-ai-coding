@@ -10,7 +10,7 @@ export class LeaveCommentUseCase implements LeaveComment {
     async execute(taskId: string, authorId: string, commentText: string): Promise<Task> {
         try {
             console.log(`Adding comment to task ${taskId} by user ${authorId}.`)
-            const task: Task | null = await this.taskRepository.findById(taskId)
+            const task: Task | null = await this.taskRepository.get(taskId)
 
             if (!task) {
                 throw new Error("Task not found.")
