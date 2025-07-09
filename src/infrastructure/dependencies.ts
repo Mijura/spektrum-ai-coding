@@ -37,7 +37,7 @@ import { UpdateTaskTitleUseCase } from "@application/use-cases/task/update-title
 import { LeaveComment } from "@domain/use-cases/task/leave-comment"
 import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
 import { FetchTaskExecutionsTimeline } from "@domain/use-cases/task-execution/fetch-timeline"
-import { WorkflowController } from "./http/controllers/workflow-controller"
+import { TaskExecutionController } from "./http/controllers/task-execution-controller"
 import { RunTaskExecutionUseCase } from "@application/use-cases/task-execution/run"
 import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
 import { FetchTaskExecutionsHeatmap } from "@domain/use-cases/task-execution/fetch-heatmap"
@@ -48,7 +48,7 @@ import { FileSystemPort } from "./workflows/frontend-development/interfaces/file
 import { WorkflowRunner } from "@domain/ports/workflow-runner"
 import { WorkflowRegistry } from "@domain/repositories/workflow-registry"
 import { InMemoryWorkflowRegistry } from "./repositories/workflow-registry"
-import { WorkflowType } from "@domain/types/workflow"
+import { WorkflowType } from "@domain/types/task-execution"
 import { NodeFileSystem } from "./workflows/frontend-development/services/node-file-system"
 import { S3DeploymentTargetAdapter } from "./workflows/frontend-development/services/s3-deployment-target"
 import { DeploymentTargetPort } from "./workflows/frontend-development/interfaces/deployment-target"
@@ -63,7 +63,7 @@ import { DefaultProjectService } from "@application/services/project-service"
 // Controllers
 export const projectController = new ProjectController()
 export const taskController = new TaskController()
-export const workflowRunController = new WorkflowController()
+export const taskExecutionController = new TaskExecutionController()
 
 // Services
 export const fileSystem: FileSystemPort = new NodeFileSystem()

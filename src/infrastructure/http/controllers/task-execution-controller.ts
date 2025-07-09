@@ -1,10 +1,10 @@
 
-import { WorkflowRun } from "@domain/entities/task-execution"
-import { WorkflowRunHeatmap } from "@domain/types/workflow"
-import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchWorkflowRunsHeatmap, runWorkflow } from "@infrastructure/dependencies"
+import { TaskExecution } from "@domain/entities/task-execution"
+import { TaskExecutionHeatmap } from "@domain/types/task-execution"
+import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, runTaskExecution } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
-export class WorkflowController {
+export class TaskExecutionController {
 
     constructor() {}
 
@@ -24,7 +24,7 @@ export class WorkflowController {
         }
 
         try {
-            const activities: WorkflowRun[] = await fetchTimelineByProjectId.execute(projectId, pagination)
+            const activities: TaskExecution[] = await fetchTimelineByProjectId.execute(projectId, pagination)
             res.json(activities)
         } catch (error) {
             console.error("Error during fetching timeline by projectId:", error)
@@ -49,7 +49,7 @@ export class WorkflowController {
         }
         
         try {
-            const activities: WorkflowRun[] = await fetchTimelineByAccountId.execute(accountId, pagination)
+            const activities: TaskExecution[] = await fetchTimelineByAccountId.execute(accountId, pagination)
             res.json(activities)
         } catch (error) {
             console.error("Error during fetching timeline by accountId:", error)
@@ -68,7 +68,7 @@ export class WorkflowController {
         }
 
         try {
-            const heatmap: WorkflowRunHeatmap[] = await fetchWorkflowRunsHeatmap.execute(accountId, { startDate, endDate })
+            const heatmap: TaskExecutionHeatmap[] = await fetchTaskExecutionsHeatmap.execute(accountId, { startDate, endDate })
             res.status(200).json(heatmap)
         } catch (error) {
             console.error("Error during fetching heatmap:", error)
@@ -76,21 +76,22 @@ export class WorkflowController {
         }
     }
 
-    async runWorkflow(req: Request, res: Response): Promise<void> {
+    async run(req: Request, res: Response): Promise<void> {
         
         const taskId = req.body.taskId
         const workflowId = req.body.workflowId
         const accountId = req.body.accountId
 
+        console.log("Received taskId:", taskId, "Type:", typeof taskId)
         console.log("Received workflowId:", workflowId, "Type:", typeof workflowId)
-        console.log("Running frontend development workflow for task:", taskId, "and account:", accountId)
+        console.log("Received accountId:", accountId, "Type:", typeof accountId)
         if (!taskId || !accountId) {
             res.status(400).json({ error: "Missing required parameters" })
             return
         }
 
 		try {
-            await runWorkflow.execute(taskId, workflowId, accountId)
+            await runTaskExecution.execute(taskId, workflowId, accountId)
             res.status(200).json({ message: "Workflow run initiated" })
 		} catch (error) {
 			console.error("Error during development workflow:", error)

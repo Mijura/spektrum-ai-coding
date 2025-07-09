@@ -5,7 +5,7 @@ import { PaginationData } from "@domain/types/activity"
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
 import { OpenSearchHeatmapResponse, WorkflowRunMapper } from "@infrastructure/mappers/workflow-run-mapper"
-import { TaskExecutionHeatmap, TimeRangeData } from "@domain/types/workflow"
+import { TaskExecutionHeatmap, TimeRangeData } from "@domain/types/task-execution"
 
 export class OpenSearchTaskExecutionRepository implements TaskExecutionRepository {
 

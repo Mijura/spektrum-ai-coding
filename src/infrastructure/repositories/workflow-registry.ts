@@ -1,4 +1,4 @@
-import { WorkflowType } from '@domain/types/workflow'
+import { WorkflowType } from '@domain/types/task-execution'
 import { WorkflowRunner } from '../../domain/ports/workflow-runner'
 import { WorkflowRegistry } from '@domain/repositories/workflow-registry'
 
