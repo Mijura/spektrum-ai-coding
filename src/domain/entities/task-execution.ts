@@ -1,7 +1,7 @@
-import { WorkflowRunStatus } from "@domain/types/activity"
+import { TaskExecutionStatus } from "@domain/types/activity"
 import { Task } from "./task"
 import { v4 as uuidv4 } from "uuid"
-import { EmitNewWorkflowRun } from "@domain/events/emitters/new-workflow-run"
+import { EmitNewTaskExecution } from "@domain/events/emitters/new-task-execution"
 import { EmitWorkflowRunUpdate } from "@domain/events/emitters/workflow-run-update"
 import { SourceCode } from "@domain/types/source-code"
 
@@ -16,14 +16,14 @@ class WorkflowPhase {
         this.worker = worker
     }
 }
-export class WorkflowRun {
+export class TaskExecution {
     public readonly id: string
     public title: string
     public readonly projectId: string
     public readonly taskId: string
     public readonly workflowId: string
     public readonly accountId: string
-    public status: WorkflowRunStatus
+    public status: TaskExecutionStatus
 	public phase: WorkflowPhase | null
     public artifact: SourceCode | null
     public occurredAt: string
@@ -36,7 +36,7 @@ export class WorkflowRun {
         taskId: string,
         workflowId: string,
         accountId: string,
-        status: WorkflowRunStatus,
+        status: TaskExecutionStatus,
         phase: WorkflowPhase | null,
         occurredAt: string,
         artifact: SourceCode | null,
@@ -55,22 +55,22 @@ export class WorkflowRun {
         this.artifact = artifact
     }
 
-    static create(task: Task, workflowId: string, accountId: string): WorkflowRun {
+    static create(task: Task, workflowId: string, accountId: string): TaskExecution {
         
         const id = uuidv4()
         const occurredAt = new Date().toISOString()
-        const status = WorkflowRunStatus.RUNNING
+        const status = TaskExecutionStatus.RUNNING
         const phase = null
 
-        const run = new WorkflowRun(id, task.title, task.projectId, task.id, workflowId, accountId, status, phase, occurredAt, null)
-        EmitNewWorkflowRun.emit(run)
+        const execution = new TaskExecution(id, task.title, task.projectId, task.id, workflowId, accountId, status, phase, occurredAt, null)
+        EmitNewTaskExecution.emit(execution)
         
-        return run
+        return execution
     }
 
     @EmitWorkflowRunUpdate()
     finishSuccessfully(artifact: any): void {
-        this.status = WorkflowRunStatus.SUCCEEDED
+        this.status = TaskExecutionStatus.SUCCEEDED
         this.artifact = artifact
     }
 
@@ -80,7 +80,7 @@ export class WorkflowRun {
 
     @EmitWorkflowRunUpdate()
     finishWithError(error: string, artifact: any): void {
-        this.status = WorkflowRunStatus.FAILED
+        this.status = TaskExecutionStatus.FAILED
         this.error = error
         this.artifact = artifact
     }

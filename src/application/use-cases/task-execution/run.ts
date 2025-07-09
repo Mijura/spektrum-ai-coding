@@ -1,9 +1,9 @@
 import { TaskRepository } from "@domain/repositories/task-repository"
 import { WorkflowRegistry } from "@domain/repositories/workflow-registry"
-import { RunWorkflow } from "@domain/use-cases/workflow/run-workflow"
+import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
 import { WorkflowRunner } from "@domain/ports/workflow-runner"
 
-export class RunWorkflowUseCase implements RunWorkflow {
+export class RunTaskExecutionUseCase implements RunTaskExecution {
 
 	constructor(
 		private readonly taskRepository: TaskRepository,

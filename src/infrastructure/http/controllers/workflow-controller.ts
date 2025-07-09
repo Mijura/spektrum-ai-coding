@@ -1,5 +1,5 @@
 
-import { WorkflowRun } from "@domain/entities/workflow-run"
+import { WorkflowRun } from "@domain/entities/task-execution"
 import { WorkflowRunHeatmap } from "@domain/types/workflow"
 import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchWorkflowRunsHeatmap, runWorkflow } from "@infrastructure/dependencies"
 import { Request, Response } from "express"

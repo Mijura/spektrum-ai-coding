@@ -3,7 +3,7 @@ import { Task } from "@domain/entities/task"
 import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
-import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
+import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
 import { SourceCode } from "@domain/types/source-code"
 import { Brain, Contributor } from "@honeycomb-app/hexacore"
 import z from "zod"
@@ -25,18 +25,18 @@ export class ReactDeveloper extends Contributor {
     frontendDevelopmentService: FrontendDevelopmentService
     projectRepository: ProjectRepository
     taskRepository: TaskRepository
-    workflowRunRepository: WorkflowRunRepository
+    taskExecutionRepository: TaskExecutionRepository
     task!: Task
     project!: Project
     private retryCount: number = 0
     private readonly MAX_RETRIES: number = 4
 
-    constructor(frontendDevelopmentService: FrontendDevelopmentService, projectRepository: ProjectRepository, taskRepository: TaskRepository, workflowRunRepository: WorkflowRunRepository) {
+    constructor(frontendDevelopmentService: FrontendDevelopmentService, projectRepository: ProjectRepository, taskRepository: TaskRepository, taskExecutionRepository: TaskExecutionRepository) {
         super();
         this.frontendDevelopmentService = frontendDevelopmentService
         this.projectRepository = projectRepository
         this.taskRepository = taskRepository
-        this.workflowRunRepository = workflowRunRepository
+        this.taskExecutionRepository = taskExecutionRepository
 
     }
 

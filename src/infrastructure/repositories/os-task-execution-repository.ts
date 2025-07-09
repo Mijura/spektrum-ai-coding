@@ -2,12 +2,12 @@ import { AwsSigv4Signer } from "@opensearch-project/opensearch/aws"
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { Client } from "@opensearch-project/opensearch"
 import { PaginationData } from "@domain/types/activity"
-import { WorkflowRun } from "@domain/entities/workflow-run"
-import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
+import { TaskExecution } from "@domain/entities/task-execution"
+import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
 import { OpenSearchHeatmapResponse, WorkflowRunMapper } from "@infrastructure/mappers/workflow-run-mapper"
-import { TimeRangeData, WorkflowRunHeatmap } from "@domain/types/workflow"
+import { TaskExecutionHeatmap, TimeRangeData } from "@domain/types/workflow"
 
-export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
+export class OpenSearchTaskExecutionRepository implements TaskExecutionRepository {
 
 	getClient(): Client {
 		const OPENSEARCH_ENDPOINT = process.env.OPENSEARCH_ENDPOINT || ""
@@ -60,39 +60,39 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		}
 	}
 
-    async save(workflowRun: WorkflowRun): Promise<WorkflowRun> {
+    async save(taskExecution: TaskExecution): Promise<TaskExecution> {
 		const index = this.getIndex()
 
         const client = this.getClient()		
 		// create index if it doesn't already exist
 		await this.createIndexIfNotExists(index)
 
-		if (!workflowRun.id) {
-			throw new Error("workflowRun.id is required for saving. Missing ID may cause unintended document creation.")
+		if (!taskExecution.id) {
+			throw new Error("taskExecution.id is required for saving. Missing ID may cause unintended document creation.")
 		}
 
 		const response = await client.update({
 			index,
-			id: workflowRun.id,
+			id: taskExecution.id,
 			body: {
-				doc: workflowRun,
+				doc: taskExecution,
 				doc_as_upsert: true
 			}
 		});
 	
 		if (response.statusCode !== 200 && response.statusCode !== 201) {
-			throw new Error(`Failed to save workflow run: ${JSON.stringify(response)}`);
+			throw new Error(`Failed to save task execution: ${JSON.stringify(response)}`);
 		}
 
-		return response.body as unknown as WorkflowRun
+		return response.body as unknown as TaskExecution
     }
 
-    async get(workflowRunId: string): Promise<WorkflowRun | null> {
+    async get(taskExecutionId: string): Promise<TaskExecution | null> {
 		const index = this.getIndex()
 
 		const client = this.getClient()
 
-		console.log(`Fetching workflow run by id: ${workflowRunId}`)
+		console.log(`Fetching task execution by id: ${taskExecutionId}`)
 
 		const indexExists = await this.indexExists(index)
 		if (!indexExists) {
@@ -102,19 +102,19 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 
 		let response = await client.get({
 			index: index,
-			id: workflowRunId,
+			id: taskExecutionId,
 		})
 
-		return response.body._source as WorkflowRun
+		return response.body._source as TaskExecution
     }
 
-	async getTimelineByProjectId(projectId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
+	async getTimelineByProjectId(projectId: string, pagination: PaginationData): Promise<TaskExecution[]> {
 		const index = this.getIndex()
 
 		const client = this.getClient()
 		const from = (pagination.pageNumber - 1) * pagination.pageSize
 
-		console.log(`Fetching workflow run timeline for projectId: ${projectId} with pagination: ${JSON.stringify(pagination)}`)
+		console.log(`Fetching task execution timeline for projectId: ${projectId} with pagination: ${JSON.stringify(pagination)}`)
 
 		const indexExists = await this.indexExists(index)
 		if (!indexExists) {
@@ -139,16 +139,16 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		})
 
 
-		return response.body.hits.hits.map((hit: any) => hit._source) as WorkflowRun[]
+		return response.body.hits.hits.map((hit: any) => hit._source) as TaskExecution[]
 	}
 
-	async getTimelineByAccountId(accountId: string, pagination: PaginationData): Promise<WorkflowRun[]> {
+	async getTimelineByAccountId(accountId: string, pagination: PaginationData): Promise<TaskExecution[]> {
 		const index = this.getIndex()
 
 		const client = this.getClient()
 		const from = (pagination.pageNumber - 1) * pagination.pageSize
 
-		console.log(`Fetching workflow run timeline for accountId: ${accountId} with pagination: ${JSON.stringify(pagination)}`)
+		console.log(`Fetching task execution timeline for accountId: ${accountId} with pagination: ${JSON.stringify(pagination)}`)
 
 		// check if index exists
 		const indexExists = await this.indexExists(index)
@@ -174,14 +174,14 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 		})
 
 
-		return response.body.hits.hits.map((hit: any) => hit._source) as WorkflowRun[]
+		return response.body.hits.hits.map((hit: any) => hit._source) as TaskExecution[]
 	}	
 
 
 	/**
 	 * Heatmap: Get the number of workflow run per day for a given accountId
 	 */
-	async getHeatmap(accountId: string, timeRange: TimeRangeData): Promise<WorkflowRunHeatmap[]> {
+	async getHeatmap(accountId: string, timeRange: TimeRangeData): Promise<TaskExecutionHeatmap[]> {
 		const index = this.getIndex()
 		const client = this.getClient()
 
@@ -223,7 +223,7 @@ export class OpenSearchWorkflowRunRepository implements WorkflowRunRepository {
 			body: query,
 		})
 
-		const heatmap: WorkflowRunHeatmap[] = WorkflowRunMapper.parseHistogram(response.body as OpenSearchHeatmapResponse)
+		const heatmap: TaskExecutionHeatmap[] = WorkflowRunMapper.parseHistogram(response.body as OpenSearchHeatmapResponse)
 
 		return heatmap
 	}

@@ -35,15 +35,15 @@ import { LeaveCommentUseCase } from "@application/use-cases/task/leave-comment"
 import { UpdateTaskDescriptionUseCase } from "@application/use-cases/task/update-description"
 import { UpdateTaskTitleUseCase } from "@application/use-cases/task/update-title"
 import { LeaveComment } from "@domain/use-cases/task/leave-comment"
-import { WorkflowRunRepository } from "@domain/repositories/workflow-run-repository"
-import { FetchWorkflowRunsTimeline } from "@domain/use-cases/workflow/fetch-timeline"
+import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
+import { FetchTaskExecutionsTimeline } from "@domain/use-cases/task-execution/fetch-timeline"
 import { WorkflowController } from "./http/controllers/workflow-controller"
-import { RunWorkflowUseCase } from "@application/use-cases/workflow/run-workflow"
-import { RunWorkflow } from "@domain/use-cases/workflow/run-workflow"
-import { FetchWorkflowRunsHeatmap } from "@domain/use-cases/workflow/fetch-heatmap"
-import { FetchWorkflowRunsHeatmapUseCase } from "@application/use-cases/workflow/fetch-heatmap"
-import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/workflow/fetch-project-timeline"
-import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/workflow/fetch-account-timeline"
+import { RunTaskExecutionUseCase } from "@application/use-cases/task-execution/run"
+import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
+import { FetchTaskExecutionsHeatmap } from "@domain/use-cases/task-execution/fetch-heatmap"
+import { FetchTaskExecutionsHeatmapUseCase } from "@application/use-cases/task-execution/fetch-heatmap"
+import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/task-execution/fetch-project-timeline"
+import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/task-execution/fetch-account-timeline"
 import { FileSystemPort } from "./workflows/frontend-development/interfaces/file-system"
 import { WorkflowRunner } from "@domain/ports/workflow-runner"
 import { WorkflowRegistry } from "@domain/repositories/workflow-registry"
@@ -54,7 +54,7 @@ import { S3DeploymentTargetAdapter } from "./workflows/frontend-development/serv
 import { DeploymentTargetPort } from "./workflows/frontend-development/interfaces/deployment-target"
 import { FrontendDevelopmentRunner } from "./workflows/frontend-development/runner"
 import { ProjectRefiningRunner } from "./workflows/project-refining/runner"
-import { MockWorkflowRunRepository } from "./repositories/mock-workflow-run-repository"
+import { MockTaskExecutionRepository } from "./repositories/mock-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { TaskPlanningRunner } from "./workflows/task-planning/runner"
 import { ProjectService } from "@domain/ports/project-service"
@@ -75,7 +75,7 @@ export const frontendDevelopmentService: FrontendDevelopmentService = new Fronte
 // Repositories
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const taskRepository: TaskRepository = new DynamoDBTaskRepository()
-export const workflowRunRepository: WorkflowRunRepository = new MockWorkflowRunRepository()
+export const taskExecutionRepository: TaskExecutionRepository = new MockTaskExecutionRepository()
 export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 
 // Workflows
@@ -101,7 +101,7 @@ export const updateTaskTitle: UpdateTaskTitle = new UpdateTaskTitleUseCase(taskR
 export const updateTaskDescription: UpdateTaskDescription = new UpdateTaskDescriptionUseCase(taskRepository)
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
 export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository)
-export const fetchTimelineByProjectId: FetchWorkflowRunsTimeline = new FetchTimelineByProjectIdUseCase(workflowRunRepository)
-export const fetchTimelineByAccountId: FetchWorkflowRunsTimeline = new FetchTimelineByAccountIdUseCase(workflowRunRepository)
-export const fetchWorkflowRunsHeatmap: FetchWorkflowRunsHeatmap = new FetchWorkflowRunsHeatmapUseCase(workflowRunRepository)
-export const runWorkflow: RunWorkflow = new RunWorkflowUseCase(taskRepository, workflowRegistry)
+export const fetchTimelineByProjectId: FetchTaskExecutionsTimeline = new FetchTimelineByProjectIdUseCase(taskExecutionRepository)
+export const fetchTimelineByAccountId:  FetchTaskExecutionsTimeline = new FetchTimelineByAccountIdUseCase(taskExecutionRepository)
+export const fetchTaskExecutionsHeatmap: FetchTaskExecutionsHeatmap = new FetchTaskExecutionsHeatmapUseCase(taskExecutionRepository)
+export const runTaskExecution: RunTaskExecution = new RunTaskExecutionUseCase(taskRepository, workflowRegistry)

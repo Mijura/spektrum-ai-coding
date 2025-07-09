@@ -7,7 +7,7 @@ export type TimeRangeData = {
     endDate: string
 }
 
-export type WorkflowRunHeatmap = {
+export type TaskExecutionHeatmap = {
     date: string
     runCount: number
 }
