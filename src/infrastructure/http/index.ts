@@ -6,7 +6,6 @@ dotenv.config()
 import { projectRouter } from "@infrastructure/http/routes/project-routes"
 import { taskRouter } from "@infrastructure/http/routes/task-routes"
 import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
-import { serveProjectFilesMiddleware } from "@infrastructure/http/middleware/serve-project-files"
 import { taskExecutionRouter } from "./routes/task-execution-routes"
 import { initializeActivityEmitter } from "./sockets/activity-emitter"
 import express from "express"
@@ -22,7 +21,6 @@ app.use(express.json())
 app.use("/", projectRouter)
 app.use("/", taskRouter)
 app.use("/", taskExecutionRouter)
-app.use("/:id", serveProjectFilesMiddleware)
 
 
 const server = http.createServer(app)

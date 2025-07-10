@@ -1,7 +1,7 @@
 
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionHeatmap } from "@domain/types/task-execution"
-import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, runTaskExecution } from "@infrastructure/dependencies"
+import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, runTaskExecution, frontendDevelopmentRunner, leaveComment } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
 export class TaskExecutionController {
@@ -99,5 +99,17 @@ export class TaskExecutionController {
 		}
 
     }
+
+    async reRunTaskExecution(req: Request, res: Response): Promise<void> {
+		try {
+			const { taskId, authorId, commentText } = req.body
+			const task = await leaveComment.execute(taskId, authorId, commentText)
+			await frontendDevelopmentRunner.run(task, authorId)
+			res.status(200).json(task)
+		} catch (error) {
+			console.error("Error adding comment:", error)
+			res.status(500).json({ message: "Error adding comment." })
+		}
+	}
     
 }

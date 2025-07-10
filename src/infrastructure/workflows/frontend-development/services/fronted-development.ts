@@ -1,7 +1,7 @@
 import path from "path"
 
 import { PackageManager } from "../interfaces/package-manager"
-import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
+import { FrontendDevelopmentService } from "@domain/ports/frontend-development-service"
 import { Project } from "@domain/entities/project"
 import { SourceCode } from "@domain/types/source-code"
 import { FileSystemPort } from "../interfaces/file-system"
@@ -154,8 +154,4 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		return await this.fetchSourceCode(projectId)
 	}
 
-	async getStaticFilesPath(projectId: string): Promise<string | null> {
-		const projectPath = path.resolve(`projects/${projectId}/dist`)
-		return (await this.fileSystem.exists(projectPath)) ? projectPath : null
-	}
 }

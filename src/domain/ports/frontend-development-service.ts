@@ -1,5 +1,9 @@
 import { Project } from "@domain/entities/project"
 import { SourceCode } from "@domain/types/source-code"
+
+/**
+ * FrontendDevelopmentService is a service that allows you to initialize, install dependencies, build, deploy, fetch, write, restore, remove, and get static files for a project.
+ */
 export interface FrontendDevelopmentService {
 	/**
 	 * Initializes project by copying the template, installing dependencies, and building the project
@@ -65,10 +69,4 @@ export interface FrontendDevelopmentService {
 	 */
 	removeSourceCodeFromFileSystem(projectId: string): Promise<void>
 
-	/**
-	 * Gets the path to the static files for a project
-	 * @param projectId - The ID of the project to get the static files path for
-	 * @returns The path to the static files for the project or null if the project is not found
-	 */
-	getStaticFilesPath(projectId: string): Promise<string | null>
 }

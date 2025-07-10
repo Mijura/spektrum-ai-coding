@@ -1,7 +1,7 @@
 import { Project } from "@domain/entities/project"
 import { CreateProject } from "@domain/use-cases/project/create-project"
 import { ProjectRepository } from "@domain/repositories/project-repository"
-import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
+import { FrontendDevelopmentService } from "@domain/ports/frontend-development-service"
 
 export class CreateProjectUseCase implements CreateProject {
 	constructor(

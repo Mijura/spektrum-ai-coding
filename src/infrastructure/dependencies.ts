@@ -7,7 +7,7 @@ import { ArchiveProject } from "@domain/use-cases/project/archive-project"
 import { DeployProject } from "@domain/use-cases/project/deploy-project"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
-import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
+import { FrontendDevelopmentService } from "@domain/ports/frontend-development-service"
 
 import { FetchProjectsUseCase } from "@application/use-cases/project/fetch-projects"
 import { DeployProjectUseCase } from "@application/use-cases/project/deploy-project"
