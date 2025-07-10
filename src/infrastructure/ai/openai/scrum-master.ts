@@ -1,9 +1,9 @@
 import { Task } from "@domain/entities/task"
 import { ActivityType, CommentLeftMetadata } from "@domain/types/activity"
-import { Brain, Contributor } from "@honeycomb-app/hexacore"
+import { OpenAIContributor, Brain } from "./contributor"
 import z from "zod"
 
-export class ScrumMaster extends Contributor {
+export class ScrumMaster extends OpenAIContributor {
 
     name: string = "Scrum Master"
 

@@ -1,6 +1,6 @@
 import { eventBus } from "@domain/events/event-bus"
 
-export function EmitWorkflowRunUpdate() {
+export function EmitTaskExecutionUpdate() {
   return function (
     target: any,
     propertyKey: string,
@@ -14,7 +14,7 @@ export function EmitWorkflowRunUpdate() {
       const maybePromise = result instanceof Promise ? result : Promise.resolve(result);
 
       return maybePromise.then((res) => {
-        eventBus.emit("workflow-run:update", this);
+        eventBus.emit("task-execution:update", this);
         return res;
       });
     };

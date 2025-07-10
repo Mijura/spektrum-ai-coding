@@ -2,7 +2,7 @@ import { TaskExecutionStatus } from "@domain/types/activity"
 import { Task } from "./task"
 import { v4 as uuidv4 } from "uuid"
 import { EmitNewTaskExecution } from "@domain/events/emitters/new-task-execution"
-import { EmitWorkflowRunUpdate } from "@domain/events/emitters/workflow-run-update"
+import { EmitTaskExecutionUpdate } from "@domain/events/emitters/task-execution-update"
 import { SourceCode } from "@domain/types/source-code"
 
 class WorkflowPhase {
@@ -68,7 +68,7 @@ export class TaskExecution {
         return execution
     }
 
-    @EmitWorkflowRunUpdate()
+    @EmitTaskExecutionUpdate()
     finishSuccessfully(artifact: any): void {
         this.status = TaskExecutionStatus.SUCCEEDED
         this.artifact = artifact
@@ -78,7 +78,7 @@ export class TaskExecution {
         this.phase = phase
     }
 
-    @EmitWorkflowRunUpdate()
+    @EmitTaskExecutionUpdate()
     finishWithError(error: string, artifact: any): void {
         this.status = TaskExecutionStatus.FAILED
         this.error = error

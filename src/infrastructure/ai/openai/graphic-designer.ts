@@ -4,10 +4,10 @@ import { FrontendDevelopmentService } from "@domain/ports/frontend-development-s
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
 import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
-import { Brain, Contributor } from "@honeycomb-app/hexacore"
 import z from "zod"
+import { OpenAIContributor, Brain } from "./contributor"
 
-export class GraphicDesigner extends Contributor {
+export class GraphicDesigner extends OpenAIContributor {
 
     name: string = "Graphic Designer"
 

@@ -1,9 +1,9 @@
 import { z } from "zod"
 import { ProjectDetails } from "@domain/types/project-details"
 import { Task } from "@domain/entities/task" 
-import { Contributor, Brain } from "@honeycomb-app/hexacore"
+import { OpenAIContributor, Brain } from "./contributor"
 
-export class ProjectRefiner extends Contributor {
+export class ProjectRefiner extends OpenAIContributor {
     
     name: string = "Project Refiner"
 
@@ -15,10 +15,9 @@ export class ProjectRefiner extends Contributor {
             description: z.string().describe("Project description withtout technical details in single sentence.")}),
     })
 
-    task: Task
+    task!: Task
 
-    constructor(task: Task) {
-        super()
+    async preThought(task: Task): Promise<void> {
         this.task = task
     }
 
@@ -48,7 +47,6 @@ export class ProjectRefiner extends Contributor {
     }
 
     async afterThought(thought: z.infer<typeof this.thoughtShape>): Promise<ProjectDetails> {
-
         const { project } = thought
         return project
     }

@@ -1,6 +1,7 @@
 import { ActivityType, TaskCreatedMetadata } from "@domain/types/activity"
 import { Activity } from "../activity"
 import { Task } from "../task"
+
 export class TaskCreatedActivity extends Activity<TaskCreatedMetadata> {
 	
     constructor(

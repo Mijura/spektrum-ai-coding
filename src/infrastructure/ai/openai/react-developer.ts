@@ -5,10 +5,10 @@ import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
 import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
 import { SourceCode } from "@domain/types/source-code"
-import { Brain, Contributor } from "@honeycomb-app/hexacore"
 import z from "zod"
+import { OpenAIContributor, Brain } from "./contributor"
 
-export class ReactDeveloper extends Contributor {
+export class ReactDeveloper extends OpenAIContributor {
     
     name: string = "React Developer"
 

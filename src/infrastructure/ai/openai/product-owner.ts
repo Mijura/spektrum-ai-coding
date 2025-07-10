@@ -1,9 +1,9 @@
 import { Task } from "@domain/entities/task"
 import { TaskRepository } from "@domain/repositories/task-repository"
-import { Contributor, Brain } from "@honeycomb-app/hexacore"
 import z from "zod"
+import { OpenAIContributor, Brain } from "./contributor"
 
-export class ProductOwner extends Contributor {
+export class ProductOwner extends OpenAIContributor {
 
     name: string = "Product Owner"
 

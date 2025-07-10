@@ -53,12 +53,15 @@ import { NodeFileSystem } from "./workflows/frontend-development/services/node-f
 import { S3DeploymentTargetAdapter } from "./workflows/frontend-development/services/s3-deployment-target"
 import { DeploymentTargetPort } from "./workflows/frontend-development/interfaces/deployment-target"
 import { FrontendDevelopmentRunner } from "./workflows/frontend-development/runner"
-import { ProjectRefiningRunner } from "./workflows/project-refining/runner"
 import { MockTaskExecutionRepository } from "./repositories/mock-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
-import { TaskPlanningRunner } from "./workflows/task-planning/runner"
 import { ProjectService } from "@domain/ports/project-service"
 import { DefaultProjectService } from "@application/services/project-service"
+import { ProductOwner } from "./ai/openai/product-owner"
+import { Contributor } from "@domain/ports/contirbutor"
+import { ReactDeveloper } from "./ai/openai/react-developer"
+import { GraphicDesigner } from "./ai/openai/graphic-designer"
+import { ProjectRefiner } from "./ai/openai/project-refiner"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -80,17 +83,21 @@ export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
 
 // Workflows
 export const frontendDevelopmentRunner: WorkflowRunner = new FrontendDevelopmentRunner()
-export const projectRefiningRunner: WorkflowRunner = new ProjectRefiningRunner()
-export const taskPlanningRunner: WorkflowRunner = new TaskPlanningRunner()
 // Register workflows
 workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentRunner)
 
+// Contributors
+export const productOwner: Contributor = new ProductOwner(taskRepository)
+export const reactDeveloper: Contributor = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, taskExecutionRepository)
+export const graphicDesigner: Contributor = new GraphicDesigner(frontendDevelopmentService, projectRepository, taskRepository, taskExecutionRepository)
+export const projectRefiner: Contributor = new ProjectRefiner()
+
 // Services
-export const projectService: ProjectService = new DefaultProjectService(projectRepository, projectRefiningRunner)
+export const projectService: ProjectService = new DefaultProjectService(projectRefiner, projectRepository)
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)
-export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(taskPlanningRunner, projectService)
+export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, projectService)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)

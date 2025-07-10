@@ -1,10 +1,11 @@
 import { PlanTasksWithAI } from "@domain/use-cases/project/plan-tasks-with-ai"
 import { Task } from "@domain/entities/task"
-import { ProjectService } from "@domain/ports/project-service"
+import { ProjectService } from "@domain/ports/project-service"    
+import { Contributor } from "@domain/ports/contirbutor"
 
 export class PlanTasksWithAIUseCase implements PlanTasksWithAI {
 	constructor(
-		private readonly taskPlanningWorkflow: any,
+        private readonly productOwner: Contributor,
         private readonly projectService: ProjectService
 	) {}
     
@@ -12,9 +13,9 @@ export class PlanTasksWithAIUseCase implements PlanTasksWithAI {
 
         console.log("Planning tasks with AI")
         const task = Task.create("Product Owner", projectId, "Plan Tasks", projectDescription)
-        await this.projectService.updateProjectDetails(task)
+        await this.projectService.updateDetailsWithAI(task)
 
-        return await this.taskPlanningWorkflow.run(task)
+        return await this.productOwner.execute(task)
     }
     
 }

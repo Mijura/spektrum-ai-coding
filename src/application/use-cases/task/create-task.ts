@@ -13,7 +13,7 @@ export class CreateTaskUseCase implements CreateTask {
 			// Create a new task
 			const task: Task = Task.create('User', projectId, title, description)
 
-			this.projectService.updateProjectDetails(task)
+			this.projectService.updateDetailsWithAI(task)
 			// Persist the task in the database
 			const savedTask = await this.taskRepository.save(task)
 			
