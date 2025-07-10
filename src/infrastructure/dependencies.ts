@@ -61,7 +61,7 @@ import { ProductOwner } from "./ai/openai/product-owner"
 import { Contributor } from "@domain/ports/contirbutor"
 import { ReactDeveloper } from "./ai/openai/react-developer"
 import { GraphicDesigner } from "./ai/openai/graphic-designer"
-import { ProjectRefiner } from "./ai/openai/project-refiner"
+import { Marketeer } from "./ai/openai/marketeer"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -90,10 +90,10 @@ workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDev
 export const productOwner: Contributor = new ProductOwner(taskRepository)
 export const reactDeveloper: Contributor = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, taskExecutionRepository)
 export const graphicDesigner: Contributor = new GraphicDesigner(frontendDevelopmentService, projectRepository, taskRepository, taskExecutionRepository)
-export const projectRefiner: Contributor = new ProjectRefiner()
+export const marketeer: Contributor = new Marketeer()
 
 // Services
-export const projectService: ProjectService = new DefaultProjectService(projectRefiner, projectRepository)
+export const projectService: ProjectService = new DefaultProjectService(marketeer, projectRepository)
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)

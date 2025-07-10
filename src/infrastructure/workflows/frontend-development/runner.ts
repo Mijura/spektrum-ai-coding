@@ -4,10 +4,12 @@ import { SourceCode } from "@domain/types/source-code"
 import { TaskExecution } from "@domain/entities/task-execution"
 import { WorkflowRunner } from "@domain/ports/workflow-runner"
 import { Project } from "@domain/entities/project"
-import { ReactDeveloper } from "./workers/react-developer"
-import { Contributor, Team } from "@honeycomb-app/hexacore"
-import { GraphicDesigner } from "./workers/graphic-designer"
-import { ScrumMaster } from "./workers/scrum-master"
+import { ReactDeveloper } from "@infrastructure/ai/openai/react-developer"
+import { GraphicDesigner } from "@infrastructure/ai/openai/graphic-designer"
+import { ScrumMaster } from "@infrastructure/ai/openai/scrum-master"
+import { Contributor } from "@domain/ports/contirbutor"
+import { Team } from "@application/services/team"
+
 export interface State {
 	task: Task
 	sourceCode: SourceCode

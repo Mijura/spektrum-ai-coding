@@ -6,7 +6,7 @@ import { ProjectDetails } from "@domain/types/project-details"
 
 export class DefaultProjectService implements ProjectService {
     constructor(
-        private readonly projectRefiner: Contributor,   
+        private readonly marketeer: Contributor,   
         private readonly projectRepository: ProjectRepository
     ) {}
 
@@ -17,7 +17,7 @@ export class DefaultProjectService implements ProjectService {
         }
 
         if (!project.detailsUpdated) {
-            const projectDetails: ProjectDetails = await this.projectRefiner.execute(task)
+            const projectDetails: ProjectDetails = await this.marketeer.execute(task)
             project.updateDetails(projectDetails.name, projectDetails.description)
             await this.projectRepository.save(project)
         }

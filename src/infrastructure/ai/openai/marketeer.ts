@@ -3,9 +3,9 @@ import { ProjectDetails } from "@domain/types/project-details"
 import { Task } from "@domain/entities/task" 
 import { OpenAIContributor, Brain } from "./contributor"
 
-export class ProjectRefiner extends OpenAIContributor {
+export class Marketeer extends OpenAIContributor {
     
-    name: string = "Project Refiner"
+    name: string = "Marketeer"
 
     brain = Brain.GPT_41_NANO
 
