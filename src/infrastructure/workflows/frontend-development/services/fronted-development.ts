@@ -1,27 +1,22 @@
 import path from "path"
 
-import { PackageManager } from "../interfaces/package-manager"
-import { FrontendDevelopmentService } from "@domain/ports/frontend-development-service"
-import { Project } from "@domain/entities/project"
+import { PackageManager } from "../../../../domain/ports/package-manager"
+import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
 import { SourceCode } from "@domain/types/source-code"
-import { FileSystemPort } from "../interfaces/file-system"
-import { DeploymentTargetPort } from "../interfaces/deployment-target"
-
+import { FileSystemPort } from "../../../../domain/ports/file-system"
+import { VersionControlSystem } from "@domain/ports/version-control-system"
+import { FileStorage } from "../../../../domain/ports/file-storage"
 export class FrontendDevelopment implements FrontendDevelopmentService {
 	constructor(
 		private readonly packageManager: PackageManager, 
-		private readonly fileSystem: FileSystemPort, 
-		private readonly deploymentTarget: DeploymentTargetPort) {}
-
-
-	removeSourceCodeFromFileSystem(projectId: string): Promise<void> {
-		const projectPath = path.resolve(`projects/${projectId}`)
-		return this.fileSystem.removeDir(projectPath)
-	}
-
-	async setupProject(project: Project): Promise<SourceCode> {
+		private readonly fileSystem: FileSystemPort,
+		private readonly fileStorage: FileStorage,
+		private readonly versionControlSystem: VersionControlSystem
+	) {}
+	
+	async setup(projectId: string): Promise<string> {
 		try {
-			const projectPath: string = path.join("projects", project.id)
+			const projectPath: string = path.join("projects", projectId)
 
 			const templateName = "rspack-react-tailwind"
 			const templatePath = path.resolve(`src/application/templates/${templateName}`)
@@ -31,30 +26,62 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 			await this.fileSystem.copyFolder(templatePath, projectPath)
 			console.log(`✅ Project template copied to ${projectPath}`)
 
-			await this.deployToDevEnvironment(project.id)
+			await this.deployToDevEnvironment(projectId)
 
-			console.log(`Project ${project.id} initialized and built successfully!`)
+			console.log(`Project ${projectId} initialized and built successfully!`)
 
-			return await this.fetchSourceCode(project.id)
+			const sourceCode = await this.getSourceCode(projectId)
+			return await this.versionControlSystem.push(projectId, sourceCode)
 		} catch (error) {
-			console.error(`Error initializing project ${project.id}:`, error)
+			console.error(`Error initializing project ${projectId}:`, error)
 			throw new Error("Project initialization failed.")
 		}
 	}
 
-	async installDependencies(projectId: string): Promise<boolean> {
+	async update(projectId: string, sourceCode: SourceCode): Promise<string> {
+		const projectPath = path.resolve(`projects/${projectId}`)
+		let promises = []
+		for (const [filePath, fileContent] of Object.entries(sourceCode)) {
+			const fullPath = path.join(projectPath, filePath)
+			await this.fileSystem.ensureFile(fullPath)
+			const writingPromise = await this.fileSystem.writeFile(fullPath, fileContent)
+			promises.push(writingPromise)
+		}
+
+		await Promise.all(promises)
+		const updatedSourceCode = await this.getSourceCode(projectId)
+
+		return await this.versionControlSystem.push(projectId, updatedSourceCode)
+	}
+
+	async deploy(projectId: string, versionId: string): Promise<string> {
+		const sourceCode = await this.versionControlSystem.pull(versionId)
+		const distFolder: string = `projects/${versionId}/dist`
+		
+		console.log("Uploading project to dev environment...")
+		const buildPath: string = path.resolve(distFolder)
+		const folderName = projectId
+
+		if (!buildPath || !folderName) {
+			throw new Error("Deplyment failed")
+		}
+
+		await this.uploadFiles(buildPath, folderName)
+	}
+
+	private async installDependencies(projectId: string): Promise<boolean> {
 		const projectPath: string = path.join("projects", projectId)
 		const installSuccess = await this.packageManager.installDependencies(projectPath)
 		return installSuccess
 	}
 
-	async buildProject(projectId: string): Promise<boolean> {
+	private async buildProject(projectId: string): Promise<boolean> {
 		const projectPath: string = path.join("projects", projectId)
 		const buildSuccess = await this.packageManager.buildProject(projectPath)
 		return buildSuccess
 	}
 
-	async deployToDevEnvironment(projectId: string): Promise<void> {
+	private async deployToDevEnvironment(projectId: string): Promise<void> {
 		const buildPath: string = path.resolve(`projects/${projectId}/dist`)
 		const folderName = projectId
 
@@ -65,55 +92,18 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		await this.uploadFiles(buildPath, folderName)
 	}
 
-	async restoreProject(project: Project): Promise<void> {
-		if(!project.artifact) {
-			throw new Error("Project doesn't have associated source code")
-		}
-
-		await this.updateSourceCode(project.id, project.artifact)
-		await this.installDependencies(project.id)
-		await this.buildProject(project.id)
-		console.log("Project built successfully")
-	}
-
-	async restoreSourceCode(project: Project): Promise<void> {
-
-		if(!project.artifact) {
-			throw new Error("Project doesn't have associated source code")
-		}
-
-		await this.updateSourceCode(project.id, project.artifact)
-		console.log("Project restored to the disk")
-	}
-
-	async deployProject(project: Project): Promise<void> {
-		await this.restoreProject(project)
-		const distFolder: string = `projects/${project.id}/dist`
-		
-		console.log("Uploading project to dev environment...")
-		const buildPath: string = path.resolve(distFolder)
-		const folderName = project.deploymentId
-
-		if (!buildPath || !folderName) {
-			throw new Error("Deplyment failed")
-		}
-
-		await this.uploadFiles(buildPath, folderName)
-
-	}
-
 	private async uploadFiles(sourceCodeFolder: string, destinationFolder: string) {
 		const allFiles = await this.fileSystem.readDirectory(sourceCodeFolder)
 
 		for (const fileName of allFiles) {
 			const fullPath = path.join(sourceCodeFolder, fileName)
 			const stream = this.fileSystem.createReadStream(fullPath)
-			await this.deploymentTarget.uploadFile(fileName, stream, destinationFolder)
+			await this.fileStorage.uploadFile(fileName, stream, destinationFolder)
 		}
 	}
 	
 
-	async fetchSourceCode(projectId: string): Promise<SourceCode> {
+	private async getSourceCode(projectId: string): Promise<SourceCode> {
 
 		const projectPath = path.join("projects", projectId)
 		const sourceCode: SourceCode = {}
@@ -140,18 +130,5 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		return sourceCode
 	}
 
-	async updateSourceCode(projectId: string, sourceCode: SourceCode): Promise<SourceCode> {
-		const projectPath = path.resolve(`projects/${projectId}`)
-		let promises = []
-		for (const [filePath, fileContent] of Object.entries(sourceCode)) {
-			const fullPath = path.join(projectPath, filePath)
-			await this.fileSystem.ensureFile(fullPath)
-			const writingPromise = await this.fileSystem.writeFile(fullPath, fileContent)
-			promises.push(writingPromise)
-		}
-
-		await Promise.all(promises)
-		return await this.fetchSourceCode(projectId)
-	}
 
 }

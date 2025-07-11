@@ -1,7 +1,7 @@
 import OpenAI from "openai/index"
 import { Contributor } from "@domain/ports/contirbutor"
 import { z } from "zod"
-import { Team } from "@application/services/team"
+import { Team } from "@application/services/frontend-team"
 import { zodResponseFormat } from "openai/helpers/zod"
 
 export enum Brain {

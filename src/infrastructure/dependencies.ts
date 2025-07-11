@@ -7,7 +7,7 @@ import { ArchiveProject } from "@domain/use-cases/project/archive-project"
 import { DeployProject } from "@domain/use-cases/project/deploy-project"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
-import { FrontendDevelopmentService } from "@domain/ports/frontend-development-service"
+import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
 
 import { FetchProjectsUseCase } from "@application/use-cases/project/fetch-projects"
 import { DeployProjectUseCase } from "@application/use-cases/project/deploy-project"
@@ -24,7 +24,7 @@ import { DynamoDBTaskRepository } from "@infrastructure/repositories/task-reposi
 
 import { YarnPackageManager } from "./workflows/frontend-development/services/yarn-package-manager"
 import { FrontendDevelopment } from "./workflows/frontend-development/services/fronted-development"
-import { PackageManager } from "./workflows/frontend-development/interfaces/package-manager"
+import { PackageManager } from "../domain/ports/package-manager"
 import { CreateTask } from "@domain/use-cases/task/create-task"
 import { FetchTasks } from "@domain/use-cases/task/fetch-tasks"
 import { UpdateTaskTitle } from "@domain/use-cases/task/update-title"
@@ -38,21 +38,16 @@ import { LeaveComment } from "@domain/use-cases/task/leave-comment"
 import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
 import { FetchTaskExecutionsTimeline } from "@domain/use-cases/task-execution/fetch-timeline"
 import { TaskExecutionController } from "./http/controllers/task-execution-controller"
-import { RunTaskExecutionUseCase } from "@application/use-cases/task-execution/run"
+import { FrontendDevelopmentUseCase } from "@application/use-cases/task-execution/frontend-development"
 import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
 import { FetchTaskExecutionsHeatmap } from "@domain/use-cases/task-execution/fetch-heatmap"
 import { FetchTaskExecutionsHeatmapUseCase } from "@application/use-cases/task-execution/fetch-heatmap"
 import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/task-execution/fetch-project-timeline"
 import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/task-execution/fetch-account-timeline"
-import { FileSystemPort } from "./workflows/frontend-development/interfaces/file-system"
-import { WorkflowRunner } from "@domain/ports/workflow-runner"
-import { WorkflowRegistry } from "@domain/repositories/workflow-registry"
-import { InMemoryWorkflowRegistry } from "./repositories/workflow-registry"
-import { WorkflowType } from "@domain/types/task-execution"
-import { NodeFileSystem } from "./workflows/frontend-development/services/node-file-system"
-import { S3DeploymentTargetAdapter } from "./workflows/frontend-development/services/s3-deployment-target"
-import { DeploymentTargetPort } from "./workflows/frontend-development/interfaces/deployment-target"
-import { FrontendDevelopmentRunner } from "./workflows/frontend-development/runner"
+import { FileSystemPort } from "../domain/ports/file-system"
+import { LocalFileSystem } from "./workflows/frontend-development/services/local-file-system"
+import { S3FileStorage } from "./workflows/frontend-development/services/s3-file-storage"
+import { FileStorage } from "../domain/ports/file-storage"
 import { MockTaskExecutionRepository } from "./repositories/mock-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { ProjectService } from "@domain/ports/project-service"
@@ -62,6 +57,9 @@ import { Contributor } from "@domain/ports/contirbutor"
 import { ReactDeveloper } from "./ai/openai/react-developer"
 import { GraphicDesigner } from "./ai/openai/graphic-designer"
 import { Marketeer } from "./ai/openai/marketeer"
+import { ScrumMaster } from "./ai/openai/scrum-master"
+import { TeamService } from "@domain/ports/team-service"
+import { FrontendTeam } from "@application/services/frontend-team"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -69,28 +67,24 @@ export const taskController = new TaskController()
 export const taskExecutionController = new TaskExecutionController()
 
 // Services
-export const fileSystem: FileSystemPort = new NodeFileSystem()
+export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
-export const deploymentTarget: DeploymentTargetPort = new S3DeploymentTargetAdapter()
-export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopment(yarnPackageManager, fileSystem, deploymentTarget)
+export const fileStorage: FileStorage = new S3FileStorage()
+export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopment(yarnPackageManager, fileSystem, fileStorage)
 
 
 // Repositories
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const taskRepository: TaskRepository = new DynamoDBTaskRepository()
 export const taskExecutionRepository: TaskExecutionRepository = new MockTaskExecutionRepository()
-export const workflowRegistry: WorkflowRegistry = new InMemoryWorkflowRegistry()
-
-// Workflows
-export const frontendDevelopmentRunner: WorkflowRunner = new FrontendDevelopmentRunner()
-// Register workflows
-workflowRegistry.registerWorkflow(WorkflowType.FRONTEND_DEVELOPMENT, frontendDevelopmentRunner)
 
 // Contributors
+export const scrumMaster: Contributor = new ScrumMaster()
 export const productOwner: Contributor = new ProductOwner(taskRepository)
 export const reactDeveloper: Contributor = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, taskExecutionRepository)
 export const graphicDesigner: Contributor = new GraphicDesigner(frontendDevelopmentService, projectRepository, taskRepository, taskExecutionRepository)
 export const marketeer: Contributor = new Marketeer()
+export const frontendTeam: TeamService = new FrontendTeam(graphicDesigner, reactDeveloper, scrumMaster)
 
 // Services
 export const projectService: ProjectService = new DefaultProjectService(marketeer, projectRepository)
@@ -111,4 +105,4 @@ export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository
 export const fetchTimelineByProjectId: FetchTaskExecutionsTimeline = new FetchTimelineByProjectIdUseCase(taskExecutionRepository)
 export const fetchTimelineByAccountId:  FetchTaskExecutionsTimeline = new FetchTimelineByAccountIdUseCase(taskExecutionRepository)
 export const fetchTaskExecutionsHeatmap: FetchTaskExecutionsHeatmap = new FetchTaskExecutionsHeatmapUseCase(taskExecutionRepository)
-export const runTaskExecution: RunTaskExecution = new RunTaskExecutionUseCase(taskRepository, workflowRegistry)
+export const frontendDevelopment: RunTaskExecution = new FrontendDevelopmentUseCase(taskRepository, taskExecutionRepository, frontendTeam)

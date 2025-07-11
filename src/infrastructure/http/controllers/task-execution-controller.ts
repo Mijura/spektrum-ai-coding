@@ -1,7 +1,7 @@
 
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionHeatmap } from "@domain/types/task-execution"
-import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, runTaskExecution, frontendDevelopmentRunner, leaveComment } from "@infrastructure/dependencies"
+import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, leaveComment } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
 export class TaskExecutionController {
