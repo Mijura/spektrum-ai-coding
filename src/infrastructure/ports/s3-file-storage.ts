@@ -1,7 +1,7 @@
 import { Upload } from '@aws-sdk/lib-storage'
 import { S3Client } from '@aws-sdk/client-s3'
 import type { Readable } from 'stream'
-import { FileStorage } from '../../../../domain/ports/file-storage'
+import { FileStorage } from '../../domain/ports/file-storage'
 
 export class S3FileStorage implements FileStorage {
     s3: S3Client

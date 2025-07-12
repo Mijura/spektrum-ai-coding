@@ -1,7 +1,7 @@
 import { CreateTask } from "@domain/use-cases/task/create-task"
 import { Task } from "@domain/entities/task"
 import { TaskRepository } from "@domain/repositories/task-repository"
-import { ProjectService } from "@domain/ports/project-service"
+import { ProjectService } from "@domain/services/project-service"
 export class CreateTaskUseCase implements CreateTask {
 	constructor(
 		private readonly taskRepository: TaskRepository,

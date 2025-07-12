@@ -1,5 +1,5 @@
 import { Task } from "@domain/entities/task"
-import { Contributor } from "./contirbutor"
+import { Contributor } from "../ports/contirbutor"
 
 export interface TeamService {
 

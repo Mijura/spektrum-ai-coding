@@ -97,7 +97,7 @@ export class Task {
 			this.activities.splice(startedWorkActivity, 1, activity)
 		}
 		this.assignedTo = undefined
-		this.status = TaskStatus.READY_FOR_NEXT_PHASE
+		// /this.status = TaskStatus.DONE
 		return activity as FinishedWork
 	}
 

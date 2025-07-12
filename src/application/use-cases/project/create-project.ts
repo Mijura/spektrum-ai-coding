@@ -1,7 +1,7 @@
 import { Project } from "@domain/entities/project"
 import { CreateProject } from "@domain/use-cases/project/create-project"
 import { ProjectRepository } from "@domain/repositories/project-repository"
-import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
+import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 
 export class CreateProjectUseCase implements CreateProject {
 	constructor(
@@ -15,8 +15,7 @@ export class CreateProjectUseCase implements CreateProject {
 			const project: Project = Project.create("My Project", "Empty project...", owner)
 
 			// Initialize and run project
-			const sourceCode = await this.frontendDevelopmentService.setupProject(project)
-			project.setArtifact(sourceCode)
+			const sourceCode = await this.frontendDevelopmentService.setupProject(project.id)
 			
 			// Persist the project details in the database
 			return await this.projectRepository.save(project)

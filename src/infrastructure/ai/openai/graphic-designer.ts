@@ -1,6 +1,6 @@
 import { Project } from "@domain/entities/project"
 import { Task } from "@domain/entities/task"
-import { FrontendDevelopmentService } from "@domain/ports/frontend-development"
+import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { ProjectRepository } from "@domain/repositories/project-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
 import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"

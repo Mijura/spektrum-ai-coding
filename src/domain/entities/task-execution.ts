@@ -4,18 +4,6 @@ import { v4 as uuidv4 } from "uuid"
 import { EmitNewTaskExecution } from "@domain/events/emitters/new-task-execution"
 import { EmitTaskExecutionUpdate } from "@domain/events/emitters/task-execution-update"
 import { SourceCode } from "@domain/types/source-code"
-
-class WorkflowPhase {
-    public readonly name: string
-    public readonly description: string
-    public readonly worker: string
-
-    constructor(name: string, description: string, worker: string) {
-        this.name = name
-        this.description = description
-        this.worker = worker
-    }
-}
 export class TaskExecution {
     public readonly id: string
     public title: string
@@ -24,7 +12,6 @@ export class TaskExecution {
     public readonly workflowId: string
     public readonly accountId: string
     public status: TaskExecutionStatus
-	public phase: WorkflowPhase | null
     public artifact: SourceCode | null
     public occurredAt: string
     public error?: string
@@ -37,7 +24,6 @@ export class TaskExecution {
         workflowId: string,
         accountId: string,
         status: TaskExecutionStatus,
-        phase: WorkflowPhase | null,
         occurredAt: string,
         artifact: SourceCode | null,
         error?: string,
@@ -49,7 +35,6 @@ export class TaskExecution {
         this.accountId = accountId
         this.title = title
         this.status = status
-        this.phase = phase
         this.occurredAt = occurredAt
         this.error = error
         this.artifact = artifact
@@ -60,9 +45,8 @@ export class TaskExecution {
         const id = uuidv4()
         const occurredAt = new Date().toISOString()
         const status = TaskExecutionStatus.RUNNING
-        const phase = null
 
-        const execution = new TaskExecution(id, task.title, task.projectId, task.id, workflowId, accountId, status, phase, occurredAt, null)
+        const execution = new TaskExecution(id, task.title, task.projectId, task.id, workflowId, accountId, status, occurredAt, null)
         EmitNewTaskExecution.emit(execution)
         
         return execution
@@ -72,10 +56,6 @@ export class TaskExecution {
     finishSuccessfully(artifact: any): void {
         this.status = TaskExecutionStatus.SUCCEEDED
         this.artifact = artifact
-    }
-
-    switchPhase(phase:WorkflowPhase): void {
-        this.phase = phase
     }
 
     @EmitTaskExecutionUpdate()

@@ -1,6 +1,6 @@
 import { Task } from "@domain/entities/task"
 import { Contributor } from "@domain/ports/contirbutor"
-import { TeamService } from "@domain/ports/team-service"
+import { TeamService } from "@domain/services/team-service"
 
 export class FrontendTeam implements TeamService {
 

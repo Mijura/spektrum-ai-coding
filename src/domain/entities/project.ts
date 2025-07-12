@@ -17,7 +17,6 @@ export class Project {
 	public status: ProjectStatus
 	public detailsUpdated: boolean
 	private _deploymentId: string | null
-	public artifact: SourceCode | null
 
 	private constructor(
 		id: string,
@@ -28,8 +27,7 @@ export class Project {
 		updated: string | null,
 		deploymentId: string | null,
 		status: ProjectStatus,
-		detailsUpdated: boolean,
-		artifact: SourceCode | null
+		detailsUpdated: boolean
 	) {
 		this.id = id
 		this.ownerId = ownerId
@@ -40,7 +38,6 @@ export class Project {
 		this._deploymentId = deploymentId
 		this.status = status
 		this.detailsUpdated = detailsUpdated
-		this.artifact = artifact
 	}
 
 	updateName(name: string) {
@@ -78,7 +75,7 @@ export class Project {
 
 		const id = uuidv4() // Generate unique ID
 		const created = new Date().toISOString() // ISO format
-		return new Project(id, owner, name, description, created, null, null, ProjectStatus.ACTIVE, false, null)
+		return new Project(id, owner, name, description, created, null, null, ProjectStatus.ACTIVE, false)
 	}
 
 	/** Restore method to rehydrate a project from persisted data */
@@ -94,15 +91,11 @@ export class Project {
 		detailsUpdated: boolean	
 		artifact: SourceCode | null
 	}): Project {
-		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.deploymentId, data.status, data.detailsUpdated, data.artifact)
+		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.deploymentId, data.status, data.detailsUpdated)
 	}
 
 	public get deploymentId(): string | null {
 		return this._deploymentId
-	}
-
-	public setArtifact(artifact: SourceCode | null) {
-		this.artifact = artifact
 	}
 
 	archive() {

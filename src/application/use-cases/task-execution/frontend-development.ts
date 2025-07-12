@@ -1,5 +1,5 @@
 import { TaskExecution } from "@domain/entities/task-execution"
-import { TeamService } from "@domain/ports/team-service"
+import { TeamService } from "@domain/services/team-service"
 import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
 import { TaskRepository } from "@domain/repositories/task-repository"
 import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
