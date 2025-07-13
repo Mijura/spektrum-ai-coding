@@ -10,20 +10,18 @@ export class Version {
     public readonly id: string
     public readonly created: string
     public readonly projectId: string
-    public readonly sourceCode: SourceCode
     public readonly environment: Environment
 
-    private constructor(id: string, created: string, projectId: string, sourceCode: SourceCode, environment: Environment) {
+    private constructor(id: string, created: string, projectId: string, environment: Environment) {
         this.id = id
         this.created = created
         this.projectId = projectId
-        this.sourceCode = sourceCode
         this.environment = environment
     }
 
-    static create(projectId: string, sourceCode: SourceCode, environment: Environment): Version {
+    static create(projectId: string, environment: Environment): Version {
         const id = uuidv4()
         const created = new Date().toISOString()
-        return new Version(id, created, projectId, sourceCode, environment)
+        return new Version(id, created, projectId, environment)
     }
 }

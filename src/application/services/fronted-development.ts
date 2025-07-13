@@ -7,6 +7,8 @@ import { FileSystemPort } from "../../domain/ports/file-system"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { FileStorage } from "../../domain/ports/file-storage"
 import { Environment, Version } from "@domain/entities/version"
+import { VersionRepository } from "@domain/repositories/version-repository"
+import { ProjectRepository } from "@domain/repositories/project-repository"
 
 export class FrontendDevelopment implements FrontendDevelopmentService {
 
@@ -14,7 +16,9 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		private readonly packageManager: PackageManager, 
 		private readonly fileSystem: FileSystemPort,
 		private readonly fileStorage: FileStorage,
-		private readonly versionControlSystem: VersionControlSystem
+		private readonly projectRepository: ProjectRepository,
+		private readonly versionControlSystem: VersionControlSystem,
+		private readonly versionRepository: VersionRepository
 	) {}
 	
 	async setupProject(projectId: string): Promise<Version> {
@@ -34,8 +38,9 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 			console.log(`Project ${projectId} initialized and built successfully!`)
 
 			const sourceCode = await this.getSourceCode(projectId)
-			const version = Version.create(projectId, sourceCode, Environment.DEV)
-			await this.versionControlSystem.push(version.id, sourceCode)
+			const version = Version.create(projectId, Environment.DEV)
+			await this.versionControlSystem.push(version, sourceCode)
+			await this.versionRepository.save(version)
 			return version
 		} catch (error) {
 			console.error(`Error initializing project ${projectId}:`, error)
@@ -63,13 +68,14 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		await this.packageManager.buildProject(projectPath)
 		await this.deployToDevEnvironment(projectId)
 
-		const version = Version.create(projectId, updatedSourceCode, Environment.DEV)
+		const version = Version.create(projectId, Environment.DEV)
 		// Save the version
-		await this.versionControlSystem.push(version.id, updatedSourceCode)
+		await this.versionControlSystem.push(version, updatedSourceCode)
+		await this.versionRepository.save(version)
 		return version
 	}
 
-	async deployToProduction(projectId: string, versionId: string): Promise<Version> {
+	async deployToProduction(projectId: string): Promise<Version> {
 		const sourceCode = await this.versionControlSystem.pull(versionId)
 		const distFolder: string = `projects/${versionId}/dist`
 		
@@ -82,7 +88,9 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		}
 
 		await this.uploadFiles(buildPath, folderName)
-		return await this.versionControlSystem.push(projectId, sourceCode)
+		const version = Version.create(projectId, Environment.PROD)
+		await this.versionControlSystem.push(version, sourceCode)
+		return version
 	}
 
 	private async deployToDevEnvironment(projectId: string): Promise<void> {
