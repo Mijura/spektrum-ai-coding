@@ -91,6 +91,7 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		const version = Version.create(projectId, Environment.PROD)
 		await this.versionControlSystem.push(version, sourceCode)
 		return version
+
 	}
 
 	private async deployToDevEnvironment(projectId: string): Promise<void> {
