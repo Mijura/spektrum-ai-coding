@@ -82,7 +82,8 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		}
 
 		await this.uploadFiles(buildPath, folderName)
-		return await this.versionControlSystem.push(projectId, sourceCode)
+		await this.versionControlSystem.push(projectId, sourceCode)
+		return Version.create(projectId, sourceCode, Environment.PROD)
 	}
 
 	private async deployToDevEnvironment(projectId: string): Promise<void> {
