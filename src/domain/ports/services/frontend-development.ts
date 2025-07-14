@@ -23,10 +23,9 @@ export interface FrontendDevelopmentService {
 	/**
 	 * Deploy the project to prodcution
 	 * @param projectId - The ID of the project to build
-	 * @param versionId - The ID of the version to deploy
 	 * @returns The version details of the deployed project
 	 */
-	deployToProduction(projectId: string, versionId: string): Promise<Version>
+	deployToProduction(projectId: string): Promise<Version>
 
 
 }

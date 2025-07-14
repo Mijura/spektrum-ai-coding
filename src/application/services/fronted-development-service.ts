@@ -1,21 +1,20 @@
 import path from "path"
 
-import { PackageManager } from "../../domain/ports/package-manager"
-import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 import { SourceCode } from "@domain/types/source-code"
 import { FileSystemPort } from "../../domain/ports/file-system"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { FileStorage } from "../../domain/ports/file-storage"
 import { Environment, Version } from "@domain/entities/version"
-import { VersionRepository } from "@domain/repositories/version-repository"
-import { ProjectRepository } from "@domain/repositories/project-repository"
+import { VersionRepository } from "@domain/ports/repositories/version-repository"
+import { ProjectRepository } from "@domain/ports/repositories/project-repository"
+import { FrontendDevelopmentService } from "@domain/ports/services/frontend-development"
+import { FrontendDeploymentService } from "@domain/ports/services/frontend-deployment"
+import { EnvironmentConfig } from "@domain/entities/project"
 
 export class FrontendDevelopment implements FrontendDevelopmentService {
 
 	constructor(
-		private readonly packageManager: PackageManager, 
 		private readonly fileSystem: FileSystemPort,
-		private readonly fileStorage: FileStorage,
+		private readonly frontendDeploymentService: FrontendDeploymentService,
 		private readonly projectRepository: ProjectRepository,
 		private readonly versionControlSystem: VersionControlSystem,
 		private readonly versionRepository: VersionRepository
@@ -23,24 +22,34 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 	
 	async setupProject(projectId: string): Promise<Version> {
 		try {
+			const project = await this.projectRepository.get(projectId)
+
 			const projectPath: string = path.join("projects", projectId)
 
 			const templateName = "rspack-react-tailwind"
 			const templatePath = path.resolve(`src/application/templates/${templateName}`)
-
 			console.log("Template path:", templatePath)
 
+			// we are using pre-built template to speed up the process
 			await this.fileSystem.copyFolder(templatePath, projectPath)
 			console.log(`✅ Project template copied to ${projectPath}`)
+			
+			const version = Version.create(projectId, Environment.DEV)
+			const url = await this.frontendDeploymentService.deploy(projectPath, version, false)
+			const sourceCode = await this.getSourceCode(projectId)
 
-			await this.deployToDevEnvironment(projectId)
+			const environmentConfig: EnvironmentConfig = {
+				url,
+				version
+			}
+			project.setDevEnvironment(environmentConfig)
+
+			await this.versionControlSystem.push(version, sourceCode)
+			await this.versionRepository.save(version)
+
 
 			console.log(`Project ${projectId} initialized and built successfully!`)
 
-			const sourceCode = await this.getSourceCode(projectId)
-			const version = Version.create(projectId, Environment.DEV)
-			await this.versionControlSystem.push(version, sourceCode)
-			await this.versionRepository.save(version)
 			return version
 		} catch (error) {
 			console.error(`Error initializing project ${projectId}:`, error)
@@ -50,6 +59,8 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 
 	async applySourceCode(projectId: string, sourceCode: SourceCode): Promise<Version> {
 		const projectPath = path.resolve(`projects/${projectId}`)
+
+		const project = await this.projectRepository.get(projectId)
 
 		// Update the source code
 		let promises = []
@@ -63,12 +74,15 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		await Promise.all(promises)
 		const updatedSourceCode = await this.getSourceCode(projectId)
 
-		// Deploy the updated source code
-		await this.packageManager.installDependencies(projectPath)
-		await this.packageManager.buildProject(projectPath)
-		await this.deployToDevEnvironment(projectId)
-
 		const version = Version.create(projectId, Environment.DEV)
+		const url = await this.frontendDeploymentService.deploy(projectPath, version)
+
+		const environmentConfig: EnvironmentConfig = {
+			url,
+			version
+		}
+		project.setDevEnvironment(environmentConfig)
+
 		// Save the version
 		await this.versionControlSystem.push(version, updatedSourceCode)
 		await this.versionRepository.save(version)
@@ -76,45 +90,32 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 	}
 
 	async deployToProduction(projectId: string): Promise<Version> {
-		const sourceCode = await this.versionControlSystem.pull(versionId)
-		const distFolder: string = `projects/${versionId}/dist`
+		const project = await this.projectRepository.get(projectId)
+		const projectPath = path.resolve(`projects/${projectId}`)
+		if(!project.devConfig) {
+			throw new Error("Dev environment not found")
+		}
+
+		const sourceCode = await this.versionControlSystem.pull(project.devConfig.version)
 		
 		console.log("Uploading project to dev environment...")
-		const buildPath: string = path.resolve(distFolder)
-		const folderName = projectId
 
-		if (!buildPath || !folderName) {
-			throw new Error("Deplyment failed")
-		}
 
-		await this.uploadFiles(buildPath, folderName)
 		const version = Version.create(projectId, Environment.PROD)
+		const url = await this.frontendDeploymentService.deploy(projectPath, version)
+
+		const environmentConfig: EnvironmentConfig = {
+			url,
+			version
+		}
+		project.setProdEnvironment(environmentConfig)
+
 		await this.versionControlSystem.push(version, sourceCode)
+		await this.versionRepository.save(version)
+
 		return version
 
-	}
-
-	private async deployToDevEnvironment(projectId: string): Promise<void> {
-		const buildPath: string = path.resolve(`projects/${projectId}/dist`)
-		const folderName = projectId
-
-		if (!buildPath || !folderName) {
-			throw new Error("Deplyment failed")
-		}
-
-		await this.uploadFiles(buildPath, folderName)
-	}
-
-	private async uploadFiles(sourceCodeFolder: string, destinationFolder: string) {
-		const allFiles = await this.fileSystem.readDirectory(sourceCodeFolder)
-
-		for (const fileName of allFiles) {
-			const fullPath = path.join(sourceCodeFolder, fileName)
-			const stream = this.fileSystem.createReadStream(fullPath)
-			await this.fileStorage.uploadFile(fileName, stream, destinationFolder)
-		}
-	}
-	
+	}	
 
 	private async getSourceCode(projectId: string): Promise<SourceCode> {
 

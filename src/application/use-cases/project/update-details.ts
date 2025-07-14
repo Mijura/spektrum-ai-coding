@@ -1,5 +1,5 @@
 import { Project } from "@domain/entities/project"
-import { ProjectRepository } from "@domain/repositories/project-repository"
+import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { UpdateProjectDetails } from "@domain/use-cases/project/update-details"
 
 export class UpdateProjectDetailsUseCase implements UpdateProjectDetails {
@@ -18,8 +18,8 @@ export class UpdateProjectDetailsUseCase implements UpdateProjectDetails {
             }
 
             // Update project details
-            project.updateName(name)
-            project.updateDescription(description)
+            project.setName(name)
+            project.setDescription(description)
 
             // Persist the project in the database
             return await this.projectRepository.save(project)

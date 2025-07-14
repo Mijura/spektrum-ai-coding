@@ -1,15 +1,15 @@
 import { TaskExecution } from "@domain/entities/task-execution"
-import { TeamService } from "@domain/services/team-service"
-import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
-import { TaskRepository } from "@domain/repositories/task-repository"
+import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
+import { Team } from "@domain/ports/ai/team"
 
 export class FrontendDevelopmentUseCase implements RunTaskExecution {
 
 	constructor(
 		private readonly taskRepository: TaskRepository,
 		private readonly taskExecutionRepository: TaskExecutionRepository,
-		private readonly frontendTeam: TeamService
+		private readonly frontendTeam: Team
 	) {}
 
 	async execute(taskId: string, accountId: string): Promise<void> {

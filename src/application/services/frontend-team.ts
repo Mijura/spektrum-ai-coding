@@ -1,8 +1,8 @@
 import { Task } from "@domain/entities/task"
-import { Contributor } from "@domain/ports/contirbutor"
-import { TeamService } from "@domain/services/team-service"
+import { Contributor } from "@domain/ports/ai/contributor"
+import { Team } from "@domain/ports/ai/team"
 
-export class FrontendTeam implements TeamService {
+export class FrontendTeam implements Team {
 
     contributors: Map<string, Contributor> = new Map()
 

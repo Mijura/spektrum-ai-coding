@@ -1,3 +1,4 @@
 export interface FileStorage {
-    uploadFile(fileName: string, stream: NodeJS.ReadableStream, destinationFolder: string): Promise<void>
+    upload(fileName: string, stream: NodeJS.ReadableStream): Promise<void>
+    download(fileName: string): Promise<Buffer>
 }

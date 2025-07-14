@@ -1,17 +1,17 @@
 import { Task } from "@domain/entities/task"
-import { Contributor } from "@domain/ports/contirbutor"
-import { ProjectService } from "@domain/services/project-service"
-import { ProjectRepository } from "@domain/repositories/project-repository"
+import { Contributor } from "@domain/ports/ai/contributor"
+import { ProjectRepository } from "@domain/ports/repositories/project-repository"
+import { MarketingService } from "@domain/ports/services/marketing-service"
 import { ProjectDetails } from "@domain/types/project-details"
 
-export class DefaultProjectService implements ProjectService {
-    
+export class DefaultMarketingService implements MarketingService {
+
     constructor(
         private readonly marketeer: Contributor,   
         private readonly projectRepository: ProjectRepository
     ) {}
 
-    async updateDetailsWithAI(task: Task) {
+    async updateProjectDetails(task: Task) {
         const project = await this.projectRepository.get(task.projectId)
         if (!project) {
             throw new Error("Project not found")
@@ -19,7 +19,7 @@ export class DefaultProjectService implements ProjectService {
 
         if (!project.detailsUpdated) {
             const projectDetails: ProjectDetails = await this.marketeer.execute(task)
-            project.updateDetails(projectDetails.name, projectDetails.description)
+            project.setDetails(projectDetails.name, projectDetails.description)
             await this.projectRepository.save(project)
         }
     }

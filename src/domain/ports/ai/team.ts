@@ -1,7 +1,7 @@
 import { Task } from "@domain/entities/task"
-import { Contributor } from "../ports/contirbutor"
+import { Contributor } from "./contributor"
 
-export interface TeamService {
+export interface Team {
 
     contributors: Map<string, Contributor>
 

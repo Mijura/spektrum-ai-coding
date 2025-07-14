@@ -1,4 +1,3 @@
-import { S3Client } from "@aws-sdk/client-s3"
 import { Version } from "@domain/entities/version"
 import { CompressorService } from "@domain/ports/compressor-service"
 import { FileStorage } from "@domain/ports/file-storage"
@@ -12,19 +11,16 @@ export class S3VersionControlSystem implements VersionControlSystem {
     private readonly compressorService: CompressorService
   ) {}
 
-  async push(version: Version): Promise<void> {
-    const archive = await this.compressorService.compress(version.sourceCode)
+  async push(version: Version, sourceCode: SourceCode): Promise<void> {
+    const archive = await this.compressorService.compress(sourceCode)
     const stream = Readable.from(archive)
 
-    await this.fileStorage.uploadFile(`${version.projectId}/${version.id}.tar.gz`, stream, version.projectId)
+    await this.fileStorage.upload(`${version.projectId}/${version.id}.tar.gz`, stream)
   }
 
-  async pull(versionId: string, projectId: string): Promise<SourceCode> {
-    const buffer = await this.fileStorage.downloadFile(`${projectId}/${versionId}.tar.gz`)
+  async pull(version: Version): Promise<SourceCode> {
+    const buffer = await this.fileStorage.download(`${version.projectId}/${version.id}.tar.gz`)
     return this.compressorService.decompress(buffer)
   }
 
-  async remove(versionId: string, projectId: string): Promise<void> {
-    await this.fileStorage.removeFile(`${projectId}/${versionId}.tar.gz`)
-  }
 }

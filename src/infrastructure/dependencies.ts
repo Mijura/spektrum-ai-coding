@@ -5,9 +5,6 @@ import { FetchProject } from "@domain/use-cases/project/fetch-project"
 import { FetchProjects } from "@domain/use-cases/project/fetch-projects"
 import { ArchiveProject } from "@domain/use-cases/project/archive-project"
 import { DeployProject } from "@domain/use-cases/project/deploy-project"
-import { ProjectRepository } from "@domain/repositories/project-repository"
-import { TaskRepository } from "@domain/repositories/task-repository"
-import { FrontendDevelopmentService } from "@domain/services/frontend-development"
 
 import { FetchProjectsUseCase } from "@application/use-cases/project/fetch-projects"
 import { DeployProjectUseCase } from "@application/use-cases/project/deploy-project"
@@ -22,8 +19,8 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTaskRepository } from "@infrastructure/repositories/task-repository"
 
-import { YarnPackageManager } from "./ports/yarn-package-manager"
-import { FrontendDevelopment } from "../application/services/fronted-development"
+import { YarnPackageManager } from "../application/services/yarn-package-manager"
+import { FrontendDevelopment } from "../application/services/fronted-development-service"
 import { PackageManager } from "../domain/ports/package-manager"
 import { CreateTask } from "@domain/use-cases/task/create-task"
 import { FetchTasks } from "@domain/use-cases/task/fetch-tasks"
@@ -35,10 +32,10 @@ import { LeaveCommentUseCase } from "@application/use-cases/task/leave-comment"
 import { UpdateTaskDescriptionUseCase } from "@application/use-cases/task/update-description"
 import { UpdateTaskTitleUseCase } from "@application/use-cases/task/update-title"
 import { LeaveComment } from "@domain/use-cases/task/leave-comment"
-import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
+import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import { FetchTaskExecutionsTimeline } from "@domain/use-cases/task-execution/fetch-timeline"
 import { TaskExecutionController } from "./http/controllers/task-execution-controller"
-import { FrontendDevelopmentUseCase } from "@application/use-cases/task-execution/frontend-development"
+import { FrontendDevelopmentUseCase } from "@application/use-cases/task/frontend-development"
 import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
 import { FetchTaskExecutionsHeatmap } from "@domain/use-cases/task-execution/fetch-heatmap"
 import { FetchTaskExecutionsHeatmapUseCase } from "@application/use-cases/task-execution/fetch-heatmap"
@@ -50,16 +47,26 @@ import { S3FileStorage } from "./ports/s3-file-storage"
 import { FileStorage } from "../domain/ports/file-storage"
 import { MockTaskExecutionRepository } from "./repositories/mock-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
-import { ProjectService } from "@domain/services/project-service"
-import { DefaultProjectService } from "@application/services/project-service"
+import { MarketingService } from "@domain/ports/services/marketing-service"
 import { ProductOwner } from "./ai/openai/product-owner"
-import { Contributor } from "@domain/ports/contirbutor"
+import { Contributor } from "@domain/ports/ai/contributor"
 import { ReactDeveloper } from "./ai/openai/react-developer"
 import { GraphicDesigner } from "./ai/openai/graphic-designer"
 import { Marketeer } from "./ai/openai/marketeer"
 import { ScrumMaster } from "./ai/openai/scrum-master"
-import { TeamService } from "@domain/services/team-service"
+import { Team } from "@domain/ports/ai/team"
 import { FrontendTeam } from "@application/services/frontend-team"
+import { FrontendDevelopmentService } from "@domain/ports/services/frontend-development"
+import { ProjectRepository } from "@domain/ports/repositories/project-repository"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
+import { DefaultMarketingService } from "@application/services/marketing-service"
+import { FrontendDeploymentService } from "@domain/ports/services/frontend-deployment"
+import { S3FrontendDeployment } from "../application/services/frontend-deployment"
+import { VersionRepository } from "@domain/ports/repositories/version-repository"
+import { VersionControlSystem } from "@domain/ports/version-control-system"
+import { S3VersionControlSystem } from "./ports/s3-source-code-storage"
+import { CompressorService } from "@domain/ports/compressor-service"
+import { TarGzCompressorService } from "./ports/targz-compressor-service"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -70,33 +77,39 @@ export const taskExecutionController = new TaskExecutionController()
 export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
 export const fileStorage: FileStorage = new S3FileStorage()
-export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopment(yarnPackageManager, fileSystem, fileStorage)
+export const frontendDeploymentService: FrontendDeploymentService = new S3FrontendDeployment(fileStorage)   
+export const compressorService: CompressorService = new TarGzCompressorService()
+export const versionControlSystem: VersionControlSystem = new S3VersionControlSystem(fileStorage, compressorService)
 
 
 // Repositories
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const taskRepository: TaskRepository = new DynamoDBTaskRepository()
 export const taskExecutionRepository: TaskExecutionRepository = new MockTaskExecutionRepository()
+export const versionRepository: VersionRepository = new DynamoDBVersionRepository()
+
+
+export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopment(yarnPackageManager, fileSystem, frontendDeploymentService, projectRepository, versionControlSystem, versionRepository)
 
 // Contributors
 export const scrumMaster: Contributor = new ScrumMaster()
 export const productOwner: Contributor = new ProductOwner(taskRepository)
-export const reactDeveloper: Contributor = new ReactDeveloper(frontendDevelopmentService, projectRepository, taskRepository, taskExecutionRepository)
+export const reactDeveloper: Contributor = new ReactDeveloper()
 export const graphicDesigner: Contributor = new GraphicDesigner(frontendDevelopmentService, projectRepository, taskRepository, taskExecutionRepository)
 export const marketeer: Contributor = new Marketeer()
-export const frontendTeam: TeamService = new FrontendTeam(graphicDesigner, reactDeveloper, scrumMaster)
+export const frontendTeam: Team = new FrontendTeam(graphicDesigner, reactDeveloper, scrumMaster)
 
-// Services
-export const projectService: ProjectService = new DefaultProjectService(marketeer, projectRepository)
+
+export const marketingService: MarketingService = new DefaultMarketingService(marketeer, projectRepository)
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)
-export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, projectService)
+export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
-export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, projectService)
+export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, marketingService)
 export const fetchTasks: FetchTasks = new FetchTasksUseCase(taskRepository)
 export const updateTaskTitle: UpdateTaskTitle = new UpdateTaskTitleUseCase(taskRepository)
 export const updateTaskDescription: UpdateTaskDescription = new UpdateTaskDescriptionUseCase(taskRepository)

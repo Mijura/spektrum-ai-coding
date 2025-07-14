@@ -3,7 +3,7 @@ import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@a
 import { Project, ProjectStatus } from "@domain/entities/project"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
-import { ProjectRepository } from "@domain/repositories/project-repository"
+import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { ProjectRecord } from "@infrastructure/records/project"
 
 const client = new DynamoDBClient({

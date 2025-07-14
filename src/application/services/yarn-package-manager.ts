@@ -1,15 +1,23 @@
 
 import { PackageManager } from "../../domain/ports/package-manager"
 import { spawn } from "child_process"
+
+/**
+ * Represents the result of a command execution
+ */
 export interface CommandResult {
 	success: boolean
 	stdout: string
 	stderr: string
 	exitCode: number
 }
+
+/**
+ * Represents a package manager that can install and build projects
+ */
 export class YarnPackageManager implements PackageManager {
 
-	runCommand(command: string, cwd: string, contextMessage?: string): Promise<CommandResult> {
+	private runCommand(command: string, cwd: string, contextMessage?: string): Promise<CommandResult> {
 		return new Promise((resolve) => {
 			const [cmd, ...args] = command.split(" ")
 			const process = spawn(cmd, args, { cwd, stdio: "pipe", shell: true })
@@ -55,7 +63,7 @@ export class YarnPackageManager implements PackageManager {
 		})
 	}
 
-	async installDependencies(projectPath: string): Promise<boolean> {
+	async install(projectPath: string): Promise<boolean> {
 		const result = await this.runCommand("yarn install", projectPath, `Installing dependencies in ${projectPath}...`)
 		console.log(JSON.stringify(result))
 		if (!result.success) {
@@ -65,7 +73,7 @@ export class YarnPackageManager implements PackageManager {
 		return result.success
 	}
 
-	async buildProject(projectPath: string): Promise<boolean> {
+	async build(projectPath: string): Promise<boolean> {
 		const result = await this.runCommand("yarn build", projectPath, `Building project in ${projectPath}...`)
 		console.log(JSON.stringify(result))
 		if (!result.success) {

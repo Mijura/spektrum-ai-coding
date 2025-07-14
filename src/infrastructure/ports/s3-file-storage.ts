@@ -1,6 +1,6 @@
 import { Upload } from '@aws-sdk/lib-storage'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import type { Readable } from 'stream'
+import { Readable } from 'stream'
 import { FileStorage } from '../../domain/ports/file-storage'
 
 export class S3FileStorage implements FileStorage {
@@ -43,11 +43,11 @@ export class S3FileStorage implements FileStorage {
         }
       }
 
-    async uploadFile(fileName: string, stream: Readable, folderName: string): Promise<void> {
+    async upload(fileName: string, stream: Readable): Promise<void> {
         const bucket = process.env.DEPLOYMENT_BUCKET
         if (!bucket) throw new Error('Missing DEPLOYMENT_BUCKET env variable')
 
-        const key = `${folderName}/${fileName}`.replace(/\\/g, '/')
+        const key = `${fileName}`.replace(/\\/g, '/')
 
         const upload = new Upload({
             client: this.s3,
@@ -72,7 +72,7 @@ export class S3FileStorage implements FileStorage {
       })
     }
 
-    async downloadFile(key: string): Promise<Buffer> {
+    async download(key: string): Promise<Buffer> {
       const bucket = process.env.DEPLOYMENT_BUCKET
       if (!bucket) throw new Error('Missing DEPLOYMENT_BUCKET env variable')
   
@@ -87,19 +87,8 @@ export class S3FileStorage implements FileStorage {
         throw new Error('S3 returned an invalid or empty response body')
       }
   
-      return await streamToBuffer(response.Body)
+      return await this.streamToBuffer(response.Body)
     }
   
-    async removeFile(key: string): Promise<void> {
-      const bucket = process.env.DEPLOYMENT_BUCKET
-      if (!bucket) throw new Error('Missing DEPLOYMENT_BUCKET env variable')
-  
-      const command = new DeleteObjectCommand({
-        Bucket: bucket,
-        Key: key,
-      })
-  
-      await this.s3.send(command)
-      console.log(`🗑️ Deleted: ${key}`)
-    }
+
 }

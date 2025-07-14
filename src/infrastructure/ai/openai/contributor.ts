@@ -1,5 +1,5 @@
 import OpenAI from "openai/index"
-import { Contributor } from "@domain/ports/contirbutor"
+import { Contributor } from "@domain/ports/ai/contributor"
 import { z } from "zod"
 import { Team } from "@application/services/frontend-team"
 import { zodResponseFormat } from "openai/helpers/zod"

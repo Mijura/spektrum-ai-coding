@@ -1,4 +1,4 @@
 export interface PackageManager {
-	installDependencies(projectPath: string): Promise<boolean>
-	buildProject(projectPath: string): Promise<boolean>
+	install(projectPath: string): Promise<boolean>
+	build(projectPath: string): Promise<boolean>
 }
