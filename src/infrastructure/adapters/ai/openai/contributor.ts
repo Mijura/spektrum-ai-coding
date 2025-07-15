@@ -1,7 +1,7 @@
 import OpenAI from "openai/index"
 import { Contributor } from "@domain/ports/ai/contributor"
 import { z } from "zod"
-import { Team } from "@application/services/frontend-team"
+import { FrontendTeam } from "@application/services/frontend-team"
 import { zodResponseFormat } from "openai/helpers/zod"
 
 export enum Brain {
@@ -75,7 +75,7 @@ export abstract class OpenAIContributor implements Contributor {
     protected async delegateTo(contributorName: string, input: any): Promise<any> {
 
         try {
-            const contributor = Team.getContributor(contributorName)
+            const contributor = FrontendTeam.getContributor(contributorName)
             if (!contributor) throw new Error(`Contributor "${contributorName}" is not registered.`)
 
             return await contributor.execute(input)
