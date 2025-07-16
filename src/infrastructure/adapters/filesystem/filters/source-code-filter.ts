@@ -7,7 +7,6 @@ export class SourceCodeFilter implements FileSelectionFilter {
 	
     constructor(private fileSystem: FileSystemPort) {}
   
-
     async fetch(basePath: string): Promise<FileArtifacts> {
 		const sourceCode: FileArtifacts = {}
 		const blacklist = new Set(["yarn.lock", ".env.example", "node_modules", "dist"])

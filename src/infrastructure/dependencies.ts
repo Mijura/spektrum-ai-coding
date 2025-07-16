@@ -19,8 +19,7 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTaskRepository } from "@infrastructure/repositories/task-repository"
 
-import { YarnPackageManager } from "./adapters/bundler/yarn-package-manager"
-import { FrontendDevelopment } from "../application/services/fronted-development-service"
+
 import { PackageManager } from "./ports/package-manager"
 import { CreateTask } from "@domain/use-cases/task/create-task"
 import { FetchTasks } from "@domain/use-cases/task/fetch-tasks"
@@ -41,34 +40,41 @@ import { FetchTaskExecutionsHeatmap } from "@domain/use-cases/task-execution/fet
 import { FetchTaskExecutionsHeatmapUseCase } from "@application/use-cases/task-execution/fetch-heatmap"
 import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/task-execution/fetch-project-timeline"
 import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/task-execution/fetch-account-timeline"
-import { FileSystemPort } from "../domain/ports/file-system"
-import { LocalFileSystem } from "./ports/local-file-system"
-import { S3FileStorage } from "./ports/s3-file-storage"
-import { FileStorage } from "../domain/ports/file-storage"
-import { MockTaskExecutionRepository } from "./repositories/mock-task-execution-repository"
+
+import { MockTaskExecutionRepository } from "@infrastructure/repositories/mock-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { MarketingService } from "@domain/ports/services/marketing-service"
-import { ProductOwner } from "./ai/openai/product-owner"
 import { Contributor } from "@domain/ports/ai/contributor"
-import { ReactDeveloper } from "./ai/openai/react-developer"
-import { GraphicDesigner } from "./ai/openai/graphic-designer"
-import { Marketeer } from "./ai/openai/marketeer"
-import { ScrumMaster } from "./ai/openai/scrum-master"
 import { Team } from "@domain/ports/ai/team"
 import { FrontendTeam } from "@application/services/frontend-team"
 import { FrontendDevelopmentService } from "@domain/ports/services/frontend-development"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { DefaultMarketingService } from "@application/services/marketing-service"
-import { FrontendDeploymentService } from "@domain/ports/services/frontend-deployment"
-import { S3FrontendDeployment } from "../application/services/frontend-deployment"
 import { VersionRepository } from "@domain/ports/repositories/version-repository"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { S3VersionControlSystem } from "./ports/s3-source-code-storage"
 import { CompressorService } from "@domain/ports/compressor-service"
-import { TarGzCompressorService } from "./ports/targz-compressor-service"
 import { Bundler } from "@domain/ports/bundlers/bundler"
 import RspackBundler from "./adapters/bundlers/rspack-bundler"
+import { DynamoDBVersionRepository } from "./repositories/version-repository"
+import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
+import { SourceCodeFilter } from "@infrastructure/adapters/filesystem/filters/source-code-filter"
+import { DistFolderFilter } from "@infrastructure/adapters/filesystem/filters/dist-folder-filter"
+import { Template } from "@domain/ports/templates/template"
+import { RspackTemplate } from "@infrastructure/adapters/templates/rspack-template"
+import { FrontendDevelopment } from "@application/services/fronted-development"
+import { ScrumMaster } from "@infrastructure/adapters/ai/openai/scrum-master"
+import { FileSystemPort } from "@domain/ports/filesystem/file-system"
+import { LocalFileSystem } from "./adapters/filesystem/local-file-system"
+import { YarnPackageManager } from "./adapters/package-managers/yarn-package-manager"
+import { FileStorage } from "./ports/file-storage"
+import { S3FileStorage } from "./adapters/s3-file-storage"
+import { TarGzCompressorService } from "./adapters/targz-compressor-service"
+import { S3VersionControlSystem } from "./adapters/s3-source-code-storage"
+import { ProductOwner } from "./adapters/ai/openai/product-owner"
+import { ReactDeveloper } from "./adapters/ai/openai/react-developer"
+import { GraphicDesigner } from "./adapters/ai/openai/graphic-designer"
+import { Marketeer } from "./adapters/ai/openai/marketeer"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -86,6 +92,14 @@ export const versionControlSystem: VersionControlSystem = new S3VersionControlSy
 
 // Bundlers
 export const rspackBundler: Bundler = new RspackBundler(yarnPackageManager)
+
+// Filters
+export const sourceCodeFilter: FileSelectionFilter = new SourceCodeFilter(fileSystem)
+export const distFolderFilter: FileSelectionFilter = new DistFolderFilter(fileSystem)
+
+// Templates
+export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, distFolderFilter)
+
 // Repositories
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const taskRepository: TaskRepository = new DynamoDBTaskRepository()
