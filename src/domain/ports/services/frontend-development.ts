@@ -1,5 +1,5 @@
-import { Version } from "@domain/entities/version"
-import { SourceCode } from "@domain/types/source-code"
+import { Version } from "@domain/value-objects/version"
+import { SourceCode } from "@domain/value-objects/source-code"
 
 /**
  * FrontendDevelopmentService is a service that allows you to setup, maintain and deploy a frontend project.
@@ -26,6 +26,4 @@ export interface FrontendDevelopmentService {
 	 * @returns The version details of the deployed project
 	 */
 	deployToProduction(projectId: string): Promise<Version>
-
-
 }

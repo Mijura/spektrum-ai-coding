@@ -1,5 +1,5 @@
-import { ActivityData } from "@domain/types/activity"
-import { TaskStatus } from "@domain/types/task"
+import { ActivityData } from "@domain/value-objects/activity"
+import { TaskStatus } from "@domain/value-objects/task"
 export interface TaskDto {
 	id: string
 	title: string

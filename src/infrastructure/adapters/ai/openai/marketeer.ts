@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { ProjectDetails } from "@domain/types/project-details"
+import { ProjectDetails } from "@domain/value-objects/project-details"
 import { Task } from "@domain/entities/task" 
 import { OpenAIContributor, Brain } from "./contributor"
 

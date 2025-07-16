@@ -1,6 +1,6 @@
 import { TaskExecution } from "@domain/entities/task-execution"
-import { PaginationData } from "@domain/types/activity"
-import { TimeRangeData, TaskExecutionHeatmap } from "@domain/types/task-execution"
+import { PaginationData } from "@domain/value-objects/activity"
+import { TimeRangeData, TaskExecutionHeatmap } from "@domain/value-objects/task-execution"
 
 export interface TaskExecutionRepository {
     save(taskExecution: TaskExecution): Promise<TaskExecution>

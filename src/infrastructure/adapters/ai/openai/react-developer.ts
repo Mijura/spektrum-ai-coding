@@ -1,5 +1,5 @@
 import { Task } from "@domain/entities/task"
-import { SourceCode } from "@domain/types/source-code"
+import { SourceCode } from "@domain/value-objects/source-code"
 import z from "zod"
 import { OpenAIContributor, Brain } from "./contributor"
 

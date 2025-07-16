@@ -1,4 +1,4 @@
-import { WorkflowRunHeatmap } from "@domain/types/task-execution";
+import { WorkflowRunHeatmap } from "@domain/value-objects/task-execution";
 
 export type HeatmapBucket = {
     key_as_string: string // ISO date string

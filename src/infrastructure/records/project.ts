@@ -1,4 +1,4 @@
-import { SourceCode } from "@domain/types/source-code"
+import { SourceCode } from "@domain/value-objects/source-code"
 
 export enum ProjectStatus {
 	ACTIVE = "Active",

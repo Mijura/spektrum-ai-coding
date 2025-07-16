@@ -1,6 +1,6 @@
 
 import { v4 as uuidv4 } from "uuid"
-import { ActivityData, ActivityMetadata, ActivityType } from "@domain/types/activity"
+import { ActivityData, ActivityMetadata, ActivityType } from "@domain/value-objects/activity"
 
 export class Activity<T> {
     constructor(

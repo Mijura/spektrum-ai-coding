@@ -1,11 +1,11 @@
 import { AwsSigv4Signer } from "@opensearch-project/opensearch/aws"
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { Client } from "@opensearch-project/opensearch"
-import { PaginationData } from "@domain/types/activity"
+import { PaginationData } from "@domain/value-objects/activity"
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
 import { OpenSearchHeatmapResponse, WorkflowRunMapper } from "@infrastructure/mappers/workflow-run-mapper"
-import { TaskExecutionHeatmap, TimeRangeData } from "@domain/types/task-execution"
+import { TaskExecutionHeatmap, TimeRangeData } from "@domain/value-objects/task-execution"
 
 export class OpenSearchTaskExecutionRepository implements TaskExecutionRepository {
 

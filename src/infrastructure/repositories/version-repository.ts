@@ -1,4 +1,4 @@
-import { Version } from "@domain/entities/version"
+import { Version } from "@domain/value-objects/version"
 import { VersionRepository } from "@domain/ports/repositories/version-repository"
 
 export class DynamoDBVersionRepository implements VersionRepository {

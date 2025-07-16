@@ -2,7 +2,7 @@ import { Task } from "@domain/entities/task"
 import { Contributor } from "@domain/ports/ai/contributor"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { MarketingService } from "@domain/ports/services/marketing-service"
-import { ProjectDetails } from "@domain/types/project-details"
+import { ProjectDetails } from "@domain/value-objects/project-details"
 
 export class DefaultMarketingService implements MarketingService {
 

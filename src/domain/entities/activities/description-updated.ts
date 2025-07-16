@@ -1,4 +1,4 @@
-import { ActivityType, DescriptionUpdatedMetadata } from "@domain/types/activity"
+import { ActivityType, DescriptionUpdatedMetadata } from "@domain/value-objects/activity"
 import { Activity } from "../activity"
 import { Task } from "../task"
 

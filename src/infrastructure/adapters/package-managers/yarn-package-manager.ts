@@ -1,5 +1,5 @@
 
-import { PackageManager } from "../../domain/ports/package-manager"
+import { PackageManager } from "../../ports/package-manager"
 import { spawn } from "child_process"
 
 /**

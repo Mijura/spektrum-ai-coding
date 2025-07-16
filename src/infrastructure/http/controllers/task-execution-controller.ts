@@ -1,6 +1,6 @@
 
 import { TaskExecution } from "@domain/entities/task-execution"
-import { TaskExecutionHeatmap } from "@domain/types/task-execution"
+import { TaskExecutionHeatmap } from "@domain/value-objects/task-execution"
 import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, leaveComment } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 

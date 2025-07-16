@@ -1,9 +1,9 @@
-import { TaskExecutionStatus } from "@domain/types/activity"
+import { TaskExecutionStatus } from "@domain/value-objects/activity"
 import { Task } from "./task"
 import { v4 as uuidv4 } from "uuid"
 import { EmitNewTaskExecution } from "@domain/events/emitters/new-task-execution"
 import { EmitTaskExecutionUpdate } from "@domain/events/emitters/task-execution-update"
-import { SourceCode } from "@domain/types/source-code"
+import { SourceCode } from "@domain/value-objects/source-code"
 export class TaskExecution {
     public readonly id: string
     public title: string

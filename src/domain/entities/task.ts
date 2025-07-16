@@ -1,15 +1,15 @@
 
-import { ActivityMetadata } from "@domain/types/activity"
+import { ActivityMetadata } from "@domain/value-objects/activity"
 import { Activity } from "./activity"
 import { v4 as uuidv4 } from 'uuid'
 import { TaskCreatedActivity } from "./activities/task-created"
 import { CommentLeft } from "./activities/comment-left"
 import { TitleUpdated } from "./activities/title-updated"
 import { DescriptionUpdated } from "./activities/description-updated"
-import { Comment } from "@domain/types/activity"
+import { Comment } from "@domain/value-objects/activity"
 import { StartedWork } from "./activities/started-work"
 import { FinishedWork } from "./activities/finished-work"
-import { TaskStatus } from "@domain/types/task"
+import { TaskStatus } from "@domain/value-objects/task"
 import { EmitTaskUpdate } from "@domain/events/emitters/task-update"
 
 export class Task {

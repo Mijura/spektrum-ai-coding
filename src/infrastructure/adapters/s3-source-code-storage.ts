@@ -1,8 +1,8 @@
-import { Version } from "@domain/entities/version"
+import { Version } from "@domain/value-objects/version"
 import { CompressorService } from "@domain/ports/compressor-service"
 import { FileStorage } from "@domain/ports/file-storage"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { SourceCode } from "@domain/types/source-code"
+import { SourceCode } from "@domain/value-objects/source-code"
 import { Readable } from "stream"
 
 export class S3VersionControlSystem implements VersionControlSystem {

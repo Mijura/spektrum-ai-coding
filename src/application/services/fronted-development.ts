@@ -1,14 +1,14 @@
 import path from "path"
 
-import { SourceCode } from "@domain/types/source-code"
+import { SourceCode } from "@domain/value-objects/source-code"
 import { FileSystemPort } from "../../domain/ports/file-system"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { VersionRepository } from "@domain/ports/repositories/version-repository"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { FrontendDevelopmentService } from "@domain/ports/services/frontend-development"
-import { FrontendDeploymentService } from "@domain/ports/services/frontend-deployment"
-import { EnvironmentConfig } from "@domain/entities/project"
-import { Version } from "@domain/entities/version"
+import { Version } from "@domain/value-objects/version"
+import { Bundler } from "@domain/ports/bundlers/bundler"
+import { Template } from "@domain/ports/templates/template"
 
 export class FrontendDevelopment implements FrontendDevelopmentService {
 
@@ -17,24 +17,23 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		private readonly frontendDeploymentService: FrontendDeploymentService,
 		private readonly projectRepository: ProjectRepository,
 		private readonly versionControlSystem: VersionControlSystem,
-		private readonly versionRepository: VersionRepository
+		private readonly versionRepository: VersionRepository,
+		private readonly template: Template,
+		private readonly jsBundler: Bundler
 	) {}
 	
 	async setupProject(projectId: string): Promise<Version> {
 		try {
 			const project = await this.projectRepository.get(projectId)
 
-			const projectPath: string = path.join("projects", projectId)
+			const projectPath = await this.template.fetchPrebuiltFiles()
 
-			const templateName = "rspack-react-tailwind"
-			const templatePath = path.resolve(`src/application/templates/${templateName}`)
-			console.log("Template path:", templatePath)
+			// we are passing true because the template is already pre-built
+			const buildArtifact = await this.jsBundler.bundle(projectId, projectPath, true)
 
-			// we are using pre-built template to speed up the process
-			await this.fileSystem.copyFolder(templatePath, projectPath)
-			console.log(`✅ Project template copied to ${projectPath}`)
+
 			
-			const version = Version.create(projectId, Environment.DEV)
+			const version = Version.create(projectId)
 			const url = await this.frontendDeploymentService.deploy(projectPath, version, false)
 			const sourceCode = await this.getSourceCode(projectId)
 

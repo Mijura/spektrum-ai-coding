@@ -1,5 +1,5 @@
-import { Version } from "@domain/entities/version"
-import { SourceCode } from "@domain/types/source-code"
+import { Version } from "@domain/value-objects/version"
+import { SourceCode } from "@domain/value-objects/source-code"
 
 export interface VersionControlSystem {
 

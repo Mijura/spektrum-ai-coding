@@ -19,9 +19,9 @@ import { ProjectController } from "@infrastructure/http/controllers/project-cont
 import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
 import { DynamoDBTaskRepository } from "@infrastructure/repositories/task-repository"
 
-import { YarnPackageManager } from "../application/services/yarn-package-manager"
+import { YarnPackageManager } from "./adapters/bundler/yarn-package-manager"
 import { FrontendDevelopment } from "../application/services/fronted-development-service"
-import { PackageManager } from "../domain/ports/package-manager"
+import { PackageManager } from "./ports/package-manager"
 import { CreateTask } from "@domain/use-cases/task/create-task"
 import { FetchTasks } from "@domain/use-cases/task/fetch-tasks"
 import { UpdateTaskTitle } from "@domain/use-cases/task/update-title"
@@ -67,6 +67,8 @@ import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { S3VersionControlSystem } from "./ports/s3-source-code-storage"
 import { CompressorService } from "@domain/ports/compressor-service"
 import { TarGzCompressorService } from "./ports/targz-compressor-service"
+import { Bundler } from "@domain/ports/bundlers/bundler"
+import RspackBundler from "./adapters/bundlers/rspack-bundler"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -82,6 +84,8 @@ export const compressorService: CompressorService = new TarGzCompressorService()
 export const versionControlSystem: VersionControlSystem = new S3VersionControlSystem(fileStorage, compressorService)
 
 
+// Bundlers
+export const rspackBundler: Bundler = new RspackBundler(yarnPackageManager)
 // Repositories
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const taskRepository: TaskRepository = new DynamoDBTaskRepository()

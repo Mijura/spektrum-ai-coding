@@ -1,6 +1,6 @@
-import { CommentLeftMetadata, ActivityType } from "@domain/types/activity"
+import { CommentLeftMetadata, ActivityType } from "@domain/value-objects/activity"
 import { Activity } from "../activity"
-import { Comment } from "../../types/activity"
+import { Comment } from "../../value-objects/activity"
 import { Task } from "../task"
 
 export class CommentLeft extends Activity<CommentLeftMetadata> {

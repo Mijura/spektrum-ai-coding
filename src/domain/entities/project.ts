@@ -1,12 +1,11 @@
+import { Version } from "@domain/value-objects/version"
 import { v4 as uuidv4 } from "uuid"
-import { EnvironmentType, Version } from "./version"
-import { Environment } from "@domain/ports/services/frontend-deployment"
 
 export enum ProjectStatus {
 	ACTIVE = "Active",
 	ARCHIVED = "Archived"
 }
-export interface EnvironmentConfig {
+export interface Deployment {
 	url: string
 	version: Version
 }
@@ -20,8 +19,8 @@ export class Project {
 	public description: string
 	public status: ProjectStatus
 	public detailsUpdated: boolean
-	public devConfig: EnvironmentConfig | null
-	public prodConfig: EnvironmentConfig | null
+	public latestDevDeployment: Deployment | null
+	public latestProdDeployment: Deployment | null
 
 	private constructor(
 		id: string,
@@ -32,8 +31,8 @@ export class Project {
 		updated: string | null,
 		status: ProjectStatus,
 		detailsUpdated: boolean,
-		devConfig: EnvironmentConfig | null,
-		prodConfig: EnvironmentConfig | null
+		latestDevDeployment: Deployment | null,
+		latestProdDeployment: Deployment | null
 	) {
 		this.id = id
 		this.ownerId = ownerId
@@ -43,8 +42,8 @@ export class Project {
 		this.updated = updated
 		this.status = status
 		this.detailsUpdated = detailsUpdated
-		this.devConfig = devConfig
-		this.prodConfig = prodConfig
+		this.latestDevDeployment = latestDevDeployment
+		this.latestProdDeployment = latestProdDeployment
 	}
 
 	setName(name: string) {
@@ -73,32 +72,27 @@ export class Project {
 		this.updated = new Date().toISOString()
 	}
 
-	setDevEnvironment(environment: EnvironmentConfig) {
-		if(environment.url === "") {
+	setLatestDevDeployment(deployment: Deployment) {
+		if(deployment.url === "") {
 			throw new Error("URL cannot be empty")
 		}
-		if(!environment.version) {
+		if(!deployment.version) {
 			throw new Error("Version cannot be empty")
 		}
 
-		if(environment.version.environment !== EnvironmentType.DEV) {
-			throw new Error("Version must be a development version")
-		}
-		this.devConfig = environment
+		this.latestDevDeployment = deployment
 		this.updated = new Date().toISOString()
 	}
 
-	setProdEnvironment(environment: EnvironmentConfig) {
-		if(environment.url === "") {
+	setLatestProdDeployment(deployment: Deployment) {
+		if(deployment.url === "") {
 			throw new Error("URL cannot be empty")
 		}
-		if(!environment.version) {
+		if(!deployment.version) {
 			throw new Error("Version cannot be empty")
 		}
-		if(environment.version.environment !== EnvironmentType.PROD) {
-			throw new Error("Version must be a production version")
-		}
-		this.prodConfig = environment
+
+		this.latestProdDeployment = deployment
 		this.updated = new Date().toISOString()
 	}
 	
@@ -129,9 +123,9 @@ export class Project {
 		updated: string | null
 		status: ProjectStatus
 		detailsUpdated: boolean	
-		devEnvironment: EnvironmentConfig
-		prodEnvironment: EnvironmentConfig | null
+		latestDevDeployment: Deployment | null
+		latestProdDeployment: Deployment | null
 	}): Project {
-		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated, data.devEnvironment, data.prodEnvironment)
+		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated, data.latestDevDeployment, data.latestProdDeployment)
 	}
 }

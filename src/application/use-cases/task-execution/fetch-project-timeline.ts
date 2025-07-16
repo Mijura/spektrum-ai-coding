@@ -1,6 +1,6 @@
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
-import { PaginationData } from "@domain/types/activity"
+import { PaginationData } from "@domain/value-objects/activity"
 import { FetchTaskExecutionsTimeline } from "@domain/use-cases/task-execution/fetch-timeline"
 
 export class FetchTimelineByProjectIdUseCase implements FetchTaskExecutionsTimeline {

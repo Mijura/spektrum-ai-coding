@@ -1,5 +1,5 @@
 import { Task } from "@domain/entities/task"
-import { ActivityType, CommentLeftMetadata } from "@domain/types/activity"
+import { ActivityType, CommentLeftMetadata } from "@domain/value-objects/activity"
 import { OpenAIContributor, Brain } from "./contributor"
 import z from "zod"
 
