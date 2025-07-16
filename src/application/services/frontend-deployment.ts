@@ -5,7 +5,7 @@ import { PackageManager } from "@domain/ports/package-manager"
 import { FrontendDeploymentService } from "@domain/ports/services/frontend-deployment"
 import path from "path"
 
-export class FrontendDeployment implements FrontendDeploymentService {
+export class Environment implements FrontendDeploymentService {
     constructor(
         private readonly fileStorage: FileStorage,
         private readonly fileSystem: FileSystemPort,

@@ -3,12 +3,12 @@ import path from "path"
 import { SourceCode } from "@domain/types/source-code"
 import { FileSystemPort } from "../../domain/ports/file-system"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { Environment, Version } from "@domain/entities/version"
 import { VersionRepository } from "@domain/ports/repositories/version-repository"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { FrontendDevelopmentService } from "@domain/ports/services/frontend-development"
 import { FrontendDeploymentService } from "@domain/ports/services/frontend-deployment"
 import { EnvironmentConfig } from "@domain/entities/project"
+import { Version } from "@domain/entities/version"
 
 export class FrontendDevelopment implements FrontendDevelopmentService {
 

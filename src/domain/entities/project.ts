@@ -1,11 +1,12 @@
 import { v4 as uuidv4 } from "uuid"
 import { EnvironmentType, Version } from "./version"
+import { Environment } from "@domain/ports/services/frontend-deployment"
 
 export enum ProjectStatus {
 	ACTIVE = "Active",
 	ARCHIVED = "Archived"
 }
-export interface Environment {
+export interface EnvironmentConfig {
 	url: string
 	version: Version
 }
@@ -19,8 +20,8 @@ export class Project {
 	public description: string
 	public status: ProjectStatus
 	public detailsUpdated: boolean
-	public devConfig: Environment | null
-	public prodConfig: Environment | null
+	public devConfig: EnvironmentConfig | null
+	public prodConfig: EnvironmentConfig | null
 
 	private constructor(
 		id: string,
@@ -31,8 +32,8 @@ export class Project {
 		updated: string | null,
 		status: ProjectStatus,
 		detailsUpdated: boolean,
-		devConfig: Environment | null,
-		prodConfig: Environment | null
+		devConfig: EnvironmentConfig | null,
+		prodConfig: EnvironmentConfig | null
 	) {
 		this.id = id
 		this.ownerId = ownerId
@@ -72,7 +73,7 @@ export class Project {
 		this.updated = new Date().toISOString()
 	}
 
-	setDevEnvironment(environment: Environment) {
+	setDevEnvironment(environment: EnvironmentConfig) {
 		if(environment.url === "") {
 			throw new Error("URL cannot be empty")
 		}
@@ -87,7 +88,7 @@ export class Project {
 		this.updated = new Date().toISOString()
 	}
 
-	setProdEnvironment(environment: Environment) {
+	setProdEnvironment(environment: EnvironmentConfig) {
 		if(environment.url === "") {
 			throw new Error("URL cannot be empty")
 		}

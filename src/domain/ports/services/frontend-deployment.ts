@@ -1,10 +1,23 @@
+import { Project } from "@domain/entities/project"
 import { Version } from "@domain/entities/version"
 
-export interface FrontendDeploymentService {
-    /**
-     * Deploys the frontend project to the given environment
-     * @param version - The version of the project to deploy
-     * @returns The URL of the deployed project
-     */
-    deploy(projectPath: string, version: Version, shouldBuild?: boolean): Promise<string>
+export enum EnvironmentType {
+    DEV = "dev",
+    PROD = "prod"
+}
+export abstract class Environment {
+
+    abstract type: EnvironmentType
+
+    abstract isInitialized(project: Project): Promise<boolean>
+
+    abstract initialize(project: Project): Promise<void>
+
+    deploy(project: Project): Promise<string> {
+        if(!this.isInitialized(project)) {
+            this.initialize(project)
+        }
+
+        return Promise.resolve("https://example.com")
+    }
 }
