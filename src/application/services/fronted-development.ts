@@ -1,6 +1,5 @@
 import path from "path"
 
-import { SourceCode } from "@domain/value-objects/source-code"
 import { FileSystemPort } from "../../domain/ports/file-system"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { VersionRepository } from "@domain/ports/repositories/version-repository"
@@ -9,6 +8,7 @@ import { FrontendDevelopmentService } from "@domain/ports/services/frontend-deve
 import { Version } from "@domain/value-objects/version"
 import { Bundler } from "@domain/ports/bundlers/bundler"
 import { Template } from "@domain/ports/templates/template"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export class FrontendDevelopment implements FrontendDevelopmentService {
 
@@ -26,22 +26,12 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 		try {
 			const project = await this.projectRepository.get(projectId)
 
-			const projectPath = await this.template.fetchPrebuiltFiles()
-
-			// we are passing true because the template is already pre-built
-			const buildArtifact = await this.jsBundler.bundle(projectId, projectPath, true)
-
+			const prebuiltFiles: FileArtifacts = await this.template.fetchPrebuiltFiles()
+			const sourceCode: FileArtifacts = await this.template.fetchSourceCode()
 
 			
 			const version = Version.create(projectId)
-			const url = await this.frontendDeploymentService.deploy(projectPath, version, false)
-			const sourceCode = await this.getSourceCode(projectId)
 
-			const environmentConfig: EnvironmentConfig = {
-				url,
-				version
-			}
-			project.setDevEnvironment(environmentConfig)
 
 			await this.versionControlSystem.push(version, sourceCode)
 			await this.versionRepository.save(version)
@@ -116,10 +106,10 @@ export class FrontendDevelopment implements FrontendDevelopmentService {
 
 	}	
 
-	private async getSourceCode(projectId: string): Promise<SourceCode> {
+	private async getSourceCode(projectId: string): Promise<FileArtifacts> {
 
 		const projectPath = path.join("projects", projectId)
-		const sourceCode: SourceCode = {}
+		const sourceCode: FileArtifacts = {}
 		const blacklist = new Set(["yarn.lock", ".env.example", "node_modules", "dist"])
 
 		const readDir = async (directory: string, relativePath = "") => {
