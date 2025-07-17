@@ -1,10 +1,10 @@
 import { Version } from "@domain/value-objects/version"
-import { SourceCode } from "@domain/value-objects/source-code"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 /**
- * FrontendDevelopmentService is a service that allows you to setup, maintain and deploy a frontend project.
+ * LocalEnvironment is a service that allows you to setup, maintain and deploy a frontend project.
  */
-export interface FrontendDevelopmentService {
+export interface DevEnvironment {
 	/**
 	 * Initializes empty React project on the dev environment
 	 * @param projectId - The ID of the project to initialize
@@ -18,7 +18,7 @@ export interface FrontendDevelopmentService {
 	 * @param sourceCode - The source code to update the project with
 	 * @returns The version details of the updated project
 	 */
-	applySourceCode(projectId: string, sourceCode: SourceCode): Promise<Version>
+	applySourceCode(projectId: string, sourceCode: FileArtifacts): Promise<Version>
 
 	/**
 	 * Deploy the project to prodcution

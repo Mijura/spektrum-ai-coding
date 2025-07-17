@@ -1,8 +1,9 @@
+import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
 import { FileSystemPort } from "@domain/ports/filesystem/file-system"
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import path from "path"
 
-export class DistFolderFilter {
+export class DistFolderFilter implements FileSelectionFilter {
 
   constructor(private fileSystem: FileSystemPort) {}
 

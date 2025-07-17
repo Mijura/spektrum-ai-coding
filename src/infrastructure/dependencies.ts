@@ -47,7 +47,6 @@ import { MarketingService } from "@domain/ports/services/marketing-service"
 import { Contributor } from "@domain/ports/ai/contributor"
 import { Team } from "@domain/ports/ai/team"
 import { FrontendTeam } from "@application/services/frontend-team"
-import { FrontendDevelopmentService } from "@domain/ports/services/frontend-development"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { DefaultMarketingService } from "@application/services/marketing-service"
@@ -62,7 +61,6 @@ import { SourceCodeFilter } from "@infrastructure/adapters/filesystem/filters/so
 import { DistFolderFilter } from "@infrastructure/adapters/filesystem/filters/dist-folder-filter"
 import { Template } from "@domain/ports/templates/template"
 import { RspackTemplate } from "@infrastructure/adapters/templates/rspack-template"
-import { FrontendDevelopment } from "@application/services/fronted-development"
 import { ScrumMaster } from "@infrastructure/adapters/ai/openai/scrum-master"
 import { FileSystemPort } from "@domain/ports/filesystem/file-system"
 import { LocalFileSystem } from "./adapters/filesystem/local-file-system"
@@ -75,6 +73,10 @@ import { ProductOwner } from "./adapters/ai/openai/product-owner"
 import { ReactDeveloper } from "./adapters/ai/openai/react-developer"
 import { GraphicDesigner } from "./adapters/ai/openai/graphic-designer"
 import { Marketeer } from "./adapters/ai/openai/marketeer"
+import { HostingService } from "@domain/ports/services/hosting-service"
+import { S3HostingService } from "@application/services/s3-hosting-service"
+import { LocalDevEnvironment } from "@application/services/local-dev-environment"
+import { DevEnvironment } from "@domain/ports/services/dev-environment"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -85,17 +87,17 @@ export const taskExecutionController = new TaskExecutionController()
 export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
 export const fileStorage: FileStorage = new S3FileStorage()
-export const frontendDeploymentService: FrontendDeploymentService = new S3FrontendDeployment(fileStorage)   
+export const hostingService: HostingService = new S3HostingService(fileStorage, fileSystem)   
 export const compressorService: CompressorService = new TarGzCompressorService()
 export const versionControlSystem: VersionControlSystem = new S3VersionControlSystem(fileStorage, compressorService)
 
 
-// Bundlers
-export const rspackBundler: Bundler = new RspackBundler(yarnPackageManager)
-
 // Filters
 export const sourceCodeFilter: FileSelectionFilter = new SourceCodeFilter(fileSystem)
 export const distFolderFilter: FileSelectionFilter = new DistFolderFilter(fileSystem)
+
+// Bundlers
+export const rspackBundler: Bundler = new RspackBundler(yarnPackageManager, distFolderFilter)
 
 // Templates
 export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, distFolderFilter)
@@ -107,13 +109,13 @@ export const taskExecutionRepository: TaskExecutionRepository = new MockTaskExec
 export const versionRepository: VersionRepository = new DynamoDBVersionRepository()
 
 
-export const frontendDevelopmentService: FrontendDevelopmentService = new FrontendDevelopment(yarnPackageManager, fileSystem, frontendDeploymentService, projectRepository, versionControlSystem, versionRepository)
+export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(hostingService, projectRepository, versionControlSystem, versionRepository, rspackTemplate, rspackBundler, fileSystem)
 
 // Contributors
 export const scrumMaster: Contributor = new ScrumMaster()
 export const productOwner: Contributor = new ProductOwner(taskRepository)
 export const reactDeveloper: Contributor = new ReactDeveloper()
-export const graphicDesigner: Contributor = new GraphicDesigner(frontendDevelopmentService, projectRepository, taskRepository, taskExecutionRepository)
+export const graphicDesigner: Contributor = new GraphicDesigner(localDevEnvironment, projectRepository, taskRepository, taskExecutionRepository)
 export const marketeer: Contributor = new Marketeer()
 export const frontendTeam: Team = new FrontendTeam(graphicDesigner, reactDeveloper, scrumMaster)
 
@@ -121,11 +123,11 @@ export const frontendTeam: Team = new FrontendTeam(graphicDesigner, reactDevelop
 export const marketingService: MarketingService = new DefaultMarketingService(marketeer, projectRepository)
 
 // Use Cases
-export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, frontendDevelopmentService)
+export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, localDevEnvironment)
 export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
-export const deployProject: DeployProject = new DeployProjectUseCase(frontendDevelopmentService, projectRepository)
+export const deployProject: DeployProject = new DeployProjectUseCase(localDevEnvironment, projectRepository)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
 export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, marketingService)
 export const fetchTasks: FetchTasks = new FetchTasksUseCase(taskRepository)

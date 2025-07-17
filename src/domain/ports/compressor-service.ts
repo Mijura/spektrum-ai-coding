@@ -1,3 +1,5 @@
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
+
 /**
  * CompressorService is a service that allows you to compress and decompress files.
  */
@@ -7,7 +9,7 @@ export interface CompressorService {
      * @param files A list of files to compress
      * @returns A buffer containing the compressed files
      */
-    compress(files: { [filePath: string]: string }): Promise<Buffer> 
+    compress(files: FileArtifacts): Promise<Buffer> 
 
 
     /**
@@ -15,5 +17,5 @@ export interface CompressorService {
      * @param archive The buffer to decompress
      * @returns A object containing 
      */
-    decompress(archive: Buffer): Promise<{ [filePath: string]: string }>
+    decompress(archive: Buffer): Promise<FileArtifacts>
 }
