@@ -1,20 +1,23 @@
 import { Version } from "@domain/value-objects/version"
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
+import { Commit } from "@domain/value-objects/commit"
 
 export interface VersionControlSystem {
 
-    /**
-     * Pushes the source code to the version control system
-     * @param version - The version to push the source code to
-     * @param sourceCode - The source code to push to the version control system
-     */
-    push(version: Version, sourceCode: FileArtifacts): Promise<void>
+
+    commitVersion(projectId: string, sourceCode: Commit): Promise<Version>
 
     /**
      * Pulls the source code from the version control system
      * @param version - The version to pull the source code from
      * @returns The source code for the given version
      */
-    pull(version: Version): Promise<FileArtifacts>
+    pullSourceCode(version: Version): Promise<FileArtifacts>
+
+    /**
+     * 
+     * @param version 
+     */
+    pullBuildArtifact(version: Version): Promise<FileArtifacts>
 
 }

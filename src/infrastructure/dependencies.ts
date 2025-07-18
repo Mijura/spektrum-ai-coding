@@ -73,7 +73,7 @@ import { ProductOwner } from "./adapters/ai/openai/product-owner"
 import { ReactDeveloper } from "./adapters/ai/openai/react-developer"
 import { GraphicDesigner } from "./adapters/ai/openai/graphic-designer"
 import { Marketeer } from "./adapters/ai/openai/marketeer"
-import { HostingService } from "@domain/ports/services/hosting-service"
+import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { S3HostingService } from "@application/services/s3-hosting-service"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
@@ -87,7 +87,7 @@ export const taskExecutionController = new TaskExecutionController()
 export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
 export const fileStorage: FileStorage = new S3FileStorage()
-export const hostingService: HostingService = new S3HostingService(fileStorage, fileSystem)   
+export const hostingService: WebHostingService = new S3HostingService(fileStorage, fileSystem)   
 export const compressorService: CompressorService = new TarGzCompressorService()
 export const versionControlSystem: VersionControlSystem = new S3VersionControlSystem(fileStorage, compressorService)
 
@@ -123,7 +123,7 @@ export const frontendTeam: Team = new FrontendTeam(graphicDesigner, reactDevelop
 export const marketingService: MarketingService = new DefaultMarketingService(marketeer, projectRepository)
 
 // Use Cases
-export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, localDevEnvironment)
+export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, rspackTemplate, hostingService, versionControlSystem, versionRepository)
 export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)

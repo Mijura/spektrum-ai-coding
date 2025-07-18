@@ -5,12 +5,6 @@ import { FileArtifacts } from "@domain/value-objects/file-artifacts"
  * LocalEnvironment is a service that allows you to setup, maintain and deploy a frontend project.
  */
 export interface DevEnvironment {
-	/**
-	 * Initializes empty React project on the dev environment
-	 * @param projectId - The ID of the project to initialize
-	 * @returns The version details of the initialized project
-	 */
-	setupProject(projectId: string): Promise<Version>
 
 	/**
 	 * Updates the source code for the project on the dev environment
