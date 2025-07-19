@@ -6,40 +6,52 @@ import { Commit } from "@domain/value-objects/commit"
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import { FileStorage } from "@infrastructure/ports/file-storage"
 import { VersionRepository } from "@domain/ports/repositories/version-repository"
+import { v4 as uuidv4 } from 'uuid'
 
 export class S3VersionControlSystem implements VersionControlSystem {
-  constructor(
-    private readonly fileStorage: FileStorage,
-    private readonly compressorService: CompressorService,
-	private readonly versionRepository: VersionRepository
-  ) {}
+	constructor(
+		private readonly fileStorage: FileStorage,
+		private readonly compressorService: CompressorService,
+		private readonly versionRepository: VersionRepository
+	) {}
 
-  async commitVersion(projectId: string, commit: Commit): Promise<Version> {
-    	// Save the version
-		const version = Version.create(projectId)
-		await this.versionRepository.save(version)
+	async commitVersion(projectId: string, commit: Commit): Promise<Version> {
+
+
+		const versionTag = uuidv4()
+		const sourceCodePath = `${projectId}/sourceCode/${versionTag}.tar.gz`
+		const buildArtifactPath = `${projectId}/sourceCode/${versionTag}.tar.gz`
 
 		const { buildArtifact, sourceCode } = commit
-		// TODO: Compress and save to s3 source code and build artifact
+		await this.push(buildArtifactPath, buildArtifact)
+		await this.push(sourceCodePath, sourceCode)
+
+		// Save the version
+		const version = Version.create(projectId, buildArtifactPath, sourceCodePath)
+		await this.versionRepository.save(version)
 		return version
-  }
-  pullSourceCode(version: Version): Promise<FileArtifacts> {
-    throw new Error("Method not implemented.")
-  }
-  pullBuildArtifact(version: Version): Promise<FileArtifacts> {
-    throw new Error("Method not implemented.")
-  }
+	}
 
-  async push(version: Version, sourceCode: FileArtifacts): Promise<void> {
-    const archive = await this.compressorService.compress(sourceCode)
-    const stream = Readable.from(archive)
 
-    await this.fileStorage.upload(`${version.projectId}/${version.tag}.tar.gz`, stream)
-  }
+	async pullSourceCode(version: Version): Promise<FileArtifacts> {
+		return this.pull(version.sourceCodeUrl)
+	}
 
-  async pull(version: Version): Promise<FileArtifacts> {
-    const buffer = await this.fileStorage.download(`${version.projectId}/${version.tag}.tar.gz`)
-    return this.compressorService.decompress(buffer)
-  }
+	async pullBuildArtifact(version: Version): Promise<FileArtifacts> {
+		return this.pull(version.buildArtifactUrl)
+	}
+
+	private async push(archivePath: string, fileArtifacts: FileArtifacts): Promise<void> {
+		const archive = await this.compressorService.compress(fileArtifacts)
+		const stream = Readable.from(archive)
+
+		await this.fileStorage.upload(archivePath, stream)
+	}
+
+
+	private async pull(archiveUrl: string): Promise<FileArtifacts> {
+		const buffer = await this.fileStorage.download(archiveUrl)
+		return this.compressorService.decompress(buffer)
+	}
 
 }
