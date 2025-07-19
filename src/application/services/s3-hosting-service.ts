@@ -2,9 +2,9 @@ import path from "path"
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import { FileStorage } from "@infrastructure/ports/file-storage"
 import { FileSystemPort } from "@domain/ports/filesystem/file-system"
-import { HostingService } from "@domain/ports/services/hosting-service"
+import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 
-export class S3HostingService implements HostingService {
+export class S3HostingService implements WebHostingService {
     constructor(
         private readonly fileStorage: FileStorage,
         private readonly fileSystem: FileSystemPort
