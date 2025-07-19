@@ -1,4 +1,3 @@
-import { Version } from "@domain/value-objects/version"
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 /**
@@ -12,12 +11,6 @@ export interface DevEnvironment {
 	 * @param sourceCode - The source code to update the project with
 	 * @returns The version details of the updated project
 	 */
-	applySourceCode(projectId: string, sourceCode: FileArtifacts): Promise<Version>
+	build(sourceCode: FileArtifacts): Promise<FileArtifacts>
 
-	/**
-	 * Deploy the project to prodcution
-	 * @param projectId - The ID of the project to build
-	 * @returns The version details of the deployed project
-	 */
-	deployToProduction(projectId: string): Promise<Version>
 }

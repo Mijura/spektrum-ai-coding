@@ -5,7 +5,7 @@ import { Commit } from "@domain/value-objects/commit"
 export interface VersionControlSystem {
 
 
-    commitVersion(projectId: string, sourceCode: Commit): Promise<Version>
+    commitVersion(projectId: string, commit: Commit): Promise<Version>
 
     /**
      * Pulls the source code from the version control system

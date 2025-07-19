@@ -109,7 +109,7 @@ export const versionRepository: VersionRepository = new DynamoDBVersionRepositor
 
 
 export const versionControlSystem: VersionControlSystem = new S3VersionControlSystem(fileStorage, compressorService, versionRepository)
-export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(hostingService, projectRepository, versionControlSystem, versionRepository, rspackBundler, fileSystem)
+export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
 // Contributors
 export const scrumMaster: Contributor = new ScrumMaster()
@@ -127,7 +127,7 @@ export const createNewProject: CreateProject = new CreateProjectUseCase(projectR
 export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
-export const deployProject: DeployProject = new DeployProjectUseCase(localDevEnvironment, projectRepository)
+export const deployProject: DeployProject = new DeployProjectUseCase(projectRepository, versionControlSystem, hostingService)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
 export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, marketingService)
 export const fetchTasks: FetchTasks = new FetchTasksUseCase(taskRepository)
@@ -138,4 +138,4 @@ export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository
 export const fetchTimelineByProjectId: FetchTaskExecutionsTimeline = new FetchTimelineByProjectIdUseCase(taskExecutionRepository)
 export const fetchTimelineByAccountId:  FetchTaskExecutionsTimeline = new FetchTimelineByAccountIdUseCase(taskExecutionRepository)
 export const fetchTaskExecutionsHeatmap: FetchTaskExecutionsHeatmap = new FetchTaskExecutionsHeatmapUseCase(taskExecutionRepository)
-export const frontendDevelopment: RunTaskExecution = new FrontendDevelopmentUseCase(taskRepository, taskExecutionRepository, frontendTeam)
+export const frontendDevelopment: RunTaskExecution = new FrontendDevelopmentUseCase(taskRepository, taskExecutionRepository, frontendTeam, localDevEnvironment, hostingService, versionControlSystem, projectRepository)
