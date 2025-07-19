@@ -109,7 +109,7 @@ export const taskExecutionRepository: TaskExecutionRepository = new MockTaskExec
 export const versionRepository: VersionRepository = new DynamoDBVersionRepository()
 
 
-export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(hostingService, projectRepository, versionControlSystem, versionRepository, rspackTemplate, rspackBundler, fileSystem)
+export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(hostingService, projectRepository, versionControlSystem, versionRepository, rspackBundler, fileSystem)
 
 // Contributors
 export const scrumMaster: Contributor = new ScrumMaster()
