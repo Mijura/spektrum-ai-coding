@@ -20,7 +20,7 @@ import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-
 import { DynamoDBTaskRepository } from "@infrastructure/repositories/task-repository"
 
 
-import { PackageManager } from "./ports/package-manager"
+import { PackageManager } from "@infrastructure/ports/package-manager"
 import { CreateTask } from "@domain/use-cases/task/create-task"
 import { FetchTasks } from "@domain/use-cases/task/fetch-tasks"
 import { UpdateTaskTitle } from "@domain/use-cases/task/update-title"
@@ -54,8 +54,8 @@ import { VersionRepository } from "@domain/ports/repositories/version-repository
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { CompressorService } from "@domain/ports/compressor-service"
 import { Bundler } from "@domain/ports/bundlers/bundler"
-import RspackBundler from "./adapters/bundlers/rspack-bundler"
-import { DynamoDBVersionRepository } from "./repositories/version-repository"
+import RspackBundler from "@infrastructure/adapters/bundlers/rspack-bundler"
+import { DynamoDBVersionRepository } from "@infrastructure/repositories/version-repository"
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
 import { SourceCodeFilter } from "@infrastructure/adapters/filesystem/filters/source-code-filter"
 import { DistFolderFilter } from "@infrastructure/adapters/filesystem/filters/dist-folder-filter"
@@ -63,20 +63,20 @@ import { Template } from "@domain/ports/templates/template"
 import { RspackTemplate } from "@infrastructure/adapters/templates/rspack-template"
 import { ScrumMaster } from "@infrastructure/adapters/ai/openai/scrum-master"
 import { FileSystemPort } from "@domain/ports/filesystem/file-system"
-import { LocalFileSystem } from "./adapters/filesystem/local-file-system"
-import { YarnPackageManager } from "./adapters/package-managers/yarn-package-manager"
-import { FileStorage } from "./ports/file-storage"
-import { S3FileStorage } from "./adapters/s3-file-storage"
-import { TarGzCompressorService } from "./adapters/targz-compressor-service"
-import { S3VersionControlSystem } from "./adapters/s3-source-code-storage"
-import { ProductOwner } from "./adapters/ai/openai/product-owner"
-import { ReactDeveloper } from "./adapters/ai/openai/react-developer"
-import { GraphicDesigner } from "./adapters/ai/openai/graphic-designer"
-import { Marketeer } from "./adapters/ai/openai/marketeer"
+import { LocalFileSystem } from "@infrastructure/adapters/filesystem/local-file-system"
+import { YarnPackageManager } from "@infrastructure/adapters/package-managers/yarn-package-manager"
+import { FileStorage } from "@infrastructure/ports/file-storage"
+import { S3FileStorage } from "@infrastructure/adapters/s3-file-storage"
+import { TarGzCompressorService } from "@infrastructure/adapters/targz-compressor-service"
+import { ProductOwner } from "@infrastructure/adapters/ai/openai/product-owner"
+import { ReactDeveloper } from "@infrastructure/adapters/ai/openai/react-developer"
+import { GraphicDesigner } from "@infrastructure/adapters/ai/openai/graphic-designer"
+import { Marketeer } from "@infrastructure/adapters/ai/openai/marketeer"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { S3HostingService } from "@application/services/s3-hosting-service"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
+import { S3VersionControlSystem } from "@infrastructure/adapters/s3-version-control-system"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -89,7 +89,6 @@ export const yarnPackageManager: PackageManager = new YarnPackageManager()
 export const fileStorage: FileStorage = new S3FileStorage()
 export const hostingService: WebHostingService = new S3HostingService(fileStorage, fileSystem)   
 export const compressorService: CompressorService = new TarGzCompressorService()
-export const versionControlSystem: VersionControlSystem = new S3VersionControlSystem(fileStorage, compressorService)
 
 
 // Filters
@@ -109,6 +108,7 @@ export const taskExecutionRepository: TaskExecutionRepository = new MockTaskExec
 export const versionRepository: VersionRepository = new DynamoDBVersionRepository()
 
 
+export const versionControlSystem: VersionControlSystem = new S3VersionControlSystem(fileStorage, compressorService, versionRepository)
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(hostingService, projectRepository, versionControlSystem, versionRepository, rspackBundler, fileSystem)
 
 // Contributors
@@ -123,7 +123,7 @@ export const frontendTeam: Team = new FrontendTeam(graphicDesigner, reactDevelop
 export const marketingService: MarketingService = new DefaultMarketingService(marketeer, projectRepository)
 
 // Use Cases
-export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, rspackTemplate, hostingService, versionControlSystem, versionRepository)
+export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, rspackTemplate, hostingService, versionControlSystem)
 export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)

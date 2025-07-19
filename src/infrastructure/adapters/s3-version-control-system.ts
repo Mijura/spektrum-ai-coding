@@ -5,15 +5,23 @@ import { Readable } from "stream"
 import { Commit } from "@domain/value-objects/commit"
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import { FileStorage } from "@infrastructure/ports/file-storage"
+import { VersionRepository } from "@domain/ports/repositories/version-repository"
 
 export class S3VersionControlSystem implements VersionControlSystem {
   constructor(
     private readonly fileStorage: FileStorage,
-    private readonly compressorService: CompressorService
+    private readonly compressorService: CompressorService,
+	private readonly versionRepository: VersionRepository
   ) {}
 
-  commitVersion(projectId: string, sourceCode: Commit): Promise<Version> {
-    throw new Error("Method not implemented.")
+  async commitVersion(projectId: string, commit: Commit): Promise<Version> {
+    	// Save the version
+		const version = Version.create(projectId)
+		await this.versionRepository.save(version)
+
+		const { buildArtifact, sourceCode } = commit
+		// TODO: Compress and save to s3 source code and build artifact
+		return version
   }
   pullSourceCode(version: Version): Promise<FileArtifacts> {
     throw new Error("Method not implemented.")
