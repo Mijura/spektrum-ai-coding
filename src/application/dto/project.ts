@@ -3,7 +3,6 @@ export interface ProjectDto {
 	name: string
 	description: string
 	owner: string
-	deploymentId?: string
 	created: Date
     updated: Date
 }

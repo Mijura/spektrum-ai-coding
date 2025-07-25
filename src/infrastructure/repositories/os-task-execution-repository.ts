@@ -3,7 +3,7 @@ import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { Client } from "@opensearch-project/opensearch"
 import { PaginationData } from "@domain/value-objects/activity"
 import { TaskExecution } from "@domain/entities/task-execution"
-import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
+import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import { OpenSearchHeatmapResponse, WorkflowRunMapper } from "@infrastructure/mappers/workflow-run-mapper"
 import { TaskExecutionHeatmap, TimeRangeData } from "@domain/value-objects/task-execution"
 

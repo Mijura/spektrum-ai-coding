@@ -1,5 +1,5 @@
 import { LeaveComment } from "@domain/use-cases/task/leave-comment"
-import { TaskRepository } from "@domain/repositories/task-repository"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { Task } from "@domain/entities/task"
 
 export class LeaveCommentUseCase implements LeaveComment {

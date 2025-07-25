@@ -1,6 +1,6 @@
 import { Project } from "@domain/entities/project"
 import { ArchiveProject } from "@domain/use-cases/project/archive-project"
-import { ProjectRepository } from "@domain/repositories/project-repository"
+import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 
 export class ArchiveProjectUseCase implements ArchiveProject {
 	constructor(private readonly projectRepository: ProjectRepository) {}

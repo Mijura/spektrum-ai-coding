@@ -1,5 +1,5 @@
 import { Task } from "@domain/entities/task"
-import { TaskRepository } from "@domain/repositories/task-repository"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { FetchTasks } from "@domain/use-cases/task/fetch-tasks"
 
 export class FetchTasksUseCase implements FetchTasks {

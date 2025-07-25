@@ -1,6 +1,6 @@
 import { Task } from "@domain/entities/task"
 import { TaskDto } from "@application/dto/task"
-import { TaskRepository } from "@domain/repositories/task-repository"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { UpdateTaskDescription } from "@domain/use-cases/task/update-description"
 
 export class UpdateTaskDescriptionUseCase implements UpdateTaskDescription{

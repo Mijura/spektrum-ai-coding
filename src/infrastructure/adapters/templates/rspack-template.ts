@@ -5,10 +5,12 @@ import path from "path"
 
 export class RspackTemplate implements Template {
     
+
+    private readonly templateName = "rspack-react-tailwind"
+
     constructor(
-      private readonly sourceCodeFilter: FileSelectionFilter,
-      private readonly distFolderFilter: FileSelectionFilter,
-      private readonly templateName = "rspack-react-tailwind"
+		private readonly sourceCodeFilter: FileSelectionFilter,
+		private readonly distFolderFilter: FileSelectionFilter
     ) {}
 
 	fetchPrebuiltFiles(): Promise<FileArtifacts> {

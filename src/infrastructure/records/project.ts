@@ -1,4 +1,4 @@
-import { SourceCode } from "@domain/value-objects/source-code"
+import { Deployment } from "@domain/entities/project"
 
 export enum ProjectStatus {
 	ACTIVE = "Active",
@@ -12,8 +12,8 @@ export interface ProjectRecord {
 	description: string
 	created: string
 	updated: string | null
-	deploymentId: string | null
 	status: ProjectStatus
 	detailsUpdated: boolean
-	artifact: SourceCode | null
+	latestDevDeployment: Deployment | null
+	latestProdDeployment: Deployment | null
 }

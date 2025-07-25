@@ -1,6 +1,6 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
-import { TaskRepository } from "@domain/repositories/task-repository"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { Task } from "@domain/entities/task"
 import { TaskRecord } from "@infrastructure/records/task"
 import { TaskMapper } from "@infrastructure/mappers/task-mapper"

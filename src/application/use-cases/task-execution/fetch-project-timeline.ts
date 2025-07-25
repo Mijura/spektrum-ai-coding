@@ -1,5 +1,5 @@
 import { TaskExecution } from "@domain/entities/task-execution"
-import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
+import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import { PaginationData } from "@domain/value-objects/activity"
 import { FetchTaskExecutionsTimeline } from "@domain/use-cases/task-execution/fetch-timeline"
 

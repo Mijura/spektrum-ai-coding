@@ -1,4 +1,4 @@
-import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
+import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import { TimeRangeData, TaskExecutionHeatmap } from "@domain/value-objects/task-execution"
 import { FetchTaskExecutionsHeatmap } from "@domain/use-cases/task-execution/fetch-heatmap"
 

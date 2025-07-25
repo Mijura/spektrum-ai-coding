@@ -1,6 +1,6 @@
 
 import { FetchProject } from "@domain/use-cases/project/fetch-project"
-import { ProjectRepository } from "@domain/repositories/project-repository"
+import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { Project } from "@domain/entities/project"
 
 export class FetchProjectUseCase implements FetchProject {
