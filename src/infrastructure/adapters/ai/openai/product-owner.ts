@@ -1,5 +1,5 @@
 import { Task } from "@domain/entities/task"
-import { TaskRepository } from "@domain/repositories/task-repository"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import z from "zod"
 import { OpenAIContributor, Brain } from "./contributor"
 

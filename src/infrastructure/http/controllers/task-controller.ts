@@ -6,8 +6,6 @@ import { Task } from "@domain/entities/task"
 
 export class TaskController {
 
-	constructor() {}
-
 	async createTask(req: Request, res: Response): Promise<void> {
 		try {
 			const { projectId, title, description } = req.body

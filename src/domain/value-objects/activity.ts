@@ -56,7 +56,6 @@ export enum ActivityType {
     COMMENT_LEFT = 'CommentLeft',
     TITLE_UPDATED = 'TaskDetailsUpdated',
     DESCRIPTION_UPDATED = 'DescriptionUpdated',
-    WORKFLOW_RUN = 'WorkflowRun',
     STARTED_WORK = 'StartedWork',
     FINISHED_WORK = 'FinishedWork'
 }

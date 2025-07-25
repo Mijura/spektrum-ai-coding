@@ -1,9 +1,8 @@
 import { Request, Response } from "express"
 import { ProjectDtoMapper } from "@application/mappers/project-dto-mappers"
 import { createNewProject, fetchProject, deployProject, fetchProjects, archiveProject, updateProjectDetails, planTasksWithAI } from "@infrastructure/dependencies"
-export class ProjectController {
 
-	constructor() {}
+export class ProjectController {
 
 	async createProject(req: Request, res: Response): Promise<void> {
 		try {

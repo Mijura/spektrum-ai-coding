@@ -1,12 +1,10 @@
 
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionHeatmap } from "@domain/value-objects/task-execution"
-import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, leaveComment } from "@infrastructure/dependencies"
+import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, leaveComment, taskRunner } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
 export class TaskExecutionController {
-
-    constructor() {}
 
     async fetchTimelineByProjectId(req: Request, res: Response): Promise<void> {
         const projectId  = req.query.projectId as string
@@ -79,11 +77,9 @@ export class TaskExecutionController {
     async run(req: Request, res: Response): Promise<void> {
         
         const taskId = req.body.taskId
-        const workflowId = req.body.workflowId
         const accountId = req.body.accountId
 
         console.log("Received taskId:", taskId, "Type:", typeof taskId)
-        console.log("Received workflowId:", workflowId, "Type:", typeof workflowId)
         console.log("Received accountId:", accountId, "Type:", typeof accountId)
         if (!taskId || !accountId) {
             res.status(400).json({ error: "Missing required parameters" })
@@ -91,10 +87,10 @@ export class TaskExecutionController {
         }
 
 		try {
-            await runTaskExecution.execute(taskId, workflowId, accountId)
+            await taskRunner.execute(taskId, accountId)
             res.status(200).json({ message: "Workflow run initiated" })
 		} catch (error) {
-			console.error("Error during development workflow:", error)
+			console.error("Error during task execution:", error)
             res.status(500).json({ error: "Internal server error" })
 		}
 
@@ -104,7 +100,7 @@ export class TaskExecutionController {
 		try {
 			const { taskId, authorId, commentText } = req.body
 			const task = await leaveComment.execute(taskId, authorId, commentText)
-			await frontendDevelopmentRunner.run(task, authorId)
+			await taskRunner.execute(taskId, authorId)
 			res.status(200).json(task)
 		} catch (error) {
 			console.error("Error adding comment:", error)

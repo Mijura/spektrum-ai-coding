@@ -4,8 +4,8 @@ import { Client } from "@opensearch-project/opensearch"
 import { PaginationData } from "@domain/value-objects/activity"
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
-import { OpenSearchHeatmapResponse, WorkflowRunMapper } from "@infrastructure/mappers/workflow-run-mapper"
 import { TaskExecutionHeatmap, TimeRangeData } from "@domain/value-objects/task-execution"
+import { OpenSearchHeatmapResponse, TaskExecutionMapper	 } from "@infrastructure/mappers/task-execution-mapper"
 
 export class OpenSearchTaskExecutionRepository implements TaskExecutionRepository {
 
@@ -179,7 +179,7 @@ export class OpenSearchTaskExecutionRepository implements TaskExecutionRepositor
 
 
 	/**
-	 * Heatmap: Get the number of workflow run per day for a given accountId
+	 * Heatmap: Get the number of task executions per day for a given accountId
 	 */
 	async getHeatmap(accountId: string, timeRange: TimeRangeData): Promise<TaskExecutionHeatmap[]> {
 		const index = this.getIndex()
@@ -223,7 +223,7 @@ export class OpenSearchTaskExecutionRepository implements TaskExecutionRepositor
 			body: query,
 		})
 
-		const heatmap: TaskExecutionHeatmap[] = WorkflowRunMapper.parseHistogram(response.body as OpenSearchHeatmapResponse)
+		const heatmap: TaskExecutionHeatmap[] = TaskExecutionMapper.parseHistogram(response.body as OpenSearchHeatmapResponse)
 
 		return heatmap
 	}

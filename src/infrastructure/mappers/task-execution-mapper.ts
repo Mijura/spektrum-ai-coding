@@ -1,4 +1,4 @@
-import { WorkflowRunHeatmap } from "@domain/value-objects/task-execution";
+import { TaskExecutionHeatmap } from "@domain/value-objects/task-execution"
 
 export type HeatmapBucket = {
     key_as_string: string // ISO date string
@@ -14,7 +14,7 @@ export type HeatmapBucket = {
     }
   }
 
-export class WorkflowRunMapper {
+export class TaskExecutionMapper {
 
 	
 	// Formats timestamp as "Dec 14, 2024"
@@ -25,9 +25,9 @@ export class WorkflowRunMapper {
       }
     
       // Parses OpenSearch histogram response
-      static parseHistogram(response: OpenSearchHeatmapResponse): WorkflowRunHeatmap[] {
+      static parseHistogram(response: OpenSearchHeatmapResponse): TaskExecutionHeatmap[] {
         return response?.aggregations?.activities_per_day?.buckets.map(bucket => ({
-          date: WorkflowRunMapper.formatDate(bucket.key),
+          date: TaskExecutionMapper.formatDate(bucket.key),
           runCount: bucket.doc_count,
         })) || []
       }

@@ -28,7 +28,7 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 			throw new Error("Task not found")
 		}
 
-		const taskExecution = TaskExecution.create(task, "Frontend Development", accountId)
+		const taskExecution = TaskExecution.create(task, accountId)
 
         try {
             const sourceCode = await this.frontendTeam.startWorking(task)
