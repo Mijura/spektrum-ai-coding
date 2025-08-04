@@ -14,12 +14,12 @@ export class RspackTemplate implements Template {
     ) {}
 
 	fetchPrebuiltFiles(): Promise<FileArtifacts> {
-		const templatePath = path.resolve(`src/application/templates/${this.templateName}`)
+		const templatePath = path.resolve(`src/infrastructure/adapters/templates/${this.templateName}`)
 		return this.distFolderFilter.fetch(templatePath)
 	}
 
 	fetchSourceCode(): Promise<FileArtifacts> {
-		const templatePath = path.resolve(`src/application/templates/${this.templateName}`)
+		const templatePath = path.resolve(`src/infrastructure/adapters/templates/${this.templateName}`)
 		return this.sourceCodeFilter.fetch(templatePath)
 	}
   

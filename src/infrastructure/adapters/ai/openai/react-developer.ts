@@ -1,5 +1,5 @@
 import { Task } from "@domain/entities/task"
-import { SourceCode } from "@domain/value-objects/source-code"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import z from "zod"
 import { OpenAIContributor, Brain } from "./contributor"
 
@@ -46,12 +46,12 @@ export class ReactDeveloper extends OpenAIContributor {
                 - Always use classes from the index.css and tailwind.config.js files.
     
                 ### **Details**
-                - **Current Source Code:** ${JSON.stringify(this.project.artifact)}
+                - **Current Source Code:** ${JSON.stringify('')}
     
         `
     }
     
-    async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<SourceCode> {
+    async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<FileArtifacts> {
         console.log("Writing code")
 
         const { sourceCode, comment } = tought

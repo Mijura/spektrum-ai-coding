@@ -6,5 +6,6 @@ export interface Team {
     contributors: Map<string, Contributor>
 
     addContributor(contributor: Contributor): void
+    getContributor(name: string): Contributor
     startWorking(task: Task): Promise<any>
 }

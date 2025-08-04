@@ -6,6 +6,8 @@ import { Template } from "@domain/ports/templates/template"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { Commit } from "@domain/value-objects/commit"
+import { Version } from "@domain/value-objects/version"
+import { Deployment } from "@domain/entities/project"
 
 export class CreateProjectUseCase implements CreateProject {
 	constructor(
@@ -20,19 +22,21 @@ export class CreateProjectUseCase implements CreateProject {
 			// Create a new project with a unique ID
 			const project: Project = Project.create("My Project", "Empty project...", owner)
 
-			// 
 			const buildArtifact: FileArtifacts = await this.template.fetchPrebuiltFiles()
 			const sourceCode: FileArtifacts = await this.template.fetchSourceCode()
 
 			// save version
 			const commit: Commit = { buildArtifact, sourceCode }
-			await this.versionControlSystem.commitVersion(project.id, commit)
 
+			const version: Version = await this.versionControlSystem.commitVersion(project.id, commit)
 			// deploy files
-			await this.webHostingService.deployPrebuiltCode(buildArtifact)
+			const url: string = await this.webHostingService.deployPrebuiltCode(buildArtifact)
+
 			console.log('Template deployed successfully!')
+
+			const deployment : Deployment = { url, version }
 			
-			// TODO: update dev environment url and version
+			project.setLatestDevDeployment(deployment)
 			await this.projectRepository.save(project)
 
 			return project
