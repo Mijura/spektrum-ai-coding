@@ -27,7 +27,7 @@ export class DeployProjectUseCase implements DeployProject {
 			const sourceCode = await this.versionControlSystem.pullSourceCode(latestVersion)
 	
 	
-			const url = await this.webHostingService.deployPrebuiltCode(buildArtifact)
+			const url = await this.webHostingService.deployPrebuiltCode(projectId, buildArtifact)
 	
 			const commit: Commit = { buildArtifact, sourceCode }
 			const version = await this.versionControlSystem.commitVersion(projectId, commit)

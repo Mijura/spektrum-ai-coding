@@ -1,8 +1,8 @@
 import OpenAI from "openai/index"
 import { Contributor } from "@domain/ports/ai/contributor"
 import { z } from "zod"
-import { FrontendTeam } from "@application/services/frontend-team"
 import { zodResponseFormat } from "openai/helpers/zod"
+import { frontendTeam } from "@infrastructure/dependencies"
 
 export enum Brain {
     GPT_41 = "gpt-4.1",
@@ -11,23 +11,21 @@ export enum Brain {
 }
 
 export abstract class OpenAIContributor implements Contributor {
+
     /**
      * The name of the contributor
      */
     abstract name: string
 
-    
     /**
      * The AI model to use
      */
     abstract brain: Brain
 
-
     /**
      * The object definition we expect the AI to return
      */
     abstract thoughtShape: z.ZodSchema
-
 
 
     /**
@@ -37,12 +35,10 @@ export abstract class OpenAIContributor implements Contributor {
         return
     }
 
-
     /**
     * The function to call to set the context of the AI
     */
     abstract loadContext(): string
-
 
     /**
      * The function to call to trigger whole process
@@ -52,7 +48,7 @@ export abstract class OpenAIContributor implements Contributor {
     async execute(task: any): Promise<any> {
         await this.preThought(task)
     
-        const client = new OpenAI();
+        const client = new OpenAI()
     
     
         const completion = await client.chat.completions.parse({
@@ -68,14 +64,13 @@ export abstract class OpenAIContributor implements Contributor {
         return await this.afterThought(completion.choices[0].message.parsed)
     }
     
-    
     /**
      * Delegate task to another collaborator
      */
     protected async delegateTo(contributorName: string, input: any): Promise<any> {
 
         try {
-            const contributor = FrontendTeam.getContributor(contributorName)
+            const contributor = frontendTeam.getContributor(contributorName)
             if (!contributor) throw new Error(`Contributor "${contributorName}" is not registered.`)
 
             return await contributor.execute(input)
@@ -84,7 +79,6 @@ export abstract class OpenAIContributor implements Contributor {
             throw error
         }
     }
-
 
     /**
      * The function to call after the AI has thought

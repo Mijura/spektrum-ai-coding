@@ -1,11 +1,9 @@
-import { Project } from "@domain/entities/project"
 import { Task } from "@domain/entities/task"
-import { FrontendDevelopmentService } from "@domain/services/frontend-development"
-import { ProjectRepository } from "@domain/repositories/project-repository"
-import { TaskRepository } from "@domain/repositories/task-repository"
-import { TaskExecutionRepository } from "@domain/repositories/task-execution-repository"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
+import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import z from "zod"
 import { OpenAIContributor, Brain } from "./contributor"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export class GraphicDesigner extends OpenAIContributor {
 
@@ -19,25 +17,20 @@ export class GraphicDesigner extends OpenAIContributor {
         tailwindConfig: z.string().describe("The full content of the tailwind.config.js file with Tailwind directives and custom styles.")
     })
 
-    frontendDevelopmentService: FrontendDevelopmentService
-    projectRepository: ProjectRepository
     taskRepository: TaskRepository
     taskExecutionRepository: TaskExecutionRepository
     task!: Task
-    project!: Project
-
-    constructor(frontendDevelopmentService: FrontendDevelopmentService, projectRepository: ProjectRepository, taskRepository: TaskRepository, taskExecutionRepository: TaskExecutionRepository) {
+    sourceCode!: FileArtifacts
+    constructor(taskRepository: TaskRepository, taskExecutionRepository: TaskExecutionRepository) {
         super()
-        this.frontendDevelopmentService = frontendDevelopmentService
-        this.projectRepository = projectRepository
         this.taskRepository = taskRepository
         this.taskExecutionRepository = taskExecutionRepository
     }
 
-    async preThought(task: Task): Promise<any> {
+    async preThought({task, sourceCode}: {task: Task, sourceCode: FileArtifacts}): Promise<any> {
         this.task = task
+        this.sourceCode = sourceCode
         this.task.startedWork("Graphic Designer", "Graphic Designer is generating the new styles and layout...")
-        this.project = await this.projectRepository.get(task.projectId)
     }
 
     loadContext(): string {
@@ -117,10 +110,10 @@ export class GraphicDesigner extends OpenAIContributor {
             ${JSON.stringify(this.task)}
 
             ### **Current index.css:** 
-            ${this.project.artifact?.["src/index.css"] ?? "(empty)"}
+            ${this.sourceCode?.["src/index.css"] ?? "(empty)"}
 
             ### **Current tailwind.config.js:**
-            ${this.project.artifact?.["tailwind.config.js"] ?? "(empty)"}
+            ${this.sourceCode?.["tailwind.config.js"] ?? "(empty)"}
 
         `
     }
@@ -130,18 +123,17 @@ export class GraphicDesigner extends OpenAIContributor {
 
         this.task.finishedWork("Graphic Designer", "Graphic Designer has finished the design generation...")
 
-        this.project.artifact = {
-            ...this.project.artifact,
+        this.sourceCode = {
+            ...this.sourceCode,
             "src/index.css": indexCss,
             "tailwind.config.js": tailwindConfig
         }
-        await this.projectRepository.save(this.project)
 
         this.task.leaveComment("Graphic Designer", comment)
 
 
         console.log("Passing task to React Developer")
-        return await this.delegateTo("React Developer", this.task)
+        return await this.delegateTo("React Developer", {task: this.task, sourceCode: this.sourceCode})
     }
 
 }

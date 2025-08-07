@@ -29,12 +29,21 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 		}
 
 		const taskExecution = TaskExecution.create(task, accountId)
+		const project = await this.projectRepository.get(task.projectId)
+		if (!project.latestDevDeployment) {
+			throw new Error("Project has no dev deployment")
+		}
+		let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
 
         try {
-            const sourceCode = await this.frontendTeam.startWorking(task)
+            const changes = await this.frontendTeam.startWorking(task)
 			const buildArtifact = await this.devEnvironment.build(sourceCode)
 
-			const url = await this.webHostingService.deployPrebuiltCode(buildArtifact)
+			sourceCode = {
+				...sourceCode,
+				...changes
+			}
+			const url = await this.webHostingService.deployPrebuiltCode(task.projectId, buildArtifact)
 	
 			const commit: Commit = { buildArtifact, sourceCode }
 			const project = await this.projectRepository.get(task.projectId)

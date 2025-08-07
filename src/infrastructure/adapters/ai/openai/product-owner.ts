@@ -41,7 +41,7 @@ export class ProductOwner extends OpenAIContributor {
 
         ---
 
-        ## ✅ Objective
+        ## Objective
 
         ### 1. Create an Actionable Task List of Product Features
         - Each task represents a **single atomic user-facing functionality**.
@@ -62,15 +62,15 @@ export class ProductOwner extends OpenAIContributor {
 
         ---
 
-        ## 🛑 Prohibited Types of Output:
-        - ❌ Project planning steps (e.g., “Define User Personas”)
-        - ❌ Technical implementation tasks (e.g., “Build Database Schema”)
-        - ❌ Development process steps (e.g., “Conduct Usability Testing”)
-        - ❌ Non-user-facing work (e.g., “Optimize Performance”)
-        - ❌ Security related features (e.g., Secure User Data)
+        ## Prohibited Types of Output:
+        - Project planning steps (e.g., “Define User Personas”)
+        - Technical implementation tasks (e.g., “Build Database Schema”)
+        - Development process steps (e.g., “Conduct Usability Testing”)
+        - Non-user-facing work (e.g., “Optimize Performance”)
+        - Security related features (e.g., Secure User Data)
         ---
 
-        ## ✅ Excellent Example Output for: “I want to create a note taking app”
+        ## Excellent Example Output for: “I want to create a note taking app”
 
         | Title                          | Description                                                               |
         |--------------------------------|---------------------------------------------------------------------------|
@@ -84,7 +84,7 @@ export class ProductOwner extends OpenAIContributor {
 
         ---
 
-        ## ❌ Bad Example Output for: “I want to create a note taking app”
+        ## Bad Example Output for: “I want to create a note taking app”
 
         | Title                                        | Description                                                                                          |
         |----------------------------------------------|------------------------------------------------------------------------------------------------------|
@@ -106,7 +106,7 @@ export class ProductOwner extends OpenAIContributor {
 
         ---
 
-        ## ✅ Additional Guidelines:
+        ## Additional Guidelines:
         - Limit the list **6 to 7 features maximum per request.**
         - Think like a **Product Owner designing MVP features** users will love.
         - Use **clear, non-technical language.**
@@ -127,8 +127,7 @@ export class ProductOwner extends OpenAIContributor {
         const taskPromises = []
         const createdTasks = []
         for (const task of tasks) {
-            //console.log(task.priority)
-            //TODO: Add priority to the task
+            // TODO: Add priority to the task
             const t = Task.create('Product Owner', this.task.projectId, task.title, task.description)
             const taskPromise = this.taskRepository.save(t)
             taskPromises.push(taskPromise)
