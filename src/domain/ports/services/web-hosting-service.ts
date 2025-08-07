@@ -1,5 +1,5 @@
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export interface WebHostingService {
-    deployPrebuiltCode(buildArtifact: FileArtifacts): Promise<string>
+    deployPrebuiltCode(projectId: string, buildArtifact: FileArtifacts): Promise<string>
 }

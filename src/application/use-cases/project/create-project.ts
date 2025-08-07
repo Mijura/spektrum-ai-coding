@@ -30,7 +30,7 @@ export class CreateProjectUseCase implements CreateProject {
 
 			const version: Version = await this.versionControlSystem.commitVersion(project.id, commit)
 			// deploy files
-			const url: string = await this.webHostingService.deployPrebuiltCode(buildArtifact)
+			const url: string = await this.webHostingService.deployPrebuiltCode(project.id, buildArtifact)
 
 			console.log('Template deployed successfully!')
 

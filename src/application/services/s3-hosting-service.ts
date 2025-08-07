@@ -8,17 +8,18 @@ export class S3HostingService implements WebHostingService {
         private readonly fileStorage: FileStorage
     ) {}
 
-    async deployPrebuiltCode(buildArtifact: FileArtifacts): Promise<string> {
-        
+    async deployPrebuiltCode(projectId: string, buildArtifact: FileArtifacts): Promise<string> {
+        const domain = process.env.WEB_HOSTING_DOMAIN
         // TODO: Write the files to the file system
 
         for (const [fileName, content] of Object.entries(buildArtifact)) {
             const stream = Readable.from([content])
-            await this.fileStorage.upload(fileName, stream)
+            const key = `${projectId}/${fileName}`
+            await this.fileStorage.upload(key, stream)
         }
                 
                 
-        return "https://jigjoy.io"
+        return `https://${projectId}.${domain}`      
     }
 
 }

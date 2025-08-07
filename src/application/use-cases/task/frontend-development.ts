@@ -43,7 +43,7 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 				...sourceCode,
 				...changes
 			}
-			const url = await this.webHostingService.deployPrebuiltCode(buildArtifact)
+			const url = await this.webHostingService.deployPrebuiltCode(task.projectId, buildArtifact)
 	
 			const commit: Commit = { buildArtifact, sourceCode }
 			const project = await this.projectRepository.get(task.projectId)
