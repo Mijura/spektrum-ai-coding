@@ -42,15 +42,21 @@ export class S3VersionControlSystem implements VersionControlSystem {
 	}
 
 	private async push(archivePath: string, fileArtifacts: FileArtifacts): Promise<void> {
+		const bucket = process.env.VERSION_CONTROL_BUCKET
+		if (!bucket) throw new Error('Missing VERSION_CONTROL_BUCKET env variable')
+
 		const archive = await this.compressorService.compress(fileArtifacts)
 		const stream = Readable.from(archive)
 
-		await this.fileStorage.upload(archivePath, stream)
+		await this.fileStorage.upload(bucket, archivePath, stream)
 	}
 
 
 	private async pull(archiveUrl: string): Promise<FileArtifacts> {
-		const buffer = await this.fileStorage.download(archiveUrl)
+		const bucket = process.env.VERSION_CONTROL_BUCKET
+		if (!bucket) throw new Error('Missing VERSION_CONTROL_BUCKET env variable')
+
+		const buffer = await this.fileStorage.download(bucket, archiveUrl)
 		return this.compressorService.decompress(buffer)
 	}
 
