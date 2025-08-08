@@ -5,6 +5,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { ProjectRecord } from "@infrastructure/records/project"
+import { TaskRecord } from "@infrastructure/records/task"
 
 const client = new DynamoDBClient({
 	region: process.env.AWS_REGION,
@@ -49,23 +50,6 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 		return ProjectMapper.toDomain(projectRecord)
 	}
 
-	async queryAllPages(queryParams: any, ddbDocClient: any): Promise<any[]> {
-		let allItems: any[] = []
-		let lastEvaluatedKey
-
-		do {
-			const result: any = await ddbDocClient.send(new QueryCommand({
-			...queryParams,
-			ExclusiveStartKey: lastEvaluatedKey,
-			}))
-
-			allItems = allItems.concat(result.Items || [])
-			lastEvaluatedKey = result.LastEvaluatedKey
-		} while (lastEvaluatedKey)
-
-		return allItems
-	}
-
 	async getAll(ownerId: string): Promise<Project[]> {
 
 		const tableName = process.env.PROJECT_TABLE
@@ -79,9 +63,10 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 			TableName: tableName,
 		}
 	  
-		const items = await this.queryAllPages(params, ddbDocClient)
+		const result = await ddbDocClient.send(new QueryCommand(params))
+		const projects: ProjectRecord[] = result.Items as ProjectRecord[]
 	
-		return ProjectMapper.toDomains(items)
+		return ProjectMapper.toDomains(projects)
 	}
 
 
@@ -102,11 +87,12 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 		  TableName: tableName,
 		}
 	  
-		const items = await this.queryAllPages(params, ddbDocClient)
+		const result = await ddbDocClient.send(new QueryCommand(params))
+		const projects: ProjectRecord[] = result.Items as ProjectRecord[]
 
-		console.log(`Found ${items.length} projects with status ${status} for owner ${ownerId}.`)
+		console.log(`Found ${projects.length} projects with status ${status} for owner ${ownerId}.`)
 	  
-		return ProjectMapper.toDomains(items)
+		return ProjectMapper.toDomains(projects)
 	  }
 	  
 }
