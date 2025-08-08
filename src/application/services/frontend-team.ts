@@ -1,7 +1,6 @@
-import { Task } from "@domain/entities/task"
 import { Contributor } from "@domain/ports/ai/contributor"
 import { Team } from "@domain/ports/ai/team"
-import { ChangeRequest } from "@domain/value-objects/change-request"
+import { WorkUnit } from "@domain/value-objects/work-unit"
 
 export class FrontendTeam implements Team {
 
@@ -31,7 +30,7 @@ export class FrontendTeam implements Team {
 		return contributor
     }
 
-	async startWorking(changeRequest: ChangeRequest) {
+	async startWorking(changeRequest: WorkUnit) {
 		if (!this.entryPoint) {
 			throw new Error("Entry point is not set.")
 		}

@@ -1,7 +1,7 @@
 import { ActivityType, CommentLeftMetadata } from "@domain/value-objects/activity"
 import { OpenAIContributor, Brain } from "./contributor"
 import z from "zod"
-import { ChangeRequest } from "@domain/value-objects/change-request"
+import { WorkUnit } from "@domain/value-objects/work-unit"
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export class ScrumMaster extends OpenAIContributor {
@@ -14,9 +14,9 @@ export class ScrumMaster extends OpenAIContributor {
         label: z.enum(["Feature", "Bug", "Improvement"]).describe("The label of the input")
     })
 
-    changeRequest!: ChangeRequest
+    changeRequest!: WorkUnit
 
-    async preThought(changeRequest: ChangeRequest): Promise<void> {
+    async preThought(changeRequest: WorkUnit): Promise<void> {
         this.changeRequest = changeRequest
     }
 

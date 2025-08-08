@@ -1,7 +1,6 @@
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import z from "zod"
 import { OpenAIContributor, Brain } from "./contributor"
-import { ChangeRequest } from "@domain/value-objects/change-request"
+import { WorkUnit } from "@domain/value-objects/work-unit"
 
 export class ReactDeveloper extends OpenAIContributor {
     
@@ -17,10 +16,10 @@ export class ReactDeveloper extends OpenAIContributor {
         comment: z.string().describe("The comment to be added to the task. It's a short summary of the changes you made from the user's perspective")
     })
 
-    changeRequest!: ChangeRequest
+    changeRequest!: WorkUnit
 
 
-    async preThought(changeRequest: ChangeRequest): Promise<any> {
+    async preThought(changeRequest: WorkUnit): Promise<any> {
         this.changeRequest = changeRequest
         this.changeRequest.task.startedWork("React Developer", "React Developer is generating the code...")
     }
@@ -51,7 +50,7 @@ export class ReactDeveloper extends OpenAIContributor {
         `
     }
     
-    async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<FileArtifacts> {
+    async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<WorkUnit> {
         console.log("Writing code")
 
         const { sourceCode, comment } = tought
@@ -59,7 +58,9 @@ export class ReactDeveloper extends OpenAIContributor {
         this.changeRequest.task.finishedWork("React Developer", "Finished with coding")
         this.changeRequest.task.leaveComment("React Developer", comment)
 
-        return { ...this.changeRequest.sourceCode, ...sourceCode }
+        this.changeRequest.sourceCode = { ...this.changeRequest.sourceCode, ...sourceCode }
+
+        return this.changeRequest
 
     }
 

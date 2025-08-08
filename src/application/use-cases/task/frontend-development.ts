@@ -8,8 +8,7 @@ import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { Commit } from "@domain/value-objects/commit"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
-import { ChangeRequest } from "@domain/value-objects/change-request"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
+import { WorkUnit } from "@domain/value-objects/work-unit"
 
 export class FrontendDevelopmentUseCase implements RunTaskExecution {
 
@@ -38,18 +37,20 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 		let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
 
         try {
-			const changeRequest: ChangeRequest = {task, sourceCode}
-            const updatedSourceCode: FileArtifacts = await this.frontendTeam.startWorking(changeRequest)
+			const changeRequest: WorkUnit = { task, sourceCode }
+            const work: WorkUnit = await this.frontendTeam.startWorking(changeRequest)
 
-			const buildArtifact = await this.devEnvironment.build(updatedSourceCode)
+			const buildArtifact = await this.devEnvironment.build(work.sourceCode)
 			const url = await this.webHostingService.deployPrebuiltCode(task.projectId, buildArtifact)
 	
-			const commit: Commit = { buildArtifact, sourceCode: updatedSourceCode }
+			const commit: Commit = { buildArtifact, sourceCode: work.sourceCode }
 			const project = await this.projectRepository.get(task.projectId)
 			const version = await this.versionControlSystem.commitVersion(project.id, commit)
 			project.setLatestDevDeployment({url , version})
 
-            taskExecution.finishSuccessfully(updatedSourceCode)
+			this.taskRepository.save(work.task)
+
+            taskExecution.finishSuccessfully(work.sourceCode)
         } catch (error: any) {
             console.error(error)
             taskExecution.finishWithError(error as string, null)

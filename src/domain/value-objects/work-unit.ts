@@ -1,7 +1,7 @@
 import { Task } from "@domain/entities/task"
 import { FileArtifacts } from "./file-artifacts"
 
-export interface ChangeRequest {
+export interface WorkUnit {
     task: Task
     sourceCode: FileArtifacts
 }
