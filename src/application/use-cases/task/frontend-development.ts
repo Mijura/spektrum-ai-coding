@@ -8,6 +8,7 @@ import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { Commit } from "@domain/value-objects/commit"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
+import { ChangeRequest } from "@domain/value-objects/change-request"
 
 export class FrontendDevelopmentUseCase implements RunTaskExecution {
 
@@ -36,13 +37,16 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 		let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
 
         try {
-            const changes = await this.frontendTeam.startWorking(task)
-			const buildArtifact = await this.devEnvironment.build(sourceCode)
+			const changeRequest: ChangeRequest = {task, sourceCode}
+            const changes = await this.frontendTeam.startWorking(changeRequest)
 
+			console.log("Changes:", changes)
 			sourceCode = {
 				...sourceCode,
 				...changes
 			}
+
+			const buildArtifact = await this.devEnvironment.build(sourceCode)
 			const url = await this.webHostingService.deployPrebuiltCode(task.projectId, buildArtifact)
 	
 			const commit: Commit = { buildArtifact, sourceCode }

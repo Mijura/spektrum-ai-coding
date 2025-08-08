@@ -4,6 +4,7 @@ import { TaskExecutionRepository } from "@domain/ports/repositories/task-executi
 import z from "zod"
 import { OpenAIContributor, Brain } from "./contributor"
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
+import { ChangeRequest } from "@domain/value-objects/change-request"
 
 export class GraphicDesigner extends OpenAIContributor {
 
@@ -27,7 +28,7 @@ export class GraphicDesigner extends OpenAIContributor {
         this.taskExecutionRepository = taskExecutionRepository
     }
 
-    async preThought({task, sourceCode}: {task: Task, sourceCode: FileArtifacts}): Promise<any> {
+    async preThought({task, sourceCode}: ChangeRequest): Promise<any> {
         this.task = task
         this.sourceCode = sourceCode
         this.task.startedWork("Graphic Designer", "Graphic Designer is generating the new styles and layout...")

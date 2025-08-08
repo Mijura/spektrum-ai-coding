@@ -20,7 +20,7 @@ export class S3VersionControlSystem implements VersionControlSystem {
 
 		const versionTag = uuidv4()
 		const sourceCodePath = `${projectId}/sourceCode/${versionTag}.tar.gz`
-		const buildArtifactPath = `${projectId}/sourceCode/${versionTag}.tar.gz`
+		const buildArtifactPath = `${projectId}/buildArtifact/${versionTag}.tar.gz`
 
 		const { buildArtifact, sourceCode } = commit
 		await this.push(buildArtifactPath, buildArtifact)
@@ -28,7 +28,7 @@ export class S3VersionControlSystem implements VersionControlSystem {
 
 		// Save the version
 		const version = Version.create(projectId, buildArtifactPath, sourceCodePath)
-		await this.versionRepository.save(version)
+		//await this.versionRepository.save(version)
 		return version
 	}
 

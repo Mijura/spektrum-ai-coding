@@ -12,7 +12,9 @@ export class S3HostingService implements WebHostingService {
         const domain = process.env.WEB_HOSTING_DOMAIN
         const bucket = process.env.WEB_HOSTING_BUCKET
 
-        if (!domain || !bucket) throw new Error('Missing WEB_HOSTING_DOMAIN or WEB_HOSTING_BUCKET env variable')
+        if (!domain) throw new Error('Missing WEB_HOSTING_DOMAIN env variable')
+            
+        if (!bucket) throw new Error('Missing WEB_HOSTING_BUCKET env variable')
 
         for (const [fileName, content] of Object.entries(buildArtifact)) {
             const stream = Readable.from([content])

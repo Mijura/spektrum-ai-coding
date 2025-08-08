@@ -1,5 +1,5 @@
-import { Task } from "@domain/entities/task"
 import { Contributor } from "./contributor"
+import { ChangeRequest } from "@domain/value-objects/change-request"
 
 export interface Team {
 
@@ -7,5 +7,5 @@ export interface Team {
 
     addContributor(contributor: Contributor): void
     getContributor(name: string): Contributor
-    startWorking(task: Task): Promise<any>
+    startWorking(changeRequest: ChangeRequest): Promise<any>
 }

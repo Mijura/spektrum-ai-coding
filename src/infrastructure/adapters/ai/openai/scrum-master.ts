@@ -1,7 +1,8 @@
-import { Task } from "@domain/entities/task"
 import { ActivityType, CommentLeftMetadata } from "@domain/value-objects/activity"
 import { OpenAIContributor, Brain } from "./contributor"
 import z from "zod"
+import { ChangeRequest } from "@domain/value-objects/change-request"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export class ScrumMaster extends OpenAIContributor {
 
@@ -13,21 +14,21 @@ export class ScrumMaster extends OpenAIContributor {
         label: z.enum(["Feature", "Bug", "Improvement"]).describe("The label of the input")
     })
 
-    task!: Task
+    changeRequest!: ChangeRequest
 
-    async preThought(task: Task): Promise<void> {
-        this.task = task
+    async preThought(changeRequest: ChangeRequest): Promise<void> {
+        this.changeRequest = changeRequest
     }
 
     loadContext(): string {
 
         let input = ''
-        const lastActivity  = this.task.getActivityLog().at(-1)
+        const lastActivity  = this.changeRequest.task.getActivityLog().at(-1)
         if (lastActivity?.type === ActivityType.COMMENT_LEFT) {
             const comment = lastActivity.metadata as CommentLeftMetadata
             return comment.commentText
         }else{
-            input = JSON.stringify(this.task)
+            input = JSON.stringify(this.changeRequest.task)
         }
 
         return `
@@ -57,20 +58,22 @@ export class ScrumMaster extends OpenAIContributor {
         `
     }
 
-    async afterThought(thought: z.infer<typeof this.thoughtShape>): Promise<void> {
+    async afterThought(thought: z.infer<typeof this.thoughtShape>): Promise<FileArtifacts | null> {
         const { label } = thought
         
         console.log("Scrum Master", "Task Label", label)
+        let result: FileArtifacts | null = null
         switch (label) {
             case "Feature":
-                await this.delegateTo("Graphic Designer", this.task)
+                result = await this.delegateTo("Graphic Designer", this.changeRequest)
                 break
             case "Bug":
-                await this.delegateTo("React Developer", this.task)
+                result = await this.delegateTo("React Developer", this.changeRequest)
                 break
             case "Improvement":
-                await this.delegateTo("React Developer", this.task)
+                result = await this.delegateTo("React Developer", this.changeRequest)
                 break
         }
+        return result
     }
 }

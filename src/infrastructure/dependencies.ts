@@ -125,11 +125,11 @@ export const frontendTeam: Team = new FrontendTeam(graphicDesigner, reactDevelop
 export const marketingService: MarketingService = new DefaultMarketingService(marketeer, projectRepository)
 
 // Use Cases
-export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, rspackTemplate, hostingService, inMemoryVersionControlSystem)
+export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, rspackTemplate, hostingService, versionControlSystem)
 export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
-export const deployProject: DeployProject = new DeployProjectUseCase(projectRepository, inMemoryVersionControlSystem, hostingService)
+export const deployProject: DeployProject = new DeployProjectUseCase(projectRepository, versionControlSystem, hostingService)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
 export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, marketingService)
 export const fetchTasks: FetchTasks = new FetchTasksUseCase(taskRepository)
@@ -140,4 +140,4 @@ export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository
 export const fetchTimelineByProjectId: FetchTaskExecutionsTimeline = new FetchTimelineByProjectIdUseCase(taskExecutionRepository)
 export const fetchTimelineByAccountId:  FetchTaskExecutionsTimeline = new FetchTimelineByAccountIdUseCase(taskExecutionRepository)
 export const fetchTaskExecutionsHeatmap: FetchTaskExecutionsHeatmap = new FetchTaskExecutionsHeatmapUseCase(taskExecutionRepository)
-export const taskRunner: RunTaskExecution = new FrontendDevelopmentUseCase(taskRepository, taskExecutionRepository, frontendTeam, localDevEnvironment, hostingService, inMemoryVersionControlSystem, projectRepository)
+export const taskRunner: RunTaskExecution = new FrontendDevelopmentUseCase(taskRepository, taskExecutionRepository, frontendTeam, localDevEnvironment, hostingService, versionControlSystem, projectRepository)
