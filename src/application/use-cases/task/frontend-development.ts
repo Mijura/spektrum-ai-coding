@@ -9,6 +9,7 @@ import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { Commit } from "@domain/value-objects/commit"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { ChangeRequest } from "@domain/value-objects/change-request"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export class FrontendDevelopmentUseCase implements RunTaskExecution {
 
@@ -38,23 +39,17 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 
         try {
 			const changeRequest: ChangeRequest = {task, sourceCode}
-            const changes = await this.frontendTeam.startWorking(changeRequest)
+            const updatedSourceCode: FileArtifacts = await this.frontendTeam.startWorking(changeRequest)
 
-			console.log("Changes:", changes)
-			sourceCode = {
-				...sourceCode,
-				...changes
-			}
-
-			const buildArtifact = await this.devEnvironment.build(sourceCode)
+			const buildArtifact = await this.devEnvironment.build(updatedSourceCode)
 			const url = await this.webHostingService.deployPrebuiltCode(task.projectId, buildArtifact)
 	
-			const commit: Commit = { buildArtifact, sourceCode }
+			const commit: Commit = { buildArtifact, sourceCode: updatedSourceCode }
 			const project = await this.projectRepository.get(task.projectId)
 			const version = await this.versionControlSystem.commitVersion(project.id, commit)
 			project.setLatestDevDeployment({url , version})
 
-            taskExecution.finishSuccessfully(sourceCode)
+            taskExecution.finishSuccessfully(updatedSourceCode)
         } catch (error: any) {
             console.error(error)
             taskExecution.finishWithError(error as string, null)

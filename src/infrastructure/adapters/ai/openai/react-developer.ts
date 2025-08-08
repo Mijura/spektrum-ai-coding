@@ -59,9 +59,7 @@ export class ReactDeveloper extends OpenAIContributor {
         this.changeRequest.task.finishedWork("React Developer", "Finished with coding")
         this.changeRequest.task.leaveComment("React Developer", comment)
 
-        console.log("Writing code", sourceCode)
-
-        return sourceCode
+        return { ...this.changeRequest.sourceCode, ...sourceCode }
 
     }
 

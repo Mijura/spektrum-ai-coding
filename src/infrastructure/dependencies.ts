@@ -126,7 +126,7 @@ export const marketingService: MarketingService = new DefaultMarketingService(ma
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, rspackTemplate, hostingService, versionControlSystem)
-export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService)
+export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService, projectRepository)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(projectRepository, versionControlSystem, hostingService)
