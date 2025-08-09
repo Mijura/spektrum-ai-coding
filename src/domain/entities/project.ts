@@ -73,11 +73,18 @@ export class Project {
 	}
 
 	setLatestDevDeployment(deployment: Deployment) {
-		if(deployment.url === "") {
+		
+		const url = deployment.url
+		const version = deployment.version
+		if(url === "") {
 			throw new Error("URL cannot be empty")
 		}
-		if(!deployment.version) {
+		if(!version) {
 			throw new Error("Version cannot be empty")
+		}
+
+		if(this.latestDevDeployment && this.latestDevDeployment.url !== url) {
+			throw new Error("URL cannot be changed after it has been set")
 		}
 
 		this.latestDevDeployment = deployment
@@ -85,11 +92,18 @@ export class Project {
 	}
 
 	setLatestProdDeployment(deployment: Deployment) {
-		if(deployment.url === "") {
+
+		const url = deployment.url
+		const version = deployment.version
+		if(url === "") {
 			throw new Error("URL cannot be empty")
 		}
-		if(!deployment.version) {
+		if(!version) {
 			throw new Error("Version cannot be empty")
+		}
+
+		if(this.latestProdDeployment && this.latestProdDeployment.url !== url) {
+			throw new Error("URL cannot be changed after it has been set")
 		}
 
 		this.latestProdDeployment = deployment

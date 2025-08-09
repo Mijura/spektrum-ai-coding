@@ -21,7 +21,6 @@ export class Task {
     public projectId: string
     public status: TaskStatus
 	private activities: Activity<ActivityMetadata>[]
-	private assignedTo?: string
 
     private constructor(
 		id: string,
@@ -69,35 +68,23 @@ export class Task {
 
 	@EmitTaskUpdate()
 	startedWork(workerId: string, message: string): StartedWork {
-		// if (this.status === TaskStatus.WORK_IN_PROGRESS) {
-		// 	throw new Error("Worker is already working on a task")
-		// }
 
 		const activity = StartedWork.create(workerId, this, message)
 		
 		this.activities.push(activity)
-		this.assignedTo = workerId
 		this.status = TaskStatus.WORK_IN_PROGRESS
 		return activity as StartedWork
 	}
 
 	@EmitTaskUpdate()
 	finishedWork(workerId: string, message: string): FinishedWork {
-		// if (!this.assignedTo) {
-		// 	throw new Error("Worker has not started working on this task")
-		// }
-
-		// if (this.assignedTo !== workerId) {
-		// 	throw new Error("Worker is not working on this task")
-		// }
 
 		const activity = FinishedWork.create(workerId, this, message)
 		const startedWorkActivity = this.activities.findIndex(activity => activity instanceof StartedWork)
 		if (startedWorkActivity) {
 			this.activities.splice(startedWorkActivity, 1, activity)
 		}
-		this.assignedTo = undefined
-		// /this.status = TaskStatus.DONE
+
 		return activity as FinishedWork
 	}
 

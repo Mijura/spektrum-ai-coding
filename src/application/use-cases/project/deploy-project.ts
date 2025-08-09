@@ -26,6 +26,8 @@ export class DeployProjectUseCase implements DeployProject {
 			const buildArtifact = await this.versionControlSystem.pullBuildArtifact(latestVersion)
 			const sourceCode = await this.versionControlSystem.pullSourceCode(latestVersion)
 	
+
+			console.log(JSON.stringify(latestVersion))
 	
 			const url = await this.webHostingService.deployPrebuiltCode(projectId, buildArtifact)
 	
@@ -33,6 +35,7 @@ export class DeployProjectUseCase implements DeployProject {
 			const version = await this.versionControlSystem.commitVersion(projectId, commit)
 			project.setLatestProdDeployment({url , version})
 			
+			await this.projectRepository.save(project)
 			return project
 		} catch (error) {
 	

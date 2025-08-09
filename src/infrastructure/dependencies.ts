@@ -16,8 +16,8 @@ import { ArchiveProjectUseCase } from "@application/use-cases/project/archive-pr
 import { TaskController } from "@infrastructure/http/controllers/task-controller"
 import { ProjectController } from "@infrastructure/http/controllers/project-controller"
 
-import { DynamoDBProjectRepository } from "@infrastructure/repositories/project-repository"
-import { DynamoDBTaskRepository } from "@infrastructure/repositories/task-repository"
+import { DynamoDBProjectRepository } from "@infrastructure/adapters/repositories/project-repository"
+import { DynamoDBTaskRepository } from "@infrastructure/adapters/repositories/task-repository"
 
 
 import { PackageManager } from "@infrastructure/ports/package-manager"
@@ -41,7 +41,7 @@ import { FetchTaskExecutionsHeatmapUseCase } from "@application/use-cases/task-e
 import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/task-execution/fetch-project-timeline"
 import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/task-execution/fetch-account-timeline"
 
-import { MockTaskExecutionRepository } from "@infrastructure/repositories/mock-task-execution-repository"
+import { MockTaskExecutionRepository } from "@infrastructure/adapters/repositories/mock-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { MarketingService } from "@domain/ports/services/marketing-service"
 import { Contributor } from "@domain/ports/ai/contributor"
@@ -55,7 +55,7 @@ import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { CompressorService } from "@domain/ports/compressor-service"
 import { Bundler } from "@domain/ports/bundlers/bundler"
 import RspackBundler from "@infrastructure/adapters/bundlers/rspack-bundler"
-import { DynamoDBVersionRepository } from "@infrastructure/repositories/version-repository"
+import { DynamoDBVersionRepository } from "@infrastructure/adapters/repositories/version-repository"
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
 import { SourceCodeFilter } from "@infrastructure/adapters/filesystem/filters/source-code-filter"
 import { DistFolderFilter } from "@infrastructure/adapters/filesystem/filters/dist-folder-filter"

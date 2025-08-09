@@ -30,7 +30,7 @@ export class FrontendTeam implements Team {
 		return contributor
     }
 
-	async startWorking(changeRequest: WorkUnit) {
+	async implement(changeRequest: WorkUnit) {
 		if (!this.entryPoint) {
 			throw new Error("Entry point is not set.")
 		}

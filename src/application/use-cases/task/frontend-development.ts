@@ -9,6 +9,9 @@ import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { Commit } from "@domain/value-objects/commit"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { WorkUnit } from "@domain/value-objects/work-unit"
+import { eventBus } from "@domain/events/event-bus"
+import { Task } from "@domain/entities/task"
+import { Deployment } from "@domain/entities/project"
 
 export class FrontendDevelopmentUseCase implements RunTaskExecution {
 
@@ -20,6 +23,7 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 		private readonly webHostingService: WebHostingService,
 		private readonly versionControlSystem: VersionControlSystem,
 		private readonly projectRepository: ProjectRepository
+
 	) {}
 
 	async execute(taskId: string, accountId: string): Promise<void> {
@@ -36,9 +40,14 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 		}
 		let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
 
+		eventBus.on("task:update", async (task: Task) => {
+			console.log(`Saving task update ${task.projectId}`)
+			await this.taskRepository.save(task)
+		})
+
         try {
 			const changeRequest: WorkUnit = { task, sourceCode }
-            const work: WorkUnit = await this.frontendTeam.startWorking(changeRequest)
+            const work: WorkUnit = await this.frontendTeam.implement(changeRequest)
 
 			const buildArtifact = await this.devEnvironment.build(work.sourceCode)
 			const url = await this.webHostingService.deployPrebuiltCode(task.projectId, buildArtifact)
@@ -46,16 +55,20 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 			const commit: Commit = { buildArtifact, sourceCode: work.sourceCode }
 			const project = await this.projectRepository.get(task.projectId)
 			const version = await this.versionControlSystem.commitVersion(project.id, commit)
-			project.setLatestDevDeployment({url , version})
 
-			this.taskRepository.save(work.task)
+			const deployment : Deployment = { url, version }
+			project.setLatestDevDeployment(deployment)
 
             taskExecution.finishSuccessfully(work.sourceCode)
+			
+			this.taskRepository.save(work.task)
+			
         } catch (error: any) {
             console.error(error)
             taskExecution.finishWithError(error as string, null)
             throw error
         } finally {
+			this.projectRepository.save(project)
             await this.taskExecutionRepository.save(taskExecution)
         }
 		

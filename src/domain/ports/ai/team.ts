@@ -7,5 +7,5 @@ export interface Team {
 
     addContributor(contributor: Contributor): void
     getContributor(name: string): Contributor
-    startWorking(changeRequest: WorkUnit): Promise<any>
+    implement(changeRequest: WorkUnit): Promise<any>
 }
