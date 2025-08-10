@@ -6,7 +6,7 @@ export class ReactDeveloper extends OpenAIContributor {
     
     name: string = "React Developer"
 
-    brain = Brain.GPT_41
+    brain = Brain.GPT_5
     
     thoughtShape = z.object({
         sourceCode: z

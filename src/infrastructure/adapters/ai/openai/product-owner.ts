@@ -7,7 +7,7 @@ export class ProductOwner extends OpenAIContributor {
 
     name: string = "Product Owner"
 
-    brain = Brain.GPT_41_NANO
+    brain = Brain.GPT_5_NANO
 
     thoughtShape = z.object({
         tasks: z.array(

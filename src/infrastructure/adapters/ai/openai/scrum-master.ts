@@ -8,7 +8,7 @@ export class ScrumMaster extends OpenAIContributor {
 
     name: string = "Scrum Master"
 
-    brain = Brain.GPT_41_NANO
+    brain = Brain.GPT_5_NANO
 
     thoughtShape = z.object({
         label: z.enum(["Feature", "Bug", "Improvement"]).describe("The label of the input")

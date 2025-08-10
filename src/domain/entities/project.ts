@@ -19,6 +19,8 @@ export class Project {
 	public description: string
 	public status: ProjectStatus
 	public detailsUpdated: boolean
+	public devEnvironmentId: string
+	public prodEnvironmentId: string 
 	public latestDevDeployment: Deployment | null
 	public latestProdDeployment: Deployment | null
 
@@ -31,6 +33,8 @@ export class Project {
 		updated: string | null,
 		status: ProjectStatus,
 		detailsUpdated: boolean,
+		devEnvironmentId: string,
+		prodEnvironmentId: string,
 		latestDevDeployment: Deployment | null,
 		latestProdDeployment: Deployment | null
 	) {
@@ -42,6 +46,8 @@ export class Project {
 		this.updated = updated
 		this.status = status
 		this.detailsUpdated = detailsUpdated
+		this.devEnvironmentId = devEnvironmentId
+		this.prodEnvironmentId = prodEnvironmentId
 		this.latestDevDeployment = latestDevDeployment
 		this.latestProdDeployment = latestProdDeployment
 	}
@@ -119,8 +125,10 @@ export class Project {
 		}
 
 		const id = uuidv4() // Generate unique ID
+		const devEnvironmentId = uuidv4()
+		const prodEnvironmentId = uuidv4()
 		const created = new Date().toISOString() // ISO format
-		return new Project(id, owner, name, description, created, null, ProjectStatus.ACTIVE, false, null, null)
+		return new Project(id, owner, name, description, created, null, ProjectStatus.ACTIVE, false, devEnvironmentId, prodEnvironmentId, null, null)
 	}
 
 	archive() {
@@ -137,9 +145,11 @@ export class Project {
 		updated: string | null
 		status: ProjectStatus
 		detailsUpdated: boolean	
+		devEnvironmentId: string
+		prodEnvironmentId: string
 		latestDevDeployment: Deployment | null
 		latestProdDeployment: Deployment | null
 	}): Project {
-		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated, data.latestDevDeployment, data.latestProdDeployment)
+		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated, data.devEnvironmentId, data.prodEnvironmentId, data.latestDevDeployment, data.latestProdDeployment)
 	}
 }

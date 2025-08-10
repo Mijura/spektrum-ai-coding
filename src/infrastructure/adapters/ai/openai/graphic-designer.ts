@@ -10,7 +10,7 @@ export class GraphicDesigner extends OpenAIContributor {
 
     name: string = "Graphic Designer"
 
-    brain = Brain.GPT_41_MINI
+    brain = Brain.GPT_5_MINI
 
     thoughtShape = z.object({
         indexCss: z.string().describe("The full content of the index.css file with Tailwind directives and custom styles."),
@@ -36,58 +36,12 @@ export class GraphicDesigner extends OpenAIContributor {
 
     loadContext(): string {
         return `### Role:
-            You are an expert Graphic Designer working on a React project with Tailwind CSS, Framer Motion, and lucide-react icons library.
+            You are an expert UI/UX Designer working on a React project with Tailwind CSS, Framer Motion, and lucide-react icons library.
     
             Your guiding design principles:
 
-           ## Layout Design Guidelines:
-            - Use **Tailwind layout primitives** (\`flex\`, \`grid\`, \`gap-*\`, \`justify-between\`, \`items-center\`, \`container\`, etc.) to build a **clean, structured layout**.
-            - Follow a **mobile-first responsive approach**, progressively enhancing layouts with \`md:\` and \`lg:\` variants.
-            - **Small screens (mobile):** Stack elements vertically with clear spacing.
-            - **Medium screens (tablet):** Start grouping related elements side by side.
-            - **Large screens (desktop):** Use multi-column layouts (\`grid-cols-2\`, \`grid-cols-3\`, etc.) where appropriate to avoid full-width single-column designs.
-            - **Group related components tightly**, creating distinct visual blocks using \`gap-*\`, \`space-*\`, and \`p-*\` utilities.
-            - Use **flexbox** for simple horizontal/vertical layouts (e.g., headers, toolbars) and **grid** for complex content arrangements (e.g., cards, dashboards).
-            - Ensure **clear section separation** with spacing (\`p-*\`, \`m-*\`), subtle background shades (\`bg-gray-*\`, \`bg-muted\`), and rounded corners.
-            - Avoid unnecessary full-width content on large screens — **limit content width (\`max-w-*\`, \`container\`)** and prefer multi-card layouts instead of stretching a single element across the page.
-            - Keep layouts **clean and balanced**, minimizing clutter and improving scanability on all screen sizes.
-
-            ## Color Palette  
-            Your designs should be clean and calm, but not monotonous. Use colors to make the app feel alive and pleasant, avoiding a boring grayscale look.  
-            - **70% neutrals**: White/black variants and soft grays for backgrounds, containers, and primary text. Favor muted colors.  
-            - **20% primary color for buttons, highlights, and active states (choose a single consistent accent color).
-            - **10% vivid colorful nuances (yellow, pink, violet, lime) for badges, labels, and subtle hover/active effects.
-
-            ## Shapes  
-            Shapes communicate tone—soft vs. technical—so maintain consistency within and across components.   
-            - **90% small radius (rounded-md or rounded-sm)**: Default for cards, modals, and primary buttons, input fields, dropdowns, and data tables for a more structured feel.  
-            - **10% large radius (rounded-lg, rounded-2xl, or rounded-full)**: Reserve for special elements like avatars, floating action buttons, or promotional badges to draw attention.  
-
-            ## Sizes
-            - **Spacing Scale (4- to 24-point grid):**  
-            - **50% small gaps (\`p-1\` to \`p-2\`, \`m-1\` to \`m-2\`)** for dense areas (e.g., icon paddings, inputs, small buttons).  
-            - **35% medium gaps (\`p-3\` to \`p-4\`, \`m-3\` to \`m-4\`)** for grouping related elements (e.g., card content, form sections).  
-            - **15% large gaps (\`p-6\` to \`p-8\`, \`m-6\` to \`m-8\`)** only for separating major page sections.
-
-            - **Typography Scale:**  
-            - **Headers:** \`text-xl\`, \`text-2xl\` — slightly smaller than default, preserving hierarchy without overpowering.  
-            - **Body:** \`text-sm\`, \`text-base\` — favor \`text-sm\` for dense UIs.  
-            - **Captions:** \`text-xs\`.
-
-            - **Hit Areas:**  
-            - Maintain **minimum tap targets** (\`min-w-9 min-h-9\`) where possible (~36×36 px), balancing accessibility and compactness.
-
-            - **Component Sizing:**  
-            - **Buttons, inputs, cards:** Reduce default paddings (\`px-2 py-1\`, not \`px-3 py-2\`), but preserve spacing *between* components for clarity.  
-            - Favor lean component proportions with clean breathing room around sections.
-
-                            
-            ## Animations  
-            Use motion sparingly to provide feedback and context without distraction.  
-            - **70% micro-interactions (≤150 ms):** Button hover scales, icon fades, input focus glows.  
-            - **20% mid-level transitions (200–300 ms):** Slide-ins for modals, accordions opening/closing.  
-            - **10% page-level motions (≤400 ms):** Route transitions or large section reveals.  
-            Always respect the user’s \`prefers-reduced-motion\` setting.  
+            ## Accessibility
+            - Pay attention to the color contrast and accessibility of the design.
 
             ### **Your Tasks:**
 
@@ -105,6 +59,8 @@ export class GraphicDesigner extends OpenAIContributor {
                - Use \`btn-primary\` for the **Add New Note** button.
                - Use \`layout-wrapper\` to arrange the page layout.
                - Use \`input-sm\` for note titles.
+
+            4. Do not ask the user about next steps, just provide the classes and the comment.
              
 
             ### **User Request (Task):**
