@@ -1,6 +1,7 @@
 import z from "zod"
 import { OpenAIContributor, Brain } from "./contributor"
 import { WorkUnit } from "@domain/value-objects/work-unit"
+import { DevEnvironment } from "@domain/ports/services/dev-environment"
 
 export class ReactDeveloper extends OpenAIContributor {
     
@@ -17,6 +18,14 @@ export class ReactDeveloper extends OpenAIContributor {
     })
 
     changeRequest!: WorkUnit
+    localDevEnvironment: DevEnvironment
+    MAX_RETRIES = 3
+    numberOfRetries = 0
+
+    constructor(localDevEnvironment: DevEnvironment) {
+        super()
+        this.localDevEnvironment = localDevEnvironment
+    }
 
 
     async preThought(changeRequest: WorkUnit): Promise<any> {
@@ -55,10 +64,27 @@ export class ReactDeveloper extends OpenAIContributor {
 
         const { sourceCode, comment } = tought
 
-        this.changeRequest.task.finishedWork("React Developer", "Finished with coding")
+        this.numberOfRetries++
         this.changeRequest.task.leaveComment("React Developer", comment)
+        this.changeRequest.task.finishedWork("React Developer", "Finished with coding")
 
         this.changeRequest.sourceCode = { ...this.changeRequest.sourceCode, ...sourceCode }
+
+        try {
+            this.changeRequest.task.startedWork("React Developer", "Building the project...")
+            const buildArtifact = await this.localDevEnvironment.build(this.changeRequest.sourceCode)
+            this.changeRequest.buildArtifact = buildArtifact
+        } catch (error) {
+            this.changeRequest.task.finishedWork("React Developer", "Finished with project build")
+            this.changeRequest.task.leaveComment("React Developer", `Error during build: ${error}` )
+
+            if (this.numberOfRetries <= this.MAX_RETRIES) {
+                return await this.execute(this.changeRequest)
+            } else {
+                throw error
+            }
+        }
+        
 
         return this.changeRequest
 

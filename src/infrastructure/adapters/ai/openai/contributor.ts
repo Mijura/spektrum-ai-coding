@@ -56,6 +56,7 @@ export abstract class OpenAIContributor implements Contributor {
     
         const completion = await client.chat.completions.parse({
             model: this.brain,
+            reasoning_effort: "low",
             messages: [
                 { role: "system", content: this.loadContext() },
                 { role: "user", content: task.toString() }
@@ -63,8 +64,9 @@ export abstract class OpenAIContributor implements Contributor {
             response_format: zodResponseFormat(this.thoughtShape, "thoughtShape")
         })
     
+        const parsed = this.thoughtShape.parse(completion.choices[0].message.parsed)
     
-        return await this.afterThought(completion.choices[0].message.parsed)
+        return await this.afterThought(parsed)
     }
     
     /**

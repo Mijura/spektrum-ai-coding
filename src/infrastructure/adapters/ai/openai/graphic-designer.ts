@@ -61,7 +61,6 @@ export class GraphicDesigner extends OpenAIContributor {
                - Use \`input-sm\` for note titles.
 
             4. Do not ask the user about next steps, just provide the classes and the comment.
-             
 
             ### **User Request (Task):**
             ${JSON.stringify(this.task)}

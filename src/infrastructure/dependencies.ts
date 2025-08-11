@@ -116,7 +116,7 @@ export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspac
 // Contributors
 export const scrumMaster: Contributor = new ScrumMaster()
 export const productOwner: Contributor = new ProductOwner(taskRepository)
-export const reactDeveloper: Contributor = new ReactDeveloper()
+export const reactDeveloper: Contributor = new ReactDeveloper(localDevEnvironment)
 export const graphicDesigner: Contributor = new GraphicDesigner(taskRepository, taskExecutionRepository)
 export const marketeer: Contributor = new Marketeer()
 export const frontendTeam: Team = new FrontendTeam(graphicDesigner, reactDeveloper, scrumMaster)
@@ -140,4 +140,4 @@ export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository
 export const fetchTimelineByProjectId: FetchTaskExecutionsTimeline = new FetchTimelineByProjectIdUseCase(taskExecutionRepository)
 export const fetchTimelineByAccountId:  FetchTaskExecutionsTimeline = new FetchTimelineByAccountIdUseCase(taskExecutionRepository)
 export const fetchTaskExecutionsHeatmap: FetchTaskExecutionsHeatmap = new FetchTaskExecutionsHeatmapUseCase(taskExecutionRepository)
-export const taskRunner: RunTaskExecution = new FrontendDevelopmentUseCase(taskRepository, taskExecutionRepository, frontendTeam, localDevEnvironment, hostingService, versionControlSystem, projectRepository)
+export const taskRunner: RunTaskExecution = new FrontendDevelopmentUseCase(taskRepository, taskExecutionRepository, frontendTeam, hostingService, versionControlSystem, projectRepository)

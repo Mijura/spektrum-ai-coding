@@ -16,6 +16,8 @@ export class ProjectMapper {
 			updated: project.updated,
 			status: project.status,
 			detailsUpdated: project.detailsUpdated,
+			devEnvironmentId: project.devEnvironmentId,
+			prodEnvironmentId: project.prodEnvironmentId,
 			latestDevDeployment: project.latestDevDeployment ? DeploymentMapper.toRecord(project.latestDevDeployment) : null,
 			latestProdDeployment: project.latestProdDeployment ? DeploymentMapper.toRecord(project.latestProdDeployment) : null
 		}
@@ -32,6 +34,8 @@ export class ProjectMapper {
 			updated: record.updated,
 			status: record.status,
 			detailsUpdated: record.detailsUpdated,
+			devEnvironmentId: record.devEnvironmentId,
+			prodEnvironmentId: record.prodEnvironmentId,
 			latestDevDeployment: record.latestDevDeployment ? DeploymentMapper.toDomain(record.latestDevDeployment) : null,
 			latestProdDeployment: record.latestProdDeployment ? DeploymentMapper.toDomain(record.latestProdDeployment) : null
 		})

@@ -4,4 +4,5 @@ import { FileArtifacts } from "./file-artifacts"
 export interface WorkUnit {
     task: Task
     sourceCode: FileArtifacts
+    buildArtifact: FileArtifacts | null
 }

@@ -3,7 +3,6 @@ import { TaskExecutionRepository } from "@domain/ports/repositories/task-executi
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
 import { Team } from "@domain/ports/ai/team"
-import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { Commit } from "@domain/value-objects/commit"
@@ -19,7 +18,6 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 		private readonly taskRepository: TaskRepository,
 		private readonly taskExecutionRepository: TaskExecutionRepository,
 		private readonly frontendTeam: Team,
-		private readonly devEnvironment: DevEnvironment,
 		private readonly webHostingService: WebHostingService,
 		private readonly versionControlSystem: VersionControlSystem,
 		private readonly projectRepository: ProjectRepository
@@ -45,13 +43,16 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 		})
 
         try {
-			const changeRequest: WorkUnit = { task, sourceCode }
+			const changeRequest: WorkUnit = { task, sourceCode, buildArtifact: null }
             const work: WorkUnit = await this.frontendTeam.implement(changeRequest)
 
-			const buildArtifact = await this.devEnvironment.build(work.sourceCode)
-			const url = await this.webHostingService.deployPrebuiltCode(project.devEnvironmentId, buildArtifact)
+			if (!work.buildArtifact) {
+				throw new Error("Build artifact is not created")
+			}
+
+			const url = await this.webHostingService.deployPrebuiltCode(project.devEnvironmentId, work.buildArtifact)
 	
-			const commit: Commit = { buildArtifact, sourceCode: work.sourceCode }
+			const commit: Commit = { buildArtifact: work.buildArtifact, sourceCode: work.sourceCode }
 			const version = await this.versionControlSystem.commitVersion(project.id, commit)
 
 			const deployment : Deployment = { url, version }
