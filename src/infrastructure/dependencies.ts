@@ -42,6 +42,7 @@ import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/task-exe
 import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/task-execution/fetch-account-timeline"
 
 import { MockTaskExecutionRepository } from "@infrastructure/adapters/repositories/mock-task-execution-repository"
+import { DynamoDBTaskExecutionRepository } from "@infrastructure/adapters/repositories/dynamodb-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { MarketingService } from "@domain/ports/services/marketing-service"
 import { Contributor } from "@domain/ports/ai/contributor"
@@ -105,7 +106,7 @@ export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, dis
 // Repositories
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const taskRepository: TaskRepository = new DynamoDBTaskRepository()
-export const taskExecutionRepository: TaskExecutionRepository = new MockTaskExecutionRepository()
+export const taskExecutionRepository: TaskExecutionRepository = new DynamoDBTaskExecutionRepository()
 export const versionRepository: VersionRepository = new DynamoDBVersionRepository()
 
 

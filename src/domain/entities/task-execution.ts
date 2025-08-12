@@ -12,7 +12,6 @@ export class TaskExecution {
     public readonly taskId: string
     public readonly accountId: string
     public status: TaskExecutionStatus
-    public artifact: FileArtifacts | null
     public occurredAt: string
     public error?: string
 
@@ -24,7 +23,6 @@ export class TaskExecution {
         accountId: string,
         status: TaskExecutionStatus,
         occurredAt: string,
-        artifact: FileArtifacts | null,
         error?: string,
     ) { 
         this.id = id
@@ -35,7 +33,6 @@ export class TaskExecution {
         this.status = status
         this.occurredAt = occurredAt
         this.error = error
-        this.artifact = artifact
     }
 
     static create(task: Task, accountId: string): TaskExecution {
@@ -44,22 +41,20 @@ export class TaskExecution {
         const occurredAt = new Date().toISOString()
         const status = TaskExecutionStatus.RUNNING
 
-        const execution = new TaskExecution(id, task.title, task.projectId, task.id, accountId, status, occurredAt, null)
+        const execution = new TaskExecution(id, task.title, task.projectId, task.id, accountId, status, occurredAt)
         EmitNewTaskExecution.emit(execution)
         
         return execution
     }
 
     @EmitTaskExecutionUpdate()
-    finishSuccessfully(artifact: any): void {
+    finishSuccessfully(): void {
         this.status = TaskExecutionStatus.SUCCEEDED
-        this.artifact = artifact
     }
 
     @EmitTaskExecutionUpdate()
-    finishWithError(error: string, artifact: any): void {
+    finishWithError(error: string): void {
         this.status = TaskExecutionStatus.FAILED
         this.error = error
-        this.artifact = artifact
     }
 }

@@ -59,13 +59,13 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 			project.setLatestDevDeployment(deployment)
 			await this.projectRepository.save(project)
 
-            taskExecution.finishSuccessfully(work.sourceCode)
+            taskExecution.finishSuccessfully()
 			
 			await this.taskRepository.save(work.task)
 
         } catch (error: any) {
             console.error(error)
-            taskExecution.finishWithError(error as string, null)
+            taskExecution.finishWithError(error as string)
             throw error
         } finally {
             await this.taskExecutionRepository.save(taskExecution)
