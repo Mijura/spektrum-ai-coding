@@ -29,6 +29,7 @@ export class CreateProjectUseCase implements CreateProject {
 			const commit: Commit = { buildArtifact, sourceCode }
 
 			const version: Version = await this.versionControlSystem.commitVersion(project.id, commit)
+
 			// deploy files
 			const url: string = await this.webHostingService.deployPrebuiltCode(project.devEnvironmentId, buildArtifact)
 
