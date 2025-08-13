@@ -8,14 +8,10 @@ export class FrontendTeam implements Team {
 
 	private entryPoint: Contributor
 	constructor(
-		designer: Contributor,
-		developer: Contributor,
-		scrumMaster: Contributor
+		developer: Contributor
 	) {
-		this.contributors.set(designer.name, designer)
 		this.contributors.set(developer.name, developer)
-		this.contributors.set(scrumMaster.name, scrumMaster)
-		this.entryPoint = scrumMaster
+		this.entryPoint = developer
 	}
 
     addContributor(contributor: Contributor) {

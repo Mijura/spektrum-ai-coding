@@ -120,7 +120,7 @@ export const productOwner: Contributor = new ProductOwner(taskRepository)
 export const reactDeveloper: Contributor = new ReactDeveloper(localDevEnvironment)
 export const graphicDesigner: Contributor = new GraphicDesigner(taskRepository, taskExecutionRepository)
 export const marketeer: Contributor = new Marketeer()
-export const frontendTeam: Team = new FrontendTeam(graphicDesigner, reactDeveloper, scrumMaster)
+export const frontendTeam: Team = new FrontendTeam(reactDeveloper)
 
 
 export const marketingService: MarketingService = new DefaultMarketingService(marketeer, projectRepository)

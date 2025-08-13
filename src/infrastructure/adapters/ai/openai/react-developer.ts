@@ -73,9 +73,10 @@ export class ReactDeveloper extends OpenAIContributor {
         try {
             this.changeRequest.task.startedWork("React Developer", "Building the project...")
             const buildArtifact = await this.localDevEnvironment.build(this.changeRequest.sourceCode)
+            this.changeRequest.task.finishedWork("React Developer", "Project build successfully")
             this.changeRequest.buildArtifact = buildArtifact
         } catch (error) {
-            this.changeRequest.task.finishedWork("React Developer", "Finished with project build")
+            this.changeRequest.task.finishedWork("React Developer", "Error encountered during build")
             this.changeRequest.task.leaveComment("React Developer", `Error during build: ${error}` )
 
             if (this.numberOfRetries <= this.MAX_RETRIES) {
