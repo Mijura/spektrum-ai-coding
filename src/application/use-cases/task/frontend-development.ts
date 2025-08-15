@@ -66,7 +66,6 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
         } catch (error: any) {
             console.error(error)
             taskExecution.finishWithError(error as string)
-            throw error
         } finally {
             await this.taskExecutionRepository.save(taskExecution)
         }

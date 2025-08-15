@@ -56,7 +56,6 @@ export abstract class OpenAIContributor implements Contributor {
     
         const completion = await client.chat.completions.parse({
             model: this.brain,
-            reasoning_effort: "low",
             messages: [
                 { role: "system", content: this.loadContext() },
                 { role: "user", content: task.toString() }

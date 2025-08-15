@@ -81,8 +81,6 @@ export class ReactDeveloper extends OpenAIContributor {
 
             if (this.numberOfRetries <= this.MAX_RETRIES) {
                 return await this.execute(this.changeRequest)
-            } else {
-                throw error
             }
         }
         
