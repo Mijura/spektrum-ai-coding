@@ -1,7 +1,7 @@
 {
 	"version": "1.0.0",
 	"manifest_version": 3,
-	"name": "Honeycomb",
+	"name": "JigJoy",
 	"icons": {
 		"16": "./public/logo16.png",
 		"48": "./public/logo192.png",
