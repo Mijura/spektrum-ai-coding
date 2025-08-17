@@ -32,6 +32,8 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 		}
 
 		const taskExecution = TaskExecution.create(task, accountId)
+		await this.taskExecutionRepository.save(taskExecution)
+
 		const project: Project = await this.projectRepository.get(task.projectId)
 		if (!project.latestDevDeployment) {
 			throw new Error("Project has no dev deployment")
