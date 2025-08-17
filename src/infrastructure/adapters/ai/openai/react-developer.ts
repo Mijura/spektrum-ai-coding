@@ -52,6 +52,8 @@ export class ReactDeveloper extends OpenAIContributor {
                 MOST IMPORTANT:
                 - Update package.json if you plan to import new dependencies. (e.g. "chart.js" should be added to the dependencies)
                 - Always use classes from the index.css and tailwind.config.js files.
+                - Do not put technology names in the code. (e.g. "Application created using React, Tailwind CSS and Framer Motion...")
+                - Do not use 'JigJoy' in the code. (e.g. "JigJoy Blog, Application created using JigJoy, etc..."), but keep the JigJoy meta tags in the index.html file, except user request change of meta tags.
     
                 ### **Details**
                 - **Current Source Code:** ${JSON.stringify(this.changeRequest.sourceCode)}
