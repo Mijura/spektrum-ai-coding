@@ -14,8 +14,7 @@
       "paths": {
         "@domain/*": ["src/domain/*"],
         "@infrastructure/*": ["src/infrastructure/*"],
-        "@application/*": ["src/application/*"],
-        "@project-templates/*": ["templates/*"]
+        "@application/*": ["src/application/*"]
       }                    
     },
     "include": ["src/**/*"],
