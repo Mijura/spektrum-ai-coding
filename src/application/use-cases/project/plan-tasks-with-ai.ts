@@ -2,13 +2,13 @@ import { PlanTasksWithAI } from "@domain/use-cases/project/plan-tasks-with-ai"
 import { Task } from "@domain/entities/task"
 import { MarketingService } from "@domain/ports/services/marketing-service"    
 import { Contributor } from "@domain/ports/ai/contributor"
-import { ProjectRepository } from "@domain/ports/repositories/project-repository"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
 
 export class PlanTasksWithAIUseCase implements PlanTasksWithAI {
 	constructor(
         private readonly productOwner: Contributor,
         private readonly marketingService: MarketingService,
-        private readonly projectRepository: ProjectRepository
+        private readonly taskRepository: TaskRepository
 	) {}
     
     async execute(projectId: string, projectDescription: string): Promise<Task[]> {
@@ -20,12 +20,13 @@ export class PlanTasksWithAIUseCase implements PlanTasksWithAI {
         const tasks = await this.productOwner.execute(task)
 
         // Save all tasks
-        const taskToSave = []
-        for (const task of tasks) {
-            taskToSave.push(this.projectRepository.save(task))
+        const taskPromises = []
+        for (const t of tasks) {
+            const taskPromise = this.taskRepository.save(t)
+            taskPromises.push(taskPromise)
         }
 
-        await Promise.all(taskToSave)
+        await Promise.all(taskPromises)
 
         return tasks
     }

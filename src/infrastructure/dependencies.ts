@@ -71,7 +71,6 @@ import { S3FileStorage } from "@infrastructure/adapters/s3-file-storage"
 import { TarGzCompressorService } from "@infrastructure/adapters/targz-compressor-service"
 import { ProductOwner } from "@infrastructure/adapters/ai/openai/product-owner"
 import { ReactDeveloper } from "@infrastructure/adapters/ai/openai/react-developer"
-import { GraphicDesigner } from "@infrastructure/adapters/ai/openai/graphic-designer"
 import { Marketeer } from "@infrastructure/adapters/ai/openai/marketeer"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { S3HostingService } from "@application/services/s3-hosting-service"
@@ -116,9 +115,8 @@ export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspac
 
 // Contributors
 export const scrumMaster: Contributor = new ScrumMaster()
-export const productOwner: Contributor = new ProductOwner(taskRepository)
+export const productOwner: Contributor = new ProductOwner()
 export const reactDeveloper: Contributor = new ReactDeveloper(localDevEnvironment)
-export const graphicDesigner: Contributor = new GraphicDesigner(taskRepository, taskExecutionRepository)
 export const marketeer: Contributor = new Marketeer()
 export const frontendTeam: Team = new FrontendTeam(reactDeveloper)
 
@@ -127,7 +125,7 @@ export const marketingService: MarketingService = new DefaultMarketingService(ma
 
 // Use Cases
 export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, rspackTemplate, hostingService, versionControlSystem)
-export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService, projectRepository)
+export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService, taskRepository)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
 export const deployProject: DeployProject = new DeployProjectUseCase(projectRepository, versionControlSystem, hostingService)
