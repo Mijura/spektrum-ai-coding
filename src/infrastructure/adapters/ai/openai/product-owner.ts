@@ -21,12 +21,6 @@ export class ProductOwner extends OpenAIContributor {
     })
 
     task!: Task
-    taskRepository: TaskRepository
-
-    constructor(taskRepository: TaskRepository) {
-        super()
-        this.taskRepository = taskRepository
-    }
 
     async preThought(task: Task): Promise<void> {
         this.task = task
@@ -44,6 +38,7 @@ export class ProductOwner extends OpenAIContributor {
         ## Objective
 
         ### 1. Create an Actionable Task List of Product Features
+        - Think of it as creating task list for the MVP features users will love.
         - Each task represents a **single atomic user-facing functionality**.
         - **Atomic = The smallest complete user-visible functionality.**
             - Example: User request “Create a note taking app.”  
@@ -108,9 +103,9 @@ export class ProductOwner extends OpenAIContributor {
 
         ## Additional Guidelines:
         - Limit the list **6 to 7 features maximum per request.**
-        - Think like a **Product Owner designing MVP features** users will love.
         - Use **clear, non-technical language.**
         - Prioritize features that are most important to the user.
+        - Add feature prirority number in the title!
 
 
         ### Task Input:
@@ -124,17 +119,12 @@ export class ProductOwner extends OpenAIContributor {
         const { tasks, comment } = thought
 
         this.task.leaveComment("Product Owner", comment)
-        const taskPromises = []
         const createdTasks = []
         for (const task of tasks) {
             // TODO: Add priority to the task
             const t = Task.create('Product Owner', this.task.projectId, task.title, task.description)
-            const taskPromise = this.taskRepository.save(t)
-            taskPromises.push(taskPromise)
             createdTasks.push(t)
         }
-
-        await Promise.all(taskPromises)
 
         return createdTasks
     }
