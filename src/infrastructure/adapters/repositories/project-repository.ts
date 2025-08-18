@@ -72,7 +72,7 @@ export class DynamoDBProjectRepository implements ProjectRepository {
 
 
 	async getAllByStatus(ownerId: string, status: ProjectStatus): Promise<Project[]> {
-		const tableName = process.env.PROJECT_TABLE;
+		const tableName = process.env.PROJECT_TABLE
 	  
 		const params = {
 		  KeyConditionExpression: "ownerId = :ownerId and #status = :status",  // Use #status to avoid conflict with reserved word
