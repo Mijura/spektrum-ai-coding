@@ -29,8 +29,13 @@ export class LocalDevEnvironment implements DevEnvironment {
 
 		await Promise.all(promises)
 		// Bundle the source code
-		const buildArtifact: FileArtifacts = await this.jsBundler.bundle(temporaryBuildFolder)
-		await this.fileSystem.removeDir(temporaryBuildFolder)
+		let buildArtifact: FileArtifacts
+		try {
+			buildArtifact = await this.jsBundler.bundle(temporaryBuildFolder)
+		} finally {
+			// Always clean up the temporary directory, regardless of success or failure
+			await this.fileSystem.removeDir(temporaryBuildFolder)
+		}
 		return buildArtifact
 	}
 
