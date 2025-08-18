@@ -1,4 +1,3 @@
-
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionHeatmap } from "@domain/value-objects/task-execution"
 import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, leaveComment, taskRunner } from "@infrastructure/dependencies"
@@ -100,7 +99,7 @@ export class TaskExecutionController {
 		try {
 			const { taskId, authorId, commentText } = req.body
 			const task = await leaveComment.execute(taskId, authorId, commentText)
-			await taskRunner.execute(taskId, authorId)
+            
 			res.status(200).json(task)
 		} catch (error) {
 			console.error("Error adding comment:", error)

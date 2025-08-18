@@ -1,6 +1,8 @@
 import { LeaveComment } from "@domain/use-cases/task/leave-comment"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { Task } from "@domain/entities/task"
+import { eventBus } from "@domain/events/event-bus"
+import { taskRunner } from "@infrastructure/dependencies"
 
 export class LeaveCommentUseCase implements LeaveComment {
     constructor(
@@ -16,8 +18,14 @@ export class LeaveCommentUseCase implements LeaveComment {
                 throw new Error("Task not found.")
             }
 
+            eventBus.on("task:update", async (task: Task) => {
+                await this.taskRepository.save(task)
+            })
+
             // TODO: Get the user id from the context
             task.leaveComment(authorId, commentText)
+
+            await taskRunner.execute(taskId, authorId)
 
             return await this.taskRepository.save(task)
         } catch (error) {
