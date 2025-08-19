@@ -61,7 +61,6 @@ import { SourceCodeFilter } from "@infrastructure/adapters/filesystem/filters/so
 import { DistFolderFilter } from "@infrastructure/adapters/filesystem/filters/dist-folder-filter"
 import { Template } from "@domain/ports/templates/template"
 import { RspackTemplate } from "@infrastructure/adapters/templates/rspack-template"
-import { ScrumMaster } from "@infrastructure/adapters/ai/openai/scrum-master"
 import { FileSystemPort } from "@domain/ports/filesystem/file-system"
 import { LocalFileSystem } from "@infrastructure/adapters/filesystem/local-file-system"
 import { YarnPackageManager } from "@infrastructure/adapters/package-managers/yarn-package-manager"
