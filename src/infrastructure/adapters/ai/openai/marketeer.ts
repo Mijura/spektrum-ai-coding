@@ -1,13 +1,15 @@
 import { z } from "zod"
 import { ProjectDetails } from "@domain/value-objects/project-details"
 import { Task } from "@domain/entities/task" 
-import { OpenAIContributor, Brain } from "./contributor"
+import { OpenAIContributor, Brain, ReasoningEffort } from "./contributor"
 
 export class Marketeer extends OpenAIContributor {
     
     name: string = "Marketeer"
 
-    brain = Brain.GPT_41_NANO
+    brain = Brain.GPT_5_NANO
+
+    reasoningEffort = ReasoningEffort.LOW
 
     thoughtShape = z.object({
         project: z.object({

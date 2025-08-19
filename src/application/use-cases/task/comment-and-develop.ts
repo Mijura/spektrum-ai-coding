@@ -1,8 +1,9 @@
-import { LeaveComment } from "@domain/use-cases/task/leave-comment"
+import { CommentAndDevelop } from "@domain/use-cases/task/comment-and-develop"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { Task } from "@domain/entities/task"
+import { develop } from "@infrastructure/dependencies"
 
-export class LeaveCommentUseCase implements LeaveComment {
+export class CommentAndDevelopUseCase implements CommentAndDevelop {
     constructor(
         private readonly taskRepository: TaskRepository
     ) {}
@@ -18,6 +19,9 @@ export class LeaveCommentUseCase implements LeaveComment {
 
             // TODO: Get the user id from the context
             task.leaveComment(authorId, commentText)
+            await this.taskRepository.save(task)
+
+            await develop.execute(taskId, authorId)
 
             return await this.taskRepository.save(task)
         } catch (error) {

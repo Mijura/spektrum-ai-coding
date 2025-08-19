@@ -13,6 +13,13 @@ export enum Brain {
     GPT_5_NANO = "gpt-5-nano"
 }
 
+export enum ReasoningEffort {
+    MINIMAL = "minimal",
+    LOW = "low",
+    MEDIUM = "medium",
+    HIGH = "high"
+}
+
 export abstract class OpenAIContributor implements Contributor {
 
     /**
@@ -29,6 +36,11 @@ export abstract class OpenAIContributor implements Contributor {
      * The object definition we expect the AI to return
      */
     abstract thoughtShape: z.ZodSchema
+
+    /**
+     * The reasoning effort to use
+     */
+    abstract reasoningEffort: ReasoningEffort
 
 
     /**
@@ -56,6 +68,7 @@ export abstract class OpenAIContributor implements Contributor {
     
         const completion = await client.chat.completions.parse({
             model: this.brain,
+            reasoning_effort: this.reasoningEffort,
             messages: [
                 { role: "system", content: this.loadContext() },
                 { role: "user", content: task.toString() }

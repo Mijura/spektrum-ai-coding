@@ -1,13 +1,16 @@
 import z from "zod"
-import { OpenAIContributor, Brain } from "./contributor"
+import { OpenAIContributor, Brain, ReasoningEffort } from "./contributor"
 import { WorkUnit } from "@domain/value-objects/work-unit"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
+import { TaskRepository } from "@domain/ports/repositories/task-repository"
 
 export class ReactDeveloper extends OpenAIContributor {
     
     name: string = "React Developer"
 
     brain = Brain.GPT_5
+
+    reasoningEffort = ReasoningEffort.MEDIUM
     
     thoughtShape = z.object({
         sourceCode: z
@@ -19,18 +22,21 @@ export class ReactDeveloper extends OpenAIContributor {
 
     changeRequest!: WorkUnit
     localDevEnvironment: DevEnvironment
+    taskRepository: TaskRepository
     MAX_RETRIES = 3
     numberOfRetries = 0
 
-    constructor(localDevEnvironment: DevEnvironment) {
+    constructor(localDevEnvironment: DevEnvironment, taskRepository: TaskRepository) {
         super()
         this.localDevEnvironment = localDevEnvironment
+        this.taskRepository = taskRepository
     }
 
 
     async preThought(changeRequest: WorkUnit): Promise<any> {
         this.changeRequest = changeRequest
         this.changeRequest.task.startedWork("React Developer", "React Developer is generating the code...")
+        await this.taskRepository.save(this.changeRequest.task)
     }
 
     loadContext(): string {
@@ -78,12 +84,16 @@ export class ReactDeveloper extends OpenAIContributor {
             this.changeRequest.task.finishedWork("React Developer", "Build successful — check Output tab to test.")
             this.changeRequest.buildArtifact = buildArtifact
         } catch (error) {
-            this.changeRequest.task.finishedWork("React Developer", "Error encountered during build")
             this.changeRequest.task.leaveComment("React Developer", `Error during build: ${error}` )
 
             if (this.numberOfRetries <= this.MAX_RETRIES) {
+                this.changeRequest.task.finishedWork("React Developer", "Error encountered during build, I would try again.")
                 return await this.execute(this.changeRequest)
+            }else{
+                this.changeRequest.task.finishedWork("React Developer", "I tried multiple times, but I couldn't build the project. Please create a new task with the bug description.")
             }
+        }finally{
+            await this.taskRepository.save(this.changeRequest.task)
         }
         
 

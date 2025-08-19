@@ -1,7 +1,6 @@
-
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionHeatmap } from "@domain/value-objects/task-execution"
-import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, leaveComment, taskRunner } from "@infrastructure/dependencies"
+import { fetchTimelineByAccountId, fetchTimelineByProjectId, fetchTaskExecutionsHeatmap, leaveComment, develop } from "@infrastructure/dependencies"
 import { Request, Response } from "express"
 
 export class TaskExecutionController {
@@ -74,7 +73,7 @@ export class TaskExecutionController {
         }
     }
 
-    async run(req: Request, res: Response): Promise<void> {
+    async develop(req: Request, res: Response): Promise<void> {
         
         const taskId = req.body.taskId
         const accountId = req.body.accountId
@@ -87,7 +86,7 @@ export class TaskExecutionController {
         }
 
 		try {
-            await taskRunner.execute(taskId, accountId)
+            await develop.execute(taskId, accountId)
             res.status(200).json({ message: "Workflow run initiated" })
 		} catch (error) {
 			console.error("Error during task execution:", error)
@@ -96,11 +95,11 @@ export class TaskExecutionController {
 
     }
 
-    async reRunTaskExecution(req: Request, res: Response): Promise<void> {
+    async commentAndDevelop(req: Request, res: Response): Promise<void> {
 		try {
 			const { taskId, authorId, commentText } = req.body
 			const task = await leaveComment.execute(taskId, authorId, commentText)
-			await taskRunner.execute(taskId, authorId)
+            
 			res.status(200).json(task)
 		} catch (error) {
 			console.error("Error adding comment:", error)

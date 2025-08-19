@@ -1,13 +1,14 @@
 import { Task } from "@domain/entities/task"
-import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import z from "zod"
-import { OpenAIContributor, Brain } from "./contributor"
+import { OpenAIContributor, Brain, ReasoningEffort } from "./contributor"
 
 export class ProductOwner extends OpenAIContributor {
 
     name: string = "Product Owner"
 
     brain = Brain.GPT_5_NANO
+
+    reasoningEffort = ReasoningEffort.LOW
 
     thoughtShape = z.object({
         tasks: z.array(

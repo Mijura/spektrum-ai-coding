@@ -1,18 +1,16 @@
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
-import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
+import { Develop } from "@domain/use-cases/task-execution/develop"
 import { Team } from "@domain/ports/ai/team"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { Commit } from "@domain/value-objects/commit"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { WorkUnit } from "@domain/value-objects/work-unit"
-import { eventBus } from "@domain/events/event-bus"
-import { Task } from "@domain/entities/task"
 import { Deployment, Project } from "@domain/entities/project"
 
-export class FrontendDevelopmentUseCase implements RunTaskExecution {
+export class DevelopUseCase implements Develop {
 
 	constructor(
 		private readonly taskRepository: TaskRepository,
@@ -40,10 +38,6 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 		}
 		let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
 
-		eventBus.on("task:update", async (task: Task) => {
-			await this.taskRepository.save(task)
-		})
-
         try {
 			const changeRequest: WorkUnit = { task, sourceCode, buildArtifact: null }
             const work: WorkUnit = await this.frontendTeam.implement(changeRequest)
@@ -62,8 +56,6 @@ export class FrontendDevelopmentUseCase implements RunTaskExecution {
 			await this.projectRepository.save(project)
 
             taskExecution.finishSuccessfully()
-			
-			await this.taskRepository.save(work.task)
 
         } catch (error: any) {
             console.error(error)
