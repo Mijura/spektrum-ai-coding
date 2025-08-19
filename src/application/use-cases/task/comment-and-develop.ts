@@ -8,7 +8,7 @@ export class CommentAndDevelopUseCase implements CommentAndDevelop {
         private readonly taskRepository: TaskRepository
     ) {}
 
-    async execute(taskId: string, authorId: string, commentText: string): Promise<Task> {
+    async execute(taskId: string, authorId: string, commentText: string): Promise<void> {
         try {
             console.log(`Adding comment to task ${taskId} by user ${authorId}.`)
             const task: Task | null = await this.taskRepository.get(taskId)
@@ -23,7 +23,6 @@ export class CommentAndDevelopUseCase implements CommentAndDevelop {
 
             await develop.execute(taskId, authorId)
 
-            return await this.taskRepository.save(task)
         } catch (error) {
             console.error("Error during adding comment:", error)
             throw new Error("Failed to add comment.")

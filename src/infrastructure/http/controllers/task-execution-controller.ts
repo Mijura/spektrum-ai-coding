@@ -98,9 +98,9 @@ export class TaskExecutionController {
     async commentAndDevelop(req: Request, res: Response): Promise<void> {
 		try {
 			const { taskId, authorId, commentText } = req.body
-			const task = await leaveComment.execute(taskId, authorId, commentText)
+			await leaveComment.execute(taskId, authorId, commentText)
             
-			res.status(200).json(task)
+			res.status(200).json({ message: "Comment added" })
 		} catch (error) {
 			console.error("Error adding comment:", error)
 			res.status(500).json({ message: "Error adding comment." })
