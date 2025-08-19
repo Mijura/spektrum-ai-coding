@@ -114,7 +114,6 @@ export const inMemoryVersionControlSystem: VersionControlSystem = new InMemoryVe
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
 // Contributors
-export const scrumMaster: Contributor = new ScrumMaster()
 export const productOwner: Contributor = new ProductOwner()
 export const reactDeveloper: Contributor = new ReactDeveloper(localDevEnvironment)
 export const marketeer: Contributor = new Marketeer()
