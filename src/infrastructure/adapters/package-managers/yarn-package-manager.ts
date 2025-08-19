@@ -1,6 +1,8 @@
 
+import { FileSystemPort } from "@domain/ports/filesystem/file-system"
 import { PackageManager } from "../../ports/package-manager"
 import { spawn } from "child_process"
+import path from "path"
 
 /**
  * Represents the result of a command execution
@@ -16,6 +18,8 @@ export interface CommandResult {
  * Represents a package manager that can install and build projects
  */
 export class YarnPackageManager implements PackageManager {
+
+	constructor(private readonly fileSystem: FileSystemPort) {}
 
 	private runCommand(command: string, cwd: string, contextMessage?: string): Promise<CommandResult> {
 		return new Promise((resolve) => {
@@ -64,6 +68,7 @@ export class YarnPackageManager implements PackageManager {
 	}
 
 	async install(projectPath: string): Promise<boolean> {
+		await this.fileSystem.ensureFile(path.join(projectPath, "yarn.lock"))
 		const result = await this.runCommand("yarn install", projectPath, `Installing dependencies in ${projectPath}...`)
 		console.log(JSON.stringify(result))
 		if (!result.success) {

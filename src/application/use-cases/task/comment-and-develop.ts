@@ -1,7 +1,6 @@
 import { CommentAndDevelop } from "@domain/use-cases/task/comment-and-develop"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { Task } from "@domain/entities/task"
-import { eventBus } from "@domain/events/event-bus"
 import { develop } from "@infrastructure/dependencies"
 
 export class CommentAndDevelopUseCase implements CommentAndDevelop {

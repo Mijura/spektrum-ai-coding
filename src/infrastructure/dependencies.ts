@@ -85,7 +85,7 @@ export const taskExecutionController = new TaskExecutionController()
 
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
-export const yarnPackageManager: PackageManager = new YarnPackageManager()
+export const yarnPackageManager: PackageManager = new YarnPackageManager(fileSystem)
 export const fileStorage: FileStorage = new S3FileStorage()
 export const hostingService: WebHostingService = new S3HostingService(fileStorage)   
 export const compressorService: CompressorService = new TarGzCompressorService()
@@ -114,7 +114,7 @@ export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspac
 
 // Contributors
 export const productOwner: Contributor = new ProductOwner()
-export const reactDeveloper: Contributor = new ReactDeveloper(localDevEnvironment)
+export const reactDeveloper: Contributor = new ReactDeveloper(localDevEnvironment, taskRepository)
 export const marketeer: Contributor = new Marketeer()
 export const frontendTeam: Team = new FrontendTeam(reactDeveloper)
 
