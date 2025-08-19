@@ -88,6 +88,7 @@ export class ReactDeveloper extends OpenAIContributor {
 
             if (this.numberOfRetries <= this.MAX_RETRIES) {
                 this.changeRequest.task.finishedWork("React Developer", "Error encountered during build, I would try again.")
+                await this.taskRepository.save(this.changeRequest.task)
                 return await this.execute(this.changeRequest)
             }else{
                 this.changeRequest.task.finishedWork("React Developer", "I tried multiple times, but I couldn't build the project. Please create a new task with the bug description.")
