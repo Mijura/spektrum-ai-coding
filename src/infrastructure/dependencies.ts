@@ -27,15 +27,14 @@ import { UpdateTaskTitle } from "@domain/use-cases/task/update-title"
 import { UpdateTaskDescription } from "@domain/use-cases/task/update-description"
 import { CreateTaskUseCase } from "@application/use-cases/task/create-task"
 import { FetchTasksUseCase } from "@application/use-cases/task/fetch-tasks"
-import { LeaveCommentUseCase } from "@application/use-cases/task/leave-comment"
+import { CommentAndDevelopUseCase } from "@application/use-cases/task/comment-and-develop"
 import { UpdateTaskDescriptionUseCase } from "@application/use-cases/task/update-description"
 import { UpdateTaskTitleUseCase } from "@application/use-cases/task/update-title"
-import { LeaveComment } from "@domain/use-cases/task/leave-comment"
 import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import { FetchTaskExecutionsTimeline } from "@domain/use-cases/task-execution/fetch-timeline"
 import { TaskExecutionController } from "./http/controllers/task-execution-controller"
-import { FrontendDevelopmentUseCase } from "@application/use-cases/task/frontend-development"
-import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
+import { DevelopUseCase } from "@application/use-cases/task/develop"
+import { Develop } from "@domain/use-cases/task-execution/develop"
 import { FetchTaskExecutionsHeatmap } from "@domain/use-cases/task-execution/fetch-heatmap"
 import { FetchTaskExecutionsHeatmapUseCase } from "@application/use-cases/task-execution/fetch-heatmap"
 import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/task-execution/fetch-project-timeline"
@@ -78,6 +77,7 @@ import { LocalDevEnvironment } from "@application/services/local-dev-environment
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { S3VersionControlSystem } from "@infrastructure/adapters/s3-version-control-system"
 import { InMemoryVersionControlSystem } from "./adapters/in-memory-version-control-system"
+import { CommentAndDevelop } from "@domain/use-cases/task/comment-and-develop"
 
 // Controllers
 export const projectController = new ProjectController()
@@ -135,8 +135,8 @@ export const fetchTasks: FetchTasks = new FetchTasksUseCase(taskRepository)
 export const updateTaskTitle: UpdateTaskTitle = new UpdateTaskTitleUseCase(taskRepository)
 export const updateTaskDescription: UpdateTaskDescription = new UpdateTaskDescriptionUseCase(taskRepository)
 export const updateProjectDetails: UpdateProjectDetails = new UpdateProjectDetailsUseCase(projectRepository)
-export const leaveComment: LeaveComment = new LeaveCommentUseCase(taskRepository)
+export const leaveComment: CommentAndDevelop = new CommentAndDevelopUseCase(taskRepository)
 export const fetchTimelineByProjectId: FetchTaskExecutionsTimeline = new FetchTimelineByProjectIdUseCase(taskExecutionRepository)
 export const fetchTimelineByAccountId:  FetchTaskExecutionsTimeline = new FetchTimelineByAccountIdUseCase(taskExecutionRepository)
 export const fetchTaskExecutionsHeatmap: FetchTaskExecutionsHeatmap = new FetchTaskExecutionsHeatmapUseCase(taskExecutionRepository)
-export const taskRunner: RunTaskExecution = new FrontendDevelopmentUseCase(taskRepository, taskExecutionRepository, frontendTeam, hostingService, versionControlSystem, projectRepository)
+export const develop: Develop = new DevelopUseCase(taskRepository, taskExecutionRepository, frontendTeam, hostingService, versionControlSystem, projectRepository)

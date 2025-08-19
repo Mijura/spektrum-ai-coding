@@ -1,7 +1,7 @@
 import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
-import { RunTaskExecution } from "@domain/use-cases/task-execution/run"
+import { Develop } from "@domain/use-cases/task-execution/develop"
 import { Team } from "@domain/ports/ai/team"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
@@ -12,7 +12,7 @@ import { eventBus } from "@domain/events/event-bus"
 import { Task } from "@domain/entities/task"
 import { Deployment, Project } from "@domain/entities/project"
 
-export class FrontendDevelopmentUseCase implements RunTaskExecution {
+export class DevelopUseCase implements Develop {
 
 	constructor(
 		private readonly taskRepository: TaskRepository,
