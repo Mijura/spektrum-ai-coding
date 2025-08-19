@@ -18,12 +18,9 @@ export class CommentAndDevelopUseCase implements CommentAndDevelop {
                 throw new Error("Task not found.")
             }
 
-            eventBus.on("task:update", async (task: Task) => {
-                await this.taskRepository.save(task)
-            })
-
             // TODO: Get the user id from the context
             task.leaveComment(authorId, commentText)
+            await this.taskRepository.save(task)
 
             await develop.execute(taskId, authorId)
 
