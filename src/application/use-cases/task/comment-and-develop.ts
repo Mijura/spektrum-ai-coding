@@ -25,7 +25,7 @@ export class CommentAndDevelopUseCase implements CommentAndDevelop {
 
         } catch (error) {
             console.error("Error during adding comment:", error)
-            throw new Error("Failed to add comment.")
+            throw new Error("Failed to add comment and execute the task.")
         }
     }
 } 
