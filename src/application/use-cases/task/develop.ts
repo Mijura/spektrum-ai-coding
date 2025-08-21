@@ -32,8 +32,6 @@ export class DevelopUseCase implements Develop {
 		const taskExecution = TaskExecution.create(task, accountId)
 		await this.taskExecutionRepository.save(taskExecution)
 
-
-
         try {
 
 			const project: Project = await this.projectRepository.get(task.projectId)
@@ -41,7 +39,7 @@ export class DevelopUseCase implements Develop {
 				throw new Error("Project has no dev deployment")
 			}
 			let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
-			
+
 			const changeRequest: WorkUnit = { task, sourceCode, buildArtifact: null }
             const work: WorkUnit = await this.reactDeveloper.execute(changeRequest)
 
