@@ -45,7 +45,6 @@ import { DynamoDBTaskExecutionRepository } from "@infrastructure/adapters/reposi
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { MarketingService } from "@domain/ports/services/marketing-service"
 import { Contributor } from "@domain/ports/ai/contributor"
-import { Team } from "@domain/ports/ai/team"
 import { FrontendTeam } from "@application/services/frontend-team"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
@@ -116,7 +115,6 @@ export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspac
 export const productOwner: Contributor = new ProductOwner()
 export const reactDeveloper: Contributor = new ReactDeveloper(localDevEnvironment, taskRepository)
 export const marketeer: Contributor = new Marketeer()
-export const frontendTeam: Team = new FrontendTeam(reactDeveloper)
 
 
 export const marketingService: MarketingService = new DefaultMarketingService(marketeer, projectRepository)
@@ -137,4 +135,4 @@ export const leaveComment: CommentAndDevelop = new CommentAndDevelopUseCase(task
 export const fetchTimelineByProjectId: FetchTaskExecutionsTimeline = new FetchTimelineByProjectIdUseCase(taskExecutionRepository)
 export const fetchTimelineByAccountId:  FetchTaskExecutionsTimeline = new FetchTimelineByAccountIdUseCase(taskExecutionRepository)
 export const fetchTaskExecutionsHeatmap: FetchTaskExecutionsHeatmap = new FetchTaskExecutionsHeatmapUseCase(taskExecutionRepository)
-export const develop: Develop = new DevelopUseCase(taskRepository, taskExecutionRepository, frontendTeam, hostingService, versionControlSystem, projectRepository)
+export const develop: Develop = new DevelopUseCase(taskRepository, taskExecutionRepository, hostingService, versionControlSystem, projectRepository, reactDeveloper)

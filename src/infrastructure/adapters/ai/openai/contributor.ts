@@ -2,7 +2,6 @@ import OpenAI from "openai/index"
 import { Contributor } from "@domain/ports/ai/contributor"
 import { z } from "zod"
 import { zodResponseFormat } from "openai/helpers/zod"
-import { frontendTeam } from "@infrastructure/dependencies"
 
 export enum Brain {
     GPT_41 = "gpt-4.1",
@@ -79,22 +78,6 @@ export abstract class OpenAIContributor implements Contributor {
         const parsed = this.thoughtShape.parse(completion.choices[0].message.parsed)
     
         return await this.afterThought(parsed)
-    }
-    
-    /**
-     * Delegate task to another collaborator
-     */
-    protected async delegateTo(contributorName: string, input: any): Promise<any> {
-
-        try {
-            const contributor = frontendTeam.getContributor(contributorName)
-            if (!contributor) throw new Error(`Contributor "${contributorName}" is not registered.`)
-
-            return await contributor.execute(input)
-        } catch (error) {
-            console.error(`Error delegating to contributor "${contributorName}":`, error)
-            throw error
-        }
     }
 
     /**

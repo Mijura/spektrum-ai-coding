@@ -34,6 +34,7 @@ export class ReactDeveloper extends OpenAIContributor {
 
     async preThought(changeRequest: WorkUnit): Promise<any> {
         this.changeRequest = changeRequest
+        console.log('React Developer is generating the code...')
         this.changeRequest.task.startedWork("React Developer", "React Developer is generating the code...")
         await this.taskRepository.save(this.changeRequest.task)
     }
@@ -87,7 +88,7 @@ export class ReactDeveloper extends OpenAIContributor {
         }finally{
             await this.taskRepository.save(this.changeRequest.task)
         }
-        
+        console.log('React Developer finished with coding.')
 
         return this.changeRequest
 
