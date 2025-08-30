@@ -5,7 +5,6 @@ import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import { Template } from "@domain/ports/templates/template"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { Commit } from "@domain/value-objects/commit"
 import { Version } from "@domain/value-objects/version"
 import { Deployment } from "@domain/entities/project"
 
@@ -26,9 +25,7 @@ export class CreateProjectUseCase implements CreateProject {
 			const sourceCode: FileArtifacts = await this.template.fetchSourceCode()
 
 			// save version
-			const commit: Commit = { buildArtifact, sourceCode }
-
-			const version: Version = await this.versionControlSystem.commitVersion(project.id, commit)
+			const version: Version = await this.versionControlSystem.commitVersion(project.id, sourceCode, buildArtifact)
 
 			// deploy files
 			const url: string = await this.webHostingService.deployPrebuiltCode(project.devEnvironmentId, buildArtifact)

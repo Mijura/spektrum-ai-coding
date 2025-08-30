@@ -5,7 +5,6 @@ import { Develop } from "@domain/use-cases/task-execution/develop"
 import { Team } from "@domain/ports/ai/team"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { Commit } from "@domain/value-objects/commit"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { WorkUnit } from "@domain/value-objects/work-unit"
 import { Deployment, Project } from "@domain/entities/project"
@@ -36,7 +35,7 @@ export class DevelopUseCase implements Develop {
 		if (!project.latestDevDeployment) {
 			throw new Error("Project has no dev deployment")
 		}
-		let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
+		let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version.tag)
 
         try {
 			const changeRequest: WorkUnit = { task, sourceCode, buildArtifact: null }
@@ -48,8 +47,7 @@ export class DevelopUseCase implements Develop {
 
 			const url = await this.webHostingService.deployPrebuiltCode(project.devEnvironmentId, work.buildArtifact)
 	
-			const commit: Commit = { buildArtifact: work.buildArtifact, sourceCode: work.sourceCode }
-			const version = await this.versionControlSystem.commitVersion(project.id, commit)
+			const version = await this.versionControlSystem.commitVersion(project.id, work.sourceCode, work.buildArtifact)
 
 			const deployment : Deployment = { url, version }
 			project.setLatestDevDeployment(deployment)
