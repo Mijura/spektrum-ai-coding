@@ -1,7 +1,7 @@
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { Commit } from "@domain/value-objects/commit"
 import { FileArtifacts } from "@domain/value-objects/file-artifacts"
-import { Version } from "@domain/value-objects/version"
+import { Version } from "@domain/entities/version"
 import { v4 as uuidv4 } from 'uuid'
 
 export class InMemoryVersionControlSystem implements VersionControlSystem {
