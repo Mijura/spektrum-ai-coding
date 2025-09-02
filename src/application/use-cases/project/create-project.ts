@@ -1,11 +1,10 @@
 import { Project } from "@domain/entities/project"
 import { CreateProject } from "@domain/use-cases/project/create-project"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
+import { FileArtifacts } from "@honeycomb-app/file-artifacts"
 import { Template } from "@domain/ports/templates/template"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { Version } from "@domain/value-objects/version"
 import { Deployment } from "@domain/entities/project"
 
 export class CreateProjectUseCase implements CreateProject {
@@ -20,12 +19,13 @@ export class CreateProjectUseCase implements CreateProject {
 		try {
 			// Create a new project with a unique ID
 			const project: Project = Project.create("My Project", "Empty project...", owner)
+			const repositoryId: string = await this.versionControlSystem.createRepository()
 
 			const buildArtifact: FileArtifacts = await this.template.fetchPrebuiltFiles()
 			const sourceCode: FileArtifacts = await this.template.fetchSourceCode()
 
 			// save version
-			const version: Version = await this.versionControlSystem.commitVersion(project.id, sourceCode, buildArtifact)
+			await this.versionControlSystem.commit(repositoryId, sourceCode)
 
 			// deploy files
 			const url: string = await this.webHostingService.deployPrebuiltCode(project.devEnvironmentId, buildArtifact)
