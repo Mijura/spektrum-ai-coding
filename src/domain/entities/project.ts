@@ -1,4 +1,3 @@
-import { Version } from "@domain/value-objects/version"
 import { v4 as uuidv4 } from "uuid"
 
 export enum ProjectStatus {
@@ -7,7 +6,7 @@ export enum ProjectStatus {
 }
 export interface Deployment {
 	url: string
-	version: Version
+	version: any
 }
 export class Project {
 
@@ -19,6 +18,7 @@ export class Project {
 	public description: string
 	public status: ProjectStatus
 	public detailsUpdated: boolean
+	public repositoryId: string
 	public devEnvironmentId: string
 	public prodEnvironmentId: string 
 	public latestDevDeployment: Deployment | null
@@ -33,6 +33,7 @@ export class Project {
 		updated: string | null,
 		status: ProjectStatus,
 		detailsUpdated: boolean,
+		repositoryId: string,
 		devEnvironmentId: string,
 		prodEnvironmentId: string,
 		latestDevDeployment: Deployment | null,
@@ -46,6 +47,7 @@ export class Project {
 		this.updated = updated
 		this.status = status
 		this.detailsUpdated = detailsUpdated
+		this.repositoryId = repositoryId
 		this.devEnvironmentId = devEnvironmentId
 		this.prodEnvironmentId = prodEnvironmentId
 		this.latestDevDeployment = latestDevDeployment
@@ -118,7 +120,7 @@ export class Project {
 	
 
 	// Factory method to create a new project
-	static create(name: string, description: string, owner: string): Project {
+	static create(name: string, description: string, owner: string, repositoryId: string): Project {
 
 		if(owner === "") {
 			throw new Error("Owner cannot be empty")
@@ -128,7 +130,7 @@ export class Project {
 		const devEnvironmentId = uuidv4()
 		const prodEnvironmentId = uuidv4()
 		const created = new Date().toISOString() // ISO format
-		return new Project(id, owner, name, description, created, null, ProjectStatus.ACTIVE, false, devEnvironmentId, prodEnvironmentId, null, null)
+		return new Project(id, owner, name, description, created, null, ProjectStatus.ACTIVE, false, repositoryId, devEnvironmentId, prodEnvironmentId, null, null)
 	}
 
 	archive() {
@@ -145,11 +147,12 @@ export class Project {
 		updated: string | null
 		status: ProjectStatus
 		detailsUpdated: boolean	
+		repositoryId: string
 		devEnvironmentId: string
 		prodEnvironmentId: string
 		latestDevDeployment: Deployment | null
 		latestProdDeployment: Deployment | null
 	}): Project {
-		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated, data.devEnvironmentId, data.prodEnvironmentId, data.latestDevDeployment, data.latestProdDeployment)
+		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated, data.repositoryId, data.devEnvironmentId, data.prodEnvironmentId, data.latestDevDeployment, data.latestProdDeployment)
 	}
 }
