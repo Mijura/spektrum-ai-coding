@@ -2,22 +2,22 @@ import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { Develop } from "@domain/use-cases/task-execution/develop"
-import { Team } from "@domain/ports/ai/team"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { WorkUnit } from "@domain/value-objects/work-unit"
 import { Deployment, Project } from "@domain/entities/project"
+import { Contributor } from "@domain/ports/ai/contributor"
 
 export class DevelopUseCase implements Develop {
 
 	constructor(
 		private readonly taskRepository: TaskRepository,
 		private readonly taskExecutionRepository: TaskExecutionRepository,
-		private readonly frontendTeam: Team,
 		private readonly webHostingService: WebHostingService,
 		private readonly versionControlSystem: VersionControlSystem,
-		private readonly projectRepository: ProjectRepository
+		private readonly projectRepository: ProjectRepository,
+		private readonly reactDeveloper: Contributor
 
 	) {}
 
@@ -31,15 +31,16 @@ export class DevelopUseCase implements Develop {
 		const taskExecution = TaskExecution.create(task, accountId)
 		await this.taskExecutionRepository.save(taskExecution)
 
-		const project: Project = await this.projectRepository.get(task.projectId)
-		if (!project.latestDevDeployment) {
-			throw new Error("Project has no dev deployment")
-		}
-		let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version.tag)
-
         try {
+
+			const project: Project = await this.projectRepository.get(task.projectId)
+			if (!project.latestDevDeployment) {
+				throw new Error("Project has no dev deployment")
+			}
+			let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
+
 			const changeRequest: WorkUnit = { task, sourceCode, buildArtifact: null }
-            const work: WorkUnit = await this.frontendTeam.implement(changeRequest)
+            const work: WorkUnit = await this.reactDeveloper.execute(changeRequest)
 
 			if (!work.buildArtifact) {
 				throw new Error("Build artifact is not created")

@@ -24,7 +24,6 @@ export class ReactDeveloper extends OpenAIContributor {
     localDevEnvironment: DevEnvironment
     taskRepository: TaskRepository
     MAX_RETRIES = 3
-    numberOfRetries = 0
 
     constructor(localDevEnvironment: DevEnvironment, taskRepository: TaskRepository) {
         super()
@@ -35,7 +34,8 @@ export class ReactDeveloper extends OpenAIContributor {
 
     async preThought(changeRequest: WorkUnit): Promise<any> {
         this.changeRequest = changeRequest
-        this.changeRequest.task.startedWork("React Developer", "React Developer is generating the code...")
+        console.log('React Developer is generating the code...')
+        this.changeRequest.task.startedWork(this.name, "React Developer is generating the code...")
         await this.taskRepository.save(this.changeRequest.task)
     }
 
@@ -66,36 +66,41 @@ export class ReactDeveloper extends OpenAIContributor {
     
         `
     }
+
+    async execute(changeRequest: WorkUnit): Promise<any> {
+
+        try{
+            return await super.execute(changeRequest)
+        }catch(error){
+            changeRequest.task.leaveComment(this.name, 'I am not able to finsih the task. Please try again or contact the support.')
+            await this.taskRepository.save(changeRequest.task)
+            console.error('Error during coding:', error)
+            throw error
+        }
+    }
     
     async afterThought(tought: z.infer<typeof this.thoughtShape>): Promise<WorkUnit> {
         console.log("Writing code")
 
         const { sourceCode, comment } = tought
 
-        this.numberOfRetries++
-        this.changeRequest.task.leaveComment("React Developer", comment)
-        this.changeRequest.task.finishedWork("React Developer", "Finished with coding")
+        this.changeRequest.task.leaveComment(this.name, comment)
+        this.changeRequest.task.finishedWork(this.name, "Finished with coding")
 
         this.changeRequest.sourceCode = { ...this.changeRequest.sourceCode, ...sourceCode }
 
         try {
-            this.changeRequest.task.startedWork("React Developer", "Building the project...")
+            this.changeRequest.task.startedWork(this.name, "Building the project...")
             const buildArtifact = await this.localDevEnvironment.build(this.changeRequest.sourceCode)
-            this.changeRequest.task.finishedWork("React Developer", "Build successful — check Output tab to test.")
+            this.changeRequest.task.finishedWork(this.name, "Build successful — check Output tab to test.")
             this.changeRequest.buildArtifact = buildArtifact
         } catch (error) {
-            this.changeRequest.task.leaveComment("React Developer", `Error during build: ${error}` )
-
-            if (this.numberOfRetries <= this.MAX_RETRIES) {
-                this.changeRequest.task.finishedWork("React Developer", "Error encountered during build, I would try again.")
-                return await this.execute(this.changeRequest)
-            }else{
-                this.changeRequest.task.finishedWork("React Developer", "I tried multiple times, but I couldn't build the project. Please create a new task with the bug description.")
-            }
+            this.changeRequest.task.leaveComment(this.name, `Error during build: ${error}` )
+            this.changeRequest.task.finishedWork(this.name, "Finsihed with error. Please create a new task with the bug description.")
         }finally{
             await this.taskRepository.save(this.changeRequest.task)
         }
-        
+        console.log('React Developer finished with coding.')
 
         return this.changeRequest
 

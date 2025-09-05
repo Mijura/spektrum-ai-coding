@@ -21,6 +21,7 @@ export class Marketeer extends OpenAIContributor {
 
     async preThought(task: Task): Promise<void> {
         this.task = task
+        console.log('Marketeer is thinking about the project name and description...')
     }
 
     loadContext(): string {
@@ -50,6 +51,7 @@ export class Marketeer extends OpenAIContributor {
 
     async afterThought(thought: z.infer<typeof this.thoughtShape>): Promise<ProjectDetails> {
         const { project } = thought
+        console.log('Marketeer finished generating the project name and description')
         return project
     }
 }

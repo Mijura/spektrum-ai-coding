@@ -25,6 +25,7 @@ export class ProductOwner extends OpenAIContributor {
 
     async preThought(task: Task): Promise<void> {
         this.task = task
+        console.log('Product Owner generating feature specs...')
     }
 
     loadContext(): string {
@@ -127,6 +128,7 @@ export class ProductOwner extends OpenAIContributor {
             createdTasks.push(t)
         }
 
+        console.log('Product Owner finished generating feature specs')
         return createdTasks
     }
 
