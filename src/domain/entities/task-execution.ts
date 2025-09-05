@@ -3,7 +3,6 @@ import { Task } from "./task"
 import { v4 as uuidv4 } from "uuid"
 import { EmitNewTaskExecution } from "@domain/events/emitters/new-task-execution"
 import { EmitTaskExecutionUpdate } from "@domain/events/emitters/task-execution-update"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export class TaskExecution {
     public readonly id: string

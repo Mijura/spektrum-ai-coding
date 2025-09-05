@@ -4,7 +4,6 @@ import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { Develop } from "@domain/use-cases/task-execution/develop"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { Commit } from "@domain/value-objects/commit"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { WorkUnit } from "@domain/value-objects/work-unit"
 import { Deployment, Project } from "@domain/entities/project"
@@ -49,8 +48,7 @@ export class DevelopUseCase implements Develop {
 
 			const url = await this.webHostingService.deployPrebuiltCode(project.devEnvironmentId, work.buildArtifact)
 	
-			const commit: Commit = { buildArtifact: work.buildArtifact, sourceCode: work.sourceCode }
-			const version = await this.versionControlSystem.commitVersion(project.id, commit)
+			const version = await this.versionControlSystem.commitVersion(project.id, work.sourceCode, work.buildArtifact)
 
 			const deployment : Deployment = { url, version }
 			project.setLatestDevDeployment(deployment)

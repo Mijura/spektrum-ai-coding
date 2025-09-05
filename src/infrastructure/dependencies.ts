@@ -51,7 +51,6 @@ import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { DefaultMarketingService } from "@application/services/marketing-service"
 import { VersionRepository } from "@domain/ports/repositories/version-repository"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { CompressorService } from "@domain/ports/compressor-service"
 import { Bundler } from "@domain/ports/bundlers/bundler"
 import RspackBundler from "@infrastructure/adapters/bundlers/rspack-bundler"
 import { DynamoDBVersionRepository } from "@infrastructure/adapters/repositories/version-repository"
@@ -63,9 +62,6 @@ import { RspackTemplate } from "@infrastructure/adapters/templates/rspack-templa
 import { FileSystemPort } from "@domain/ports/filesystem/file-system"
 import { LocalFileSystem } from "@infrastructure/adapters/filesystem/local-file-system"
 import { YarnPackageManager } from "@infrastructure/adapters/package-managers/yarn-package-manager"
-import { FileStorage } from "@infrastructure/ports/file-storage"
-import { S3FileStorage } from "@infrastructure/adapters/s3-file-storage"
-import { TarGzCompressorService } from "@infrastructure/adapters/targz-compressor-service"
 import { ProductOwner } from "@infrastructure/adapters/ai/openai/product-owner"
 import { ReactDeveloper } from "@infrastructure/adapters/ai/openai/react-developer"
 import { Marketeer } from "@infrastructure/adapters/ai/openai/marketeer"
@@ -73,21 +69,22 @@ import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { S3HostingService } from "@application/services/s3-hosting-service"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
-import { S3VersionControlSystem } from "@infrastructure/adapters/s3-version-control-system"
+import { JigJoyVCSAdapter } from "@infrastructure/adapters/jigjoy-vcs"
 import { InMemoryVersionControlSystem } from "./adapters/in-memory-version-control-system"
 import { CommentAndDevelop } from "@domain/use-cases/task/comment-and-develop"
+import { FileStorage, FileStorageProvider } from "@honeycomb-app/file-artifacts"
 
 // Controllers
 export const projectController = new ProjectController()
 export const taskController = new TaskController()
 export const taskExecutionController = new TaskExecutionController()
 
+
+const fileStorage: FileStorage = FileStorageProvider.create()
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager(fileSystem)
-export const fileStorage: FileStorage = new S3FileStorage()
-export const hostingService: WebHostingService = new S3HostingService(fileStorage)   
-export const compressorService: CompressorService = new TarGzCompressorService()
+export const hostingService: WebHostingService = new S3HostingService(fileStorage)
 
 
 // Filters
@@ -107,8 +104,8 @@ export const taskExecutionRepository: TaskExecutionRepository = new DynamoDBTask
 export const versionRepository: VersionRepository = new DynamoDBVersionRepository()
 
 
-export const versionControlSystem: VersionControlSystem = new S3VersionControlSystem(fileStorage, compressorService, versionRepository)
-export const inMemoryVersionControlSystem: VersionControlSystem = new InMemoryVersionControlSystem()
+export const versionControlSystem: VersionControlSystem = new JigJoyVCSAdapter()
+// export const inMemoryVersionControlSystem: VersionControlSystem = new InMemoryVersionControlSystem()
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
 // Contributors

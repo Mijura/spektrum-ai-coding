@@ -1,23 +1,28 @@
-import { Version } from "@domain/value-objects/version"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
-import { Commit } from "@domain/value-objects/commit"
+import { FileArtifacts } from "@honeycomb-app/file-artifacts"
+
 
 export interface VersionControlSystem {
 
-
-    commitVersion(projectId: string, commit: Commit): Promise<Version>
+    /**
+     * Creates a new repository
+     * @returns The repository id created by the version control system
+     */
+    createRepository(): Promise<string>
 
     /**
-     * Pulls the source code from the version control system
-     * @param version - The version to pull the source code from
-     * @returns The source code for the given version
+     * Commits the files to the version control system
+     * @param repositoryId - The repository id to commit the files to
+     * @param fileArtifacts - The file artifacts to commit
+     * @returns The version created by the version control system
      */
-    pullSourceCode(version: Version): Promise<FileArtifacts>
+    commit(repositoryId: string, fileArtifacts: FileArtifacts): Promise<void>
 
     /**
-     * 
-     * @param version 
+     * Pulls the files from the version control system
+     * @param repositoryId - The repository id to pull the files from
+     * @returns The files for the given repository
      */
-    pullBuildArtifact(version: Version): Promise<FileArtifacts>
+    pull(repositoryId: string): Promise<FileArtifacts>
+
 
 }
