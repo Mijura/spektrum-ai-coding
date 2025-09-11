@@ -1,4 +1,5 @@
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
+import { FileArtifacts } from "@honeycomb-app/file-artifacts"
+
 
 export interface WebHostingService {
     deployPrebuiltCode(projectId: string, buildArtifact: FileArtifacts): Promise<string>

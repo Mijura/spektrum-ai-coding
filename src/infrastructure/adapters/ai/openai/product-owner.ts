@@ -1,6 +1,6 @@
 import { Task } from "@domain/entities/task"
-import z from "zod"
 import { OpenAIContributor, Brain, ReasoningEffort } from "./contributor"
+import z from "zod"
 
 export class ProductOwner extends OpenAIContributor {
 

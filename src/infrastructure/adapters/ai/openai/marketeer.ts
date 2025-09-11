@@ -1,7 +1,7 @@
-import { z } from "zod"
 import { ProjectDetails } from "@domain/value-objects/project-details"
 import { Task } from "@domain/entities/task" 
 import { OpenAIContributor, Brain, ReasoningEffort } from "./contributor"
+import { z } from "zod"
 
 export class Marketeer extends OpenAIContributor {
     

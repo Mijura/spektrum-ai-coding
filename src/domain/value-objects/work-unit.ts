@@ -1,5 +1,5 @@
 import { Task } from "@domain/entities/task"
-import { FileArtifacts } from "./file-artifacts"
+import { FileArtifacts } from "@honeycomb-app/file-artifacts"
 
 export interface WorkUnit {
     task: Task

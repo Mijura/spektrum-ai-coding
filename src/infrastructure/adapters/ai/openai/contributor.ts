@@ -1,7 +1,7 @@
 import OpenAI from "openai/index"
 import { Contributor } from "@domain/ports/ai/contributor"
-import { z } from "zod"
 import { zodResponseFormat } from "openai/helpers/zod"
+import { z } from "zod"
 
 export enum Brain {
     GPT_41 = "gpt-4.1",

@@ -1,5 +1,4 @@
 import { TaskExecutionStatus } from "@domain/value-objects/activity"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export interface TaskExecutionRecord {
     id: string

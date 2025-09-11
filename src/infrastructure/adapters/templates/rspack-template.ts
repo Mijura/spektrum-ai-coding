@@ -1,6 +1,6 @@
 import { Template } from "@domain/ports/templates/template"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
+import { FileArtifacts } from "@honeycomb-app/file-artifacts"
 import path from "path"
 
 export class RspackTemplate implements Template {

@@ -1,7 +1,7 @@
 import { Bundler } from "@domain/ports/bundlers/bundler"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import { PackageManager } from "@infrastructure/ports/package-manager"
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
+import { FileArtifacts } from "@honeycomb-app/file-artifacts"
 
 export default class RspackBundler implements Bundler {
 

@@ -18,8 +18,8 @@ export class CreateProjectUseCase implements CreateProject {
 	async execute(owner: string): Promise<Project> {
 		try {
 			// Create a new project with a unique ID
-			const project: Project = Project.create("My Project", "Empty project...", owner)
 			const repositoryId: string = await this.versionControlSystem.createRepository()
+			const project: Project = Project.create("My Project", "Empty project...", owner, repositoryId)
 
 			const buildArtifact: FileArtifacts = await this.template.fetchPrebuiltFiles()
 			const sourceCode: FileArtifacts = await this.template.fetchSourceCode()

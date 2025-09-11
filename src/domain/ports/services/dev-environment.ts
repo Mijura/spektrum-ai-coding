@@ -1,4 +1,4 @@
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
+import { FileArtifacts } from "@honeycomb-app/file-artifacts"
 
 /**
  * LocalEnvironment is a service that allows you to setup, maintain and deploy a frontend project.

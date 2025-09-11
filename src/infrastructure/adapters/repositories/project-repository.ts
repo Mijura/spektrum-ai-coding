@@ -5,7 +5,6 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { ProjectMapper } from "@infrastructure/mappers/project-mapper"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { ProjectRecord } from "@infrastructure/records/project"
-import { TaskRecord } from "@infrastructure/records/task"
 
 const client = new DynamoDBClient({
 	region: process.env.AWS_REGION,
