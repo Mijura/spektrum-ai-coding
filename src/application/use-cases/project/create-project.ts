@@ -5,7 +5,6 @@ import { FileArtifacts } from "@honeycomb-app/file-artifacts"
 import { Template } from "@domain/ports/templates/template"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { Deployment } from "@domain/entities/project"
 
 export class CreateProjectUseCase implements CreateProject {
 	constructor(
@@ -28,13 +27,10 @@ export class CreateProjectUseCase implements CreateProject {
 			await this.versionControlSystem.commit(repositoryId, sourceCode)
 
 			// deploy files
-			const url: string = await this.webHostingService.deployPrebuiltCode(project.devEnvironmentId, buildArtifact)
+			//const url: string = await this.webHostingService.deployPrebuiltCode(buildArtifact)
 
 			console.log('Template deployed successfully!')
-
-			const deployment : Deployment = { url, version }
 			
-			project.setLatestDevDeployment(deployment)
 			await this.projectRepository.save(project)
 
 			return project

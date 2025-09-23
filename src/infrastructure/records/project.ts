@@ -1,5 +1,3 @@
-import { Deployment } from "@domain/entities/project"
-
 export enum ProjectStatus {
 	ACTIVE = "Active",
 	ARCHIVED = "Archived",
@@ -15,8 +13,4 @@ export interface ProjectRecord {
 	status: ProjectStatus
 	detailsUpdated: boolean
 	repositoryId: string
-	devEnvironmentId: string
-	prodEnvironmentId: string
-	latestDevDeployment: Deployment | null
-	latestProdDeployment: Deployment | null
 }

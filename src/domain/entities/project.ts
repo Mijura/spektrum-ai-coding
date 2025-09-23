@@ -4,10 +4,7 @@ export enum ProjectStatus {
 	ACTIVE = "Active",
 	ARCHIVED = "Archived"
 }
-export interface Deployment {
-	url: string
-	version: any
-}
+
 export class Project {
 
 	public readonly id: string
@@ -19,10 +16,6 @@ export class Project {
 	public status: ProjectStatus
 	public detailsUpdated: boolean
 	public repositoryId: string
-	public devEnvironmentId: string
-	public prodEnvironmentId: string 
-	public latestDevDeployment: Deployment | null
-	public latestProdDeployment: Deployment | null
 
 	private constructor(
 		id: string,
@@ -33,11 +26,7 @@ export class Project {
 		updated: string | null,
 		status: ProjectStatus,
 		detailsUpdated: boolean,
-		repositoryId: string,
-		devEnvironmentId: string,
-		prodEnvironmentId: string,
-		latestDevDeployment: Deployment | null,
-		latestProdDeployment: Deployment | null
+		repositoryId: string
 	) {
 		this.id = id
 		this.ownerId = ownerId
@@ -48,10 +37,6 @@ export class Project {
 		this.status = status
 		this.detailsUpdated = detailsUpdated
 		this.repositoryId = repositoryId
-		this.devEnvironmentId = devEnvironmentId
-		this.prodEnvironmentId = prodEnvironmentId
-		this.latestDevDeployment = latestDevDeployment
-		this.latestProdDeployment = latestProdDeployment
 	}
 
 	setName(name: string) {
@@ -79,46 +64,7 @@ export class Project {
 		this.detailsUpdated = true
 		this.updated = new Date().toISOString()
 	}
-
-	setLatestDevDeployment(deployment: Deployment) {
-		
-		const url = deployment.url
-		const version = deployment.version
-		if(url === "") {
-			throw new Error("URL cannot be empty")
-		}
-		if(!version) {
-			throw new Error("Version cannot be empty")
-		}
-
-		if(this.latestDevDeployment && this.latestDevDeployment.url !== url) {
-			throw new Error("URL cannot be changed after it has been set")
-		}
-
-		this.latestDevDeployment = deployment
-		this.updated = new Date().toISOString()
-	}
-
-	setLatestProdDeployment(deployment: Deployment) {
-
-		const url = deployment.url
-		const version = deployment.version
-		if(url === "") {
-			throw new Error("URL cannot be empty")
-		}
-		if(!version) {
-			throw new Error("Version cannot be empty")
-		}
-
-		if(this.latestProdDeployment && this.latestProdDeployment.url !== url) {
-			throw new Error("URL cannot be changed after it has been set")
-		}
-
-		this.latestProdDeployment = deployment
-		this.updated = new Date().toISOString()
-	}
 	
-
 	// Factory method to create a new project
 	static create(name: string, description: string, owner: string, repositoryId: string): Project {
 
@@ -130,7 +76,7 @@ export class Project {
 		const devEnvironmentId = uuidv4()
 		const prodEnvironmentId = uuidv4()
 		const created = new Date().toISOString() // ISO format
-		return new Project(id, owner, name, description, created, null, ProjectStatus.ACTIVE, false, repositoryId, devEnvironmentId, prodEnvironmentId, null, null)
+		return new Project(id, owner, name, description, created, null, ProjectStatus.ACTIVE, false, repositoryId)
 	}
 
 	archive() {
@@ -148,11 +94,7 @@ export class Project {
 		status: ProjectStatus
 		detailsUpdated: boolean	
 		repositoryId: string
-		devEnvironmentId: string
-		prodEnvironmentId: string
-		latestDevDeployment: Deployment | null
-		latestProdDeployment: Deployment | null
 	}): Project {
-		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated, data.repositoryId, data.devEnvironmentId, data.prodEnvironmentId, data.latestDevDeployment, data.latestProdDeployment)
+		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated, data.repositoryId)
 	}
 }

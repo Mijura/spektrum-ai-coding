@@ -40,7 +40,6 @@ import { FetchTaskExecutionsHeatmapUseCase } from "@application/use-cases/task-e
 import { FetchTimelineByProjectIdUseCase } from "@application/use-cases/task-execution/fetch-project-timeline"
 import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/task-execution/fetch-account-timeline"
 
-import { MockTaskExecutionRepository } from "@infrastructure/adapters/repositories/mock-task-execution-repository"
 import { DynamoDBTaskExecutionRepository } from "@infrastructure/adapters/repositories/dynamodb-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { MarketingService } from "@domain/ports/services/marketing-service"
@@ -48,11 +47,9 @@ import { Contributor } from "@domain/ports/ai/contributor"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { DefaultMarketingService } from "@application/services/marketing-service"
-import { VersionRepository } from "@domain/ports/repositories/version-repository"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { Bundler } from "@domain/ports/bundlers/bundler"
 import RspackBundler from "@infrastructure/adapters/bundlers/rspack-bundler"
-import { DynamoDBVersionRepository } from "@infrastructure/adapters/repositories/version-repository"
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
 import { SourceCodeFilter } from "@infrastructure/adapters/filesystem/filters/source-code-filter"
 import { DistFolderFilter } from "@infrastructure/adapters/filesystem/filters/dist-folder-filter"
@@ -69,7 +66,6 @@ import { S3HostingService } from "@application/services/s3-hosting-service"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { JigJoyVCSAdapter } from "@infrastructure/adapters/jigjoy-vcs"
-import { InMemoryVersionControlSystem } from "./adapters/in-memory-version-control-system"
 import { CommentAndDevelop } from "@domain/use-cases/task/comment-and-develop"
 import { FileStorage, FileStorageProvider } from "@honeycomb-app/file-artifacts"
 
@@ -100,7 +96,6 @@ export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, dis
 export const projectRepository: ProjectRepository = new DynamoDBProjectRepository()
 export const taskRepository: TaskRepository = new DynamoDBTaskRepository()
 export const taskExecutionRepository: TaskExecutionRepository = new DynamoDBTaskExecutionRepository()
-export const versionRepository: VersionRepository = new DynamoDBVersionRepository()
 
 
 export const versionControlSystem: VersionControlSystem = new JigJoyVCSAdapter()
