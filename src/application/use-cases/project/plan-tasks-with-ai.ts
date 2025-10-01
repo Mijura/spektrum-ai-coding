@@ -1,12 +1,12 @@
 import { PlanTasksWithAI } from "@domain/use-cases/project/plan-tasks-with-ai"
 import { Task } from "@domain/entities/task"
 import { MarketingService } from "@domain/ports/services/marketing-service"    
-import { Contributor } from "@domain/ports/ai/contributor"
+import { Agent } from "@domain/ports/ai/agent"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 
 export class PlanTasksWithAIUseCase implements PlanTasksWithAI {
 	constructor(
-        private readonly productOwner: Contributor,
+        private readonly productOwner: Agent,
         private readonly marketingService: MarketingService,
         private readonly taskRepository: TaskRepository
 	) {}

@@ -1,9 +1,9 @@
 import { ProjectDetails } from "@domain/value-objects/project-details"
 import { Task } from "@domain/entities/task" 
-import { OpenAIContributor, Brain, ReasoningEffort } from "./contributor"
+import { OpenAIAgent, Brain, ReasoningEffort } from "./agent"
 import { z } from "zod"
 
-export class Marketeer extends OpenAIContributor {
+export class Marketeer extends OpenAIAgent {
     
     name: string = "Marketeer"
 

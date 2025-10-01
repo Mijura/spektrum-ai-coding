@@ -1,8 +1,8 @@
 import { z } from "zod"
 
-export interface Contributor {
+export interface Agent {
     readonly name: string
-    readonly brain: string
+    readonly model: string
     readonly thoughtShape: z.ZodSchema
 
     preThought(input: any): Promise<void>

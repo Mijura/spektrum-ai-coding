@@ -1,9 +1,9 @@
 import OpenAI from "openai/index"
-import { Contributor } from "@domain/ports/ai/contributor"
+import { Agent } from "@domain/ports/ai/agent"
 import { zodResponseFormat } from "openai/helpers/zod"
 import { z } from "zod"
 
-export enum Brain {
+export enum Model {
     GPT_41 = "gpt-4.1",
     GPT_41_MINI = "gpt-4.1-mini",
     GPT_41_NANO = "gpt-4.1-nano",
@@ -19,17 +19,17 @@ export enum ReasoningEffort {
     HIGH = "high"
 }
 
-export abstract class OpenAIContributor implements Contributor {
+export abstract class OpenAIAgent implements Agent {
 
     /**
-     * The name of the contributor
+     * The name of the agent
      */
     abstract name: string
 
     /**
      * The AI model to use
      */
-    abstract brain: Brain
+    abstract model: Model
 
     /**
      * The object definition we expect the AI to return
@@ -66,7 +66,7 @@ export abstract class OpenAIContributor implements Contributor {
     
     
         const completion = await client.chat.completions.parse({
-            model: this.brain,
+            model: this.models,
             reasoning_effort: this.reasoningEffort,
             messages: [
                 { role: "system", content: this.loadContext() },
@@ -78,6 +78,15 @@ export abstract class OpenAIContributor implements Contributor {
         const parsed = this.thoughtShape.parse(completion.choices[0].message.parsed)
     
         return await this.afterThought(parsed)
+    }
+    
+    /**
+     * Delegate task to another collaborator
+     */
+    protected async delegateTo(agentName: string, input: any): Promise<any> {
+
+        // TODO: Implement this
+        return null
     }
 
     /**
