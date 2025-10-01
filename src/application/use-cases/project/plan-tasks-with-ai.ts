@@ -1,12 +1,7 @@
 import { PlanTasksWithAI } from "@domain/use-cases/project/plan-tasks-with-ai"
 import { Task } from "@domain/entities/task"
-<<<<<<< HEAD
-import { MarketingService } from "@domain/ports/services/marketing-service" 
-import { Agent } from "@domain/ports/ai/agent"
-=======
 import { MarketingService } from "@domain/ports/services/marketing-service"    
-import { Agent } from "@domain/ports/ai/contributor"
->>>>>>> feature/jig-639-comment-from-react-developer-sometimes-disappears-when
+import { Agent } from "@domain/ports/ai/agent"    
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 
 export class PlanTasksWithAIUseCase implements PlanTasksWithAI {
