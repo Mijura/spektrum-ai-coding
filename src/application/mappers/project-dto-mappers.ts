@@ -1,4 +1,4 @@
-import { Deployment, Project, ProjectStatus } from "@domain/entities/project"
+import { Project, ProjectStatus } from "@domain/entities/project"
 
 
 export interface ProjectDto {
@@ -10,8 +10,6 @@ export interface ProjectDto {
   updated: string | null
   status: ProjectStatus
   detailsUpdated: boolean
-  latestDevDeployment: Deployment | null
-  latestProdDeployment: Deployment | null
 }
 
 export class ProjectDtoMapper {
@@ -25,9 +23,7 @@ export class ProjectDtoMapper {
       created: project.created,
       updated: project.updated,
       status: project.status,
-      detailsUpdated: project.detailsUpdated,
-      latestDevDeployment: project.latestDevDeployment,
-      latestProdDeployment: project.latestProdDeployment
+      detailsUpdated: project.detailsUpdated
     }
   }
 

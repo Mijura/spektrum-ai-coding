@@ -1,14 +1,6 @@
 import { Task } from "@domain/entities/task"
-import { OpenAIAgent, Brain, ReasoningEffort } from "./agent"
 import z from "zod"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import { OpenAIAgent, Model, ReasoningEffort } from "./agent"
->>>>>>> 672dd1e (rename contributor to agent)
-=======
-import { OpenAIAgent, Model, ReasoningEffort } from "./agent"
->>>>>>> feature/jig-639-comment-from-react-developer-sometimes-disappears-when
 
 export class ProductOwner extends OpenAIAgent {
 

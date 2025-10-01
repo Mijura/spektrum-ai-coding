@@ -6,12 +6,8 @@ import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { WorkUnit } from "@domain/value-objects/work-unit"
-import { Deployment, Project } from "@domain/entities/project"
-<<<<<<< HEAD
+import { Project } from "@domain/entities/project"
 import { Agent } from "@domain/ports/ai/agent"
-=======
-import { Agent } from "@domain/ports/ai/contributor"
->>>>>>> feature/jig-639-comment-from-react-developer-sometimes-disappears-when
 
 export class DevelopUseCase implements Develop {
 
@@ -54,7 +50,7 @@ export class DevelopUseCase implements Develop {
 	
 			const version = await this.versionControlSystem.commitVersion(project.id, work.sourceCode, work.buildArtifact)
 
-			const deployment : Deployment = { url, version }
+			const deployment = { url, version }
 			await this.projectRepository.save(project)
 
             taskExecution.finishSuccessfully()

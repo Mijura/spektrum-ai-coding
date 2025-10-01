@@ -3,8 +3,7 @@ import { Project } from "@domain/entities/project"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
-import { Commit } from "@domain/value-objects/commit"
-import { Version } from "@domain/value-objects/version"
+
 export class DeployProjectUseCase implements DeployProject {
 	constructor(
 		private readonly projectRepository: ProjectRepository,
@@ -26,7 +25,7 @@ export class DeployProjectUseCase implements DeployProject {
 	
 			const url = await this.webHostingService.deployPrebuiltCode(project.prodEnvironmentId, buildArtifact)
 	 
-			const commit: Commit = { buildArtifact, sourceCode }
+			const commit = { buildArtifact, sourceCode }
 			const version = await this.versionControlSystem.commitVersion(projectId, commit)
 			
 			await this.projectRepository.save(project)
