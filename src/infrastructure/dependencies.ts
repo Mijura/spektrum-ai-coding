@@ -45,7 +45,7 @@ import { DynamoDBTaskExecutionRepository } from "@infrastructure/adapters/reposi
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { MarketingService } from "@domain/ports/services/marketing-service"
 import { Contributor } from "@domain/ports/ai/contributor"
-import { FrontendTeam } from "@application/services/frontend-team"
+
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { DefaultMarketingService } from "@application/services/marketing-service"

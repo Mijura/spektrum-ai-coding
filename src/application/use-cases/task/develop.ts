@@ -40,7 +40,9 @@ export class DevelopUseCase implements Develop {
 			let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
 
 			const changeRequest: WorkUnit = { task, sourceCode, buildArtifact: null }
+
             const work: WorkUnit = await this.reactDeveloper.execute(changeRequest)
+
 
 			if (!work.buildArtifact) {
 				throw new Error("Build artifact is not created")

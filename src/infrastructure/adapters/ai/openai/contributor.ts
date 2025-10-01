@@ -79,6 +79,15 @@ export abstract class OpenAIContributor implements Contributor {
     
         return await this.afterThought(parsed)
     }
+    
+    /**
+     * Delegate task to another collaborator
+     */
+    protected async delegateTo(contributorName: string, input: any): Promise<any> {
+
+        // TODO: Implement this
+        return null
+    }
 
     /**
      * The function to call after the AI has thought
