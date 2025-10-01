@@ -44,7 +44,7 @@ import { MockTaskExecutionRepository } from "@infrastructure/adapters/repositori
 import { DynamoDBTaskExecutionRepository } from "@infrastructure/adapters/repositories/dynamodb-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { MarketingService } from "@domain/ports/services/marketing-service"
-import { Contributor } from "@domain/ports/ai/contributor"
+import { Agent } from "@domain/ports/ai/contributor"
 
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
@@ -108,10 +108,10 @@ export const versionControlSystem: VersionControlSystem = new JigJoyVCSAdapter()
 // export const inMemoryVersionControlSystem: VersionControlSystem = new InMemoryVersionControlSystem()
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
-// Contributors
-export const productOwner: Contributor = new ProductOwner()
-export const reactDeveloper: Contributor = new ReactDeveloper(localDevEnvironment, taskRepository)
-export const marketeer: Contributor = new Marketeer()
+// Agents
+export const productOwner: Agent = new ProductOwner()
+export const reactDeveloper: Agent = new ReactDeveloper(localDevEnvironment, taskRepository)
+export const marketeer: Agent = new Marketeer()
 
 
 export const marketingService: MarketingService = new DefaultMarketingService(marketeer, projectRepository)

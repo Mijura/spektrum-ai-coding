@@ -1,5 +1,5 @@
 import { Task } from "@domain/entities/task"
-import { Contributor } from "@domain/ports/ai/contributor"
+import { Agent } from "@domain/ports/ai/agent"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { MarketingService } from "@domain/ports/services/marketing-service"
 import { ProjectDetails } from "@domain/value-objects/project-details"
@@ -7,7 +7,7 @@ import { ProjectDetails } from "@domain/value-objects/project-details"
 export class DefaultMarketingService implements MarketingService {
 
     constructor(
-        private readonly marketeer: Contributor,   
+        private readonly marketeer: Agent,   
         private readonly projectRepository: ProjectRepository
     ) {}
 
