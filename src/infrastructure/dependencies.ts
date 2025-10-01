@@ -43,7 +43,12 @@ import { FetchTimelineByAccountIdUseCase } from "@application/use-cases/task-exe
 import { DynamoDBTaskExecutionRepository } from "@infrastructure/adapters/repositories/dynamodb-task-execution-repository"
 import { PlanTasksWithAIUseCase } from "@application/use-cases/project/plan-tasks-with-ai"
 import { MarketingService } from "@domain/ports/services/marketing-service"
+<<<<<<< HEAD
 import { Agent } from "@domain/ports/ai/agent"
+=======
+import { Agent } from "@domain/ports/ai/contributor"
+
+>>>>>>> feature/jig-639-comment-from-react-developer-sometimes-disappears-when
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { DefaultMarketingService } from "@application/services/marketing-service"

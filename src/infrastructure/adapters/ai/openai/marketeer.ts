@@ -1,11 +1,15 @@
 import { ProjectDetails } from "@domain/value-objects/project-details"
 import { Task } from "@domain/entities/task" 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { OpenAIAgent, Brain, ReasoningEffort } from "./agent"
 import { z } from "zod"
 =======
 import { OpenAIAgent, Model, ReasoningEffort } from "./agent"
 >>>>>>> 672dd1e (rename contributor to agent)
+=======
+import { OpenAIAgent, Model, ReasoningEffort } from "./agent"
+>>>>>>> feature/jig-639-comment-from-react-developer-sometimes-disappears-when
 
 export class Marketeer extends OpenAIAgent {
     

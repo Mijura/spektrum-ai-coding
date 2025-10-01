@@ -18,11 +18,6 @@ export class DeployProjectUseCase implements DeployProject {
 			
 			const project = await this.projectRepository.get(projectId)
 
-			if (!project.latestDevDeployment) {
-				throw new Error("Project has no dev deployment")
-			}
-
-			const latestVersion: Version = project.latestDevDeployment.version
 
 			console.log(`Deploying project ${JSON.stringify(project)}`)
 	
@@ -33,7 +28,6 @@ export class DeployProjectUseCase implements DeployProject {
 	 
 			const commit: Commit = { buildArtifact, sourceCode }
 			const version = await this.versionControlSystem.commitVersion(projectId, commit)
-			project.setLatestProdDeployment({url , version})
 			
 			await this.projectRepository.save(project)
 			return project

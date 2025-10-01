@@ -1,5 +1,9 @@
 import OpenAI from "openai/index"
+<<<<<<< HEAD
 import { Agent } from "@domain/ports/ai/agent"
+=======
+import { Agent } from "@domain/ports/ai/contributor"
+>>>>>>> feature/jig-639-comment-from-react-developer-sometimes-disappears-when
 import { z } from "zod"
 import { zodResponseFormat } from "openai/helpers/zod"
 
@@ -67,10 +71,14 @@ export abstract class OpenAIAgent implements Agent {
     
         const completion = await client.chat.completions.parse({
 <<<<<<< HEAD
+<<<<<<< HEAD
             model: this.models,
 =======
             model: this.model,
 >>>>>>> 672dd1e (rename contributor to agent)
+=======
+            model: this.model,
+>>>>>>> feature/jig-639-comment-from-react-developer-sometimes-disappears-when
             reasoning_effort: this.reasoningEffort,
             messages: [
                 { role: "system", content: this.loadContext() },
@@ -87,7 +95,11 @@ export abstract class OpenAIAgent implements Agent {
     /**
      * Delegate task to another collaborator
      */
+<<<<<<< HEAD
     protected async delegateTo(agentName: string, input: any): Promise<any> {
+=======
+    protected async delegateTo(contributorName: string, input: any): Promise<any> {
+>>>>>>> feature/jig-639-comment-from-react-developer-sometimes-disappears-when
 
         // TODO: Implement this
         return null

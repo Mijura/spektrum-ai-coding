@@ -73,8 +73,6 @@ export class Project {
 		}
 
 		const id = uuidv4() // Generate unique ID
-		const devEnvironmentId = uuidv4()
-		const prodEnvironmentId = uuidv4()
 		const created = new Date().toISOString() // ISO format
 		return new Project(id, owner, name, description, created, null, ProjectStatus.ACTIVE, false, repositoryId)
 	}

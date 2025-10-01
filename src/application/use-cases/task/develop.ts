@@ -7,7 +7,11 @@ import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { WorkUnit } from "@domain/value-objects/work-unit"
 import { Deployment, Project } from "@domain/entities/project"
+<<<<<<< HEAD
 import { Agent } from "@domain/ports/ai/agent"
+=======
+import { Agent } from "@domain/ports/ai/contributor"
+>>>>>>> feature/jig-639-comment-from-react-developer-sometimes-disappears-when
 
 export class DevelopUseCase implements Develop {
 
@@ -34,9 +38,7 @@ export class DevelopUseCase implements Develop {
         try {
 
 			const project: Project = await this.projectRepository.get(task.projectId)
-			if (!project.latestDevDeployment) {
-				throw new Error("Project has no dev deployment")
-			}
+
 			let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
 
 			const changeRequest: WorkUnit = { task, sourceCode, buildArtifact: null }
@@ -53,7 +55,6 @@ export class DevelopUseCase implements Develop {
 			const version = await this.versionControlSystem.commitVersion(project.id, work.sourceCode, work.buildArtifact)
 
 			const deployment : Deployment = { url, version }
-			project.setLatestDevDeployment(deployment)
 			await this.projectRepository.save(project)
 
             taskExecution.finishSuccessfully()
