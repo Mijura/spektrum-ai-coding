@@ -1,7 +1,7 @@
 import OpenAI from "openai/index"
 import { Agent } from "@domain/ports/ai/agent"
-import { zodResponseFormat } from "openai/helpers/zod"
 import { z } from "zod"
+import { zodResponseFormat } from "openai/helpers/zod"
 
 export enum Model {
     GPT_41 = "gpt-4.1",
@@ -66,7 +66,11 @@ export abstract class OpenAIAgent implements Agent {
     
     
         const completion = await client.chat.completions.parse({
+<<<<<<< HEAD
             model: this.models,
+=======
+            model: this.model,
+>>>>>>> 672dd1e (rename contributor to agent)
             reasoning_effort: this.reasoningEffort,
             messages: [
                 { role: "system", content: this.loadContext() },

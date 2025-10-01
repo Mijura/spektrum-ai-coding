@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 
 import { OpenAIAgent, Brain, ReasoningEffort } from "./agent"
+=======
+import z from "zod"
+import { OpenAIAgent, Model, ReasoningEffort } from "./agent"
+>>>>>>> 672dd1e (rename contributor to agent)
 import { WorkUnit } from "@domain/value-objects/work-unit"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
@@ -9,7 +14,7 @@ export class ReactDeveloper extends OpenAIAgent {
     
     name: string = "React Developer"
 
-    brain = Brain.GPT_5
+    model = Model.GPT_5
 
     reasoningEffort = ReasoningEffort.MEDIUM
     

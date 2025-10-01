@@ -1,13 +1,17 @@
 import { ProjectDetails } from "@domain/value-objects/project-details"
 import { Task } from "@domain/entities/task" 
+<<<<<<< HEAD
 import { OpenAIAgent, Brain, ReasoningEffort } from "./agent"
 import { z } from "zod"
+=======
+import { OpenAIAgent, Model, ReasoningEffort } from "./agent"
+>>>>>>> 672dd1e (rename contributor to agent)
 
 export class Marketeer extends OpenAIAgent {
     
     name: string = "Marketeer"
 
-    brain = Brain.GPT_5_NANO
+    model = Model.GPT_5_NANO
 
     reasoningEffort = ReasoningEffort.LOW
 

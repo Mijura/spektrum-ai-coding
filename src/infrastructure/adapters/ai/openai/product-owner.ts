@@ -1,12 +1,16 @@
 import { Task } from "@domain/entities/task"
 import { OpenAIAgent, Brain, ReasoningEffort } from "./agent"
 import z from "zod"
+<<<<<<< HEAD
+=======
+import { OpenAIAgent, Model, ReasoningEffort } from "./agent"
+>>>>>>> 672dd1e (rename contributor to agent)
 
 export class ProductOwner extends OpenAIAgent {
 
     name: string = "Product Owner"
 
-    brain = Brain.GPT_5_NANO
+    model = Model.GPT_5_NANO
 
     reasoningEffort = ReasoningEffort.LOW
 
