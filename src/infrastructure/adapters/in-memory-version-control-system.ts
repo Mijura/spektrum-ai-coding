@@ -1,5 +1,5 @@
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { FileArtifacts } from "@honeycomb-app/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/file-artifacts"
 
 export class InMemoryVersionControlSystem implements VersionControlSystem {
     createRepository(): Promise<string> {

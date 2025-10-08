@@ -1,6 +1,6 @@
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
 import { FileSystemPort } from "@domain/ports/filesystem/file-system"
-import { FileArtifacts } from "@honeycomb-app/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/file-artifacts"
 import path from "path"
 
 export class DistFolderFilter implements FileSelectionFilter {

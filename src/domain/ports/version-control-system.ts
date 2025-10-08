@@ -1,4 +1,4 @@
-import { FileArtifacts } from "@honeycomb-app/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/file-artifacts"
 
 
 export interface VersionControlSystem {

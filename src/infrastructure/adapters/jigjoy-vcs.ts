@@ -1,6 +1,6 @@
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { FileArtifacts } from "@honeycomb-app/file-artifacts"
-import { JigJoyVCS } from "@honeycomb-app/vcs-sdk"
+import { FileArtifacts } from "@jigjoy-io/file-artifacts"
+import { JigJoyVCS } from "@jigjoy-io/vcs-sdk"
 
 export class JigJoyVCSAdapter implements VersionControlSystem {
 

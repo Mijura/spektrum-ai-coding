@@ -1,5 +1,5 @@
 import path from "path"
-import { FileArtifacts } from "@honeycomb-app/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/file-artifacts"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { Bundler } from "@domain/ports/bundlers/bundler"
 import { FileSystemPort } from "@domain/ports/filesystem/file-system"

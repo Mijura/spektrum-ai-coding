@@ -1,5 +1,5 @@
-import { FileArtifacts } from "@honeycomb-app/file-artifacts"
-import { FileStorage } from "@honeycomb-app/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/file-artifacts"
+import { FileStorage } from "@jigjoy-io/file-artifacts"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { Readable } from "stream"
 

@@ -933,9 +933,18 @@
     "@aws-sdk/lib-storage" "^3.878.0"
     uuid "^11.1.0"
 
-"@honeycomb-app/vcs-sdk@^0.0.2":
+"@jigjoy-io/file-artifacts@^0.0.3":
+  version "0.0.3"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/file-artifacts/0.0.3/4a56a1cbc1d6e329210a8fb7cfa2d2b196ca6e22"
+  integrity sha512-ncQCumnZ+TXHzNtR1vb4pGELA85S2Ykjtj5UHpCsjE50ovpax0g6u52vCN/EL8pKhF4TPIx7avZ/kzflcrzjUA==
+  dependencies:
+    "@aws-sdk/client-s3" "^3.878.0"
+    "@aws-sdk/lib-storage" "^3.878.0"
+    uuid "^11.1.0"
+
+"@jigjoy-io/vcs-sdk@^0.0.2":
   version "0.0.2"
-  resolved "https://npm.pkg.github.com/download/@honeycomb-app/vcs-sdk/0.0.2/3841671747cb3d45009d2c00135266b978565d10"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/vcs-sdk/0.0.2/3841671747cb3d45009d2c00135266b978565d10"
   integrity sha512-8Aqlq4L5qZHPR8FiFED0q1uXrbl4wLmpJU824NQIVx+LWPqpbotQs4pi3eZLTOpVvnJLxVIyfE7yo9mVY3wJiQ==
   dependencies:
     "@honeycomb-app/file-artifacts" "^0.0.3"

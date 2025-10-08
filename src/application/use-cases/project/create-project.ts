@@ -1,7 +1,7 @@
 import { Project } from "@domain/entities/project"
 import { CreateProject } from "@domain/use-cases/project/create-project"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
-import { FileArtifacts } from "@honeycomb-app/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/file-artifacts"
 import { Template } from "@domain/ports/templates/template"
 import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"

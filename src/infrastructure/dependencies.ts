@@ -67,7 +67,7 @@ import { LocalDevEnvironment } from "@application/services/local-dev-environment
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { JigJoyVCSAdapter } from "@infrastructure/adapters/jigjoy-vcs"
 import { CommentAndDevelop } from "@domain/use-cases/task/comment-and-develop"
-import { FileStorage, FileStorageProvider } from "@honeycomb-app/file-artifacts"
+import { FileStorage, FileStorageProvider } from "@jigjoy-io/file-artifacts"
 import { Agent } from "@domain/value-objects/agent"
 
 // Controllers
