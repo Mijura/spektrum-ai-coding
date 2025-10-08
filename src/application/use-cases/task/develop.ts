@@ -7,7 +7,7 @@ import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { WorkUnit } from "@domain/value-objects/work-unit"
 import { Project } from "@domain/entities/project"
-import { Agent } from "@domain/ports/ai/agent"
+import { Agent } from "@domain/value-objects/agent"
 
 export class DevelopUseCase implements Develop {
 
