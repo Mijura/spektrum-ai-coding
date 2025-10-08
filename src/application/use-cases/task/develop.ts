@@ -35,7 +35,7 @@ export class DevelopUseCase implements Develop {
 
 			const project: Project = await this.projectRepository.get(task.projectId)
 
-			let sourceCode = await this.versionControlSystem.pullSourceCode(project.latestDevDeployment.version)
+			let sourceCode = await this.versionControlSystem.pull(project.id)
 
 			const changeRequest: WorkUnit = { task, sourceCode, buildArtifact: null }
 
@@ -46,9 +46,9 @@ export class DevelopUseCase implements Develop {
 				throw new Error("Build artifact is not created")
 			}
 
-			const url = await this.webHostingService.deployPrebuiltCode(project.devEnvironmentId, work.buildArtifact)
+			const url = await this.webHostingService.deployPrebuiltCode(project.id, work.buildArtifact)
 	
-			const version = await this.versionControlSystem.commitVersion(project.id, work.sourceCode, work.buildArtifact)
+			const version = await this.versionControlSystem.commit(project.id, work.sourceCode)
 
 			const deployment = { url, version }
 			await this.projectRepository.save(project)

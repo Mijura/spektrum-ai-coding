@@ -20,13 +20,12 @@ export class DeployProjectUseCase implements DeployProject {
 
 			console.log(`Deploying project ${JSON.stringify(project)}`)
 	
-			const buildArtifact = await this.versionControlSystem.pullBuildArtifact(latestVersion)
-			const sourceCode = await this.versionControlSystem.pullSourceCode(latestVersion)
+			const sourceCode = await this.versionControlSystem.pull(project.repositoryId)
 	
-			const url = await this.webHostingService.deployPrebuiltCode(project.prodEnvironmentId, buildArtifact)
+			const url = await this.webHostingService.deployPrebuiltCode(project.id, sourceCode)
 	 
-			const commit = { buildArtifact, sourceCode }
-			const version = await this.versionControlSystem.commitVersion(projectId, commit)
+
+			//const version = await this.versionControlSystem.commit(project.repositoryId, commit)
 			
 			await this.projectRepository.save(project)
 			return project

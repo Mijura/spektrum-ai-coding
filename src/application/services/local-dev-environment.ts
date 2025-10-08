@@ -16,8 +16,6 @@ export class LocalDevEnvironment implements DevEnvironment {
 		const buildId = uuidv4()
 		const temporaryBuildFolder = path.resolve(`projects/${buildId}`)		
 
-		// TODO: Fetch the source code from the version control system and merge with the passed source code
-
 		// write the source code to the file system
 		let promises = []
 		for (const [filePath, fileContent] of Object.entries(sourceCode)) {
