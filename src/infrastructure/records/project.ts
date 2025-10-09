@@ -12,5 +12,4 @@ export interface ProjectRecord {
 	updated: string | null
 	status: ProjectStatus
 	detailsUpdated: boolean
-	repositoryId: string
 }

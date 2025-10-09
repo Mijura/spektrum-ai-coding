@@ -15,7 +15,6 @@ export class Project {
 	public description: string
 	public status: ProjectStatus
 	public detailsUpdated: boolean
-	public repositoryId: string
 
 	private constructor(
 		id: string,
@@ -25,8 +24,7 @@ export class Project {
 		created: string,
 		updated: string | null,
 		status: ProjectStatus,
-		detailsUpdated: boolean,
-		repositoryId: string
+		detailsUpdated: boolean
 	) {
 		this.id = id
 		this.ownerId = ownerId
@@ -36,7 +34,6 @@ export class Project {
 		this.updated = updated
 		this.status = status
 		this.detailsUpdated = detailsUpdated
-		this.repositoryId = repositoryId
 	}
 
 	setName(name: string) {
@@ -66,7 +63,7 @@ export class Project {
 	}
 	
 	// Factory method to create a new project
-	static create(name: string, description: string, owner: string, repositoryId: string): Project {
+	static create(name: string, description: string, owner: string): Project {
 
 		if(owner === "") {
 			throw new Error("Owner cannot be empty")
@@ -74,7 +71,7 @@ export class Project {
 
 		const id = uuidv4() // Generate unique ID
 		const created = new Date().toISOString() // ISO format
-		return new Project(id, owner, name, description, created, null, ProjectStatus.ACTIVE, false, repositoryId)
+		return new Project(id, owner, name, description, created, null, ProjectStatus.ACTIVE, false)
 	}
 
 	archive() {
@@ -90,9 +87,8 @@ export class Project {
 		created: string
 		updated: string | null
 		status: ProjectStatus
-		detailsUpdated: boolean	
-		repositoryId: string
+		detailsUpdated: boolean
 	}): Project {
-		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated, data.repositoryId)
+		return new Project(data.id, data.ownerId, data.name, data.description, data.created, data.updated, data.status, data.detailsUpdated)
 	}
 }

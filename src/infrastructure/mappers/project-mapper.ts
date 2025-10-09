@@ -13,8 +13,7 @@ export class ProjectMapper {
 			created: project.created,
 			updated: project.updated,
 			status: project.status,
-			detailsUpdated: project.detailsUpdated,
-			repositoryId: project.repositoryId
+			detailsUpdated: project.detailsUpdated
 		}
 	}
 
@@ -28,8 +27,7 @@ export class ProjectMapper {
 			created: record.created,
 			updated: record.updated,
 			status: record.status,
-			detailsUpdated: record.detailsUpdated,
-			repositoryId: record.repositoryId
+			detailsUpdated: record.detailsUpdated
 		})
 	}
 
