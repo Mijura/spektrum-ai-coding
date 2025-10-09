@@ -2,7 +2,6 @@ import { TaskExecution } from "@domain/entities/task-execution"
 import { TaskExecutionRepository } from "@domain/ports/repositories/task-execution-repository"
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { Develop } from "@domain/use-cases/task-execution/develop"
-import { WebHostingService } from "@domain/ports/services/web-hosting-service"
 import { VersionControlSystem } from "@domain/ports/version-control-system"
 import { ProjectRepository } from "@domain/ports/repositories/project-repository"
 import { WorkUnit } from "@domain/value-objects/work-unit"
@@ -14,7 +13,6 @@ export class DevelopUseCase implements Develop {
 	constructor(
 		private readonly taskRepository: TaskRepository,
 		private readonly taskExecutionRepository: TaskExecutionRepository,
-		private readonly webHostingService: WebHostingService,
 		private readonly versionControlSystem: VersionControlSystem,
 		private readonly projectRepository: ProjectRepository,
 		private readonly reactDeveloper: Agent

@@ -61,13 +61,10 @@ import { YarnPackageManager } from "@infrastructure/adapters/package-managers/ya
 import { ProductOwner } from "@infrastructure/adapters/ai/openai/product-owner"
 import { ReactDeveloper } from "@infrastructure/adapters/ai/openai/react-developer"
 import { Marketeer } from "@infrastructure/adapters/ai/openai/marketeer"
-import { WebHostingService } from "@domain/ports/services/web-hosting-service"
-import { S3HostingService } from "@application/services/s3-hosting-service"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { JigJoyVCSAdapter } from "@infrastructure/adapters/jigjoy-vcs"
 import { CommentAndDevelop } from "@domain/use-cases/task/comment-and-develop"
-import { FileStorage, FileStorageProvider } from "@jigjoy-io/file-artifacts"
 import { Agent } from "@domain/agent"
 
 // Controllers
@@ -75,12 +72,9 @@ export const projectController = new ProjectController()
 export const taskController = new TaskController()
 export const taskExecutionController = new TaskExecutionController()
 
-
-const fileStorage: FileStorage = FileStorageProvider.create()
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager(fileSystem)
-export const hostingService: WebHostingService = new S3HostingService(fileStorage)
 
 
 // Filters
@@ -100,7 +94,6 @@ export const taskExecutionRepository: TaskExecutionRepository = new DynamoDBTask
 
 
 export const versionControlSystem: VersionControlSystem = new JigJoyVCSAdapter()
-// export const inMemoryVersionControlSystem: VersionControlSystem = new InMemoryVersionControlSystem()
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
 // Agents
@@ -112,11 +105,11 @@ export const marketeer: Agent = new Marketeer()
 export const marketingService: MarketingService = new DefaultMarketingService(marketeer, projectRepository)
 
 // Use Cases
-export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, rspackTemplate, hostingService, versionControlSystem)
+export const createNewProject: CreateProject = new CreateProjectUseCase(projectRepository, rspackTemplate, versionControlSystem)
 export const planTasksWithAI: PlanTasksWithAI = new PlanTasksWithAIUseCase(productOwner, marketingService, taskRepository)
 export const fetchProject: FetchProject = new FetchProjectUseCase(projectRepository)
 export const fetchProjects: FetchProjects = new FetchProjectsUseCase(projectRepository)
-export const deployProject: DeployProject = new DeployProjectUseCase(projectRepository, versionControlSystem, hostingService)
+export const deployProject: DeployProject = new DeployProjectUseCase(projectRepository, versionControlSystem)
 export const archiveProject: ArchiveProject = new ArchiveProjectUseCase(projectRepository)
 export const createTask: CreateTask = new CreateTaskUseCase(taskRepository, marketingService)
 export const fetchTasks: FetchTasks = new FetchTasksUseCase(taskRepository)
@@ -127,4 +120,4 @@ export const leaveComment: CommentAndDevelop = new CommentAndDevelopUseCase(task
 export const fetchTimelineByProjectId: FetchTaskExecutionsTimeline = new FetchTimelineByProjectIdUseCase(taskExecutionRepository)
 export const fetchTimelineByAccountId:  FetchTaskExecutionsTimeline = new FetchTimelineByAccountIdUseCase(taskExecutionRepository)
 export const fetchTaskExecutionsHeatmap: FetchTaskExecutionsHeatmap = new FetchTaskExecutionsHeatmapUseCase(taskExecutionRepository)
-export const develop: Develop = new DevelopUseCase(taskRepository, taskExecutionRepository, hostingService, versionControlSystem, projectRepository, reactDeveloper)
+export const develop: Develop = new DevelopUseCase(taskRepository, taskExecutionRepository, versionControlSystem, projectRepository, reactDeveloper)
