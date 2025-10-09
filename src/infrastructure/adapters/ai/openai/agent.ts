@@ -1,7 +1,7 @@
 import OpenAI from "openai/index"
 import { z } from "zod"
 import { zodResponseFormat } from "openai/helpers/zod"
-import { Agent } from "@domain/value-objects/agent"
+import { Agent } from "@domain/agent"
 
 export enum Model {
     GPT_41 = "gpt-4.1",

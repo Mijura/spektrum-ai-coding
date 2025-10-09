@@ -1,7 +1,7 @@
 import { PlanTasksWithAI } from "@domain/use-cases/project/plan-tasks-with-ai"
 import { Task } from "@domain/entities/task"
 import { MarketingService } from "@domain/ports/services/marketing-service"    
-import { Agent } from "@domain/value-objects/agent"    
+import { Agent } from "@domain/agent"    
 import { TaskRepository } from "@domain/ports/repositories/task-repository"
 
 export class PlanTasksWithAIUseCase implements PlanTasksWithAI {
