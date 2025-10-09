@@ -11,14 +11,12 @@ export class JigJoyVCSAdapter implements VersionControlSystem {
 	}
 
 	async commit(repositoryId: string, fileArtifacts: FileArtifacts): Promise<void> {
-		return await this.vcs.commitVersion(repositoryId, fileArtifacts)
+		return await this.vcs.commit(repositoryId, fileArtifacts)
 	}
-
 
 	async pull(repositoryId: string): Promise<FileArtifacts> {
-		return await this.vcs.pullSourceCod(repositoryId)
+		return await this.vcs.pull(repositoryId)
 	}
-
 
 
 }
