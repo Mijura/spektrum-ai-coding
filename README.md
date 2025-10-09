@@ -1,6 +1,6 @@
-# JigJoy Backend
+# Vibe Coding Service
 
-Backend for the JigJoy vibe coding platform.
+Handles AI-assisted software creation, where humans and agents co-author front-end and back-end code through natural-language tasks.
 
 ## Architecture
 
