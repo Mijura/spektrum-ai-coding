@@ -2,7 +2,6 @@ import z from "zod"
 import { OpenAIAgent, Model, ReasoningEffort } from "./agent"
 import { WorkUnit } from "@domain/value-objects/work-unit"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
-import { TaskRepository } from "@domain/ports/repositories/task-repository"
 
 export class ReactDeveloper extends OpenAIAgent {
     
@@ -22,13 +21,11 @@ export class ReactDeveloper extends OpenAIAgent {
 
     changeRequest!: WorkUnit
     localDevEnvironment: DevEnvironment
-    taskRepository: TaskRepository
     MAX_RETRIES = 3
 
-    constructor(localDevEnvironment: DevEnvironment, taskRepository: TaskRepository) {
+    constructor(localDevEnvironment: DevEnvironment) {
         super()
         this.localDevEnvironment = localDevEnvironment
-        this.taskRepository = taskRepository
     }
 
 
@@ -36,7 +33,7 @@ export class ReactDeveloper extends OpenAIAgent {
         this.changeRequest = changeRequest
         console.log('React Developer is generating the code...')
         this.changeRequest.task.startedWork(this.name, "React Developer is generating the code...")
-        await this.taskRepository.save(this.changeRequest.task)
+        //await this.taskRepository.save(this.changeRequest.task)
     }
 
     loadContext(): string {
@@ -73,7 +70,7 @@ export class ReactDeveloper extends OpenAIAgent {
             return await super.execute(changeRequest)
         }catch(error){
             changeRequest.task.leaveComment(this.name, 'I am not able to finsih the task. Please try again or contact the support.')
-            await this.taskRepository.save(changeRequest.task)
+            //await this.taskRepository.save(changeRequest.task)
             console.error('Error during coding:', error)
             throw error
         }
@@ -98,7 +95,7 @@ export class ReactDeveloper extends OpenAIAgent {
             this.changeRequest.task.leaveComment(this.name, `Error during build: ${error}` )
             this.changeRequest.task.finishedWork(this.name, "Finsihed with error. Please create a new task with the bug description.")
         }finally{
-            await this.taskRepository.save(this.changeRequest.task)
+            //await this.taskRepository.save(this.changeRequest.task)
         }
         console.log('React Developer finished with coding.')
 

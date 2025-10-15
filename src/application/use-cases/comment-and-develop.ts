@@ -1,12 +1,8 @@
-import { CommentAndDevelop } from "@domain/use-cases/task/comment-and-develop"
-import { TaskRepository } from "@domain/ports/repositories/task-repository"
 import { Task } from "@domain/entities/task"
+import { CommentAndDevelop } from "@domain/use-cases/task-execution/comment-and-develop"
 import { develop } from "@infrastructure/dependencies"
 
 export class CommentAndDevelopUseCase implements CommentAndDevelop {
-    constructor(
-        private readonly taskRepository: TaskRepository
-    ) {}
 
     async execute(taskId: string, authorId: string, commentText: string): Promise<void> {
         try {
