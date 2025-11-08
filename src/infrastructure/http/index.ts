@@ -3,8 +3,6 @@ import dotenv from "dotenv"
 dotenv.config()
 
 
-import { projectRouter } from "@infrastructure/http/routes/project-routes"
-import { taskRouter } from "@infrastructure/http/routes/task-routes"
 import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
 import { taskExecutionRouter } from "./routes/task-execution-routes"
 import { initializeActivityEmitter } from "./sockets/activity-emitter"
@@ -17,9 +15,8 @@ const app = express()
 // Middlewares
 app.use(corsMiddleware)
 app.use(express.json())
+
 // Routes
-app.use("/", projectRouter)
-app.use("/", taskRouter)
 app.use("/", taskExecutionRouter)
 
 
