@@ -105,7 +105,7 @@
     tslib "^2.6.2"
     uuid "^9.0.1"
 
-"@aws-sdk/client-s3@^3.817.0", "@aws-sdk/client-s3@^3.878.0", "@aws-sdk/client-s3@^3.879.0":
+"@aws-sdk/client-s3@^3.817.0", "@aws-sdk/client-s3@^3.879.0":
   version "3.879.0"
   resolved "https://registry.npmjs.org/@aws-sdk/client-s3/-/client-s3-3.879.0.tgz"
   integrity sha512-1bD2Do/OdCIzl72ncHKYamDhPijUErLYpuLvciyYD4Ywt4cVLHjWtVIqb22XOOHYYHE3NqHMd4uRhvXMlsBRoQ==
@@ -501,7 +501,7 @@
     "@smithy/types" "^4.3.2"
     tslib "^2.6.2"
 
-"@aws-sdk/lib-storage@^3.817.0", "@aws-sdk/lib-storage@^3.878.0":
+"@aws-sdk/lib-storage@^3.817.0":
   version "3.879.0"
   resolved "https://registry.npmjs.org/@aws-sdk/lib-storage/-/lib-storage-3.879.0.tgz"
   integrity sha512-FAb3vOfLIrf8lPuDoxKRu18DxXfQLEFm7MoXi0jd8ooFjD09jpVCQGNrRuMCqc688wrx7zJSovWObtn4LRjvrg==
@@ -924,21 +924,11 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@jigjoy-io/file-artifacts@^0.0.3":
-  version "0.0.3"
-  resolved "https://npm.pkg.github.com/download/@jigjoy-io/file-artifacts/0.0.3/4a56a1cbc1d6e329210a8fb7cfa2d2b196ca6e22"
-  integrity sha512-ncQCumnZ+TXHzNtR1vb4pGELA85S2Ykjtj5UHpCsjE50ovpax0g6u52vCN/EL8pKhF4TPIx7avZ/kzflcrzjUA==
+"@jigjoy-io/project-artifacts-client@^0.0.2":
+  version "0.0.2"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-artifacts-client/0.0.2/6e21111b133f964db7b3b34fe9fefe94f8322dfe"
+  integrity sha512-/PPGfefn7zekoNARCMp4WZdqEUu6WNmD8AnyKpvOH31UaS1FI6FkHi0IUDTIcQdw/iBdKNUQgruVVDf3sMFSQg==
   dependencies:
-    "@aws-sdk/client-s3" "^3.878.0"
-    "@aws-sdk/lib-storage" "^3.878.0"
-    uuid "^11.1.0"
-
-"@jigjoy-io/vcs-sdk@^0.0.3":
-  version "0.0.3"
-  resolved "https://npm.pkg.github.com/download/@jigjoy-io/vcs-sdk/0.0.3/99d1c3c327cfc9afe82e6ee012b3a98fee957e3c"
-  integrity sha512-iLryvoP86S8kgqL3iFlkTGcnx3GBLUH1d5Oh18k27hrgfmqkoMJsUKIvymybMzAXuOmdAYlx3OiTYSdxy5lOpg==
-  dependencies:
-    "@jigjoy-io/file-artifacts" "^0.0.3"
     uuid "^11.1.0"
 
 "@jridgewell/resolve-uri@^3.0.3":

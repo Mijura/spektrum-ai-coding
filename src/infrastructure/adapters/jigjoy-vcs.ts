@@ -1,5 +1,5 @@
 import { VersionControlSystem } from "@domain/ports/version-control-system"
-import { FileArtifacts } from "@jigjoy-io/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
 import { JigJoyVCS } from "@jigjoy-io/vcs-sdk"
 
 export class JigJoyVCSAdapter implements VersionControlSystem {
