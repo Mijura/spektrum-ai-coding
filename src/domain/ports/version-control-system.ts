@@ -1,4 +1,4 @@
-import { FileArtifacts } from "@jigjoy-io/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
 
 
 export interface VersionControlSystem {

@@ -1,6 +1,6 @@
 import { FileSystemPort } from "@domain/ports/filesystem/file-system"
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
-import { FileArtifacts } from "@jigjoy-io/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
 import path from "path"
 
 export class SourceCodeFilter implements FileSelectionFilter {

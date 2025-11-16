@@ -1,4 +1,4 @@
-import { FileArtifacts } from "@jigjoy-io/file-artifacts"
+import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
 
 /**
  * LocalEnvironment is a service that allows you to setup, maintain and deploy a frontend project.
