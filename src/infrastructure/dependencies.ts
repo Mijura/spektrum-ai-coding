@@ -39,7 +39,7 @@ export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, dis
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
 // SDKs
-const projectArtifactsClient = new ProjectArtifactsClient()
+export const projectArtifactsClient = new ProjectArtifactsClient()
 
 // Use Cases
 export const develop: Develop = new DevelopUseCase(projectArtifactsClient, localDevEnvironment)
