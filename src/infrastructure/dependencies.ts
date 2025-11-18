@@ -10,10 +10,8 @@ import { DistFolderFilter } from "@infrastructure/adapters/filesystem/filters/di
 import { Template } from "@domain/ports/templates/template"
 import { RspackTemplate } from "@infrastructure/adapters/templates/rspack-template"
 import { YarnPackageManager } from "@infrastructure/adapters/package-managers/yarn-package-manager"
-import { ReactDeveloper } from "@infrastructure/adapters/ai/openai/react-developer"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
-import { Agent } from "@domain/agent"
 import { FileSystemPort, LocalFileSystem } from "@jigjoy-io/file-artifacts-storage"
 import { ProjectArtifactsClient } from "@jigjoy-io/project-artifacts-client"
 import { AICodingController } from "./http/controllers/ai-coding-controller"
@@ -23,7 +21,7 @@ export const aiCodingController = new AICodingController()
 
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
-export const yarnPackageManager: PackageManager = new YarnPackageManager(fileSystem)
+export const yarnPackageManager: PackageManager = new YarnPackageManager()
 
 
 // Filters
@@ -40,11 +38,8 @@ export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, dis
 
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
-// Agents
-export const reactDeveloper: Agent = new ReactDeveloper(localDevEnvironment)
-
 // SDKs
 const projectArtifactsClient = new ProjectArtifactsClient()
 
 // Use Cases
-export const develop: Develop = new DevelopUseCase(projectArtifactsClient, reactDeveloper)
+export const develop: Develop = new DevelopUseCase(projectArtifactsClient, localDevEnvironment)
