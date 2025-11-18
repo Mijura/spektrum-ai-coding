@@ -4,7 +4,7 @@ dotenv.config()
 
 
 import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
-import { taskExecutionRouter } from "./routes/task-execution-routes"
+import { aiCodingRoutes } from "./routes/ai-coding-routes"
 import { initializeActivityEmitter } from "./sockets/activity-emitter"
 import express from "express"
 import http from "http"
@@ -17,7 +17,7 @@ app.use(corsMiddleware)
 app.use(express.json())
 
 // Routes
-app.use("/", taskExecutionRouter)
+app.use("/", aiCodingRoutes)
 
 
 const server = http.createServer(app)

@@ -1,5 +1,5 @@
 
-import { FileSystemPort } from "@domain/ports/filesystem/file-system"
+import { FileSystemPort } from "@jigjoy-io/file-artifacts-storage"
 import { PackageManager } from "../../ports/package-manager"
 import { spawn } from "child_process"
 import path from "path"

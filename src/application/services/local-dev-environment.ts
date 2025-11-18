@@ -2,8 +2,8 @@ import path from "path"
 import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { Bundler } from "@domain/ports/bundlers/bundler"
-import { FileSystemPort } from "@domain/ports/filesystem/file-system"
 import { v4 as uuidv4 } from 'uuid'
+import { FileSystemPort } from "@jigjoy-io/file-artifacts-storage"
 
 export class LocalDevEnvironment implements DevEnvironment {
 

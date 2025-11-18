@@ -1,3 +1,5 @@
+import { Task } from "@domain/entities/task"
+
 export interface Develop {
-	execute(taskId: string, accountId: string): Promise<void>
+	execute(task: Task, projectHistoryId: string): Promise<void>
 }

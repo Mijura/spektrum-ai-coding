@@ -1,54 +1,43 @@
-import { TaskExecution } from "@domain/entities/task-execution"
-import { Develop } from "@domain/use-cases/task-execution/develop"
-import { VersionControlSystem } from "@domain/ports/version-control-system"
+import { Develop } from "@domain/use-cases/develop"
 import { WorkUnit } from "@domain/value-objects/work-unit"
-import { Project } from "@domain/entities/project"
 import { Agent } from "@domain/agent"
+import { ArtifactsDTO, ProjectArtifactsClient } from "@jigjoy-io/project-artifacts-client"
+import { Task } from "@domain/entities/task"
 
 export class DevelopUseCase implements Develop {
 
 	constructor(
-		private readonly versionControlSystem: VersionControlSystem,
+		private readonly projectArtifactsClient: ProjectArtifactsClient,
 		private readonly reactDeveloper: Agent
 	) {}
 
-	async execute(taskId: string, accountId: string): Promise<void> {
-		console.log("Running frontend development workflow for task:", taskId, "and account:", accountId)
-		const task = await this.taskRepository.get(taskId)
-		if (!task) {
-			throw new Error("Task not found")
-		}
+	async execute(task: Task, projectHistoryId: string): Promise<void> {
 
-		const taskExecution = TaskExecution.create(task, accountId)
-		await this.taskExecutionRepository.save(taskExecution)
 
         try {
 
-			const project: Project = await this.projectRepository.get(task.projectId)
+			let artifactsDTO: ArtifactsDTO = await this.projectArtifactsClient.fetchArtifacts(projectHistoryId)
 
-			let sourceCode = await this.versionControlSystem.pull(project.id)
-
-			const changeRequest: WorkUnit = { task, sourceCode, buildArtifact: null }
+			const changeRequest: WorkUnit = { 
+				task, 
+				buildArtifacts: artifactsDTO.buildArtifacts,
+				sourceCode: artifactsDTO.sourceCodeArtifacts
+			}
 
             const work: WorkUnit = await this.reactDeveloper.execute(changeRequest)
 
 
-			if (!work.buildArtifact) {
-				throw new Error("Build artifact is not created")
-			}
-	
-			const version = await this.versionControlSystem.commit(project.id, work.sourceCode)
+			// save created artifacts
+			await this.projectArtifactsClient.saveArtifacts({
+				repositoryId: projectHistoryId,
+				buildArtifacts: work.buildArtifacts,
+				sourceCodeArtifacts: work.sourceCode
+			})
 
-			await this.projectRepository.save(project)
-
-            taskExecution.finishSuccessfully()
 
         } catch (error: any) {
             console.error(error)
-            taskExecution.finishWithError(error as string)
-        } finally {
-            await this.taskExecutionRepository.save(taskExecution)
-        }
+        } 
 		
 	}
 }
