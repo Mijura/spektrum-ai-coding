@@ -19,7 +19,7 @@ export interface CommandResult {
  */
 export class YarnPackageManager implements PackageManager {
 
-	constructor(private readonly fileSystem: FileSystemPort) {}
+	constructor() {}
 
 	private runCommand(command: string, cwd: string, contextMessage?: string): Promise<CommandResult> {
 		return new Promise((resolve) => {
@@ -68,7 +68,6 @@ export class YarnPackageManager implements PackageManager {
 	}
 
 	async install(projectPath: string): Promise<boolean> {
-		await this.fileSystem.ensureFile(path.join(projectPath, "yarn.lock"))
 		const result = await this.runCommand("yarn install", projectPath, `Installing dependencies in ${projectPath}...`)
 		console.log(JSON.stringify(result))
 		if (!result.success) {

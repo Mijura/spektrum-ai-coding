@@ -1,14 +1,15 @@
 import { Develop } from "@domain/use-cases/develop"
 import { WorkUnit } from "@domain/value-objects/work-unit"
-import { Agent } from "@domain/agent"
 import { ArtifactsDTO, ProjectArtifactsClient } from "@jigjoy-io/project-artifacts-client"
 import { Task } from "@domain/entities/task"
+import { ReactDeveloper } from "@infrastructure/adapters/ai/openai/react-developer"
+import { DevEnvironment } from "@domain/ports/services/dev-environment"
 
 export class DevelopUseCase implements Develop {
 
 	constructor(
 		private readonly projectArtifactsClient: ProjectArtifactsClient,
-		private readonly reactDeveloper: Agent
+		private readonly devEnvironment: DevEnvironment
 	) {}
 
 	async execute(task: Task, projectHistoryId: string): Promise<void> {
@@ -24,7 +25,8 @@ export class DevelopUseCase implements Develop {
 				sourceCode: artifactsDTO.sourceCodeArtifacts
 			}
 
-            const work: WorkUnit = await this.reactDeveloper.execute(changeRequest)
+			const reactDeveloper = new ReactDeveloper(this.devEnvironment)
+            const work: WorkUnit = await reactDeveloper.execute(changeRequest)
 
 
 			// save created artifacts
