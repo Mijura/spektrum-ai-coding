@@ -1,5 +1,5 @@
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
-import { FileSystemPort } from "@domain/ports/filesystem/file-system"
+import { FileSystemPort } from "@jigjoy-io/file-artifacts-storage"
 import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
 import path from "path"
 

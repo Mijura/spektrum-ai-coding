@@ -1,7 +1,6 @@
 import { Server as HTTPServer } from "http"
 import { Server as SocketIOServer, Socket } from "socket.io"
 import { Task } from "@domain/entities/task"
-import { TaskExecution } from "@domain/entities/task-execution"
 import { eventBus } from "@domain/events/event-bus"
 
 export function initializeActivityEmitter(server: HTTPServer) {
@@ -42,14 +41,4 @@ export function initializeActivityEmitter(server: HTTPServer) {
 		io.to(task.projectId).emit("task:update", task)
 	})
 
-		// Listen once on server-side and forward to specific room
-	eventBus.on("task-execution:update", (taskExecution: TaskExecution) => {
-		console.log(`Broadcasting task-execution:update to room ${taskExecution.accountId}`)
-		io.to(taskExecution.accountId).emit("task-execution:update", taskExecution)
-	})
-	
-	eventBus.on("task-execution:new", (taskExecution: TaskExecution) => {
-		console.log(`Broadcasting task-execution:new to room ${taskExecution.accountId}`)
-		io.to(taskExecution.accountId).emit("task-execution:new", taskExecution)
-	})
 }
