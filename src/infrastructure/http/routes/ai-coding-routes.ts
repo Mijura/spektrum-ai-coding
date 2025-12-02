@@ -1,8 +1,9 @@
-import { aiCodingController } from "@infrastructure/dependencies"
+import { aiCodingController, moduleController } from "@infrastructure/dependencies"
 import express, { Request, Response } from "express"
 
 const router = express.Router()
 
+router.post("/intialize-react-project", (req: Request, res: Response) => moduleController.initializeReactProject(req, res) )
 router.post("/develop", (req: Request, res: Response) => aiCodingController.develop(req, res))
 
 export { router as aiCodingRoutes }

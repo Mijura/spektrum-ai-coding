@@ -5,18 +5,12 @@ export class AICodingController {
 
     async develop(req: Request, res: Response): Promise<void> {
         
-        const taskId = req.body.taskId
-        const accountId = req.body.accountId
-
-        console.log("Received taskId:", taskId, "Type:", typeof taskId)
-        console.log("Received accountId:", accountId, "Type:", typeof accountId)
-        if (!taskId || !accountId) {
-            res.status(400).json({ error: "Missing required parameters" })
-            return
-        }
+        const task = req.body.task
+        const chatHistory = req.body.chatHistory
+        const projectId = req.body.projectId
 
 		try {
-            await develop.execute(taskId, accountId)
+            await develop.execute(task, chatHistory, projectId)
             res.status(200).json({ message: "Workflow run initiated" })
 		} catch (error) {
 			console.error("Error during task execution:", error)

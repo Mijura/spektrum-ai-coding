@@ -1,6 +1,6 @@
 import { PackageManager } from "@infrastructure/ports/package-manager"
 import { DevelopUseCase } from "@application/use-cases/develop"
-import { Develop } from "@domain/use-cases/develop"
+import { Develop } from "@application/ports/inbound/develop"
 
 import { Bundler } from "@domain/ports/bundlers/bundler"
 import RspackBundler from "@infrastructure/adapters/bundlers/rspack-bundler"
@@ -12,17 +12,20 @@ import { RspackTemplate } from "@infrastructure/adapters/templates/rspack-templa
 import { YarnPackageManager } from "@infrastructure/adapters/package-managers/yarn-package-manager"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
-import { FileSystemPort, LocalFileSystem } from "@jigjoy-io/file-artifacts-storage"
 import { ProjectArtifactsClient } from "@jigjoy-io/project-artifacts-client"
 import { AICodingController } from "./http/controllers/ai-coding-controller"
+import { InitializeReactProjectUseCase } from "@application/use-cases/initialize-react-project"
+import { ModuleController } from "./http/controllers/module-controller"
+import { FileSystemPort } from "@application/ports/outbound/file-system"
+import { LocalFileSystem } from "@infrastructure/adapters/filesystem/local-file-system"
 
 // Controllers
 export const aiCodingController = new AICodingController()
+export const moduleController = new ModuleController()
 
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
 export const yarnPackageManager: PackageManager = new YarnPackageManager()
-
 
 // Filters
 export const sourceCodeFilter: FileSelectionFilter = new SourceCodeFilter(fileSystem)
@@ -34,8 +37,6 @@ export const rspackBundler: Bundler = new RspackBundler(yarnPackageManager, dist
 // Templates
 export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, distFolderFilter)
 
-
-
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
 // SDKs
@@ -43,3 +44,4 @@ export const projectArtifactsClient = new ProjectArtifactsClient()
 
 // Use Cases
 export const develop: Develop = new DevelopUseCase(projectArtifactsClient, localDevEnvironment)
+export const initializeReactProject = new InitializeReactProjectUseCase(projectArtifactsClient, rspackTemplate)

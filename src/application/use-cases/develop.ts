@@ -1,9 +1,8 @@
-import { Develop } from "@domain/use-cases/develop"
+import { Develop } from "@application/ports/inbound/develop"
 import { WorkUnit } from "@domain/value-objects/work-unit"
 import { ArtifactsDTO, ProjectArtifactsClient } from "@jigjoy-io/project-artifacts-client"
-import { Task } from "@domain/entities/task"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
-import { Mosaic, MosaicAgent } from "@jigjoy-io/mosaic"
+import { Command, Agent, Message } from "@jigjoy-io/mosaic"
 import z from "zod"
 
 export class DevelopUseCase implements Develop {
@@ -13,12 +12,12 @@ export class DevelopUseCase implements Develop {
 		private readonly devEnvironment: DevEnvironment
 	) {}
 
-	async execute(task: Task, projectHistoryId: string): Promise<void> {
+	async execute(task: string, chatHistory: Message[], repositoryId: string): Promise<void> {
 
 
         try {
 
-			let artifactsDTO: ArtifactsDTO = await this.projectArtifactsClient.fetchArtifacts(projectHistoryId)
+			let artifactsDTO: ArtifactsDTO = await this.projectArtifactsClient.fetchArtifacts(repositoryId)
 
 			const changeRequest: WorkUnit = { 
 				task, 
@@ -26,8 +25,17 @@ export class DevelopUseCase implements Develop {
 				sourceCode: artifactsDTO.sourceCodeArtifacts
 			}
 
-			const request: Mosaic = {
+			const outputSchema = z.object({
+				sourceCode: z
+					.object({})
+					.catchall(z.string().describe("The source code (content) inside a file"))
+					.describe("A map where each key is a file path and the value is the source code for that file"),
+				comment: z.string().describe("The comment to be added to the task. It's a short summary of the changes you made from the user's perspective")
+			})
+
+			const command: Command = {
 				model: 'gpt-5',
+				messages: chatHistory,
 				task: `### Role:
 				You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
 		
@@ -50,25 +58,20 @@ export class DevelopUseCase implements Develop {
 		
 					### **Details**
 					- **Current Source Code:** ${JSON.stringify(changeRequest.sourceCode)}
-        		`
+        		`,
+				structuredOutput: outputSchema
 			}
 
-			const outputSchema = z.object({
-				sourceCode: z
-					.object({})
-					.catchall(z.string().describe("The source code (content) inside a file"))
-					.describe("A map where each key is a file path and the value is the source code for that file"),
-				comment: z.string().describe("The comment to be added to the task. It's a short summary of the changes you made from the user's perspective")
-			})
 
-			const developer = new MosaicAgent(request)
+
+			const developer = new Agent(command)
 			const sourceCode = await developer.act()
 			const buildArtifacts = await this.devEnvironment.build(sourceCode)
 
 
 			// save created artifacts
 			await this.projectArtifactsClient.saveArtifacts({
-				repositoryId: projectHistoryId,
+				repositoryId: repositoryId,
 				buildArtifacts: buildArtifacts,
 				sourceCodeArtifacts: sourceCode
 			})
