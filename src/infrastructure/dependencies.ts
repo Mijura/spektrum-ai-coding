@@ -14,10 +14,12 @@ import { LocalDevEnvironment } from "@application/services/local-dev-environment
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { ProjectArtifactsClient } from "@jigjoy-io/project-artifacts-client"
 import { AICodingController } from "./http/controllers/ai-coding-controller"
-import { InitializeReactProjectUseCase } from "@application/use-cases/initialize-react-project"
+import { InitializeReactModuleUseCase } from "@application/use-cases/initialize-react-module"
 import { ModuleController } from "./http/controllers/module-controller"
 import { FileSystemPort } from "@application/ports/outbound/file-system"
 import { LocalFileSystem } from "@infrastructure/adapters/filesystem/local-file-system"
+import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
+import { DynamoDBCodebaseRepository } from "./storage/codebase-repository"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -41,7 +43,8 @@ export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspac
 
 // SDKs
 export const projectArtifactsClient = new ProjectArtifactsClient()
+export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 
 // Use Cases
 export const develop: Develop = new DevelopUseCase(projectArtifactsClient, localDevEnvironment)
-export const initializeReactProject = new InitializeReactProjectUseCase(projectArtifactsClient, rspackTemplate)
+export const initializeReactModule = new InitializeReactModuleUseCase(projectArtifactsClient, rspackTemplate, codebaseRepository)

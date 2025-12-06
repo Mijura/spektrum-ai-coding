@@ -1,4 +1,3 @@
-
-export interface InitializeReactProject {
+export interface InitializeReactModule {
 	execute(projectId: string): Promise<void>
 }

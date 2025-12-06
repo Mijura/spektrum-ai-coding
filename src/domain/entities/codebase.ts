@@ -3,8 +3,8 @@ import { Module } from "@domain/value-objects/module"
 export class Codebase {
 
     constructor(
-        private readonly projectId: string,
-        private readonly modules: Module []){
+        readonly projectId: string,
+        readonly modules: Module []){
     }
 
     addModule(module: Module){
@@ -14,5 +14,12 @@ export class Codebase {
     static create(projectId: string){
         return new Codebase(projectId, [])
     }
+
+    static rehydrate(data: {
+		projectId: string,
+		modules: Module[]
+	}): Codebase {
+		return new Codebase(data.projectId, data.modules)
+	}
 
 }
