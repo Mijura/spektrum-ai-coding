@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "serve": "ts-node -r tsconfig-paths/register src/infrastructure/http/index.ts",        
+    "serve": "ts-node -r tsconfig-paths/register src/infrastructure/http/index.ts",
     "docs": "npx swagger-ui-watcher openapi.yaml --port 2020",
     "dev": "npm-run-all --parallel serve docs"
   },
@@ -15,8 +15,8 @@
     "@aws-sdk/client-dynamodb": "^3.398.0",
     "@aws-sdk/lib-dynamodb": "^3.398.0",
     "@aws-sdk/lib-storage": "^3.817.0",
-    "@jigjoy-io/mosaic": "^0.2.2",
-    "@jigjoy-io/project-artifacts-client": "^0.0.2",
+    "@jigjoy-io/mosaic": "^0.4.0",
+    "@jigjoy-io/project-versioning-client": "^0.0.4",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "fs-extra": "^11.3.2",
