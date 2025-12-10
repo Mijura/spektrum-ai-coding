@@ -1,14 +1,15 @@
 import { Develop } from "@application/ports/inbound/develop"
 import { WorkUnit } from "@domain/value-objects/work-unit"
-import { ArtifactsDTO, ProjectArtifactsClient } from "@jigjoy-io/project-artifacts-client"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { Command, Agent, Message } from "@jigjoy-io/mosaic"
+import { VersionControlPort } from "@application/ports/outbound/version-control"
+import { Version } from "@application/value-objects/version"
 import z from "zod"
 
 export class DevelopUseCase implements Develop {
 
 	constructor(
-		private readonly projectArtifactsClient: ProjectArtifactsClient,
+		private readonly vcs: VersionControlPort,
 		private readonly devEnvironment: DevEnvironment
 	) {}
 
@@ -17,12 +18,12 @@ export class DevelopUseCase implements Develop {
 
         try {
 
-			let artifactsDTO: ArtifactsDTO = await this.projectArtifactsClient.fetchArtifacts(repositoryId)
+			let version: Version = await this.vcs.pull(repositoryId)
 
 			const changeRequest: WorkUnit = { 
 				task, 
-				buildArtifacts: artifactsDTO.buildArtifacts,
-				sourceCode: artifactsDTO.sourceCodeArtifacts
+				buildArtifacts: version.buildArtifacts,
+				sourceCode: version.sourceCodeArtifacts
 			}
 
 			const outputSchema = z.object({
@@ -70,7 +71,7 @@ export class DevelopUseCase implements Develop {
 
 
 			// save created artifacts
-			await this.projectArtifactsClient.saveArtifacts({
+			await this.vcs.push({
 				repositoryId: repositoryId,
 				buildArtifacts: buildArtifacts,
 				sourceCodeArtifacts: sourceCode

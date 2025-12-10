@@ -1,4 +1,4 @@
-import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export interface Template {
     fetchPrebuiltFiles(): Promise<FileArtifacts>

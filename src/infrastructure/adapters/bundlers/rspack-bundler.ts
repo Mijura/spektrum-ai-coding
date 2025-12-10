@@ -1,7 +1,7 @@
 import { Bundler } from "@domain/ports/bundlers/bundler"
 import { PackageManager } from "@infrastructure/ports/package-manager"
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
-import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 
 export default class RspackBundler implements Bundler {
 

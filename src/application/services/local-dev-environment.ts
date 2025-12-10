@@ -1,7 +1,7 @@
-import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { Bundler } from "@domain/ports/bundlers/bundler"
 import { FileSystemPort } from "@application/ports/outbound/file-system"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import { v4 as uuidv4 } from 'uuid'
 import path from "path"
 

@@ -1,5 +1,4 @@
-
-import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
+import { FileArtifacts } from "./file-artifacts"
 
 export interface WorkUnit {
     task: string

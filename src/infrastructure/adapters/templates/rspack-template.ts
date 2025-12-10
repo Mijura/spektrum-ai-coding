@@ -1,6 +1,6 @@
 import { Template } from "@domain/ports/templates/template"
 import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
-import { FileArtifacts } from "@jigjoy-io/project-artifacts-client"
+import { FileArtifacts } from "@domain/value-objects/file-artifacts"
 import path from "path"
 
 export class RspackTemplate implements Template {

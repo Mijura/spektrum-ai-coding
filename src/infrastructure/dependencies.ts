@@ -12,7 +12,7 @@ import { RspackTemplate } from "@infrastructure/adapters/templates/rspack-templa
 import { YarnPackageManager } from "@infrastructure/adapters/package-managers/yarn-package-manager"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
-import { ProjectArtifactsClient } from "@jigjoy-io/project-artifacts-client"
+import { ProjectVersioningClient } from "@jigjoy-io/project-versioning-client"
 import { AICodingController } from "./http/controllers/ai-coding-controller"
 import { InitializeReactModuleUseCase } from "@application/use-cases/initialize-react-module"
 import { ModuleController } from "./http/controllers/module-controller"
@@ -20,6 +20,9 @@ import { FileSystemPort } from "@application/ports/outbound/file-system"
 import { LocalFileSystem } from "@infrastructure/adapters/filesystem/local-file-system"
 import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
 import { DynamoDBCodebaseRepository } from "./storage/codebase-repository"
+import { InitializeReactModule } from "@application/ports/inbound/initialize-react-module"
+import { DefaultVersionControl } from "./storage/version-control"
+import { VersionControlPort } from "@application/ports/outbound/version-control"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -41,10 +44,15 @@ export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, dis
 
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
-// SDKs
-export const projectArtifactsClient = new ProjectArtifactsClient()
+
+
 export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 
+const projectVersioningClient = new ProjectVersioningClient()
+const versionControl: VersionControlPort = new DefaultVersionControl(projectVersioningClient)
+
+
+
 // Use Cases
-export const develop: Develop = new DevelopUseCase(projectArtifactsClient, localDevEnvironment)
-export const initializeReactModule = new InitializeReactModuleUseCase(projectArtifactsClient, rspackTemplate, codebaseRepository)
+export const develop: Develop = new DevelopUseCase(versionControl, localDevEnvironment)
+export const initializeReactModule :InitializeReactModule = new InitializeReactModuleUseCase(versionControl, rspackTemplate, codebaseRepository)
