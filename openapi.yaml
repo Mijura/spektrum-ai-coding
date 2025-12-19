@@ -10,7 +10,7 @@ servers:
     description: Local Express API
 
 paths:
-  /intialize-react-project:
+  /intialize-react-module:
     post:
       summary: Initialize React project
       description: Initialize a React project for a given projectId.

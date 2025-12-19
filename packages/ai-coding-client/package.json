@@ -1,0 +1,31 @@
+{
+    "name": "@jigjoy-io/ai-coding-client",
+    "version": "0.0.1",
+    "description": "The SDK for ai coding",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jigjoy-io/ai-coding.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/"
+    },
+    "author": "Miodrag Vilotijević",
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "prepublishOnly": "npm run build"
+    },
+    "keywords": [],
+    "license": "MIT",
+    "devDependencies": {
+        "@types/node": "^24.3.0",
+        "tsup": "^8.0.2",
+        "typescript": "^5.3.3"
+    }
+}
