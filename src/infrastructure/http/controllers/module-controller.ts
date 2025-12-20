@@ -6,7 +6,6 @@ export class ModuleController {
     async initializeReactModule(req: Request, res: Response): Promise<void> {
         
         const projectId = req.body.projectId
-
         if(!projectId){
             throw new Error(`Project id is required`)
         }

@@ -48,7 +48,9 @@ export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspac
 
 export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 
-const projectVersioningClient = new ProjectVersioningClient()
+const projectVersioningEndpoint = process.env.PROJECT_VERSIONING_ENDPOINT || ''
+
+const projectVersioningClient = new ProjectVersioningClient(projectVersioningEndpoint)
 const versionControl: VersionControlPort = new DefaultVersionControl(projectVersioningClient)
 
 

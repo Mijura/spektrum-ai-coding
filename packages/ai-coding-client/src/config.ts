@@ -1,1 +1,0 @@
-export const AI_CODING_ENDPOINT = process.env.AI_CODING_ENDPOINT || "https://4tfv1gv2ch.execute-api.eu-west-1.amazonaws.com/Prod"
