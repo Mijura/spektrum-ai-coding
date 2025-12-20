@@ -25,16 +25,19 @@ export class InitializeReactModuleUseCase implements InitializeReactModule {
             buildArtifacts: buildArtifacts,
             sourceCodeArtifacts: sourceCode
         }
-        this.vcs.push(version)
+
+        await this.vcs.push(version)
 
         // create codebase and add module to it
         const codeabase = Codebase.create(projectId)
+
         const module: Module = {
             repositoryId: repositoryId,
             type: 'frontend',
             framework: 'react'
         }
         codeabase.addModule(module)
+
         // save codebase to repository
         await this.codebaseRepository.save(codeabase)
 

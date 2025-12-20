@@ -23,8 +23,9 @@ export class DefaultVersionControl implements VersionControlPort {
     }
     async push(version: Version): Promise<void> {
         const versionDTO = {
-            ...version,
-            projectHistoryId: version.repositoryId
+            projectHistoryId: version.repositoryId,
+            buildArtifacts: version.buildArtifacts,
+            sourceCodeArtifacts: version.sourceCodeArtifacts
         }
         await this.projectVersioning.saveVersion(versionDTO)
     }
