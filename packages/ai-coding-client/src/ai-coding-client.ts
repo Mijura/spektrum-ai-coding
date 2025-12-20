@@ -8,17 +8,17 @@ export class AICodingClient {
         this.endpoint = endpoint
     }
 
-    async initializeReactModule(projectId: string){
+    async initializeReactModule(projectId: string): Promise<void>{
         try {
             
             const requestBody = {
                 projectId: projectId
             }
 
-            return await axios.post(
+            await axios.post(
 				`${this.endpoint}/initialize-react-module`,
 				requestBody
-			  )
+			)
 
 		} catch (error) {
 			console.error("Error initializing react module:", error)
