@@ -1,4 +1,4 @@
-import { Module } from "@domain/value-objects/module"
+import { Module } from "./module"
 
 export class Codebase {
 

@@ -3,15 +3,15 @@ import { CodebaseRepositoryPort } from '@application/ports/outbound/codebase-rep
 import { VersionControlPort } from '@application/ports/outbound/version-control'
 import { Version } from '@application/value-objects/version'
 import { Codebase } from '@domain/entities/codebase'
+import { Module, ModuleType } from '@domain/entities/module'
 import { Template } from '@domain/ports/templates/template'
-import { Module } from '@domain/value-objects/module'
 
 export class InitializeReactModuleUseCase implements InitializeReactModule {
 
 
     constructor(private vcs: VersionControlPort, private template: Template, private codebaseRepository: CodebaseRepositoryPort){}
 
-    async execute(projectId: string): Promise<void> {
+    async execute(projectId: string): Promise<Module> {
 
         // initialize project history
         const repositoryId = await this.vcs.init()
@@ -31,15 +31,14 @@ export class InitializeReactModuleUseCase implements InitializeReactModule {
         // create codebase and add module to it
         const codeabase = Codebase.create(projectId)
 
-        const module: Module = {
-            repositoryId: repositoryId,
-            type: 'frontend',
-            framework: 'react'
-        }
+        const module = Module.create(repositoryId, ModuleType.FRONTEND)
+        
         codeabase.addModule(module)
 
         // save codebase to repository
         await this.codebaseRepository.save(codeabase)
+
+        return module
 
     }
     
