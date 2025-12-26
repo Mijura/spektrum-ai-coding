@@ -11,8 +11,8 @@ export class ModuleController {
         }
 
 		try {
-            await initializeReactModule.execute(projectId)
-            res.status(200).json({ message: "React project initialized" })
+            const module = await initializeReactModule.execute(projectId)
+            res.status(201).json(module)
 		} catch (error) {
 			console.error("Error during react project initialization:", error)
             res.status(500).json({ error: "Internal server error" })
