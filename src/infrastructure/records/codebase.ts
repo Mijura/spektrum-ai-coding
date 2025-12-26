@@ -1,7 +1,6 @@
-import { Module } from "@domain/value-objects/module"
+import { ModuleRecord } from "./module"
 
 export type CodebaseRecord = {
 	projectId: string
-	modules: Module[]
+	modules: ModuleRecord[]
 }
-

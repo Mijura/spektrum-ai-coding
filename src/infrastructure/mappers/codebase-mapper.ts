@@ -1,12 +1,13 @@
 import { Codebase } from "@domain/entities/codebase"
 import { CodebaseRecord } from "@infrastructure/records/codebase"
+import { ModuleMapper } from "./module-mapper"
 
 export class CodebaseMapper {
     
 	static toRecord(codebase: Codebase): CodebaseRecord {
 		return {
 			projectId: codebase.projectId,
-			modules: codebase.modules,
+			modules: codebase.modules.map((module) => ModuleMapper.toRecord(module)),
 		}
 	}
 

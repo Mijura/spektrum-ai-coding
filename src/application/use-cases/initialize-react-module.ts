@@ -35,6 +35,9 @@ export class InitializeReactModuleUseCase implements InitializeReactModule {
         
         codeabase.addModule(module)
 
+        console.log(`codebase: ${JSON.stringify(codeabase)}`)
+        console.log(`module: ${JSON.stringify(module)}`)
+
         // save codebase to repository
         await this.codebaseRepository.save(codeabase)
 

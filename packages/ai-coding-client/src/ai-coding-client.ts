@@ -31,7 +31,7 @@ export class AICodingClient {
 				requestBody
 			)
 
-            return response.data as Module
+            return response.data
 
 		} catch (error) {
 			console.error("Error initializing react module:", error)
