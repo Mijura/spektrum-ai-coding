@@ -48,7 +48,10 @@ export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspac
 
 export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 
-const projectVersioningEndpoint = process.env.PROJECT_VERSIONING_ENDPOINT || ''
+const projectVersioningEndpoint = process.env.PROJECT_VERSIONING_ENDPOINT
+if(!projectVersioningEndpoint){
+    throw new Error('PROJECT_VERSIONING_ENDPOINT is not set')
+}
 
 const projectVersioningClient = new ProjectVersioningClient(projectVersioningEndpoint)
 const versionControl: VersionControlPort = new DefaultVersionControl(projectVersioningClient)

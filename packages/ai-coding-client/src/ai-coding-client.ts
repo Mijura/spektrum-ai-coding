@@ -2,13 +2,13 @@ import axios from 'axios'
 
 
 export enum ModuleType {
-    FRONTEND
+    FRONTEND = "FRONTEND",
 }
 
 export type Module = {
     id: string,
     repositoryId: string,
-    moduleType: ModuleType
+    type: ModuleType
 }
 
 export class AICodingClient {

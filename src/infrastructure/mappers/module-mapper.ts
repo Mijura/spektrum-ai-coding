@@ -7,7 +7,7 @@ export class ModuleMapper {
 		return {
 			id: module.id,
 			repositoryId: module.repositoryId,
-			moduleType: module.moduleType
+			type: module.type
 		}
 	}
 }
