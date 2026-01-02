@@ -1,3 +1,4 @@
+import { Message } from '@jigjoy-io/mosaic'
 import axios from 'axios'
 
 
@@ -38,4 +39,27 @@ export class AICodingClient {
 			throw error
 		}
     }
+
+    async develop(task: string, chatHistory: Message[], projectId: string): Promise<void>{
+        try {
+            const requestBody = {
+                projectId: projectId,
+                task: task,
+                chatHistory: chatHistory
+            }
+
+            const response = await axios.post(
+                `${this.endpoint}/develop`,
+                requestBody
+            )
+
+            return response.data
+        }
+        catch (error) {
+            console.error("Error developing:", error)
+            throw error
+        }
+    }   
+
+
 }

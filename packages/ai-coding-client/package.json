@@ -1,6 +1,6 @@
 {
     "name": "@jigjoy-io/ai-coding-client",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "The SDK for ai coding",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
