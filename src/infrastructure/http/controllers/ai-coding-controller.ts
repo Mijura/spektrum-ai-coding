@@ -11,7 +11,7 @@ export class AICodingController {
 
 		try {
             await develop.execute(task, chatHistory, projectId)
-            res.status(200).json({ message: "Workflow run initiated" })
+            res.status(200).json({ message: "Task developed successfully" })
 		} catch (error) {
 			console.error("Error during task execution:", error)
             res.status(500).json({ error: "Internal server error" })

@@ -5,20 +5,27 @@ import { Command, Agent, Message } from "@jigjoy-io/mosaic"
 import { VersionControlPort } from "@application/ports/outbound/version-control"
 import { Version } from "@application/value-objects/version"
 import z from "zod"
+import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
 
 export class DevelopUseCase implements Develop {
 
 	constructor(
 		private readonly vcs: VersionControlPort,
-		private readonly devEnvironment: DevEnvironment
+		private readonly devEnvironment: DevEnvironment,
+		private readonly codebaseRepository: CodebaseRepositoryPort
 	) {}
 
-	async execute(task: string, chatHistory: Message[], repositoryId: string): Promise<void> {
+	async execute(task: string, chatHistory: Message[], projectId: string): Promise<void> {
 
 
         try {
 
-			let version: Version = await this.vcs.pull(repositoryId)
+			const codebase = await this.codebaseRepository.get(projectId)
+			const module = codebase.modules[0]
+			if(!module){
+				throw new Error('Module not found')
+			}
+			let version: Version = await this.vcs.pull(module.repositoryId)
 
 			const changeRequest: WorkUnit = { 
 				task, 
@@ -48,7 +55,7 @@ export class DevelopUseCase implements Develop {
 					- You should keep all previous features visible and working.
 					- When new feature is requested, you should ensure that its visible to the user, along with all previous features.
 
-					**Task with plan:**
+					**Task to be developed:**
 					${JSON.stringify(changeRequest.task)}
 
 					MOST IMPORTANT:
@@ -66,15 +73,15 @@ export class DevelopUseCase implements Develop {
 
 
 			const developer = new Agent(command)
-			const sourceCode = await developer.act()
-			const buildArtifacts = await this.devEnvironment.build(sourceCode)
+			const response = await developer.act()
+			const buildArtifacts = await this.devEnvironment.build(response.sourceCode)
 
 
 			// save created artifacts
 			await this.vcs.push({
-				repositoryId: repositoryId,
+				repositoryId: module.repositoryId,
 				buildArtifacts: buildArtifacts,
-				sourceCodeArtifacts: sourceCode
+				sourceCodeArtifacts: response.sourceCode
 			})
 
 

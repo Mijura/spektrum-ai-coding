@@ -59,5 +59,5 @@ const versionControl: VersionControlPort = new DefaultVersionControl(projectVers
 
 
 // Use Cases
-export const develop: Develop = new DevelopUseCase(versionControl, localDevEnvironment)
+export const develop: Develop = new DevelopUseCase(versionControl, localDevEnvironment, codebaseRepository)
 export const initializeReactModule :InitializeReactModule = new InitializeReactModuleUseCase(versionControl, rspackTemplate, codebaseRepository)

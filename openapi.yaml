@@ -74,7 +74,7 @@ paths:
                 - projectId
       responses:
         "200":
-          description: Workflow run initiated
+          description: Task developed successfully
           content:
             application/json:
               schema:
@@ -82,6 +82,6 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Workflow run initiated
+                    example: Task developed successfully
         "500":
           description: Internal server error
