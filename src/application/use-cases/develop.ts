@@ -1,10 +1,11 @@
 import { Develop } from "@application/ports/inbound/develop"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
-import { Command, Agent, Message } from "@jigjoy-io/mosaic"
+import { Command, Agent } from "@jigjoy-io/mosaic"
 import { VersionControlPort } from "@application/ports/outbound/version-control"
 import { Version } from "@application/value-objects/version"
 import z from "zod"
 import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
+import { Task } from "@jigjoy-io/task-contracts"
 
 export class DevelopUseCase implements Develop {
 
@@ -14,12 +15,12 @@ export class DevelopUseCase implements Develop {
 		private readonly codebaseRepository: CodebaseRepositoryPort
 	) {}
 
-	async execute(task: string, chatHistory: Message[], projectId: string): Promise<void> {
+	async execute(task: Task): Promise<void> {
 
 
         try {
 
-			const codebase = await this.codebaseRepository.get(projectId)
+			const codebase = await this.codebaseRepository.get(task.projectId)
 			const module = codebase.modules[0]
 			if(!module){
 				throw new Error('Module not found')
@@ -36,7 +37,6 @@ export class DevelopUseCase implements Develop {
 
 			const command: Command = {
 				model: 'gpt-5',
-				messages: chatHistory,
 				task: `### Role:
 				You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
 		
@@ -47,8 +47,10 @@ export class DevelopUseCase implements Develop {
 					- You should use the components in the src/components/ui folder to develop new features.
 					- You should keep all previous features visible and working.
 					- When new feature is requested, you should ensure that its visible to the user, along with all previous features.
+					- You should always update the package.json file to add new dependencies.
+					- Figure out from the task history what should you do.
 
-					**Task to be developed:**
+					**Here is the whole task history:**
 					${JSON.stringify(task)}
 
 					MOST IMPORTANT:

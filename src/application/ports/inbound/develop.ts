@@ -1,5 +1,5 @@
-import { Message } from "@jigjoy-io/mosaic"
+import { Task } from "@jigjoy-io/task-contracts"
 
 export interface Develop {
-	execute(task: string, chatHistory: Message[], repositoryId: string): Promise<void>
+	execute(task: Task): Promise<void>
 }
