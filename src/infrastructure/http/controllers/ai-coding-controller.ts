@@ -1,16 +1,15 @@
 import { develop } from "@infrastructure/dependencies"
+import { Task } from "@jigjoy-io/task-contracts"
 import { Request, Response } from "express"
 
 export class AICodingController {
 
     async develop(req: Request, res: Response): Promise<void> {
         
-        const task = req.body.task
-        const chatHistory = req.body.chatHistory
-        const projectId = req.body.projectId
+        const task: Task = JSON.parse(req.body)
 
 		try {
-            await develop.execute(task, chatHistory, projectId)
+            await develop.execute(task)
             res.status(200).json({ message: "Task developed successfully" })
 		} catch (error) {
 			console.error("Error during task execution:", error)

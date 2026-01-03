@@ -1,4 +1,4 @@
-import { Message } from '@jigjoy-io/mosaic'
+import { Task } from '@jigjoy-io/task-contracts'
 import axios from 'axios'
 
 
@@ -40,17 +40,12 @@ export class AICodingClient {
 		}
     }
 
-    async develop(task: string, chatHistory: Message[], projectId: string): Promise<void>{
+    async develop(task: Task): Promise<void>{
         try {
-            const requestBody = {
-                projectId: projectId,
-                task: task,
-                chatHistory: chatHistory
-            }
 
             const response = await axios.post(
                 `${this.endpoint}/develop`,
-                requestBody
+                task
             )
 
             return response.data
