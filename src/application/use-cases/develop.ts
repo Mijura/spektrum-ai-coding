@@ -6,13 +6,15 @@ import { Version } from "@application/value-objects/version"
 import z from "zod"
 import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
 import { Task } from "@jigjoy-io/task-contracts"
+import { DeployModuleCommand, EnvironmentType, ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 
 export class DevelopUseCase implements Develop {
 
 	constructor(
 		private readonly vcs: VersionControlPort,
 		private readonly devEnvironment: DevEnvironment,
-		private readonly codebaseRepository: CodebaseRepositoryPort
+		private readonly codebaseRepository: CodebaseRepositoryPort,
+		private readonly projectDeploymentClient: ProjectDeploymentClient
 	) {}
 
 	async execute(task: Task): Promise<void> {
@@ -68,16 +70,35 @@ export class DevelopUseCase implements Develop {
 
 
 			const developer = new Agent(command)
+
+			console.log('React Developer developing task...')
 			const response = await developer.act()
-			const buildArtifacts = await this.devEnvironment.build(response.sourceCode)
+
+			const sourceCode = {
+				...version.sourceCodeArtifacts,
+				...response.sourceCode
+			}
+			const buildArtifacts = await this.devEnvironment.build(sourceCode)
 
 
 			// save created artifacts
 			await this.vcs.push({
 				repositoryId: module.repositoryId,
 				buildArtifacts: buildArtifacts,
-				sourceCodeArtifacts: response.sourceCode
+				sourceCodeArtifacts: sourceCode
 			})
+
+			console.log('Deploying module...')
+			const deploymentRequest: DeployModuleCommand = {
+				projectId: task.projectId,
+				moduleId: module.id,
+				moduleType: module.type,
+				versionControlId: module.repositoryId,
+				environmentType: EnvironmentType.DEV,
+				setAsEntryPoint: true
+			}
+
+			await this.projectDeploymentClient.deployModule(deploymentRequest)
 
 
         } catch (error: any) {

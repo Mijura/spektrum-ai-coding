@@ -23,6 +23,7 @@ import { DynamoDBCodebaseRepository } from "./storage/codebase-repository"
 import { InitializeReactModule } from "@application/ports/inbound/initialize-react-module"
 import { DefaultVersionControl } from "./storage/version-control"
 import { VersionControlPort } from "@application/ports/outbound/version-control"
+import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -56,8 +57,13 @@ if(!projectVersioningEndpoint){
 const projectVersioningClient = new ProjectVersioningClient(projectVersioningEndpoint)
 const versionControl: VersionControlPort = new DefaultVersionControl(projectVersioningClient)
 
+const projectDeploymentEndpoint = process.env.PROJECT_DEPLOYMENT_ENDPOINT
+if(!projectDeploymentEndpoint){
+    throw new Error('PROJECT_DEPLOYMENT_ENDPOINT is not set')
+}
 
+const projectDeploymentClient = new ProjectDeploymentClient(projectDeploymentEndpoint)
 
 // Use Cases
-export const develop: Develop = new DevelopUseCase(versionControl, localDevEnvironment, codebaseRepository)
+export const develop: Develop = new DevelopUseCase(versionControl, localDevEnvironment, codebaseRepository, projectDeploymentClient)
 export const initializeReactModule :InitializeReactModule = new InitializeReactModuleUseCase(versionControl, rspackTemplate, codebaseRepository)

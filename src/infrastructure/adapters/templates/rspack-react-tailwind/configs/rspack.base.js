@@ -46,11 +46,8 @@ module.exports = {
 		new rspack.CssExtractRspackPlugin({
 			filename: "[name].[contenthash].css",
 		}),
-				new rspack.HtmlRspackPlugin({
+		new rspack.HtmlRspackPlugin({
 			template: path.join(__dirname, "../public/index.html"),
-		}),
-		new rspack.CopyRspackPlugin({
-			patterns: [{ from: "manifest.json" }, { from: "./public/favicon.ico" }],
 		})
 	],
 	resolve: {

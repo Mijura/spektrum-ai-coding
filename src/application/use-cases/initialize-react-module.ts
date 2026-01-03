@@ -19,7 +19,7 @@ export class InitializeReactModuleUseCase implements InitializeReactModule {
         // fetch template files and save it
         const buildArtifacts = await this.template.fetchPrebuiltFiles()
         const sourceCode = await this.template.fetchSourceCode()
-
+        
         const version: Version = {
             repositoryId: repositoryId,
             buildArtifacts: buildArtifacts,
