@@ -1,5 +1,4 @@
 import { Develop } from "@application/ports/inbound/develop"
-import { WorkUnit } from "@domain/value-objects/work-unit"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { Command, Agent, Message } from "@jigjoy-io/mosaic"
 import { VersionControlPort } from "@application/ports/outbound/version-control"
@@ -27,12 +26,6 @@ export class DevelopUseCase implements Develop {
 			}
 			let version: Version = await this.vcs.pull(module.repositoryId)
 
-			const changeRequest: WorkUnit = { 
-				task, 
-				buildArtifacts: version.buildArtifacts,
-				sourceCode: version.sourceCodeArtifacts
-			}
-
 			const outputSchema = z.object({
 				sourceCode: z
 					.object({})
@@ -56,7 +49,7 @@ export class DevelopUseCase implements Develop {
 					- When new feature is requested, you should ensure that its visible to the user, along with all previous features.
 
 					**Task to be developed:**
-					${JSON.stringify(changeRequest.task)}
+					${JSON.stringify(task)}
 
 					MOST IMPORTANT:
 					- Update package.json if you plan to import new dependencies. (e.g. "chart.js" should be added to the dependencies)
@@ -65,7 +58,7 @@ export class DevelopUseCase implements Develop {
 					- Do not use 'JigJoy' in the code. (e.g. "JigJoy Blog, Application created using JigJoy, etc..."), but keep the JigJoy meta tags in the index.html file, except user request change of meta tags.
 		
 					### **Details**
-					- **Current Source Code:** ${JSON.stringify(changeRequest.sourceCode)}
+					- **Current Source Code:** ${JSON.stringify(version.sourceCodeArtifacts)}
         		`,
 				structuredOutput: outputSchema
 			}
