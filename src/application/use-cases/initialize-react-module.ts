@@ -2,9 +2,9 @@ import { InitializeReactModule } from '@application/ports/use-cases/initialize-r
 import { CodebaseRepositoryPort } from '@application/ports/outbound/codebase-repository'
 import { VersionControlPort } from '@application/ports/outbound/version-control'
 import { Version } from '@application/value-objects/version'
-import { Codebase } from '@domain/entities/codebase'
-import { Module, ModuleType } from '@domain/entities/module'
-import { Template } from '@domain/ports/templates/template'
+import { Codebase } from '@domain/codebase'
+import { Module, ModuleType } from '@domain/module'
+import { Template } from '@application/ports/outbound/template'
 
 export class InitializeReactModuleUseCase implements InitializeReactModule {
 

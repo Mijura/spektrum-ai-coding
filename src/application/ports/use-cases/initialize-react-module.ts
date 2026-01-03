@@ -1,4 +1,4 @@
-import { Module } from "@domain/entities/module"
+import { Module } from "@domain/module"
 
 export interface InitializeReactModule {
 	execute(projectId: string): Promise<Module>

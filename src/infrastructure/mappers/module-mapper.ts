@@ -1,5 +1,5 @@
 
-import { Module } from "@domain/entities/module"
+import { Module } from "@domain/module"
 import { ModuleRecord } from "@infrastructure/records/module"
 
 export class ModuleMapper {

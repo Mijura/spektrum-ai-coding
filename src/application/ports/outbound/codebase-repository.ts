@@ -1,4 +1,4 @@
-import { Codebase } from "@domain/entities/codebase"
+import { Codebase } from "@domain/codebase"
 
 export interface CodebaseRepositoryPort {
     get(projectId: string): Promise<Codebase>

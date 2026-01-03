@@ -1,4 +1,4 @@
-import { ModuleType } from "@domain/entities/module"
+import { ModuleType } from "@domain/module"
 
 export type ModuleRecord = {
 	id: string,

@@ -1,6 +1,6 @@
-import { Template } from "@domain/ports/templates/template"
-import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
+import { Template } from "@application/ports/outbound/template"
+import { FileSelectionFilter } from "@application/ports/outbound/file-selection-filter"
+import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import path from "path"
 
 export class RspackTemplate implements Template {

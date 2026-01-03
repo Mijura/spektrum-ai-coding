@@ -1,7 +1,7 @@
 
 import { FileSystemPort } from "@application/ports/outbound/file-system"
-import { FileSelectionFilter } from "@domain/ports/filesystem/file-selection-filter"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
+import { FileSelectionFilter } from "@application/ports/outbound/file-selection-filter"
+import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import path from "path"
 
 export class SourceCodeFilter implements FileSelectionFilter {
