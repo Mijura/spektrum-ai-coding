@@ -5,10 +5,11 @@ import { Request, Response } from "express"
 export class AICodingController {
 
     async develop(req: Request, res: Response): Promise<void> {
-        
-        const task: Task = JSON.parse(req.body)
+    
 
 		try {
+
+            const task: Task = req.body as Task
             await develop.execute(task)
             res.status(200).json({ message: "Task developed successfully" })
 		} catch (error) {
