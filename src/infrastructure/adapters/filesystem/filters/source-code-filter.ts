@@ -10,7 +10,7 @@ export class SourceCodeFilter implements FileSelectionFilter {
   
     async fetch(basePath: string): Promise<FileArtifacts> {
 		const sourceCode: FileArtifacts = {}
-		const blacklist = new Set([".env.example", "node_modules", "dist", "yarn.lock"])
+		const blacklist = new Set([".env.example", "node_modules", "dist", "package-lock.json", "yarn.lock"])
 	
 		const readDir = async (directory: string, relativePath = "") => {
 			const files = await this.fileSystem.readDirectory(directory)
