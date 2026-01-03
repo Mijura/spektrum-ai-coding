@@ -1,4 +1,4 @@
-import { InitializeReactModule } from '@application/ports/inbound/initialize-react-module'
+import { InitializeReactModule } from '@application/ports/use-cases/initialize-react-module'
 import { CodebaseRepositoryPort } from '@application/ports/outbound/codebase-repository'
 import { VersionControlPort } from '@application/ports/outbound/version-control'
 import { Version } from '@application/value-objects/version'

@@ -1,4 +1,4 @@
-import { Develop } from "@application/ports/inbound/develop"
+import { Develop } from "@application/ports/use-cases/develop"
 import { DevEnvironment } from "@domain/ports/services/dev-environment"
 import { Command, Agent } from "@jigjoy-io/mosaic"
 import { VersionControlPort } from "@application/ports/outbound/version-control"
