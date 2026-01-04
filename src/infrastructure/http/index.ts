@@ -2,12 +2,10 @@ import dotenv from "dotenv"
 // Load environment variables from .env file
 dotenv.config()
 
-
 import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
 import { aiCodingRoutes } from "./routes/ai-coding-routes"
 import express from "express"
 import http from "http"
-
 
 const app = express()
 
@@ -17,7 +15,6 @@ app.use(express.json())
 
 // Routes
 app.use("/", aiCodingRoutes)
-
 
 const server = http.createServer(app)
 

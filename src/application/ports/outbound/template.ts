@@ -1,6 +1,6 @@
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 
 export interface Template {
-    fetchPrebuiltFiles(): Promise<FileArtifacts>
-    fetchSourceCode(): Promise<FileArtifacts>
+	fetchPrebuiltFiles(): Promise<FileArtifacts>
+	fetchSourceCode(): Promise<FileArtifacts>
 }

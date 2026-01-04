@@ -1,3 +1,3 @@
 export class FileArtifacts {
-    [filePath: string]: string
+	[filePath: string]: string
 }

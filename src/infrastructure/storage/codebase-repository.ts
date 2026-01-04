@@ -9,7 +9,6 @@ const client = new DynamoDBClient()
 const ddbDocClient = DynamoDBDocumentClient.from(client)
 
 export class DynamoDBCodebaseRepository implements CodebaseRepositoryPort {
-
 	async save(codebase: Codebase): Promise<void> {
 		const tableName = process.env.CODEBASE_TABLE
 
@@ -42,5 +41,4 @@ export class DynamoDBCodebaseRepository implements CodebaseRepositoryPort {
 
 		return CodebaseMapper.toDomain(codebaseRecord)
 	}
-
 }

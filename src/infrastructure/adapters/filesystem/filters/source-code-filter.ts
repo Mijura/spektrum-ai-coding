@@ -1,29 +1,27 @@
-
 import { FileSystemPort } from "@application/ports/outbound/file-system"
 import { FileSelectionFilter } from "@application/ports/outbound/file-selection-filter"
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import path from "path"
 
 export class SourceCodeFilter implements FileSelectionFilter {
-	
-    constructor(private fileSystem: FileSystemPort) {}
-  
-    async fetch(basePath: string): Promise<FileArtifacts> {
+	constructor(private fileSystem: FileSystemPort) {}
+
+	async fetch(basePath: string): Promise<FileArtifacts> {
 		const sourceCode: FileArtifacts = {}
 		const blacklist = new Set([".env.example", "node_modules", "dist", "package-lock.json", "yarn.lock"])
-	
+
 		const readDir = async (directory: string, relativePath = "") => {
 			const files = await this.fileSystem.readDirectory(directory)
-	
+
 			for (const file of files) {
 				const filePath = path.join(directory, file)
 				const fileRelativePath = path.join(relativePath, file)
-		
+
 				const isDir = await this.fileSystem.isDirectory(filePath)
 				const baseName = path.basename(fileRelativePath)
-		
+
 				if (blacklist.has(baseName)) continue
-		
+
 				if (isDir) {
 					await readDir(filePath, fileRelativePath)
 				} else {
@@ -31,9 +29,8 @@ export class SourceCodeFilter implements FileSelectionFilter {
 				}
 			}
 		}
-  
+
 		await readDir(basePath)
 		return sourceCode
-    }
+	}
 }
-  

@@ -1,10 +1,8 @@
-
 import { FileSystemPort } from "@application/ports/outbound/file-system"
 import * as fs from "fs-extra"
 
 export class LocalFileSystem implements FileSystemPort {
-	
-    async copyFolder(source: string, destination: string): Promise<void> {
+	async copyFolder(source: string, destination: string): Promise<void> {
 		await this.ensureDir(destination)
 		await fs.copy(source, destination)
 	}
@@ -26,7 +24,7 @@ export class LocalFileSystem implements FileSystemPort {
 	}
 
 	async isDirectory(path: string): Promise<boolean> {
-		return await fs.stat(path).then(stats => stats.isDirectory())
+		return await fs.stat(path).then((stats) => stats.isDirectory())
 	}
 
 	async readFile(path: string): Promise<string> {
@@ -40,7 +38,7 @@ export class LocalFileSystem implements FileSystemPort {
 	async removeDir(path: string): Promise<void> {
 		await fs.remove(path)
 	}
-	
+
 	createReadStream(filePath: string): NodeJS.ReadableStream {
 		return fs.createReadStream(filePath)
 	}

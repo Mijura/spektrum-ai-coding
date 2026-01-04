@@ -9,23 +9,19 @@ import { Task } from "@jigjoy-io/task-contracts"
 import { DeployModuleCommand, EnvironmentType, ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 
 export class DevelopUseCase implements Develop {
-
 	constructor(
 		private readonly vcs: VersionControlPort,
 		private readonly devEnvironment: DevEnvironment,
 		private readonly codebaseRepository: CodebaseRepositoryPort,
-		private readonly projectDeploymentClient: ProjectDeploymentClient
+		private readonly projectDeploymentClient: ProjectDeploymentClient,
 	) {}
 
 	async execute(task: Task): Promise<void> {
-
-
-        try {
-
+		try {
 			const codebase = await this.codebaseRepository.get(task.projectId)
 			const module = codebase.modules[0]
-			if(!module){
-				throw new Error('Module not found')
+			if (!module) {
+				throw new Error("Module not found")
 			}
 			let version: Version = await this.vcs.pull(module.repositoryId)
 
@@ -34,11 +30,15 @@ export class DevelopUseCase implements Develop {
 					.object({})
 					.catchall(z.string().describe("The source code (content) inside a file"))
 					.describe("A map where each key is a file path and the value is the source code for that file"),
-				comment: z.string().describe("The comment to be added to the task. It's a short summary of the changes you made from the user's perspective")
+				comment: z
+					.string()
+					.describe(
+						"The comment to be added to the task. It's a short summary of the changes you made from the user's perspective",
+					),
 			})
 
 			const command: Command = {
-				model: 'gpt-5',
+				model: "gpt-5",
 				task: `### Role:
 				You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
 		
@@ -64,46 +64,40 @@ export class DevelopUseCase implements Develop {
 					### **Details**
 					- **Current Source Code:** ${JSON.stringify(version.sourceCodeArtifacts)}
         		`,
-				structuredOutput: outputSchema
+				structuredOutput: outputSchema,
 			}
-
-
 
 			const developer = new Agent(command)
 
-			console.log('React Developer developing task...')
+			console.log("React Developer developing task...")
 			const response = await developer.act()
 
 			const sourceCode = {
 				...version.sourceCodeArtifacts,
-				...response.sourceCode
+				...response.sourceCode,
 			}
 			const buildArtifacts = await this.devEnvironment.build(sourceCode)
-
 
 			// save created artifacts
 			await this.vcs.push({
 				repositoryId: module.repositoryId,
 				buildArtifacts: buildArtifacts,
-				sourceCodeArtifacts: sourceCode
+				sourceCodeArtifacts: sourceCode,
 			})
 
-			console.log('Deploying module...')
+			console.log("Deploying module...")
 			const deploymentRequest: DeployModuleCommand = {
 				projectId: task.projectId,
 				moduleId: module.id,
 				moduleType: module.type,
 				versionControlId: module.repositoryId,
 				environmentType: EnvironmentType.DEV,
-				setAsEntryPoint: true
+				setAsEntryPoint: true,
 			}
 
 			await this.projectDeploymentClient.deployModule(deploymentRequest)
-
-
-        } catch (error: any) {
-            console.error(error)
-        } 
-		
+		} catch (error: any) {
+			console.error(error)
+		}
 	}
 }

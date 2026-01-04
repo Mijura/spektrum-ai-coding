@@ -1,45 +1,44 @@
-import { InitializeReactModule } from '@application/ports/use-cases/initialize-react-module'
-import { CodebaseRepositoryPort } from '@application/ports/outbound/codebase-repository'
-import { VersionControlPort } from '@application/ports/outbound/version-control'
-import { Version } from '@application/value-objects/version'
-import { Codebase } from '@domain/codebase'
-import { Module, ModuleType } from '@domain/module'
-import { Template } from '@application/ports/outbound/template'
+import { InitializeReactModule } from "@application/ports/use-cases/initialize-react-module"
+import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
+import { VersionControlPort } from "@application/ports/outbound/version-control"
+import { Version } from "@application/value-objects/version"
+import { Codebase } from "@domain/codebase"
+import { Module, ModuleType } from "@domain/module"
+import { Template } from "@application/ports/outbound/template"
 
 export class InitializeReactModuleUseCase implements InitializeReactModule {
+	constructor(
+		private vcs: VersionControlPort,
+		private template: Template,
+		private codebaseRepository: CodebaseRepositoryPort,
+	) {}
 
+	async execute(projectId: string): Promise<Module> {
+		// initialize project history
+		const repositoryId = await this.vcs.init()
 
-    constructor(private vcs: VersionControlPort, private template: Template, private codebaseRepository: CodebaseRepositoryPort){}
+		// fetch template files and save it
+		const buildArtifacts = await this.template.fetchPrebuiltFiles()
+		const sourceCode = await this.template.fetchSourceCode()
 
-    async execute(projectId: string): Promise<Module> {
+		const version: Version = {
+			repositoryId: repositoryId,
+			buildArtifacts: buildArtifacts,
+			sourceCodeArtifacts: sourceCode,
+		}
 
-        // initialize project history
-        const repositoryId = await this.vcs.init()
+		await this.vcs.push(version)
 
-        // fetch template files and save it
-        const buildArtifacts = await this.template.fetchPrebuiltFiles()
-        const sourceCode = await this.template.fetchSourceCode()
-        
-        const version: Version = {
-            repositoryId: repositoryId,
-            buildArtifacts: buildArtifacts,
-            sourceCodeArtifacts: sourceCode
-        }
+		// create codebase and add module to it
+		const codeabase = Codebase.create(projectId)
 
-        await this.vcs.push(version)
+		const module = Module.create(repositoryId, ModuleType.FRONTEND)
 
-        // create codebase and add module to it
-        const codeabase = Codebase.create(projectId)
+		codeabase.addModule(module)
 
-        const module = Module.create(repositoryId, ModuleType.FRONTEND)
-        
-        codeabase.addModule(module)
+		// save codebase to repository
+		await this.codebaseRepository.save(codeabase)
 
-        // save codebase to repository
-        await this.codebaseRepository.save(codeabase)
-
-        return module
-
-    }
-    
+		return module
+	}
 }

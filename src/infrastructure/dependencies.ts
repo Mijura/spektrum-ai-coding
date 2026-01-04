@@ -45,25 +45,32 @@ export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, dis
 
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
-
-
 export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 
 const projectVersioningEndpoint = process.env.PROJECT_VERSIONING_ENDPOINT
-if(!projectVersioningEndpoint){
-    throw new Error('PROJECT_VERSIONING_ENDPOINT is not set')
+if (!projectVersioningEndpoint) {
+	throw new Error("PROJECT_VERSIONING_ENDPOINT is not set")
 }
 
 const projectVersioningClient = new ProjectVersioningClient(projectVersioningEndpoint)
 const versionControl: VersionControlPort = new DefaultVersionControl(projectVersioningClient)
 
 const projectDeploymentEndpoint = process.env.PROJECT_DEPLOYMENT_ENDPOINT
-if(!projectDeploymentEndpoint){
-    throw new Error('PROJECT_DEPLOYMENT_ENDPOINT is not set')
+if (!projectDeploymentEndpoint) {
+	throw new Error("PROJECT_DEPLOYMENT_ENDPOINT is not set")
 }
 
 const projectDeploymentClient = new ProjectDeploymentClient(projectDeploymentEndpoint)
 
 // Use Cases
-export const develop: Develop = new DevelopUseCase(versionControl, localDevEnvironment, codebaseRepository, projectDeploymentClient)
-export const initializeReactModule :InitializeReactModule = new InitializeReactModuleUseCase(versionControl, rspackTemplate, codebaseRepository)
+export const develop: Develop = new DevelopUseCase(
+	versionControl,
+	localDevEnvironment,
+	codebaseRepository,
+	projectDeploymentClient,
+)
+export const initializeReactModule: InitializeReactModule = new InitializeReactModuleUseCase(
+	versionControl,
+	rspackTemplate,
+	codebaseRepository,
+)

@@ -8,7 +8,7 @@ export class RspackTemplate implements Template {
 
 	constructor(
 		private readonly sourceCodeFilter: FileSelectionFilter,
-		private readonly distFolderFilter: FileSelectionFilter
+		private readonly distFolderFilter: FileSelectionFilter,
 	) {}
 
 	fetchPrebuiltFiles(): Promise<FileArtifacts> {

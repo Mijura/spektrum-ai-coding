@@ -3,7 +3,6 @@ import { CodebaseRecord } from "@infrastructure/records/codebase"
 import { ModuleMapper } from "./module-mapper"
 
 export class CodebaseMapper {
-    
 	static toRecord(codebase: Codebase): CodebaseRecord {
 		return {
 			projectId: codebase.projectId,
@@ -22,4 +21,3 @@ export class CodebaseMapper {
 		return records.map((record) => this.toDomain(record))
 	}
 }
-

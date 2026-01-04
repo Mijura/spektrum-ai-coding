@@ -1,4 +1,3 @@
-
 import { Module } from "@domain/module"
 import { ModuleRecord } from "@infrastructure/records/module"
 
@@ -7,7 +6,7 @@ export class ModuleMapper {
 		return {
 			id: module.id,
 			repositoryId: module.repositoryId,
-			type: module.type
+			type: module.type,
 		}
 	}
 }
