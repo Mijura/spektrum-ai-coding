@@ -19,7 +19,7 @@ export class DevelopUseCase implements Develop {
 	async execute(task: Task): Promise<void> {
 		try {
 			const codebase = await this.codebaseRepository.get(task.projectId)
-			const module = codebase.modules[0]
+			const module = codebase.modules[0] // TODO: support multiple modules
 			if (!module) {
 				throw new Error("Module not found")
 			}

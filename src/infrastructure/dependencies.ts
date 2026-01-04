@@ -24,6 +24,8 @@ import { InitializeReactModule } from "@application/ports/use-cases/initialize-r
 import { DefaultVersionControl } from "./storage/version-control"
 import { VersionControlPort } from "@application/ports/outbound/version-control"
 import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
+import { DeployToProductionUseCase } from "@application/use-cases/deploy-to-production"
+import { DeployToProduction } from "@application/ports/use-cases/deploy-to-production"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -69,8 +71,11 @@ export const develop: Develop = new DevelopUseCase(
 	codebaseRepository,
 	projectDeploymentClient,
 )
+
 export const initializeReactModule: InitializeReactModule = new InitializeReactModuleUseCase(
 	versionControl,
 	rspackTemplate,
 	codebaseRepository,
 )
+
+export const deployToProduction: DeployToProduction = new DeployToProductionUseCase(projectDeploymentClient, codebaseRepository)
