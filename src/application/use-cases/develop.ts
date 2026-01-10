@@ -7,7 +7,8 @@ import z from "zod"
 import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
 import { Task } from "@jigjoy-io/task-contracts"
 import { DeployModuleCommand, EnvironmentType, ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
-import { ObservabilityClient, TaskExecution } from "@jigjoy-io/observability-client"
+import { ObservabilityClient, TaskExecution, TaskExecutionStatus } from "@jigjoy-io/observability-client"
+import { TaskExecutionEmitter } from "@application/events/emitters/task-execution"
 
 export class DevelopUseCase implements Develop {
 	constructor(
@@ -22,6 +23,7 @@ export class DevelopUseCase implements Develop {
 
 
 		const taskExecution: TaskExecution = await this.observabilityClient.taskExecutionStarted(task.title, task.projectId, task.id, accountId)
+		TaskExecutionEmitter.newTaskExecution(taskExecution)
 		console.log('Task execution started', taskExecution)
 		try {
 
@@ -105,9 +107,14 @@ export class DevelopUseCase implements Develop {
 			await this.projectDeploymentClient.deployModule(deploymentRequest)
 			console.log('Module deployed successfully')
 			await this.observabilityClient.taskExecutionSucceeded(taskExecution.id)
+			taskExecution.status = TaskExecutionStatus.SUCCEEDED
+			TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
 		} catch (error: any) {
 			console.error(error)
 			await this.observabilityClient.taskExecutionFailed(taskExecution.id, error.message)
+			taskExecution.status = TaskExecutionStatus.FAILED
+			taskExecution.error = error.message
+			TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
 		}
 	}
 }
