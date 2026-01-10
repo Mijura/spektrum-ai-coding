@@ -7,6 +7,7 @@ import z from "zod"
 import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
 import { Task } from "@jigjoy-io/task-contracts"
 import { DeployModuleCommand, EnvironmentType, ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
+import { ObservabilityClient, TaskExecution } from "@jigjoy-io/observability-client"
 
 export class DevelopUseCase implements Develop {
 	constructor(
@@ -14,10 +15,16 @@ export class DevelopUseCase implements Develop {
 		private readonly devEnvironment: DevEnvironment,
 		private readonly codebaseRepository: CodebaseRepositoryPort,
 		private readonly projectDeploymentClient: ProjectDeploymentClient,
+		private readonly observabilityClient: ObservabilityClient,
 	) {}
 
-	async execute(task: Task): Promise<void> {
+	async execute(task: Task, accountId: string): Promise<void> {
+
+
+		const taskExecution: TaskExecution = await this.observabilityClient.taskExecutionStarted(task.title, task.projectId, task.id, accountId)
+		console.log('Task execution started', taskExecution)
 		try {
+
 			const codebase = await this.codebaseRepository.get(task.projectId)
 			const module = codebase.modules[0] // TODO: support multiple modules
 			if (!module) {
@@ -96,8 +103,11 @@ export class DevelopUseCase implements Develop {
 			}
 
 			await this.projectDeploymentClient.deployModule(deploymentRequest)
+			console.log('Module deployed successfully')
+			await this.observabilityClient.taskExecutionSucceeded(taskExecution.id)
 		} catch (error: any) {
 			console.error(error)
+			await this.observabilityClient.taskExecutionFailed(taskExecution.id, error.message)
 		}
 	}
 }

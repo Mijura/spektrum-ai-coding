@@ -17,6 +17,7 @@
 		"@aws-sdk/lib-dynamodb": "^3.398.0",
 		"@aws-sdk/lib-storage": "^3.817.0",
 		"@jigjoy-io/mosaic": "^0.5.0",
+		"@jigjoy-io/observability-client": "^0.0.5",
 		"@jigjoy-io/project-deployment-client": "^0.0.8",
 		"@jigjoy-io/project-versioning-client": "^0.0.8",
 		"@jigjoy-io/task-contracts": "^0.0.2",

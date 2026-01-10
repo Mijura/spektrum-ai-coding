@@ -26,6 +26,7 @@ import { VersionControlPort } from "@application/ports/outbound/version-control"
 import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 import { DeployToProductionUseCase } from "@application/use-cases/deploy-to-production"
 import { DeployToProduction } from "@application/ports/use-cases/deploy-to-production"
+import { ObservabilityClient } from "@jigjoy-io/observability-client"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -64,12 +65,20 @@ if (!projectDeploymentEndpoint) {
 
 const projectDeploymentClient = new ProjectDeploymentClient(projectDeploymentEndpoint)
 
+const observabilityEndpoint = process.env.OBSERVABILITY_ENDPOINT
+if (!observabilityEndpoint) {
+	throw new Error("OBSERVABILITY_ENDPOINT is not set")
+}
+const observabilityClient = new ObservabilityClient(observabilityEndpoint)
+
+
 // Use Cases
 export const develop: Develop = new DevelopUseCase(
 	versionControl,
 	localDevEnvironment,
 	codebaseRepository,
 	projectDeploymentClient,
+	observabilityClient,
 )
 
 export const initializeReactModule: InitializeReactModule = new InitializeReactModuleUseCase(
