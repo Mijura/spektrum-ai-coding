@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 // Load environment variables from .env file
 dotenv.config()
 
+import { initializeActivityEmitter } from "@infrastructure/socket/activity-emitter"
 import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
 import { aiCodingRoutes } from "./routes/ai-coding-routes"
 import { moduleRoutes } from "./routes/module-routes"
@@ -19,6 +20,8 @@ app.use("/", aiCodingRoutes)
 app.use("/", moduleRoutes)
 
 const server = http.createServer(app)
+
+initializeActivityEmitter(server)
 
 const port = process.env.PORT || 80
 server.listen(port, () => {
