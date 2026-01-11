@@ -5,10 +5,12 @@ import { VersionControlPort } from "@application/ports/outbound/version-control"
 import { Version } from "@application/value-objects/version"
 import z from "zod"
 import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
-import { Task } from "@jigjoy-io/task-contracts"
+import { ActivityType, Task } from "@jigjoy-io/task-contracts"
 import { DeployModuleCommand, EnvironmentType, ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 import { ObservabilityClient, TaskExecution, TaskExecutionStatus } from "@jigjoy-io/observability-client"
 import { TaskExecutionEmitter } from "@application/events/emitters/task-execution"
+import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
+import { TaskEmitter } from "@application/events/emitters/task-update"
 
 export class DevelopUseCase implements Develop {
 	constructor(
@@ -17,6 +19,7 @@ export class DevelopUseCase implements Develop {
 		private readonly codebaseRepository: CodebaseRepositoryPort,
 		private readonly projectDeploymentClient: ProjectDeploymentClient,
 		private readonly observabilityClient: ObservabilityClient,
+		private readonly projectPlanningClient: ProjectPlanningClient
 	) {}
 
 	async execute(task: Task, accountId: string): Promise<void> {
@@ -79,13 +82,26 @@ export class DevelopUseCase implements Develop {
 			const developer = new Agent(command)
 
 			console.log("React Developer developing task...")
+			
+			let updatedTask = await this.projectPlanningClient.recordWork(task.id, 'React Developer', 'React Developer is generating the code...', ActivityType.STARTED_WORK)
+			TaskEmitter.taskUpdated(updatedTask)
 			const response = await developer.act()
+
+			updatedTask = await this.projectPlanningClient.recordWork(task.id, 'React Developer', 'React Developer finished with coding', ActivityType.FINISHED_WORK)
+			TaskEmitter.taskUpdated(updatedTask)
+
+			updatedTask = await this.projectPlanningClient.leaveComment(task.id, response.comment, 'React Developer')
+			TaskEmitter.taskUpdated(updatedTask)
+
+			updatedTask = await this.projectPlanningClient.recordWork(task.id, 'React Developer', 'React Developer started app deployment', ActivityType.STARTED_WORK)
+			TaskEmitter.taskUpdated(updatedTask)
 
 			const sourceCode = {
 				...version.sourceCodeArtifacts,
 				...response.sourceCode,
 			}
 			const buildArtifacts = await this.devEnvironment.build(sourceCode)
+
 
 			// save created artifacts
 			await this.vcs.push({
@@ -104,17 +120,29 @@ export class DevelopUseCase implements Develop {
 				setAsEntryPoint: true,
 			}
 
+
 			await this.projectDeploymentClient.deployModule(deploymentRequest)
+
 			console.log('Module deployed successfully')
 			await this.observabilityClient.taskExecutionSucceeded(taskExecution.id)
 			taskExecution.status = TaskExecutionStatus.SUCCEEDED
 			TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
+
+			updatedTask = await this.projectPlanningClient.recordWork(task.id, 'React Developer', 'App deployed — check Output tab to test.', ActivityType.FINISHED_WORK)
+			TaskEmitter.taskUpdated(updatedTask)
 		} catch (error: any) {
 			console.error(error)
+
 			await this.observabilityClient.taskExecutionFailed(taskExecution.id, error.message)
 			taskExecution.status = TaskExecutionStatus.FAILED
 			taskExecution.error = error.message
 			TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
+
+			let updatedTask = await this.projectPlanningClient.recordWork(task.id, 'React Developer', 'Finsihed with error. Please create a new task with the bug description.', ActivityType.FINISHED_WORK)
+			TaskEmitter.taskUpdated(updatedTask)
+
+			updatedTask = await this.projectPlanningClient.leaveComment(task.id, error.message, 'React Developer')
+			TaskEmitter.taskUpdated(updatedTask)
 		}
 	}
 }
