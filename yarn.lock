@@ -737,6 +737,14 @@
   dependencies:
     axios "^1.13.2"
 
+"@jigjoy-io/project-planning-client@^0.0.3":
+  version "0.0.3"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-planning-client/0.0.3/e97a42c5efe1ba87ed5f2b02163ecabba9fcbef2"
+  integrity sha512-x2MzzbM7CEtmM5cXyZrM6yPTIpa4/qEh3OqmlN9ExjmJP5dKv+DF5fzNXBCY/eiZQyklWxstryEjQF6cEOOVRA==
+  dependencies:
+    "@jigjoy-io/task-contracts" "^0.0.2"
+    axios "^1.13.2"
+
 "@jigjoy-io/project-versioning-client@^0.0.8":
   version "0.0.8"
   resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-versioning-client/0.0.8/1a47d89d3a9fe3e1083445defdea98f882cb370a"
