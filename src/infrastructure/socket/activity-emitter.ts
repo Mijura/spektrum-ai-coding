@@ -1,6 +1,6 @@
 import { TaskExecution } from "@jigjoy-io/observability-client"
 import { Server as SocketIOServer, Socket } from "socket.io"
-import { eventBus } from "@application/events/event-bus"
+import { eventBus } from "@app/events/event-bus"
 import { Task } from "@jigjoy-io/task-contracts"
 import { Server as HTTPServer } from "http"
 

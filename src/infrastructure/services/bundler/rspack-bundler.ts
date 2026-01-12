@@ -1,5 +1,5 @@
-import { BundlerServicePort } from "@application/ports/services/bundler-service"
-import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-selection-filter"
+import { BundlerServicePort } from "@app/ports/services/bundler-service"
+import { FileSelectionFilter } from "@infra/services/filesystem/file-selection-filter"
 import { FileArtifacts } from "@domain/file-artifacts"
 import { YarnPackageManager } from "./yarn-package-manager"
 

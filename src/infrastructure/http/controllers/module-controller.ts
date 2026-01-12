@@ -1,4 +1,4 @@
-import { deployToProduction, initializeReactModule } from "@infrastructure/dependencies"
+import { deployToProduction, initializeReactModule } from "@infra/dependencies"
 import { Request, Response } from "express"
 
 export class ModuleController {

@@ -1,4 +1,4 @@
-import { moduleController } from "@infrastructure/dependencies"
+import { moduleController } from "@infra/dependencies"
 import express, { Request, Response } from "express"
 
 const router = express.Router()

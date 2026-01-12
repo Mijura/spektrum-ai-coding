@@ -1,4 +1,4 @@
-import { ModuleRecord } from "@infrastructure/repositories/codebase/records/module"
+import { ModuleRecord } from "@infra/repositories/codebase/records/module"
 import { Module } from "@domain/module"
 
 export class ModuleMapper {

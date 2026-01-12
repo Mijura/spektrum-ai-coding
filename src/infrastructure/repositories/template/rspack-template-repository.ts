@@ -1,5 +1,5 @@
-import { TemplateRepositoryPort } from "@application/ports/repositories/template-repository"
-import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-selection-filter"
+import { TemplateRepositoryPort } from "@app/ports/repositories/template-repository"
+import { FileSelectionFilter } from "@infra/services/filesystem/file-selection-filter"
 import { FileArtifacts } from "@domain/file-artifacts"
 import path from "path"
 

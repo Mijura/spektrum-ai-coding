@@ -1,4 +1,4 @@
-import { eventBus } from "@application/events/event-bus"
+import { eventBus } from "@app/events/event-bus"
 import { Task } from "@jigjoy-io/task-contracts"
 
 export class TaskEmitter {

@@ -1,4 +1,4 @@
-import { aiCodingController } from "@infrastructure/dependencies"
+import { aiCodingController } from "@infra/dependencies"
 import express, { Request, Response } from "express"
 
 const router = express.Router()

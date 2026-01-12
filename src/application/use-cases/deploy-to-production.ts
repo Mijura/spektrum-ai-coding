@@ -1,5 +1,5 @@
-import { CodebaseRepositoryPort } from "@application/ports/repositories/codebase-repository"
-import { DeployToProductionUseCase } from "@application/ports/use-cases/deploy-to-production"
+import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
+import { DeployToProductionUseCase } from "@app/ports/use-cases/deploy-to-production"
 import {
 	DeployModuleCommand,
 	EntryPoint,

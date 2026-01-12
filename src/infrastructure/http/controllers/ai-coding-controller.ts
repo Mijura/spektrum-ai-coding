@@ -1,4 +1,4 @@
-import { develop } from "@infrastructure/dependencies"
+import { develop } from "@infra/dependencies"
 import { Task } from "@jigjoy-io/task-contracts"
 import { Request, Response } from "express"
 

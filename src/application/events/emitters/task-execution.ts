@@ -1,5 +1,5 @@
 import { TaskExecution } from "@jigjoy-io/observability-client"
-import { eventBus } from "@application/events/event-bus"
+import { eventBus } from "@app/events/event-bus"
 
 export class TaskExecutionEmitter {
 	static newTaskExecution(taskExecution: TaskExecution): void {

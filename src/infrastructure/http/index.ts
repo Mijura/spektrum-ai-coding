@@ -2,8 +2,8 @@ import dotenv from "dotenv"
 // Load environment variables from .env file
 dotenv.config()
 
-import { initializeActivityEmitter } from "@infrastructure/socket/activity-emitter"
-import { corsMiddleware } from "@infrastructure/http/middleware/allow-requests"
+import { initializeActivityEmitter } from "@infra/socket/activity-emitter"
+import { corsMiddleware } from "@infra/http/middleware/allow-requests"
 import { aiCodingRoutes } from "./routes/ai-coding-routes"
 import { moduleRoutes } from "./routes/module-routes"
 import express from "express"

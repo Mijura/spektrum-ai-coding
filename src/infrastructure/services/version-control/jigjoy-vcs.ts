@@ -1,4 +1,4 @@
-import { VersionControlServicePort } from "@application/ports/services/version-control-service"
+import { VersionControlServicePort } from "@app/ports/services/version-control-service"
 import { ProjectVersioningClient } from "@jigjoy-io/project-versioning-client"
 import { Version } from "@domain/version"
 

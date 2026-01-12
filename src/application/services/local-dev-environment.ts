@@ -1,5 +1,5 @@
-import { BundlerServicePort } from "@application/ports/services/bundler-service"
-import { FileSystemServicePort } from "@application/ports/services/file-system-service"
+import { BundlerServicePort } from "@app/ports/services/bundler-service"
+import { FileSystemServicePort } from "@app/ports/services/file-system-service"
 import { FileArtifacts } from "@domain/file-artifacts"
 import { v4 as uuidv4 } from "uuid"
 import path from "path"

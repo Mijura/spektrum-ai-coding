@@ -1,7 +1,7 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
-import { CodebaseRepositoryPort } from "@application/ports/repositories/codebase-repository"
-import { CodebaseMapper } from "@infrastructure/repositories/codebase/mappers/codebase-mapper"
-import { CodebaseRecord } from "@infrastructure/repositories/codebase/records/codebase"
+import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
+import { CodebaseMapper } from "@infra/repositories/codebase/mappers/codebase-mapper"
+import { CodebaseRecord } from "@infra/repositories/codebase/records/codebase"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { Codebase } from "@domain/codebase"
 
