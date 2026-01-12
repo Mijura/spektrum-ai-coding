@@ -1,9 +1,9 @@
-import { Bundler } from "@application/ports/services/bundler"
+import { BundlerServicePort } from "@application/ports/services/bundler-service"
 import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-selection-filter"
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import { YarnPackageManager } from "./yarn-package-manager"
 
-export class RspackBundler implements Bundler {
+export class RspackBundlerService implements BundlerServicePort {
 	constructor(
 		private readonly yarnPackageManager: YarnPackageManager,
 		private readonly distFolderFilter: FileSelectionFilter,

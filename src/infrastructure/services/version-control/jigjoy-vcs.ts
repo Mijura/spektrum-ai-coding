@@ -1,8 +1,8 @@
-import { VersionControlPort } from "@application/ports/services/version-control"
+import { VersionControlServicePort } from "@application/ports/services/version-control-service"
 import { Version } from "@application/value-objects/version"
 import { ProjectVersioningClient } from "@jigjoy-io/project-versioning-client"
 
-export class JigJoyVCS implements VersionControlPort {
+export class JigJoyVCS implements VersionControlServicePort {
 	private readonly projectVersioning: ProjectVersioningClient
 	constructor() {
 		const projectVersioningEndpoint = process.env.PROJECT_VERSIONING_ENDPOINT

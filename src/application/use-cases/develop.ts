@@ -3,7 +3,7 @@ import { ObservabilityClient, TaskExecution, TaskExecutionStatus } from "@jigjoy
 import { CodebaseRepositoryPort } from "@application/ports/repositories/codebase-repository"
 import { TaskExecutionEmitter } from "@application/events/emitters/task-execution"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
-import { VersionControlPort } from "@application/ports/services/version-control"
+import { VersionControlServicePort } from "@application/ports/services/version-control-service"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { TaskEmitter } from "@application/events/emitters/task-update"
 import { Develop } from "@application/ports/use-cases/develop"
@@ -14,7 +14,7 @@ import { z } from "zod"
 
 export class DevelopUseCase implements Develop {
 	constructor(
-		private readonly vcs: VersionControlPort,
+		private readonly vcs: VersionControlServicePort,
 		private readonly devEnvironment: LocalDevEnvironment,
 		private readonly codebaseRepository: CodebaseRepositoryPort,
 		private readonly projectDeploymentClient: ProjectDeploymentClient,

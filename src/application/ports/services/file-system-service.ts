@@ -1,4 +1,4 @@
-export interface FileSystemPort {
+export interface FileSystemServicePort {
 	copyFolder(source: string, destination: string): Promise<void>
 	writeFile(path: string, content: string): Promise<void>
 	exists(path: string): Promise<boolean>

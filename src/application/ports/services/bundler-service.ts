@@ -1,5 +1,5 @@
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 
-export interface Bundler {
+export interface BundlerServicePort {
 	bundle(projectPath: string): Promise<FileArtifacts>
 }

@@ -1,10 +1,10 @@
-import { FileSystemPort } from "@application/ports/services/file-system"
+import { FileSystemServicePort } from "@application/ports/services/file-system-service"
 import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-selection-filter"
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import path from "path"
 
 export class SourceCodeFilter implements FileSelectionFilter {
-	constructor(private fileSystem: FileSystemPort) {}
+	constructor(private fileSystem: FileSystemServicePort) {}
 
 	async fetch(basePath: string): Promise<FileArtifacts> {
 		const sourceCode: FileArtifacts = {}
