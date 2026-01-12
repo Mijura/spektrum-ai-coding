@@ -11,7 +11,6 @@ import { TemplateService } from "@application/ports/outbound/template-service"
 import { RspackTemplateService } from "@infrastructure/templates/rspack-template-service"
 import { YarnPackageManager } from "@infrastructure/adapters/package-managers/yarn-package-manager"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
-import { DevEnvironment } from "@application/ports/outbound/dev-environment"
 import { ProjectVersioningClient } from "@jigjoy-io/project-versioning-client"
 import { AICodingController } from "./http/controllers/ai-coding-controller"
 import { InitializeReactModuleUseCase } from "@application/use-cases/initialize-react-module"
@@ -47,7 +46,7 @@ export const rspackBundler: Bundler = new RspackBundler(yarnPackageManager, dist
 // Templates
 export const rspackTemplate: TemplateService = new RspackTemplateService(sourceCodeFilter, distFolderFilter)
 
-export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
+export const localDevEnvironment: LocalDevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
 export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 

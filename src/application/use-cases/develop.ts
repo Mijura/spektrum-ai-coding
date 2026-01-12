@@ -1,5 +1,4 @@
 import { Develop } from "@application/ports/use-cases/develop"
-import { DevEnvironment } from "@application/ports/outbound/dev-environment"
 import { Command, Agent } from "@jigjoy-io/mosaic"
 import { VersionControlPort } from "@application/ports/outbound/version-control"
 import { Version } from "@application/value-objects/version"
@@ -11,11 +10,12 @@ import { ObservabilityClient, TaskExecution, TaskExecutionStatus } from "@jigjoy
 import { TaskExecutionEmitter } from "@application/events/emitters/task-execution"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { TaskEmitter } from "@application/events/emitters/task-update"
+import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 
 export class DevelopUseCase implements Develop {
 	constructor(
 		private readonly vcs: VersionControlPort,
-		private readonly devEnvironment: DevEnvironment,
+		private readonly devEnvironment: LocalDevEnvironment,
 		private readonly codebaseRepository: CodebaseRepositoryPort,
 		private readonly projectDeploymentClient: ProjectDeploymentClient,
 		private readonly observabilityClient: ObservabilityClient,

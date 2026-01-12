@@ -1,11 +1,10 @@
-import { DevEnvironment } from "@application/ports/outbound/dev-environment"
 import { Bundler } from "@application/ports/outbound/bundler"
 import { FileSystemPort } from "@application/ports/outbound/file-system"
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import { v4 as uuidv4 } from "uuid"
 import path from "path"
 
-export class LocalDevEnvironment implements DevEnvironment {
+export class LocalDevEnvironment {
 	constructor(
 		private readonly jsBundler: Bundler,
 		private readonly fileSystem: FileSystemPort,
