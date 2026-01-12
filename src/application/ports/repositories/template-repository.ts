@@ -1,4 +1,4 @@
-import { FileArtifacts } from "@application/value-objects/file-artifacts"
+import { FileArtifacts } from "@domain/file-artifacts"
 
 export interface TemplateRepositoryPort {
 	fetchPrebuiltFiles(): Promise<FileArtifacts>

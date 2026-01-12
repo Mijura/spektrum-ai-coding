@@ -8,7 +8,7 @@ import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { TaskEmitter } from "@application/events/emitters/task-update"
 import { Develop } from "@application/ports/use-cases/develop"
 import { ActivityType, Task } from "@jigjoy-io/task-contracts"
-import { Version } from "@application/value-objects/version"
+import { Version } from "@domain/version"
 import { Command, Agent } from "@jigjoy-io/mosaic"
 import { z } from "zod"
 

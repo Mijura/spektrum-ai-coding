@@ -1,6 +1,6 @@
 import { TemplateRepositoryPort } from "@application/ports/repositories/template-repository"
 import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-selection-filter"
-import { FileArtifacts } from "@application/value-objects/file-artifacts"
+import { FileArtifacts } from "@domain/file-artifacts"
 import path from "path"
 
 export class RspackTemplateRepository implements TemplateRepositoryPort {

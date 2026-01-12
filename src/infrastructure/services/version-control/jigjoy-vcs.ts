@@ -1,5 +1,5 @@
 import { VersionControlServicePort } from "@application/ports/services/version-control-service"
-import { Version } from "@application/value-objects/version"
+import { Version } from "@domain/version"
 import { ProjectVersioningClient } from "@jigjoy-io/project-versioning-client"
 
 export class JigJoyVCS implements VersionControlServicePort {

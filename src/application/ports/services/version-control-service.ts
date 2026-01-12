@@ -1,4 +1,4 @@
-import { Version } from "@application/value-objects/version"
+import { Version } from "@domain/version"
 
 export interface VersionControlServicePort {
 	init(): Promise<string>
