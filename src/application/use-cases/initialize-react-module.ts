@@ -4,12 +4,12 @@ import { VersionControlPort } from "@application/ports/outbound/version-control"
 import { Version } from "@application/value-objects/version"
 import { Codebase } from "@domain/codebase"
 import { Module, ModuleType } from "@domain/module"
-import { Template } from "@application/ports/outbound/template"
+import { TemplateService } from "@application/ports/outbound/template-service"
 
 export class InitializeReactModuleUseCase implements InitializeReactModule {
 	constructor(
 		private vcs: VersionControlPort,
-		private template: Template,
+		private template: TemplateService,
 		private codebaseRepository: CodebaseRepositoryPort,
 	) {}
 

@@ -1,9 +1,9 @@
-import { Template } from "@application/ports/outbound/template"
+import { TemplateService } from "@application/ports/outbound/template-service"
 import { FileSelectionFilter } from "@application/ports/outbound/file-selection-filter"
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import path from "path"
 
-export class RspackTemplate implements Template {
+export class RspackTemplateService implements TemplateService {
 	private readonly templateName = "rspack-react-tailwind"
 
 	constructor(

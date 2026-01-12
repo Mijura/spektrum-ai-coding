@@ -7,8 +7,8 @@ import RspackBundler from "@infrastructure/adapters/bundlers/rspack-bundler"
 import { FileSelectionFilter } from "@application/ports/outbound/file-selection-filter"
 import { SourceCodeFilter } from "@infrastructure/adapters/filesystem/filters/source-code-filter"
 import { DistFolderFilter } from "@infrastructure/adapters/filesystem/filters/dist-folder-filter"
-import { Template } from "@application/ports/outbound/template"
-import { RspackTemplate } from "@infrastructure/adapters/templates/rspack-template"
+import { TemplateService } from "@application/ports/outbound/template-service"
+import { RspackTemplateService } from "@infrastructure/templates/rspack-template-service"
 import { YarnPackageManager } from "@infrastructure/adapters/package-managers/yarn-package-manager"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { DevEnvironment } from "@application/ports/outbound/dev-environment"
@@ -45,7 +45,7 @@ export const distFolderFilter: FileSelectionFilter = new DistFolderFilter(fileSy
 export const rspackBundler: Bundler = new RspackBundler(yarnPackageManager, distFolderFilter)
 
 // Templates
-export const rspackTemplate: Template = new RspackTemplate(sourceCodeFilter, distFolderFilter)
+export const rspackTemplate: TemplateService = new RspackTemplateService(sourceCodeFilter, distFolderFilter)
 
 export const localDevEnvironment: DevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
