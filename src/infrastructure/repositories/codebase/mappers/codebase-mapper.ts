@@ -1,6 +1,6 @@
-import { Codebase } from "@domain/codebase"
-import { CodebaseRecord } from "@infrastructure/storage/records/codebase"
+import { CodebaseRecord } from "@infrastructure/repositories/codebase/records/codebase"
 import { ModuleMapper } from "./module-mapper"
+import { Codebase } from "@domain/codebase"
 
 export class CodebaseMapper {
 	static toRecord(codebase: Codebase): CodebaseRecord {

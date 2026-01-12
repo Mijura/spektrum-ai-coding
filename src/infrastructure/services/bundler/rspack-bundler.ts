@@ -3,7 +3,7 @@ import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-se
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import { YarnPackageManager } from "./yarn-package-manager"
 
-export default class RspackBundler implements Bundler {
+export class RspackBundler implements Bundler {
 	constructor(
 		private readonly yarnPackageManager: YarnPackageManager,
 		private readonly distFolderFilter: FileSelectionFilter,

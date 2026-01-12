@@ -2,22 +2,21 @@ import { DevelopUseCase } from "@application/use-cases/develop"
 import { Develop } from "@application/ports/use-cases/develop"
 
 import { Bundler } from "@application/ports/services/bundler"
-import RspackBundler from "@infrastructure/services/bundler/rspack-bundler"
+import { RspackBundler } from "@infrastructure/services/bundler/rspack-bundler"
 import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-selection-filter"
-import { SourceCodeFilter } from "@infrastructure/services/filesystem/filters/source-code-filter"
-import { DistFolderFilter } from "@infrastructure/services/filesystem/filters/dist-folder-filter"
-import { TemplateService } from "@application/ports/services/template-service"
-import { RspackTemplateService } from "@infrastructure/services/template/rspack-template-service"
+import { SourceCodeFilter } from "@infrastructure/shared/filters/source-code-filter"
+import { DistFolderFilter } from "@infrastructure/shared/filters/dist-folder-filter"
+import { TemplateRepositoryPort } from "@application/ports/repositories/template-repository"
+import { RspackTemplateRepository } from "@infrastructure/repositories/template/rspack-template-repository"
 import { YarnPackageManager } from "@infrastructure/services/bundler/yarn-package-manager"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
-import { ProjectVersioningClient } from "@jigjoy-io/project-versioning-client"
 import { AICodingController } from "./http/controllers/ai-coding-controller"
 import { InitializeReactModuleUseCase } from "@application/use-cases/initialize-react-module"
 import { ModuleController } from "./http/controllers/module-controller"
 import { FileSystemPort } from "@application/ports/services/file-system"
 import { LocalFileSystem } from "@infrastructure/services/filesystem/local-file-system"
-import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
-import { DynamoDBCodebaseRepository } from "./storage/codebase-repository"
+import { CodebaseRepositoryPort } from "@application/ports/repositories/codebase-repository"
+import { DynamoDBCodebaseRepository } from "@infrastructure/repositories/codebase/codebase-repository"
 import { InitializeReactModule } from "@application/ports/use-cases/initialize-react-module"
 import { JigJoyVCS } from "./services/version-control/jigjoy-vcs"
 import { VersionControlPort } from "@application/ports/services/version-control"
@@ -43,7 +42,7 @@ export const distFolderFilter: FileSelectionFilter = new DistFolderFilter(fileSy
 export const rspackBundler: Bundler = new RspackBundler(yarnPackageManager, distFolderFilter)
 
 // Templates
-export const rspackTemplate: TemplateService = new RspackTemplateService(sourceCodeFilter, distFolderFilter)
+export const rspackTemplateRepository: TemplateRepositoryPort = new RspackTemplateRepository(sourceCodeFilter, distFolderFilter)
 
 export const localDevEnvironment: LocalDevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystem)
 
@@ -82,7 +81,7 @@ export const develop: Develop = new DevelopUseCase(
 
 export const initializeReactModule: InitializeReactModule = new InitializeReactModuleUseCase(
 	versionControl,
-	rspackTemplate,
+	rspackTemplateRepository,
 	codebaseRepository,
 )
 

@@ -1,15 +1,15 @@
 import { InitializeReactModule } from "@application/ports/use-cases/initialize-react-module"
-import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
+import { CodebaseRepositoryPort } from "@application/ports/repositories/codebase-repository"
 import { VersionControlPort } from "@application/ports/services/version-control"
 import { Version } from "@application/value-objects/version"
 import { Codebase } from "@domain/codebase"
 import { Module, ModuleType } from "@domain/module"
-import { TemplateService } from "@application/ports/services/template-service"
+import { TemplateRepositoryPort } from "@application/ports/repositories/template-repository"
 
 export class InitializeReactModuleUseCase implements InitializeReactModule {
 	constructor(
 		private vcs: VersionControlPort,
-		private template: TemplateService,
+		private templateRepository: TemplateRepositoryPort,
 		private codebaseRepository: CodebaseRepositoryPort,
 	) {}
 
@@ -18,8 +18,8 @@ export class InitializeReactModuleUseCase implements InitializeReactModule {
 		const repositoryId = await this.vcs.init()
 
 		// fetch template files and save it
-		const buildArtifacts = await this.template.fetchPrebuiltFiles()
-		const sourceCode = await this.template.fetchSourceCode()
+		const buildArtifacts = await this.templateRepository.fetchPrebuiltFiles()
+		const sourceCode = await this.templateRepository.fetchSourceCode()
 
 		const version: Version = {
 			repositoryId: repositoryId,

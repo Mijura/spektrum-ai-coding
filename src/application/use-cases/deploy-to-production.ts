@@ -1,4 +1,4 @@
-import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
+import { CodebaseRepositoryPort } from "@application/ports/repositories/codebase-repository"
 import { DeployToProduction } from "@application/ports/use-cases/deploy-to-production"
 import {
 	DeployModuleCommand,

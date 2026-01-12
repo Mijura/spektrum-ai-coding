@@ -1,9 +1,9 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
+import { CodebaseRepositoryPort } from "@application/ports/repositories/codebase-repository"
+import { CodebaseMapper } from "@infrastructure/repositories/codebase/mappers/codebase-mapper"
+import { CodebaseRecord } from "@infrastructure/repositories/codebase/records/codebase"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
-import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
 import { Codebase } from "@domain/codebase"
-import { CodebaseMapper } from "@infrastructure/storage/mappers/codebase-mapper"
-import { CodebaseRecord } from "@infrastructure/storage/records/codebase"
 
 const client = new DynamoDBClient()
 const ddbDocClient = DynamoDBDocumentClient.from(client)

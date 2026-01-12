@@ -1,5 +1,5 @@
+import { ModuleRecord } from "@infrastructure/repositories/codebase/records/module"
 import { Module } from "@domain/module"
-import { ModuleRecord } from "@infrastructure/storage/records/module"
 
 export class ModuleMapper {
 	static toRecord(module: Module): ModuleRecord {

@@ -1,6 +1,6 @@
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 
-export interface TemplateService {
+export interface TemplateRepositoryPort {
 	fetchPrebuiltFiles(): Promise<FileArtifacts>
 	fetchSourceCode(): Promise<FileArtifacts>
 }
