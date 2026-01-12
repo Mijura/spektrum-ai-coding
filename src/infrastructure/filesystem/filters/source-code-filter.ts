@@ -1,5 +1,5 @@
-import { FileSystemPort } from "@application/ports/outbound/file-system"
-import { FileSelectionFilter } from "@application/ports/outbound/file-selection-filter"
+import { FileSystemPort } from "@application/ports/services/file-system"
+import { FileSelectionFilter } from "@infrastructure/filesystem/file-selection-filter"
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import path from "path"
 

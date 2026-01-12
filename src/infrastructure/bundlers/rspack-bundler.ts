@@ -1,6 +1,6 @@
-import { Bundler } from "@application/ports/outbound/bundler"
-import { PackageManager } from "@infrastructure/ports/package-manager"
-import { FileSelectionFilter } from "@application/ports/outbound/file-selection-filter"
+import { Bundler } from "@application/ports/services/bundler"
+import { PackageManager } from "@infrastructure/package-managers/package-manager"
+import { FileSelectionFilter } from "@infrastructure/filesystem/file-selection-filter"
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 
 export default class RspackBundler implements Bundler {

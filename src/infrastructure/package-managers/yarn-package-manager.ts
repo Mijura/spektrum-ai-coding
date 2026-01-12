@@ -1,4 +1,4 @@
-import { PackageManager } from "../../ports/package-manager"
+import { PackageManager } from "./package-manager"
 import { spawn } from "child_process"
 
 /**
