@@ -1,5 +1,5 @@
 import { CodebaseRepositoryPort } from "@application/ports/repositories/codebase-repository"
-import { DeployToProduction } from "@application/ports/use-cases/deploy-to-production"
+import { DeployToProductionUseCase } from "@application/ports/use-cases/deploy-to-production"
 import {
 	DeployModuleCommand,
 	EntryPoint,
@@ -7,7 +7,7 @@ import {
 	ProjectDeploymentClient,
 } from "@jigjoy-io/project-deployment-client"
 
-export class DeployToProductionUseCase implements DeployToProduction {
+export class DeployToProduction implements DeployToProductionUseCase {
 	constructor(
 		private readonly projectDeploymentClient: ProjectDeploymentClient,
 		private readonly codebaseRepository: CodebaseRepositoryPort,

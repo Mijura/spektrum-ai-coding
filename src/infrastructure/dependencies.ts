@@ -8,22 +8,22 @@ import { RspackTemplateRepository } from "@infrastructure/repositories/template/
 import { YarnPackageManager } from "@infrastructure/services/bundler/yarn-package-manager"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { AICodingController } from "./http/controllers/ai-coding-controller"
-import { InitializeReactModuleUseCase } from "@application/use-cases/initialize-react-module"
+import { InitializeReactModule } from "@application/use-cases/initialize-react-module"
 import { ModuleController } from "./http/controllers/module-controller"
 import { FileSystemServicePort } from "@application/ports/services/file-system-service"
 import { LocalFileSystem } from "@infrastructure/services/filesystem/local-file-system"
 import { CodebaseRepositoryPort } from "@application/ports/repositories/codebase-repository"
 import { DynamoDBCodebaseRepository } from "@infrastructure/repositories/codebase/codebase-repository"
-import { InitializeReactModule } from "@application/ports/use-cases/initialize-react-module"
+import { InitializeReactModuleUseCase } from "@application/ports/use-cases/initialize-react-module"
 import { JigJoyVCS } from "./services/version-control/jigjoy-vcs"
 import { VersionControlServicePort } from "@application/ports/services/version-control-service"
 import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
-import { DeployToProductionUseCase } from "@application/use-cases/deploy-to-production"
-import { DeployToProduction } from "@application/ports/use-cases/deploy-to-production"
+import { DeployToProduction } from "@application/use-cases/deploy-to-production"
+import { DeployToProductionUseCase } from "@application/ports/use-cases/deploy-to-production"
 import { ObservabilityClient } from "@jigjoy-io/observability-client"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
-import { DevelopUseCase } from "@application/use-cases/develop"
-import { Develop } from "@application/ports/use-cases/develop"
+import { Develop } from "@application/use-cases/develop"
+import { DevelopUseCase } from "@application/ports/use-cases/develop"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -38,7 +38,10 @@ export const yarnPackageManager: YarnPackageManager = new YarnPackageManager()
 export const rspackBundler: BundlerServicePort = new RspackBundlerService(yarnPackageManager, distFolderFilter)
 
 // Templates
-export const rspackTemplateRepository: TemplateRepositoryPort = new RspackTemplateRepository(sourceCodeFilter, distFolderFilter)
+export const rspackTemplateRepository: TemplateRepositoryPort = new RspackTemplateRepository(
+	sourceCodeFilter,
+	distFolderFilter,
+)
 
 export const localDevEnvironment: LocalDevEnvironment = new LocalDevEnvironment(rspackBundler, fileSystemService)
 
@@ -66,7 +69,7 @@ if (!projectPlanningEndpoint) {
 const projectPlanningClient = new ProjectPlanningClient(projectPlanningEndpoint)
 
 // Use Cases
-export const develop: Develop = new DevelopUseCase(
+export const develop: DevelopUseCase = new Develop(
 	versionControl,
 	localDevEnvironment,
 	codebaseRepository,
@@ -75,13 +78,13 @@ export const develop: Develop = new DevelopUseCase(
 	projectPlanningClient,
 )
 
-export const initializeReactModule: InitializeReactModule = new InitializeReactModuleUseCase(
+export const initializeReactModule: InitializeReactModuleUseCase = new InitializeReactModule(
 	versionControl,
 	rspackTemplateRepository,
 	codebaseRepository,
 )
 
-export const deployToProduction: DeployToProduction = new DeployToProductionUseCase(
+export const deployToProduction: DeployToProductionUseCase = new DeployToProduction(
 	projectDeploymentClient,
 	codebaseRepository,
 )

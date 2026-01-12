@@ -6,13 +6,13 @@ import { LocalDevEnvironment } from "@application/services/local-dev-environment
 import { VersionControlServicePort } from "@application/ports/services/version-control-service"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { TaskEmitter } from "@application/events/emitters/task-update"
-import { Develop } from "@application/ports/use-cases/develop"
+import { DevelopUseCase } from "@application/ports/use-cases/develop"
 import { ActivityType, Task } from "@jigjoy-io/task-contracts"
 import { Version } from "@domain/version"
 import { Command, Agent } from "@jigjoy-io/mosaic"
 import { z } from "zod"
 
-export class DevelopUseCase implements Develop {
+export class Develop implements DevelopUseCase {
 	constructor(
 		private readonly vcs: VersionControlServicePort,
 		private readonly devEnvironment: LocalDevEnvironment,

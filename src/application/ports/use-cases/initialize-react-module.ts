@@ -1,5 +1,5 @@
 import { Module } from "@domain/module"
 
-export interface InitializeReactModule {
+export interface InitializeReactModuleUseCase {
 	execute(projectId: string): Promise<Module>
 }
