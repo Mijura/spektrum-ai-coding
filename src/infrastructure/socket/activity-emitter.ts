@@ -42,12 +42,12 @@ export function initializeActivityEmitter(server: HTTPServer) {
 		io.to(task.projectId).emit("task:update", task)
 	})
 
-		// Listen once on server-side and forward to specific room
+	// Listen once on server-side and forward to specific room
 	eventBus.on("task-execution:update", (taskExecution: TaskExecution) => {
 		console.log(`Broadcasting task-execution:update to room ${taskExecution.accountId}`)
 		io.to(taskExecution.accountId).emit("task-execution:update", taskExecution)
 	})
-	
+
 	eventBus.on("task-execution:new", (taskExecution: TaskExecution) => {
 		console.log(`Broadcasting task-execution:new to room ${taskExecution.accountId}`)
 		io.to(taskExecution.accountId).emit("task-execution:new", taskExecution)

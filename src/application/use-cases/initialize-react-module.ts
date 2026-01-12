@@ -1,10 +1,10 @@
 import { InitializeReactModule } from "@application/ports/use-cases/initialize-react-module"
 import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
-import { VersionControlPort } from "@application/ports/outbound/version-control"
+import { VersionControlPort } from "@application/ports/services/version-control"
 import { Version } from "@application/value-objects/version"
 import { Codebase } from "@domain/codebase"
 import { Module, ModuleType } from "@domain/module"
-import { TemplateService } from "@application/ports/outbound/template-service"
+import { TemplateService } from "@application/ports/services/template-service"
 
 export class InitializeReactModuleUseCase implements InitializeReactModule {
 	constructor(

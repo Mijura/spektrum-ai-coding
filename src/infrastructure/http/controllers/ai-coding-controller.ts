@@ -5,10 +5,10 @@ import { Request, Response } from "express"
 export class AICodingController {
 	async develop(req: Request, res: Response): Promise<void> {
 		try {
-			const { task, accountId } = req.body as { task: Task, accountId: string }
+			const { task, accountId } = req.body as { task: Task; accountId: string }
 
-            console.log("task", task)
-            console.log("accountId", accountId)
+			console.log("task", task)
+			console.log("accountId", accountId)
 			if (!task || !accountId) {
 				throw new Error("Task and accountId are required")
 			}

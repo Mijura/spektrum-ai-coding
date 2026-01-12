@@ -1,27 +1,26 @@
-import { PackageManager } from "@infrastructure/package-managers/package-manager"
 import { DevelopUseCase } from "@application/use-cases/develop"
 import { Develop } from "@application/ports/use-cases/develop"
 
 import { Bundler } from "@application/ports/services/bundler"
-import RspackBundler from "@infrastructure/bundlers/rspack-bundler"
-import { FileSelectionFilter } from "@infrastructure/filesystem/file-selection-filter"
-import { SourceCodeFilter } from "@infrastructure/filesystem/filters/source-code-filter"
-import { DistFolderFilter } from "@infrastructure/filesystem/filters/dist-folder-filter"
-import { TemplateService } from "@application/ports/outbound/template-service"
-import { RspackTemplateService } from "@infrastructure/templates/rspack-template-service"
-import { YarnPackageManager } from "@infrastructure/package-managers/yarn-package-manager"
+import RspackBundler from "@infrastructure/services/bundler/rspack-bundler"
+import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-selection-filter"
+import { SourceCodeFilter } from "@infrastructure/services/filesystem/filters/source-code-filter"
+import { DistFolderFilter } from "@infrastructure/services/filesystem/filters/dist-folder-filter"
+import { TemplateService } from "@application/ports/services/template-service"
+import { RspackTemplateService } from "@infrastructure/services/template/rspack-template-service"
+import { YarnPackageManager } from "@infrastructure/services/bundler/yarn-package-manager"
 import { LocalDevEnvironment } from "@application/services/local-dev-environment"
 import { ProjectVersioningClient } from "@jigjoy-io/project-versioning-client"
 import { AICodingController } from "./http/controllers/ai-coding-controller"
 import { InitializeReactModuleUseCase } from "@application/use-cases/initialize-react-module"
 import { ModuleController } from "./http/controllers/module-controller"
 import { FileSystemPort } from "@application/ports/services/file-system"
-import { LocalFileSystem } from "@infrastructure/filesystem/local-file-system"
+import { LocalFileSystem } from "@infrastructure/services/filesystem/local-file-system"
 import { CodebaseRepositoryPort } from "@application/ports/outbound/codebase-repository"
 import { DynamoDBCodebaseRepository } from "./storage/codebase-repository"
 import { InitializeReactModule } from "@application/ports/use-cases/initialize-react-module"
-import { DefaultVersionControl } from "./storage/version-control"
-import { VersionControlPort } from "@application/ports/outbound/version-control"
+import { JigJoyVCS } from "./services/version-control/jigjoy-vcs"
+import { VersionControlPort } from "@application/ports/services/version-control"
 import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 import { DeployToProductionUseCase } from "@application/use-cases/deploy-to-production"
 import { DeployToProduction } from "@application/ports/use-cases/deploy-to-production"
@@ -34,7 +33,7 @@ export const moduleController = new ModuleController()
 
 // Services
 export const fileSystem: FileSystemPort = new LocalFileSystem()
-export const yarnPackageManager: PackageManager = new YarnPackageManager()
+export const yarnPackageManager: YarnPackageManager = new YarnPackageManager()
 
 // Filters
 export const sourceCodeFilter: FileSelectionFilter = new SourceCodeFilter(fileSystem)
@@ -50,13 +49,7 @@ export const localDevEnvironment: LocalDevEnvironment = new LocalDevEnvironment(
 
 export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 
-const projectVersioningEndpoint = process.env.PROJECT_VERSIONING_ENDPOINT
-if (!projectVersioningEndpoint) {
-	throw new Error("PROJECT_VERSIONING_ENDPOINT is not set")
-}
-
-const projectVersioningClient = new ProjectVersioningClient(projectVersioningEndpoint)
-const versionControl: VersionControlPort = new DefaultVersionControl(projectVersioningClient)
+const versionControl: VersionControlPort = new JigJoyVCS()
 
 const projectDeploymentEndpoint = process.env.PROJECT_DEPLOYMENT_ENDPOINT
 if (!projectDeploymentEndpoint) {
@@ -70,7 +63,6 @@ if (!observabilityEndpoint) {
 	throw new Error("OBSERVABILITY_ENDPOINT is not set")
 }
 const observabilityClient = new ObservabilityClient(observabilityEndpoint)
-
 
 const projectPlanningEndpoint = process.env.PROJECT_PLANNING_ENDPOINT
 if (!projectPlanningEndpoint) {
@@ -94,4 +86,7 @@ export const initializeReactModule: InitializeReactModule = new InitializeReactM
 	codebaseRepository,
 )
 
-export const deployToProduction: DeployToProduction = new DeployToProductionUseCase(projectDeploymentClient, codebaseRepository)
+export const deployToProduction: DeployToProduction = new DeployToProductionUseCase(
+	projectDeploymentClient,
+	codebaseRepository,
+)

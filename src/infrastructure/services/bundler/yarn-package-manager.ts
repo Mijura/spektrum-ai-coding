@@ -1,4 +1,3 @@
-import { PackageManager } from "./package-manager"
 import { spawn } from "child_process"
 
 /**
@@ -11,10 +10,7 @@ export interface CommandResult {
 	exitCode: number
 }
 
-/**
- * Represents a package manager that can install and build projects
- */
-export class YarnPackageManager implements PackageManager {
+export class YarnPackageManager {
 	constructor() {}
 
 	private runCommand(command: string, cwd: string, contextMessage?: string): Promise<CommandResult> {

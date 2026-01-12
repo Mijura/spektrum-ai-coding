@@ -1,5 +1,5 @@
 import { Codebase } from "@domain/codebase"
-import { CodebaseRecord } from "@infrastructure/records/codebase"
+import { CodebaseRecord } from "@infrastructure/storage/records/codebase"
 import { ModuleMapper } from "./module-mapper"
 
 export class CodebaseMapper {

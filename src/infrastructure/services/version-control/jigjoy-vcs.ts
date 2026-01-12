@@ -1,9 +1,17 @@
-import { VersionControlPort } from "@application/ports/outbound/version-control"
+import { VersionControlPort } from "@application/ports/services/version-control"
 import { Version } from "@application/value-objects/version"
 import { ProjectVersioningClient } from "@jigjoy-io/project-versioning-client"
 
-export class DefaultVersionControl implements VersionControlPort {
-	constructor(readonly projectVersioning: ProjectVersioningClient) {}
+export class JigJoyVCS implements VersionControlPort {
+	private readonly projectVersioning: ProjectVersioningClient
+	constructor() {
+		const projectVersioningEndpoint = process.env.PROJECT_VERSIONING_ENDPOINT
+		if (!projectVersioningEndpoint) {
+			throw new Error("PROJECT_VERSIONING_ENDPOINT is not set")
+		}
+
+		this.projectVersioning = new ProjectVersioningClient(projectVersioningEndpoint)
+	}
 
 	async init(): Promise<string> {
 		return await this.projectVersioning.initializeProjectHistory()

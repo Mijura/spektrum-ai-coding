@@ -1,11 +1,11 @@
 import { Bundler } from "@application/ports/services/bundler"
-import { PackageManager } from "@infrastructure/package-managers/package-manager"
-import { FileSelectionFilter } from "@infrastructure/filesystem/file-selection-filter"
+import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-selection-filter"
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
+import { YarnPackageManager } from "./yarn-package-manager"
 
 export default class RspackBundler implements Bundler {
 	constructor(
-		private readonly yarnPackageManager: PackageManager,
+		private readonly yarnPackageManager: YarnPackageManager,
 		private readonly distFolderFilter: FileSelectionFilter,
 	) {}
 

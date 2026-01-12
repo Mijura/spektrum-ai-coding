@@ -1,5 +1,5 @@
-import { TemplateService } from "@application/ports/outbound/template-service"
-import { FileSelectionFilter } from "@infrastructure/filesystem/file-selection-filter"
+import { TemplateService } from "@application/ports/services/template-service"
+import { FileSelectionFilter } from "@infrastructure/services/filesystem/file-selection-filter"
 import { FileArtifacts } from "@application/value-objects/file-artifacts"
 import path from "path"
 
@@ -12,12 +12,12 @@ export class RspackTemplateService implements TemplateService {
 	) {}
 
 	fetchPrebuiltFiles(): Promise<FileArtifacts> {
-		const templatePath = path.resolve(`src/infrastructure/templates/${this.templateName}`)
+		const templatePath = path.resolve(`src/infrastructure/services/template/${this.templateName}`)
 		return this.distFolderFilter.fetch(templatePath)
 	}
 
 	fetchSourceCode(): Promise<FileArtifacts> {
-		const templatePath = path.resolve(`src/infrastructure/templates/${this.templateName}`)
+		const templatePath = path.resolve(`src/infrastructure/services/template/${this.templateName}`)
 		return this.sourceCodeFilter.fetch(templatePath)
 	}
 }
