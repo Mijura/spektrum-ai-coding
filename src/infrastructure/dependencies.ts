@@ -70,12 +70,12 @@ const projectPlanningClient = new ProjectPlanningClient(projectPlanningEndpoint)
 
 // Use Cases
 export const develop: DevelopUseCase = new Develop(
-	versionControl,
-	localDevEnvironment,
 	codebaseRepository,
-	projectDeploymentClient,
-	observabilityClient,
 	projectPlanningClient,
+	localDevEnvironment,
+	versionControl,
+	observabilityClient,
+	projectDeploymentClient,
 )
 
 export const initializeReactModule: InitializeReactModuleUseCase = new InitializeReactModule(
