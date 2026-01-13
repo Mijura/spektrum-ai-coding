@@ -14,6 +14,7 @@ import { TestingPhase } from "./phase/testing"
 import { Version } from "@domain/version"
 import { Module } from "@domain/module"
 import { Phase } from "./phase/phase"
+import { CodeAssistServicePort } from "@app/services/code-assist"
 
 export class AIDevelopmentWorkflow {
 	private phase!: Phase
@@ -30,6 +31,7 @@ export class AIDevelopmentWorkflow {
 		private readonly vcs: VersionControlServicePort,
 		private readonly observabilityClient: ObservabilityClient,
 		private readonly projectDeploymentClient: ProjectDeploymentClient,
+		private readonly codeAssistService: CodeAssistServicePort,
 	) {}
 
 	setPhase(phase: Phase): void {
@@ -88,7 +90,7 @@ export class AIDevelopmentWorkflow {
 		let currentTry = 1
 		while (currentTry <= this.numberOfTries) {
 			try {
-				this.setPhase(new ImplementationPhase(this.projectPlanningClient))
+				this.setPhase(new ImplementationPhase(this.projectPlanningClient, this.codeAssistService))
 				await this.phase.execute(this)
 				this.setPhase(new TestingPhase(this.projectPlanningClient, this.devEnvironment))
 				await this.phase.execute(this)
