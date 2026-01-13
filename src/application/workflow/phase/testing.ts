@@ -1,9 +1,9 @@
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
-import { AIDevelopmentWorkflow } from "../ai-development-workflow"
-import { Phase } from "./phase"
-import { ActivityType } from "@jigjoy-io/task-contracts"
-import { TaskEmitter } from "@app/events/emitters/task-update"
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
+import { AIDevelopmentWorkflow } from "../ai-development-workflow"
+import { TaskEmitter } from "@app/events/emitters/task-update"
+import { ActivityType } from "@jigjoy-io/task-contracts"
+import { Phase } from "./phase"
 
 export class TestingPhase implements Phase {
 	constructor(
