@@ -1,7 +1,7 @@
-import { FileSystemServicePort } from "@app/ports/services/file-system-service"
+import { FileSystemPort } from "@app/ports/services/file-system"
 import * as fs from "fs-extra"
 
-export class LocalFileSystem implements FileSystemServicePort {
+export class LocalFileSystem implements FileSystemPort {
 	async copyFolder(source: string, destination: string): Promise<void> {
 		await this.ensureDir(destination)
 		await fs.copy(source, destination)

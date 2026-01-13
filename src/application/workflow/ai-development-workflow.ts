@@ -5,6 +5,7 @@ import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { TaskExecutionEmitter } from "@app/events/emitters/task-execution"
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
+import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { ActivityType, Task } from "@jigjoy-io/task-contracts"
 import { TaskEmitter } from "@app/events/emitters/task-update"
 import { ImplementationPhase } from "./phase/implementation"
@@ -14,7 +15,6 @@ import { BuildPhase } from "./phase/build"
 import { Version } from "@domain/version"
 import { Module } from "@domain/module"
 import { Phase } from "./phase/phase"
-import { CodeAssistServicePort } from "@app/services/code-assist"
 
 export class AIDevelopmentWorkflow {
 	private phase!: Phase
@@ -31,7 +31,7 @@ export class AIDevelopmentWorkflow {
 		private readonly vcs: VersionControlServicePort,
 		private readonly observabilityClient: ObservabilityClient,
 		private readonly projectDeploymentClient: ProjectDeploymentClient,
-		private readonly codeAssistService: CodeAssistServicePort,
+		private readonly codeGenerator: CodeGeneratorPort,
 	) {}
 
 	setPhase(phase: Phase): void {
@@ -94,7 +94,7 @@ export class AIDevelopmentWorkflow {
 		let currentTry = 1
 		while (currentTry <= this.numberOfTries) {
 			try {
-				this.setPhase(new ImplementationPhase(this.projectPlanningClient, this.codeAssistService))
+				this.setPhase(new ImplementationPhase(this.projectPlanningClient, this.codeGenerator))
 				await this.phase.execute(this)
 				this.setPhase(new BuildPhase(this.projectPlanningClient, this.devEnvironment))
 				await this.phase.execute(this)

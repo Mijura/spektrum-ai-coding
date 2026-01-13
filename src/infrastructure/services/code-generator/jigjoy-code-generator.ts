@@ -1,10 +1,10 @@
-import { CodeAssistServicePort } from "@app/services/code-assist"
+import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { FileArtifacts } from "@domain/file-artifacts"
 import { Agent, Command } from "@jigjoy-io/mosaic"
 import { Task } from "@jigjoy-io/task-contracts"
 import z from "zod"
 
-export class JigJoyCodeAssistService implements CodeAssistServicePort {
+export class JigJoyCodeGenerator implements CodeGeneratorPort {
 	constructor() {}
 
 	async generateCode(task: Task, sourceCode: FileArtifacts): Promise<{ comment: string; sourceCode: FileArtifacts }> {

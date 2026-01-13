@@ -1,10 +1,10 @@
-import { FileSystemServicePort } from "@app/ports/services/file-system-service"
+import { FileSystemPort } from "@app/ports/services/file-system"
 import { FileSelectionFilter } from "@infra/services/filesystem/file-selection-filter"
 import { FileArtifacts } from "@domain/file-artifacts"
 import path from "path"
 
 export class DistFolderFilter implements FileSelectionFilter {
-	constructor(private fileSystem: FileSystemServicePort) {}
+	constructor(private fileSystem: FileSystemPort) {}
 
 	async fetch(basePath: string): Promise<FileArtifacts> {
 		const fileArtifacts: FileArtifacts = {}

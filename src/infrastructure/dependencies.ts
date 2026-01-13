@@ -1,4 +1,4 @@
-import { BundlerServicePort } from "@app/ports/services/bundler-service"
+import { BundlerPort } from "@app/ports/services/bundler"
 import { RspackBundlerService } from "@infra/services/bundler/rspack-bundler"
 import { FileSelectionFilter } from "@infra/services/filesystem/file-selection-filter"
 import { SourceCodeFilter } from "@infra/shared/filters/source-code-filter"
@@ -10,7 +10,7 @@ import { LocalDevEnvironment } from "@app/services/local-dev-environment"
 import { AICodingController } from "./http/controllers/ai-coding-controller"
 import { InitializeReactModule } from "@app/use-cases/initialize-react-module"
 import { ModuleController } from "./http/controllers/module-controller"
-import { FileSystemServicePort } from "@app/ports/services/file-system-service"
+import { FileSystemPort } from "@app/ports/services/file-system"
 import { LocalFileSystem } from "@infra/services/filesystem/local-file-system"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
 import { DynamoDBCodebaseRepository } from "@infra/repositories/codebase/codebase-repository"
@@ -24,20 +24,20 @@ import { ObservabilityClient } from "@jigjoy-io/observability-client"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { Develop } from "@app/use-cases/develop"
 import { DevelopUseCase } from "@app/ports/use-cases/develop"
-import { JigJoyCodeAssistService } from "./services/code-assist-service"
-import { CodeAssistServicePort } from "@app/services/code-assist"
+import { JigJoyCodeGenerator } from "./services/code-generator/jigjoy-code-generator"
+import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 
 // Controllers
 export const aiCodingController = new AICodingController()
 export const moduleController = new ModuleController()
 
 // Services
-export const fileSystemService: FileSystemServicePort = new LocalFileSystem()
+export const fileSystemService: FileSystemPort = new LocalFileSystem()
 export const sourceCodeFilter: FileSelectionFilter = new SourceCodeFilter(fileSystemService)
 export const distFolderFilter: FileSelectionFilter = new DistFolderFilter(fileSystemService)
 
 export const yarnPackageManager: YarnPackageManager = new YarnPackageManager()
-export const rspackBundler: BundlerServicePort = new RspackBundlerService(yarnPackageManager, distFolderFilter)
+export const rspackBundler: BundlerPort = new RspackBundlerService(yarnPackageManager, distFolderFilter)
 
 // Templates
 export const rspackTemplateRepository: TemplateRepositoryPort = new RspackTemplateRepository(
@@ -69,7 +69,7 @@ if (!projectPlanningEndpoint) {
 	throw new Error("PROJECT_PLANNING_ENDPOINT is not set")
 }
 const projectPlanningClient = new ProjectPlanningClient(projectPlanningEndpoint)
-const codeAssistService: CodeAssistServicePort = new JigJoyCodeAssistService()
+const codeGenerator: CodeGeneratorPort = new JigJoyCodeGenerator()
 
 // Use Cases
 export const develop: DevelopUseCase = new Develop(
@@ -79,7 +79,7 @@ export const develop: DevelopUseCase = new Develop(
 	versionControl,
 	observabilityClient,
 	projectDeploymentClient,
-	codeAssistService,
+	codeGenerator,
 )
 
 export const initializeReactModule: InitializeReactModuleUseCase = new InitializeReactModule(

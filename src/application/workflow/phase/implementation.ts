@@ -1,6 +1,6 @@
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { AIDevelopmentWorkflow } from "../ai-development-workflow"
-import { CodeAssistServicePort } from "@app/services/code-assist"
+import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { TaskEmitter } from "@app/events/emitters/task-update"
 import { ActivityType, Task } from "@jigjoy-io/task-contracts"
 import { FileArtifacts } from "@domain/file-artifacts"
@@ -9,7 +9,7 @@ import { Phase } from "./phase"
 export class ImplementationPhase implements Phase {
 	constructor(
 		private readonly projectPlanningClient: ProjectPlanningClient,
-		private readonly codeAssistService: CodeAssistServicePort,
+		private readonly codeGenerator: CodeGeneratorPort,
 	) {}
 
 	async execute(context: AIDevelopmentWorkflow): Promise<void> {
@@ -26,7 +26,7 @@ export class ImplementationPhase implements Phase {
 		)
 		TaskEmitter.taskUpdated(updatedTask)
 
-		const response = await this.codeAssistService.generateCode(task, sourceCode)
+		const response = await this.codeGenerator.generateCode(task, sourceCode)
 
 		context.updateSourceCode(response.sourceCode)
 

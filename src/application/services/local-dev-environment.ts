@@ -1,13 +1,13 @@
-import { BundlerServicePort } from "@app/ports/services/bundler-service"
-import { FileSystemServicePort } from "@app/ports/services/file-system-service"
+import { BundlerPort } from "@app/ports/services/bundler"
+import { FileSystemPort } from "@app/ports/services/file-system"
 import { FileArtifacts } from "@domain/file-artifacts"
 import { v4 as uuidv4 } from "uuid"
 import path from "path"
 
 export class LocalDevEnvironment {
 	constructor(
-		private readonly jsBundler: BundlerServicePort,
-		private readonly fileSystem: FileSystemServicePort,
+		private readonly jsBundler: BundlerPort,
+		private readonly fileSystem: FileSystemPort,
 	) {}
 
 	async build(sourceCode: FileArtifacts): Promise<FileArtifacts> {
