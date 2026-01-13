@@ -3,7 +3,6 @@ import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { AIDevelopmentWorkflow } from "../ai-development-workflow"
 import { TaskEmitter } from "@app/events/emitters/task-update"
 import { ActivityType } from "@jigjoy-io/task-contracts"
-import { FileArtifacts } from "@domain/file-artifacts"
 import { Phase } from "./phase"
 
 export class DeploymentPhase implements Phase {
