@@ -10,7 +10,7 @@ import { TaskEmitter } from "@app/events/emitters/task-update"
 import { ImplementationPhase } from "./phase/implementation"
 import { FileArtifacts } from "@domain/file-artifacts"
 import { DeploymentPhase } from "./phase/deployment"
-import { TestingPhase } from "./phase/testing"
+import { BuildPhase } from "./phase/build"
 import { Version } from "@domain/version"
 import { Module } from "@domain/module"
 import { Phase } from "./phase/phase"
@@ -48,6 +48,10 @@ export class AIDevelopmentWorkflow {
 
 	updateBuildArtifacts(buildArtifacts: FileArtifacts): void {
 		this.buildArtifacts = buildArtifacts
+	}
+
+	setTask(task: Task): void {
+		this.task = task
 	}
 
 	getTask(): Task {
@@ -92,7 +96,7 @@ export class AIDevelopmentWorkflow {
 			try {
 				this.setPhase(new ImplementationPhase(this.projectPlanningClient, this.codeAssistService))
 				await this.phase.execute(this)
-				this.setPhase(new TestingPhase(this.projectPlanningClient, this.devEnvironment))
+				this.setPhase(new BuildPhase(this.projectPlanningClient, this.devEnvironment))
 				await this.phase.execute(this)
 				break
 			} catch (error: any) {
@@ -112,6 +116,8 @@ export class AIDevelopmentWorkflow {
 					error.message,
 					"React Developer",
 				)
+
+				this.setTask(updatedTask)
 				TaskEmitter.taskUpdated(updatedTask)
 			}
 		}

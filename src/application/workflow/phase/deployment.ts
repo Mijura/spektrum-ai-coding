@@ -14,8 +14,7 @@ export class DeploymentPhase implements Phase {
 	async execute(context: AIDevelopmentWorkflow): Promise<void> {
 		const module = context.getModule()
 		const task = context.getTask()
-		const buildArtifacts: FileArtifacts = context.getBuildArtifacts()
-		console.log("Deploying build artifacts", buildArtifacts)
+		console.log("Deploying the application...")
 
 		let updatedTask = await this.projectPlanningClient.recordWork(
 			task.id,
@@ -46,5 +45,6 @@ export class DeploymentPhase implements Phase {
 			ActivityType.FINISHED_WORK,
 		)
 		TaskEmitter.taskUpdated(updatedTask)
+		context.setTask(updatedTask)
 	}
 }

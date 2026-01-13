@@ -40,5 +40,6 @@ export class ImplementationPhase implements Phase {
 
 		updatedTask = await this.projectPlanningClient.leaveComment(task.id, response.comment, "React Developer")
 		TaskEmitter.taskUpdated(updatedTask)
+		context.setTask(updatedTask)
 	}
 }

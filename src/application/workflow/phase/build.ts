@@ -5,7 +5,7 @@ import { TaskEmitter } from "@app/events/emitters/task-update"
 import { ActivityType } from "@jigjoy-io/task-contracts"
 import { Phase } from "./phase"
 
-export class TestingPhase implements Phase {
+export class BuildPhase implements Phase {
 	constructor(
 		private readonly projectPlanningClient: ProjectPlanningClient,
 		private readonly devEnvironment: LocalDevEnvironment,
@@ -15,7 +15,7 @@ export class TestingPhase implements Phase {
 		const sourceCode = context.getSourceCode()
 		const task = context.getTask()
 
-		console.log("Testing source code", sourceCode)
+		console.log("Building source code")
 
 		let updatedTask = await this.projectPlanningClient.recordWork(
 			task.id,
@@ -35,5 +35,7 @@ export class TestingPhase implements Phase {
 			ActivityType.FINISHED_WORK,
 		)
 		TaskEmitter.taskUpdated(updatedTask)
+
+		context.setTask(updatedTask)
 	}
 }
