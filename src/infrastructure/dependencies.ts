@@ -24,6 +24,8 @@ import { ObservabilityClient } from "@jigjoy-io/observability-client"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { Develop } from "@app/use-cases/develop"
 import { DevelopUseCase } from "@app/ports/use-cases/develop"
+import { JigJoyCodeAssistService } from "./services/code-assist-service"
+import { CodeAssistServicePort } from "@app/services/code-assist"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -67,6 +69,7 @@ if (!projectPlanningEndpoint) {
 	throw new Error("PROJECT_PLANNING_ENDPOINT is not set")
 }
 const projectPlanningClient = new ProjectPlanningClient(projectPlanningEndpoint)
+const codeAssistService: CodeAssistServicePort = new JigJoyCodeAssistService()
 
 // Use Cases
 export const develop: DevelopUseCase = new Develop(
@@ -76,6 +79,7 @@ export const develop: DevelopUseCase = new Develop(
 	versionControl,
 	observabilityClient,
 	projectDeploymentClient,
+	codeAssistService,
 )
 
 export const initializeReactModule: InitializeReactModuleUseCase = new InitializeReactModule(
