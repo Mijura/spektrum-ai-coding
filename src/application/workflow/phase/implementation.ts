@@ -14,7 +14,7 @@ export class ImplementationPhase implements Phase {
 		const sourceCode: FileArtifacts = context.getSourceCode()
 		const task: Task = context.getTask()
 
-		console.log("Implementing task", task)
+		console.log("React Developer is developing task", task)
 
 		const outputSchema = z.object({
 			sourceCode: z
@@ -59,8 +59,6 @@ export class ImplementationPhase implements Phase {
 		}
 
 		const developer = new Agent(command)
-
-		console.log("React Developer developing task...")
 
 		let updatedTask = await this.projectPlanningClient.recordWork(
 			task.id,
