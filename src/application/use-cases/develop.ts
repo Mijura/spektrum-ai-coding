@@ -2,7 +2,7 @@ import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 import { ObservabilityClient } from "@jigjoy-io/observability-client"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
-import { VersionControlServicePort } from "@app/ports/services/version-control-service"
+import { VersionControlService } from "@app/ports/services/version-control-service"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { AIDevelopmentWorkflow } from "@app/workflow/ai-development-workflow"
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
@@ -14,7 +14,7 @@ export class Develop implements DevelopUseCase {
 		private readonly codebaseRepository: CodebaseRepositoryPort,
 		private readonly projectPlanningClient: ProjectPlanningClient,
 		private readonly devEnvironment: LocalDevEnvironment,
-		private readonly vcs: VersionControlServicePort,
+		private readonly versionControlService: VersionControlService,
 		private readonly observabilityClient: ObservabilityClient,
 		private readonly projectDeploymentClient: ProjectDeploymentClient,
 		private readonly codeGenerator: CodeGeneratorPort,
@@ -26,7 +26,7 @@ export class Develop implements DevelopUseCase {
 				this.codebaseRepository,
 				this.projectPlanningClient,
 				this.devEnvironment,
-				this.vcs,
+				this.versionControlService,
 				this.observabilityClient,
 				this.projectDeploymentClient,
 				this.codeGenerator,

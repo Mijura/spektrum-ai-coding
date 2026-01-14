@@ -1,6 +1,6 @@
 import { Version } from "@domain/version"
 
-export interface VersionControlServicePort {
+export interface VersionControlService {
 	init(): Promise<string>
 	pull(repositoryId: string): Promise<Version>
 	push(version: Version): Promise<void>

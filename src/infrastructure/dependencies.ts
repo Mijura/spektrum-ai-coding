@@ -15,8 +15,8 @@ import { LocalFileSystem } from "@infra/services/filesystem/local-file-system"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
 import { DynamoDBCodebaseRepository } from "@infra/repositories/codebase/codebase-repository"
 import { InitializeReactModuleUseCase } from "@app/ports/use-cases/initialize-react-module"
-import { JigJoyVCS } from "./services/version-control/jigjoy-vcs"
-import { VersionControlServicePort } from "@app/ports/services/version-control-service"
+import { JigJoyVersionControl } from "./services/version-control/jigjoy-vcs"
+import { VersionControlService } from "@app/ports/services/version-control-service"
 import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 import { DeployToProduction } from "@app/use-cases/deploy-to-production"
 import { DeployToProductionUseCase } from "@app/ports/use-cases/deploy-to-production"
@@ -49,7 +49,7 @@ export const localDevEnvironment: LocalDevEnvironment = new LocalDevEnvironment(
 
 export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 
-const versionControl: VersionControlServicePort = new JigJoyVCS()
+const versionControl: VersionControlService = new JigJoyVersionControl()
 
 const projectDeploymentEndpoint = process.env.PROJECT_DEPLOYMENT_ENDPOINT
 if (!projectDeploymentEndpoint) {

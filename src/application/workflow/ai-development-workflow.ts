@@ -1,5 +1,5 @@
 import { ObservabilityClient, TaskExecution, TaskExecutionStatus } from "@jigjoy-io/observability-client"
-import { VersionControlServicePort } from "@app/ports/services/version-control-service"
+import { VersionControlService } from "@app/ports/services/version-control-service"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
 import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
@@ -28,7 +28,7 @@ export class AIDevelopmentWorkflow {
 		private readonly codebaseRepository: CodebaseRepositoryPort,
 		private readonly projectPlanningClient: ProjectPlanningClient,
 		private readonly devEnvironment: LocalDevEnvironment,
-		private readonly vcs: VersionControlServicePort,
+		private readonly versionControlService: VersionControlService,
 		private readonly observabilityClient: ObservabilityClient,
 		private readonly projectDeploymentClient: ProjectDeploymentClient,
 		private readonly codeGenerator: CodeGeneratorPort,
@@ -77,7 +77,7 @@ export class AIDevelopmentWorkflow {
 		if (!module) {
 			throw new Error("Module not found")
 		}
-		let version: Version = await this.vcs.pull(module.repositoryId)
+		let version: Version = await this.versionControlService.pull(module.repositoryId)
 		this.sourceCode = version.sourceCodeArtifacts
 		this.buildArtifacts = version.buildArtifacts
 		this.module = module
@@ -133,7 +133,7 @@ export class AIDevelopmentWorkflow {
 		}
 
 		// save created artifacts
-		await this.vcs.push({
+		await this.versionControlService.push({
 			repositoryId: module.repositoryId,
 			buildArtifacts: this.buildArtifacts,
 			sourceCodeArtifacts: this.sourceCode,
