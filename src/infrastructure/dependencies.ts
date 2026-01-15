@@ -51,23 +51,13 @@ export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRe
 
 const versionControl: VersionControlService = new JigJoyVersionControl()
 
-const projectDeploymentEndpoint = process.env.PROJECT_DEPLOYMENT_ENDPOINT
-if (!projectDeploymentEndpoint) {
-	throw new Error("PROJECT_DEPLOYMENT_ENDPOINT is not set")
-}
-
+const projectDeploymentEndpoint = process.env.PROJECT_DEPLOYMENT_ENDPOINT as string
 const projectDeploymentClient = new ProjectDeploymentClient(projectDeploymentEndpoint)
 
-const observabilityEndpoint = process.env.OBSERVABILITY_ENDPOINT
-if (!observabilityEndpoint) {
-	throw new Error("OBSERVABILITY_ENDPOINT is not set")
-}
+const observabilityEndpoint = process.env.OBSERVABILITY_ENDPOINT as string
 const observabilityClient = new ObservabilityClient(observabilityEndpoint)
 
-const projectPlanningEndpoint = process.env.PROJECT_PLANNING_ENDPOINT
-if (!projectPlanningEndpoint) {
-	throw new Error("PROJECT_PLANNING_ENDPOINT is not set")
-}
+const projectPlanningEndpoint = process.env.PROJECT_PLANNING_ENDPOINT as string
 const projectPlanningClient = new ProjectPlanningClient(projectPlanningEndpoint)
 const codeGenerator: CodeGeneratorPort = new JigJoyCodeGenerator()
 

@@ -1,6 +1,6 @@
 import { InitializeReactModuleUseCase } from "@app/ports/use-cases/initialize-react-module"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
-import { VersionControlServicePort } from "@app/ports/services/version-control-service"
+import { VersionControlService } from "@app/ports/services/version-control-service"
 import { Version } from "@domain/version"
 import { Codebase } from "@domain/codebase"
 import { Module, ModuleType } from "@domain/module"
@@ -8,7 +8,7 @@ import { TemplateRepositoryPort } from "@app/ports/repositories/template-reposit
 
 export class InitializeReactModule implements InitializeReactModuleUseCase {
 	constructor(
-		private vcs: VersionControlServicePort,
+		private vcs: VersionControlService,
 		private templateRepository: TemplateRepositoryPort,
 		private codebaseRepository: CodebaseRepositoryPort,
 	) {}
