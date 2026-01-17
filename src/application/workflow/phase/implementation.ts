@@ -5,10 +5,12 @@ import { TaskEmitter } from "@app/events/emitters/task-update"
 import { ActivityType, Task } from "@jigjoy-io/task-contracts"
 import { FileArtifacts } from "@domain/file-artifacts"
 import { Phase } from "./phase"
+import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
+import { Contribution, ContributionType } from "@app/types/contribution"
 
 export class ImplementationPhase implements Phase {
 	constructor(
-		private readonly projectPlanningClient: ProjectPlanningClient,
+		private readonly projectPlanningService: ProjectPlanningService,
 		private readonly codeGenerator: CodeGeneratorPort,
 	) {}
 
@@ -18,27 +20,29 @@ export class ImplementationPhase implements Phase {
 
 		console.log("React Developer is developing task", task)
 
-		let updatedTask = await this.projectPlanningClient.recordWork(
-			task.id,
-			"React Developer",
-			"React Developer is generating the code...",
-			ActivityType.STARTED_WORK,
-		)
+		let contribution: Contribution = {
+			taskId: task.id,
+			workerId: "React Developer",
+			message: "React Developer is generating the code...",
+			type: ContributionType.STARTED_WORK,
+		}
+		let updatedTask = await this.projectPlanningService.recordWork(contribution)
 		TaskEmitter.taskUpdated(updatedTask)
 
 		const response = await this.codeGenerator.generateCode(task, sourceCode)
 
 		context.updateSourceCode(response.sourceCode)
 
-		updatedTask = await this.projectPlanningClient.recordWork(
-			task.id,
-			"React Developer",
-			"React Developer finished with coding",
-			ActivityType.FINISHED_WORK,
-		)
+		let finishedContribution: Contribution = {
+			taskId: task.id,
+			workerId: "React Developer",
+			message: "React Developer finished with coding",
+			type: ContributionType.FINISHED_WORK,
+		}
+		updatedTask = await this.projectPlanningService.recordWork(finishedContribution)
 		TaskEmitter.taskUpdated(updatedTask)
 
-		updatedTask = await this.projectPlanningClient.leaveComment(task.id, response.comment, "React Developer")
+		updatedTask = await this.projectPlanningService.leaveComment(task.id, response.comment, "React Developer")
 		TaskEmitter.taskUpdated(updatedTask)
 		context.setTask(updatedTask)
 	}

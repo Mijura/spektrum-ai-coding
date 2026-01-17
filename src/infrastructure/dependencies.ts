@@ -17,7 +17,6 @@ import { DynamoDBCodebaseRepository } from "@infra/repositories/codebase/codebas
 import { InitializeReactModuleUseCase } from "@app/ports/use-cases/initialize-react-module"
 import { JigJoyVersionControl } from "./services/version-control/jigjoy-vcs"
 import { VersionControlService } from "@app/ports/services/version-control-service"
-import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 import { DeployToProduction } from "@app/use-cases/deploy-to-production"
 import { DeployToProductionUseCase } from "@app/ports/use-cases/deploy-to-production"
 import { ObservabilityClient } from "@jigjoy-io/observability-client"
@@ -28,6 +27,8 @@ import { JigJoyCodeGenerator } from "./services/code-generator/jigjoy-code-gener
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { JigJoyProjectDeploymentService } from "./services/project-deployment/project-deployment-service"
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
+import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
+import { JigJoyProjectPlanningService } from "./services/project-planning/project-planning-service"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -55,17 +56,15 @@ const versionControl: VersionControlService = new JigJoyVersionControl()
 
 const observabilityEndpoint = process.env.OBSERVABILITY_ENDPOINT as string
 const observabilityClient = new ObservabilityClient(observabilityEndpoint)
-
-const projectPlanningEndpoint = process.env.PROJECT_PLANNING_ENDPOINT as string
-const projectPlanningClient = new ProjectPlanningClient(projectPlanningEndpoint)
-
 const codeGenerator: CodeGeneratorPort = new JigJoyCodeGenerator()
+
+const projectPlanningService: ProjectPlanningService = new JigJoyProjectPlanningService()
 const projectDeploymentService: ProjectDeploymentService = new JigJoyProjectDeploymentService()
 
 // Use Cases
 export const develop: DevelopUseCase = new Develop(
 	codebaseRepository,
-	projectPlanningClient,
+	projectPlanningService,
 	localDevEnvironment,
 	versionControl,
 	observabilityClient,

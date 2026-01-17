@@ -2,6 +2,7 @@ import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-reposit
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { DeployToProductionUseCase } from "@app/ports/use-cases/deploy-to-production"
 import { DeploymentRequest, EnvironmentType } from "@app/types/deployment-request"
+import { EntryPoint } from "@app/types/entry-point"
 
 
 export class DeployToProduction implements DeployToProductionUseCase {

@@ -1,5 +1,6 @@
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { DeploymentRequest } from "@app/types/deployment-request"
+import { EntryPoint } from "@app/types/entry-point"
 import { DeployModuleCommand, ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 
 export class JigJoyProjectDeploymentService implements ProjectDeploymentService {

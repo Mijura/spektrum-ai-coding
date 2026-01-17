@@ -1,4 +1,4 @@
-import { EntryPoint } from "@jigjoy-io/project-deployment-client"
+import { EntryPoint } from "@app/types/entry-point"
 
 export interface DeployToProductionUseCase {
 	execute(projectId: string): Promise<EntryPoint>

@@ -1,11 +1,10 @@
 import { ObservabilityClient, TaskExecution, TaskExecutionStatus } from "@jigjoy-io/observability-client"
 import { VersionControlService } from "@app/ports/services/version-control-service"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
-import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { TaskExecutionEmitter } from "@app/events/emitters/task-execution"
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
-import { ActivityType, Task } from "@jigjoy-io/task-contracts"
+import { Task } from "@jigjoy-io/task-contracts"
 import { TaskEmitter } from "@app/events/emitters/task-update"
 import { ImplementationPhase } from "./phase/implementation"
 import { FileArtifacts } from "@domain/file-artifacts"
@@ -15,6 +14,8 @@ import { Version } from "@domain/version"
 import { Module } from "@domain/module"
 import { Phase } from "./phase/phase"
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
+import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
+import { Contribution, ContributionType } from "@app/types/contribution"
 
 export class AIDevelopmentWorkflow {
 	private phase!: Phase
@@ -26,7 +27,7 @@ export class AIDevelopmentWorkflow {
 
 	constructor(
 		private readonly codebaseRepository: CodebaseRepositoryPort,
-		private readonly projectPlanningClient: ProjectPlanningClient,
+		private readonly projectPlanningService: ProjectPlanningService,
 		private readonly devEnvironment: LocalDevEnvironment,
 		private readonly versionControlService: VersionControlService,
 		private readonly observabilityClient: ObservabilityClient,
@@ -94,24 +95,24 @@ export class AIDevelopmentWorkflow {
 		let currentTry = 1
 		while (currentTry <= this.numberOfTries) {
 			try {
-				this.setPhase(new ImplementationPhase(this.projectPlanningClient, this.codeGenerator))
+				this.setPhase(new ImplementationPhase(this.projectPlanningService, this.codeGenerator))
 				await this.phase.execute(this)
-				this.setPhase(new BuildPhase(this.projectPlanningClient, this.devEnvironment))
+				this.setPhase(new BuildPhase(this.projectPlanningService, this.devEnvironment))
 				await this.phase.execute(this)
 				break
 			} catch (error: any) {
 				console.error(error)
 				this.numberOfTries--
 
-				let updatedTask = await this.projectPlanningClient.recordWork(
-					this.task.id,
-					"React Developer",
-					"Finsihed with error. Please create a new task with the bug description.",
-					ActivityType.FINISHED_WORK,
-				)
-				TaskEmitter.taskUpdated(updatedTask)
+				let contribution: Contribution = {
+					taskId: this.task.id,
+					workerId: "React Developer",
+					message: "Finsihed with error. Please create a new task with the bug description.",
+					type: ContributionType.FINISHED_WORK,
+				}
+				let updatedTask = await this.projectPlanningService.recordWork(contribution)
 
-				updatedTask = await this.projectPlanningClient.leaveComment(
+				updatedTask = await this.projectPlanningService.leaveComment(
 					this.task.id,
 					error.message,
 					"React Developer",
@@ -139,7 +140,7 @@ export class AIDevelopmentWorkflow {
 			sourceCodeArtifacts: this.sourceCode,
 		})
 
-		this.setPhase(new DeploymentPhase(this.projectDeploymentService, this.projectPlanningClient))
+		this.setPhase(new DeploymentPhase(this.projectDeploymentService, this.projectPlanningService))
 		await this.phase.execute(this)
 
 		await this.observabilityClient.taskExecutionSucceeded(taskExecution.id)
