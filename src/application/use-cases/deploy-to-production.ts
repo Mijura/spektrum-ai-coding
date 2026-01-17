@@ -1,15 +1,12 @@
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
+import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { DeployToProductionUseCase } from "@app/ports/use-cases/deploy-to-production"
-import {
-	DeployModuleCommand,
-	EntryPoint,
-	EnvironmentType,
-	ProjectDeploymentClient,
-} from "@jigjoy-io/project-deployment-client"
+import { DeploymentRequest, EnvironmentType } from "@app/types/deployment-request"
+
 
 export class DeployToProduction implements DeployToProductionUseCase {
 	constructor(
-		private readonly projectDeploymentClient: ProjectDeploymentClient,
+		private readonly projectDeploymentService: ProjectDeploymentService,
 		private readonly codebaseRepository: CodebaseRepositoryPort,
 	) {}
 
@@ -19,14 +16,13 @@ export class DeployToProduction implements DeployToProductionUseCase {
 		if (!module) {
 			throw new Error("Module not found")
 		}
-		const deploymentRequest: DeployModuleCommand = {
-			projectId: projectId,
+		const deploymentRequest: DeploymentRequest = {
 			moduleId: module.id,
+			repositoryId: module.repositoryId,
 			moduleType: module.type,
-			versionControlId: module.repositoryId,
 			environmentType: EnvironmentType.PROD,
 			setAsEntryPoint: true,
 		}
-		return await this.projectDeploymentClient.deployModule(deploymentRequest)
+		return await this.projectDeploymentService.deployModule(projectId, deploymentRequest)
 	}
 }

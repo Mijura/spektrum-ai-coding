@@ -26,6 +26,8 @@ import { Develop } from "@app/use-cases/develop"
 import { DevelopUseCase } from "@app/ports/use-cases/develop"
 import { JigJoyCodeGenerator } from "./services/code-generator/jigjoy-code-generator"
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
+import { JigJoyProjectDeploymentService } from "./services/project-deployment/project-deployment-service"
+import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -51,15 +53,14 @@ export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRe
 
 const versionControl: VersionControlService = new JigJoyVersionControl()
 
-const projectDeploymentEndpoint = process.env.PROJECT_DEPLOYMENT_ENDPOINT as string
-const projectDeploymentClient = new ProjectDeploymentClient(projectDeploymentEndpoint)
-
 const observabilityEndpoint = process.env.OBSERVABILITY_ENDPOINT as string
 const observabilityClient = new ObservabilityClient(observabilityEndpoint)
 
 const projectPlanningEndpoint = process.env.PROJECT_PLANNING_ENDPOINT as string
 const projectPlanningClient = new ProjectPlanningClient(projectPlanningEndpoint)
+
 const codeGenerator: CodeGeneratorPort = new JigJoyCodeGenerator()
+const projectDeploymentService: ProjectDeploymentService = new JigJoyProjectDeploymentService()
 
 // Use Cases
 export const develop: DevelopUseCase = new Develop(
@@ -68,7 +69,7 @@ export const develop: DevelopUseCase = new Develop(
 	localDevEnvironment,
 	versionControl,
 	observabilityClient,
-	projectDeploymentClient,
+	projectDeploymentService,
 	codeGenerator,
 )
 
@@ -79,6 +80,6 @@ export const initializeReactModule: InitializeReactModuleUseCase = new Initializ
 )
 
 export const deployToProduction: DeployToProductionUseCase = new DeployToProduction(
-	projectDeploymentClient,
+	projectDeploymentService,
 	codebaseRepository,
 )

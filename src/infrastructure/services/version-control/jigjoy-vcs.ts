@@ -5,11 +5,7 @@ import { Version } from "@domain/version"
 export class JigJoyVersionControl implements VersionControlService {
 	private readonly projectVersioning: ProjectVersioningClient
 	constructor() {
-		const projectVersioningEndpoint = process.env.PROJECT_VERSIONING_ENDPOINT
-		if (!projectVersioningEndpoint) {
-			throw new Error("PROJECT_VERSIONING_ENDPOINT is not set")
-		}
-
+		const projectVersioningEndpoint = process.env.PROJECT_VERSIONING_ENDPOINT as string
 		this.projectVersioning = new ProjectVersioningClient(projectVersioningEndpoint)
 	}
 

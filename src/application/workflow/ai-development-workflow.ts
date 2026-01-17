@@ -1,7 +1,6 @@
 import { ObservabilityClient, TaskExecution, TaskExecutionStatus } from "@jigjoy-io/observability-client"
 import { VersionControlService } from "@app/ports/services/version-control-service"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
-import { ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
 import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { TaskExecutionEmitter } from "@app/events/emitters/task-execution"
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
@@ -15,6 +14,7 @@ import { BuildPhase } from "./phase/build"
 import { Version } from "@domain/version"
 import { Module } from "@domain/module"
 import { Phase } from "./phase/phase"
+import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 
 export class AIDevelopmentWorkflow {
 	private phase!: Phase
@@ -30,7 +30,7 @@ export class AIDevelopmentWorkflow {
 		private readonly devEnvironment: LocalDevEnvironment,
 		private readonly versionControlService: VersionControlService,
 		private readonly observabilityClient: ObservabilityClient,
-		private readonly projectDeploymentClient: ProjectDeploymentClient,
+		private readonly projectDeploymentService: ProjectDeploymentService,
 		private readonly codeGenerator: CodeGeneratorPort,
 	) {}
 
@@ -139,7 +139,7 @@ export class AIDevelopmentWorkflow {
 			sourceCodeArtifacts: this.sourceCode,
 		})
 
-		this.setPhase(new DeploymentPhase(this.projectDeploymentClient, this.projectPlanningClient))
+		this.setPhase(new DeploymentPhase(this.projectDeploymentService, this.projectPlanningClient))
 		await this.phase.execute(this)
 
 		await this.observabilityClient.taskExecutionSucceeded(taskExecution.id)

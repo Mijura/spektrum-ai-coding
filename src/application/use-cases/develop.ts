@@ -8,6 +8,7 @@ import { AIDevelopmentWorkflow } from "@app/workflow/ai-development-workflow"
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { DevelopUseCase } from "@app/ports/use-cases/develop"
 import { Task } from "@jigjoy-io/task-contracts"
+import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 
 export class Develop implements DevelopUseCase {
 	constructor(
@@ -16,7 +17,7 @@ export class Develop implements DevelopUseCase {
 		private readonly devEnvironment: LocalDevEnvironment,
 		private readonly versionControlService: VersionControlService,
 		private readonly observabilityClient: ObservabilityClient,
-		private readonly projectDeploymentClient: ProjectDeploymentClient,
+		private readonly projectDeploymentService: ProjectDeploymentService,
 		private readonly codeGenerator: CodeGeneratorPort,
 	) {}
 
@@ -28,7 +29,7 @@ export class Develop implements DevelopUseCase {
 				this.devEnvironment,
 				this.versionControlService,
 				this.observabilityClient,
-				this.projectDeploymentClient,
+				this.projectDeploymentService,
 				this.codeGenerator,
 			)
 
