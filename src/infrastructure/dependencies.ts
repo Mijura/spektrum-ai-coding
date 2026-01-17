@@ -7,28 +7,28 @@ import { TemplateRepositoryPort } from "@app/ports/repositories/template-reposit
 import { RspackTemplateRepository } from "@infra/repositories/template/rspack-template-repository"
 import { YarnPackageManager } from "@infra/services/bundler/yarn-package-manager"
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
-import { AICodingController } from "./http/controllers/ai-coding-controller"
+import { AICodingController } from "@infra/http/controllers/ai-coding-controller"
 import { InitializeReactModule } from "@app/use-cases/initialize-react-module"
-import { ModuleController } from "./http/controllers/module-controller"
+import { ModuleController } from "@infra/http/controllers/module-controller"
 import { FileSystemPort } from "@app/ports/services/file-system"
 import { LocalFileSystem } from "@infra/services/filesystem/local-file-system"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
 import { DynamoDBCodebaseRepository } from "@infra/repositories/codebase/codebase-repository"
 import { InitializeReactModuleUseCase } from "@app/ports/use-cases/initialize-react-module"
-import { JigJoyVersionControl } from "./services/version-control/jigjoy-vcs"
+import { JigJoyVersionControl } from "@infra/services/version-control/jigjoy-vcs"
 import { VersionControlService } from "@app/ports/services/version-control-service"
 import { DeployToProduction } from "@app/use-cases/deploy-to-production"
 import { DeployToProductionUseCase } from "@app/ports/use-cases/deploy-to-production"
-import { ObservabilityClient } from "@jigjoy-io/observability-client"
-import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
 import { Develop } from "@app/use-cases/develop"
 import { DevelopUseCase } from "@app/ports/use-cases/develop"
-import { JigJoyCodeGenerator } from "./services/code-generator/jigjoy-code-generator"
+import { JigJoyCodeGenerator } from "@infra/services/code-generator/jigjoy-code-generator"
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
-import { JigJoyProjectDeploymentService } from "./services/project-deployment/project-deployment-service"
+import { JigJoyProjectDeploymentService } from "@infra/services/project-deployment/project-deployment-service"
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
-import { JigJoyProjectPlanningService } from "./services/project-planning/project-planning-service"
+import { JigJoyProjectPlanningService } from "@infra/services/project-planning/project-planning-service"
+import { ObservabilityService } from "@app/ports/services/observability-service"
+import { JigJoyObservabilityService } from "@infra/services/observability/observability-service"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -54,8 +54,7 @@ export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRe
 
 const versionControl: VersionControlService = new JigJoyVersionControl()
 
-const observabilityEndpoint = process.env.OBSERVABILITY_ENDPOINT as string
-const observabilityClient = new ObservabilityClient(observabilityEndpoint)
+const observabilityService: ObservabilityService = new JigJoyObservabilityService()
 const codeGenerator: CodeGeneratorPort = new JigJoyCodeGenerator()
 
 const projectPlanningService: ProjectPlanningService = new JigJoyProjectPlanningService()
@@ -67,7 +66,7 @@ export const develop: DevelopUseCase = new Develop(
 	projectPlanningService,
 	localDevEnvironment,
 	versionControl,
-	observabilityClient,
+	observabilityService,
 	projectDeploymentService,
 	codeGenerator,
 )

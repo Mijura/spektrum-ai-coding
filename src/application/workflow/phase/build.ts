@@ -1,7 +1,7 @@
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
-import { AIDevelopmentWorkflow } from "../ai-development-workflow"
+import { AIDevelopmentWorkflow } from "@app/workflow/ai-development-workflow"
 import { TaskEmitter } from "@app/events/emitters/task-update"
-import { Phase } from "./phase"
+import { Phase } from "@app/workflow/phase/phase"
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
 import { Contribution, ContributionType } from "@app/types/contribution"
 

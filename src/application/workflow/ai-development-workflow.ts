@@ -1,4 +1,4 @@
-import { ObservabilityClient, TaskExecution, TaskExecutionStatus } from "@jigjoy-io/observability-client"
+import { TaskExecution, TaskExecutionStatus } from "@app/types/task-execution"
 import { VersionControlService } from "@app/ports/services/version-control-service"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
 import { TaskExecutionEmitter } from "@app/events/emitters/task-execution"
@@ -6,16 +6,17 @@ import { LocalDevEnvironment } from "@app/services/local-dev-environment"
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { Task } from "@jigjoy-io/task-contracts"
 import { TaskEmitter } from "@app/events/emitters/task-update"
-import { ImplementationPhase } from "./phase/implementation"
+import { ImplementationPhase } from "@app/workflow/phase/implementation"
 import { FileArtifacts } from "@domain/file-artifacts"
 import { DeploymentPhase } from "./phase/deployment"
 import { BuildPhase } from "./phase/build"
 import { Version } from "@domain/version"
 import { Module } from "@domain/module"
-import { Phase } from "./phase/phase"
+import { Phase } from "@app/workflow/phase/phase"
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
 import { Contribution, ContributionType } from "@app/types/contribution"
+import { ObservabilityService } from "@app/ports/services/observability-service"
 
 export class AIDevelopmentWorkflow {
 	private phase!: Phase
@@ -30,7 +31,7 @@ export class AIDevelopmentWorkflow {
 		private readonly projectPlanningService: ProjectPlanningService,
 		private readonly devEnvironment: LocalDevEnvironment,
 		private readonly versionControlService: VersionControlService,
-		private readonly observabilityClient: ObservabilityClient,
+		private readonly observabilityService: ObservabilityService,
 		private readonly projectDeploymentService: ProjectDeploymentService,
 		private readonly codeGenerator: CodeGeneratorPort,
 	) {}
@@ -83,7 +84,7 @@ export class AIDevelopmentWorkflow {
 		this.buildArtifacts = version.buildArtifacts
 		this.module = module
 
-		const taskExecution: TaskExecution = await this.observabilityClient.taskExecutionStarted(
+		const taskExecution: TaskExecution = await this.observabilityService.taskExecutionStarted(
 			this.task.title,
 			this.task.projectId,
 			this.task.id,
@@ -125,7 +126,7 @@ export class AIDevelopmentWorkflow {
 
 		if (currentTry > this.numberOfTries) {
 			const errorMessage = "Failed to develop task after " + this.numberOfTries + " tries"
-			await this.observabilityClient.taskExecutionFailed(taskExecution.id, errorMessage)
+			await this.observabilityService.taskExecutionFailed(taskExecution.id, errorMessage)
 			taskExecution.status = TaskExecutionStatus.FAILED
 			taskExecution.error = errorMessage
 			TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
@@ -143,7 +144,7 @@ export class AIDevelopmentWorkflow {
 		this.setPhase(new DeploymentPhase(this.projectDeploymentService, this.projectPlanningService))
 		await this.phase.execute(this)
 
-		await this.observabilityClient.taskExecutionSucceeded(taskExecution.id)
+		await this.observabilityService.taskExecutionSucceeded(taskExecution.id)
 		taskExecution.status = TaskExecutionStatus.SUCCEEDED
 		TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
 	}
