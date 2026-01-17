@@ -1,7 +1,6 @@
 import { EnvironmentType } from "@jigjoy-io/project-deployment-client"
 import { AIDevelopmentWorkflow } from "../ai-development-workflow"
 import { TaskEmitter } from "@app/events/emitters/task-update"
-import { ActivityType } from "@jigjoy-io/task-contracts"
 import { Phase } from "./phase"
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { DeploymentRequest } from "@app/types/deployment-request"
