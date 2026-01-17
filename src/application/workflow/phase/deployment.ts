@@ -1,48 +1,51 @@
-import { DeployModuleCommand, EnvironmentType, ProjectDeploymentClient } from "@jigjoy-io/project-deployment-client"
-import { ProjectPlanningClient } from "@jigjoy-io/project-planning-client"
-import { AIDevelopmentWorkflow } from "../ai-development-workflow"
+import { EnvironmentType } from "@app/types/deployment-request"
+import { AIDevelopmentWorkflow } from "@app/workflow/ai-development-workflow"
 import { TaskEmitter } from "@app/events/emitters/task-update"
-import { ActivityType } from "@jigjoy-io/task-contracts"
-import { Phase } from "./phase"
+import { Phase } from "@app/workflow/phase/phase"
+import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
+import { DeploymentRequest } from "@app/types/deployment-request"
+import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
+import { Contribution, ContributionType } from "@app/types/contribution"
 
 export class DeploymentPhase implements Phase {
 	constructor(
-		private readonly projectDeploymentClient: ProjectDeploymentClient,
-		private readonly projectPlanningClient: ProjectPlanningClient,
+		private readonly projectDeploymentService: ProjectDeploymentService,
+		private readonly projectPlanningService: ProjectPlanningService,
 	) {}
 	async execute(context: AIDevelopmentWorkflow): Promise<void> {
 		const module = context.getModule()
 		const task = context.getTask()
 		console.log("Deploying the application...")
 
-		let updatedTask = await this.projectPlanningClient.recordWork(
-			task.id,
-			"React Developer",
-			"Deploying the application...",
-			ActivityType.STARTED_WORK,
-		)
+		let contribution: Contribution = {
+			taskId: task.id,
+			workerId: "React Developer",
+			message: "Deploying the application...",
+			type: ContributionType.STARTED_WORK,
+		}
+		let updatedTask = await this.projectPlanningService.recordWork(contribution)
 		TaskEmitter.taskUpdated(updatedTask)
 
 		console.log("Deploying module...")
-		const deploymentRequest: DeployModuleCommand = {
-			projectId: task.projectId,
+		const deploymentRequest: DeploymentRequest = {
 			moduleId: module.id,
 			moduleType: module.type,
-			versionControlId: module.repositoryId,
+			repositoryId: module.repositoryId,
 			environmentType: EnvironmentType.DEV,
 			setAsEntryPoint: true,
 		}
 
-		await this.projectDeploymentClient.deployModule(deploymentRequest)
+		await this.projectDeploymentService.deployModule(task.projectId, deploymentRequest)
 
 		console.log("Module deployed successfully")
 
-		updatedTask = await this.projectPlanningClient.recordWork(
-			task.id,
-			"React Developer",
-			"App deployed — check Output tab to test.",
-			ActivityType.FINISHED_WORK,
-		)
+		let finishedContribution: Contribution = {
+			taskId: task.id,
+			workerId: "React Developer",
+			message: "App deployed — check Output tab to test.",
+			type: ContributionType.FINISHED_WORK,
+		}
+		updatedTask = await this.projectPlanningService.recordWork(finishedContribution)
 		TaskEmitter.taskUpdated(updatedTask)
 		context.setTask(updatedTask)
 	}
