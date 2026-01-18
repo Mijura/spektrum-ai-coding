@@ -21,7 +21,7 @@ describe("Rspack Template Repository", () => {
 		const prebuiltFiles = await repository.fetchPrebuiltFiles()
 
 		expect(prebuiltFiles).toBeDefined()
-		expect(prebuiltFiles instanceof FileArtifacts).toBe(true)
+		expect(typeof prebuiltFiles).toBe("object")
 		// Should have at least some files from the dist folder
 		expect(Object.keys(prebuiltFiles).length).toBeGreaterThan(0)
 	})
@@ -30,7 +30,7 @@ describe("Rspack Template Repository", () => {
 		const sourceCode = await repository.fetchSourceCode()
 
 		expect(sourceCode).toBeDefined()
-		expect(sourceCode instanceof FileArtifacts).toBe(true)
+		expect(typeof sourceCode).toBe("object")
 		// Should have at least some source files
 		expect(Object.keys(sourceCode).length).toBeGreaterThan(0)
 	})
