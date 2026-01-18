@@ -52,20 +52,12 @@ export class AIDevelopmentWorkflow {
 		this.buildArtifacts = buildArtifacts
 	}
 
-	setTask(task: Task): void {
-		this.task = task
-	}
-
 	getTask(): Task {
 		return this.task
 	}
 
 	getSourceCode(): FileArtifacts {
 		return this.sourceCode
-	}
-
-	getBuildArtifacts(): FileArtifacts {
-		return this.buildArtifacts
 	}
 
 	getModule(): Module {
@@ -103,7 +95,7 @@ export class AIDevelopmentWorkflow {
 				break
 			} catch (error: any) {
 				console.error(error)
-				this.numberOfTries--
+				currentTry++
 
 				let contribution: Contribution = {
 					taskId: this.task.id,
@@ -119,7 +111,7 @@ export class AIDevelopmentWorkflow {
 					"React Developer",
 				)
 
-				this.setTask(updatedTask)
+				this.updateTask(updatedTask)
 				TaskEmitter.taskUpdated(updatedTask)
 			}
 		}

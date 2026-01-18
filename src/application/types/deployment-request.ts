@@ -1,8 +1,8 @@
-export declare enum ModuleType {
+export enum ModuleType {
 	FRONTEND = "FRONTEND",
 }
 
-export declare enum EnvironmentType {
+export enum EnvironmentType {
 	DEV = "DEV",
 	PROD = "PROD",
 }
