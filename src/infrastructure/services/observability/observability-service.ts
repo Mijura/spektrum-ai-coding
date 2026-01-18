@@ -8,8 +8,8 @@ export class JigJoyObservabilityService implements ObservabilityService {
 		const observabilityEndpoint = process.env.OBSERVABILITY_ENDPOINT as string
 		this.observabilityClient = new ObservabilityClient(observabilityEndpoint)
 	}
-    async taskExecutionStarted(taskTitle: string, taskProjectId: string, taskExecutionId: string, accountId: string): Promise<TaskExecution> {
-        return await this.observabilityClient.taskExecutionStarted(taskTitle, taskProjectId, taskExecutionId, accountId)
+    async taskExecutionStarted(taskTitle: string, projectId: string, taskId: string, accountId: string): Promise<TaskExecution> {
+        return await this.observabilityClient.taskExecutionStarted(taskTitle, projectId, taskId, accountId)
     }
     async taskExecutionSucceeded(taskExecutionId: string): Promise<void> {
         return await this.observabilityClient.taskExecutionSucceeded(taskExecutionId)
