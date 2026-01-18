@@ -38,6 +38,6 @@ export class BuildPhase implements Phase {
 		updatedTask = await this.projectPlanningService.recordWork(finishedContribution)
 		TaskEmitter.taskUpdated(updatedTask)
 
-		context.setTask(updatedTask)
+		context.updateTask(updatedTask)
 	}
 }
