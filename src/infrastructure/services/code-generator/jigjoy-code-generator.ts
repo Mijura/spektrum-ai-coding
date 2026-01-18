@@ -8,6 +8,7 @@ export class JigJoyCodeGenerator implements CodeGeneratorPort {
 	constructor() {}
 
 	async generateCode(task: Task, sourceCode: FileArtifacts): Promise<{ comment: string; sourceCode: FileArtifacts }> {
+		console.log("Generating code for task", task)
 		const outputSchema = z.object({
 			sourceCode: z
 				.object({})
@@ -53,6 +54,7 @@ export class JigJoyCodeGenerator implements CodeGeneratorPort {
 		const developer = new Agent(command)
 
 		const response = await developer.act()
+		console.log("Code generation finished")
 
 		const updatedSourceCode = {
 			...sourceCode,
