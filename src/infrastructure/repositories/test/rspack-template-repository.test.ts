@@ -3,7 +3,6 @@ import { RspackTemplateRepository } from "@infra/repositories/template/rspack-te
 import { SourceCodeFilter } from "@infra/shared/filters/source-code-filter"
 import { DistFolderFilter } from "@infra/shared/filters/dist-folder-filter"
 import { LocalFileSystem } from "@infra/services/filesystem/local-file-system"
-import { FileArtifacts } from "@domain/file-artifacts"
 
 describe("Rspack Template Repository", () => {
 	let repository: RspackTemplateRepository
