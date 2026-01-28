@@ -9,7 +9,6 @@ import { YarnPackageManager } from "@infra/services/bundler/yarn-package-manager
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
 import { AICodingController } from "@infra/http/controllers/ai-coding-controller"
 import { InitializeReactModule } from "@app/use-cases/initialize-react-module"
-import { ModuleController } from "@infra/http/controllers/module-controller"
 import { FileSystemPort } from "@app/ports/services/file-system"
 import { LocalFileSystem } from "@infra/services/filesystem/local-file-system"
 import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-repository"
@@ -32,7 +31,6 @@ import { JigJoyObservabilityService } from "@infra/services/observability/observ
 
 // Controllers
 export const aiCodingController = new AICodingController()
-export const moduleController = new ModuleController()
 
 // Services
 export const fileSystemService: FileSystemPort = new LocalFileSystem()
@@ -61,7 +59,7 @@ const projectPlanningService: ProjectPlanningService = new JigJoyProjectPlanning
 const projectDeploymentService: ProjectDeploymentService = new JigJoyProjectDeploymentService()
 
 // Use Cases
-export const develop: DevelopUseCase = new Develop(
+export const developModuleUseCase: DevelopUseCase = new Develop(
 	codebaseRepository,
 	projectPlanningService,
 	localDevEnvironment,
@@ -71,13 +69,13 @@ export const develop: DevelopUseCase = new Develop(
 	codeGenerator,
 )
 
-export const initializeReactModule: InitializeReactModuleUseCase = new InitializeReactModule(
+export const initializeReactModuleUseCase: InitializeReactModuleUseCase = new InitializeReactModule(
 	versionControl,
 	rspackTemplateRepository,
 	codebaseRepository,
 )
 
-export const deployToProduction: DeployToProductionUseCase = new DeployToProduction(
+export const deployToProductionUseCase: DeployToProductionUseCase = new DeployToProduction(
 	projectDeploymentService,
 	codebaseRepository,
 )
