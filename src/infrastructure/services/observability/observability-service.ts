@@ -1,20 +1,21 @@
 import { ObservabilityService } from "@app/ports/services/observability-service"
 import { TaskExecution } from "@app/types/task-execution"
-import { ObservabilityClient } from "@jigjoy-io/observability-client"
+import { PlatformSDK } from "@jigjoy-io/platform-sdk"
 
 export class JigJoyObservabilityService implements ObservabilityService {
-	private readonly observabilityClient: ObservabilityClient
+    private readonly jigjoyClient: PlatformSDK
 	constructor() {
-		const observabilityEndpoint = process.env.OBSERVABILITY_ENDPOINT as string
-		this.observabilityClient = new ObservabilityClient(observabilityEndpoint)
-	}
+		const API_GATEWAY = process.env.API_GATEWAY || ""
+		this.jigjoyClient = new PlatformSDK(`${API_GATEWAY}`)
+    }
+    
     async taskExecutionStarted(taskTitle: string, projectId: string, taskId: string, accountId: string): Promise<TaskExecution> {
-        return await this.observabilityClient.taskExecutionStarted(taskTitle, projectId, taskId, accountId)
+        return await this.jigjoyClient.observability.taskExecutionStarted(taskTitle, projectId, taskId, accountId)
     }
     async taskExecutionSucceeded(taskExecutionId: string): Promise<void> {
-        return await this.observabilityClient.taskExecutionSucceeded(taskExecutionId)
+        return await this.jigjoyClient.observability.taskExecutionSucceeded(taskExecutionId)
     }
     async taskExecutionFailed(taskExecutionId: string, errorMessage: string): Promise<void> {
-        return await this.observabilityClient.taskExecutionFailed(taskExecutionId, errorMessage)
+        return await this.jigjoyClient.observability.taskExecutionFailed(taskExecutionId, errorMessage)
     }
 }

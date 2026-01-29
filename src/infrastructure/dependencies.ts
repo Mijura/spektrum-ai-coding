@@ -50,13 +50,13 @@ export const localDevEnvironment: LocalDevEnvironment = new LocalDevEnvironment(
 
 export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 
-const versionControl: VersionControlService = new JigJoyVersionControl()
 
-const observabilityService: ObservabilityService = new JigJoyObservabilityService()
 const codeGenerator: CodeGeneratorPort = new JigJoyCodeGenerator()
 
 const projectPlanningService: ProjectPlanningService = new JigJoyProjectPlanningService()
 const projectDeploymentService: ProjectDeploymentService = new JigJoyProjectDeploymentService()
+const versionControl: VersionControlService = new JigJoyVersionControl()
+const observabilityService: ObservabilityService = new JigJoyObservabilityService()
 
 // Use Cases
 export const developModuleUseCase: DevelopUseCase = new Develop(
