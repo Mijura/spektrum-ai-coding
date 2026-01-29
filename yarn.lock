@@ -546,6 +546,22 @@
   dependencies:
     tslib "^2.4.0"
 
+"@jigjoy-io/account-and-billing-client@^0.0.1":
+  version "0.0.1"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/account-and-billing-client/0.0.1/f7c200577d837b695b21d3d2c0cf520167e8b455#f7c200577d837b695b21d3d2c0cf520167e8b455"
+  integrity sha512-mFRjOtyeTCAhIzYJvhjCxs3SWyHcHT3BvZ0zhgFp6UFUUXSGlVibk9GWMj8sEFaBBt0pLFtUgKyrDp5FBC5lqQ==
+  dependencies:
+    "@jigjoy-io/task-contracts" "^0.0.2"
+    axios "^1.13.2"
+
+"@jigjoy-io/ai-coding-client@^0.0.10":
+  version "0.0.10"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/ai-coding-client/0.0.10/8c209f16bbfbf254f200b6ba692ff33da34dcddc#8c209f16bbfbf254f200b6ba692ff33da34dcddc"
+  integrity sha512-LTfMM6CudRbhJEIqvxE0AxfcUhsCDO3cvkzgYYbLPhpFTqWIRpgzSeDgkbPblOBzLhlQCfOiD0EJF4R+lKChwA==
+  dependencies:
+    "@jigjoy-io/task-contracts" "^0.0.2"
+    axios "^1.13.2"
+
 "@jigjoy-io/mosaic@^0.5.0":
   version "0.5.0"
   resolved "https://registry.npmjs.org/@jigjoy-io/mosaic/-/mosaic-0.5.0.tgz"
@@ -555,31 +571,44 @@
     openai "^6.9.1"
     zod "^4.1.13"
 
-"@jigjoy-io/observability-client@^0.0.5":
-  version "0.0.5"
-  resolved "https://npm.pkg.github.com/download/@jigjoy-io/observability-client/0.0.5/733a4c35159e9df405e50271d65a2c5f3fa3d4ac"
-  integrity sha512-VwLgUtyo4XuWxFQKRgL9xQDpWWaWz5jRjcRsW5VQ544OdZirVB/+PU+wPIfADurHJ9btBPLCTwVw1ibPMzLdmQ==
+"@jigjoy-io/observability-client@^0.0.6":
+  version "0.0.6"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/observability-client/0.0.6/25fbe304ad2161c5b1598c86e2b3e65a06a27733#25fbe304ad2161c5b1598c86e2b3e65a06a27733"
+  integrity sha512-xTTbNfu5G+crZQTRFpfLpQwtPNZFML4m0WLFxQfmJZLG1WQUR/GzDOYc1o2tRCi+6MT4BJT3nY0TZEHzJENYlQ==
   dependencies:
     axios "^1.13.2"
 
-"@jigjoy-io/project-deployment-client@^0.0.8":
-  version "0.0.8"
-  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-deployment-client/0.0.8/ff466c840f7e2510258a2429635aea9438dfa7e8"
-  integrity sha512-cb9l7bt44ZMcH0O9Wrayn569AZbeKuPslNbCNhix+hybt9SC3rwcG4mFajaxnJLefqaYtM8gxCFh0Gy8ynlFzg==
+"@jigjoy-io/platform-sdk@^0.0.3":
+  version "0.0.3"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/platform-sdk/0.0.3/4823fa11b448d57030027f7f0e6c5fb79e3c7d8e#4823fa11b448d57030027f7f0e6c5fb79e3c7d8e"
+  integrity sha512-mw8XTvd1azfGEtlQlkW0XjS/YJTX+Tgf8NdDC+4ZezOjhaKCcPTI2xua/s9WAwtSEg7yUOPi3Oxw1u3KZ80qXg==
+  dependencies:
+    "@jigjoy-io/account-and-billing-client" "^0.0.1"
+    "@jigjoy-io/ai-coding-client" "^0.0.10"
+    "@jigjoy-io/observability-client" "^0.0.6"
+    "@jigjoy-io/project-deployment-client" "^0.0.9"
+    "@jigjoy-io/project-planning-client" "^0.0.6"
+    "@jigjoy-io/project-versioning-client" "^0.0.8"
+    axios "^1.13.2"
+
+"@jigjoy-io/project-deployment-client@^0.0.9":
+  version "0.0.9"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-deployment-client/0.0.9/5d5485184ec7f320fcd5b2009867e2bbf60621af#5d5485184ec7f320fcd5b2009867e2bbf60621af"
+  integrity sha512-mQt5tDFz2Qi2bxYYGI5D/m9I4WfhgSmTkngIubKa1UQH9WQCIeWC6D7R4SKauxLQhwn15ZmTKwGuGwUFH+PfRw==
   dependencies:
     axios "^1.13.2"
 
-"@jigjoy-io/project-planning-client@^0.0.5":
-  version "0.0.5"
-  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-planning-client/0.0.5/1c8355c61aee2c6fe0c9726d6c2ba06520749663#1c8355c61aee2c6fe0c9726d6c2ba06520749663"
-  integrity sha512-UWdQpqnZND+0jgXMYju6VsQtpBubYEzkrQUXWz+hF27lVobs0n6gpBy/pTtjoaFTTJckMd6h3v3pwuYeDuIeEA==
+"@jigjoy-io/project-planning-client@^0.0.6":
+  version "0.0.6"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-planning-client/0.0.6/8c855ae629998e2d6e40f80b02d8b1359020063a#8c855ae629998e2d6e40f80b02d8b1359020063a"
+  integrity sha512-7UXgeZBoTpfDc4pJN245PMagWJor2elbwouNMwlrCnYQV6KBEqGn1M+1Vs1AwjQYqgP7sCdOOmxpie5CpMxeyg==
   dependencies:
     "@jigjoy-io/task-contracts" "^0.0.2"
     axios "^1.13.2"
 
 "@jigjoy-io/project-versioning-client@^0.0.8":
   version "0.0.8"
-  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-versioning-client/0.0.8/1a47d89d3a9fe3e1083445defdea98f882cb370a"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-versioning-client/0.0.8/1a47d89d3a9fe3e1083445defdea98f882cb370a#1a47d89d3a9fe3e1083445defdea98f882cb370a"
   integrity sha512-ppc4Cs1Ic6GtOe+1gnHHsi//y/FOYE7j04kI5s1wd1CijP0cLV1hdAS3qXw0FNjjPofPVNqvr/MxjafWTu1+0A==
   dependencies:
     axios "^1.13.2"
@@ -1450,9 +1479,9 @@ available-typed-arrays@^1.0.7:
     possible-typed-array-names "^1.0.0"
 
 axios@^1.13.2:
-  version "1.13.2"
-  resolved "https://registry.npmjs.org/axios/-/axios-1.13.2.tgz"
-  integrity sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==
+  version "1.13.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.4.tgz#15d109a4817fb82f73aea910d41a2c85606076bc"
+  integrity sha512-1wVkUaAO6WyaYtCkcYCOx12ZgpGf9Zif+qXa4n+oYzK558YryKqiL6UWwd5DqiH3VRW0GYhTZQ/vlgJrCoNQlg==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.4"
@@ -2016,7 +2045,7 @@ finalhandler@~1.3.1:
 
 follow-redirects@^1.15.6:
   version "1.15.11"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.11.tgz"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.11.tgz#777d73d72a92f8ec4d2e410eb47352a56b8e8340"
   integrity sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==
 
 for-each@^0.3.3, for-each@^0.3.5:
@@ -2888,7 +2917,7 @@ proxy-addr@~2.0.7:
 
 proxy-from-env@^1.1.0:
   version "1.1.0"
-  resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz"
+  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
   integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
 
 punycode@^2.1.0:
