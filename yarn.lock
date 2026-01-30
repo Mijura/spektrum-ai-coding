@@ -554,10 +554,10 @@
     "@jigjoy-io/task-contracts" "^0.0.2"
     axios "^1.13.2"
 
-"@jigjoy-io/ai-coding-client@^0.0.10":
-  version "0.0.10"
-  resolved "https://npm.pkg.github.com/download/@jigjoy-io/ai-coding-client/0.0.10/8c209f16bbfbf254f200b6ba692ff33da34dcddc#8c209f16bbfbf254f200b6ba692ff33da34dcddc"
-  integrity sha512-LTfMM6CudRbhJEIqvxE0AxfcUhsCDO3cvkzgYYbLPhpFTqWIRpgzSeDgkbPblOBzLhlQCfOiD0EJF4R+lKChwA==
+"@jigjoy-io/ai-coding-client@^0.0.11":
+  version "0.0.11"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/ai-coding-client/0.0.11/bfa0d87cecdab89c864b4d2e28ad2947068990cf#bfa0d87cecdab89c864b4d2e28ad2947068990cf"
+  integrity sha512-GnFChP1pqF3doxZUWQcvw6ikpLvW0vsj4+Qhd3AHFEFYTgD+cPuY3WyKPCIK7xfdkz05NgX9MXRmMFxKJRRjIw==
   dependencies:
     "@jigjoy-io/task-contracts" "^0.0.2"
     axios "^1.13.2"
@@ -578,17 +578,17 @@
   dependencies:
     axios "^1.13.2"
 
-"@jigjoy-io/platform-sdk@^0.0.3":
-  version "0.0.3"
-  resolved "https://npm.pkg.github.com/download/@jigjoy-io/platform-sdk/0.0.3/4823fa11b448d57030027f7f0e6c5fb79e3c7d8e#4823fa11b448d57030027f7f0e6c5fb79e3c7d8e"
-  integrity sha512-mw8XTvd1azfGEtlQlkW0XjS/YJTX+Tgf8NdDC+4ZezOjhaKCcPTI2xua/s9WAwtSEg7yUOPi3Oxw1u3KZ80qXg==
+"@jigjoy-io/platform-sdk@^0.0.6":
+  version "0.0.6"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/platform-sdk/0.0.6/b9043234a37fd08b01998d1bbf9142c98d70342f#b9043234a37fd08b01998d1bbf9142c98d70342f"
+  integrity sha512-iwsHsB6nLUFah2ImR842nrKqLedBuQV2j/8SDfqRN2PzlckT+1dNWBZ3nMIE0hg/wbMO8o/QPwDbEEqVJ5sONg==
   dependencies:
     "@jigjoy-io/account-and-billing-client" "^0.0.1"
-    "@jigjoy-io/ai-coding-client" "^0.0.10"
+    "@jigjoy-io/ai-coding-client" "^0.0.11"
     "@jigjoy-io/observability-client" "^0.0.6"
     "@jigjoy-io/project-deployment-client" "^0.0.9"
     "@jigjoy-io/project-planning-client" "^0.0.6"
-    "@jigjoy-io/project-versioning-client" "^0.0.8"
+    "@jigjoy-io/project-versioning-client" "^0.0.10"
     axios "^1.13.2"
 
 "@jigjoy-io/project-deployment-client@^0.0.9":
@@ -606,10 +606,10 @@
     "@jigjoy-io/task-contracts" "^0.0.2"
     axios "^1.13.2"
 
-"@jigjoy-io/project-versioning-client@^0.0.8":
-  version "0.0.8"
-  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-versioning-client/0.0.8/1a47d89d3a9fe3e1083445defdea98f882cb370a#1a47d89d3a9fe3e1083445defdea98f882cb370a"
-  integrity sha512-ppc4Cs1Ic6GtOe+1gnHHsi//y/FOYE7j04kI5s1wd1CijP0cLV1hdAS3qXw0FNjjPofPVNqvr/MxjafWTu1+0A==
+"@jigjoy-io/project-versioning-client@^0.0.10":
+  version "0.0.10"
+  resolved "https://npm.pkg.github.com/download/@jigjoy-io/project-versioning-client/0.0.10/b942ae2d33b8a18ef8f165aa9ed43a54818f784a#b942ae2d33b8a18ef8f165aa9ed43a54818f784a"
+  integrity sha512-daDyDBDCzLzPFWZNlFqB2tALFCJDbriqMY4LjlXSLv7059qiVFwEw+VyYqjfB9TUaA9d/M+koGFxTsinBRoCyA==
   dependencies:
     axios "^1.13.2"
 

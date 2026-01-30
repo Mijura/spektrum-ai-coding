@@ -12,10 +12,6 @@ describe("JigJoyProjectPlanningService Integration Tests", () => {
 	const testOwner = `test-owner-${Date.now()}`
 
 	beforeAll(async () => {
-		// Ensure the endpoint is configured
-		if (!process.env.PROJECT_PLANNING_ENDPOINT) {
-			throw new Error("PROJECT_PLANNING_ENDPOINT environment variable is not set")
-		}
 		service = new JigJoyProjectPlanningService()
 
 		// Create a project first
@@ -36,7 +32,7 @@ describe("JigJoyProjectPlanningService Integration Tests", () => {
 		
 		const createdTask = await service.createTask(task)
 		testTaskId = createdTask.id
-	}, 50_000)
+	}, 15_000)
 
 	it("should record work contribution", async () => {
 		const contribution = {

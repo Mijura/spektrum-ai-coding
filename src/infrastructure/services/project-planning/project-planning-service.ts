@@ -6,8 +6,8 @@ import { PlatformSDK } from "@jigjoy-io/platform-sdk"
 export class JigJoyProjectPlanningService implements ProjectPlanningService {
     private readonly jigjoyClient: PlatformSDK
 	constructor() {
-		const API_GATEWAY = process.env.API_GATEWAY || ""
-		this.jigjoyClient = new PlatformSDK(`${API_GATEWAY}`)
+		const JIGJOY_API_ENDPOINT = process.env.JIGJOY_API_ENDPOINT || ""
+		this.jigjoyClient = new PlatformSDK(`${JIGJOY_API_ENDPOINT}`)
     }
 
 	async createProject(owner: string): Promise<{ project: any; entryPoint: any }> {

@@ -6,10 +6,6 @@ describe("JigJoyProjectDeploymentService Integration Tests", () => {
 	const testProjectId = `test-project-${Date.now()}`
 
 	beforeAll(() => {
-		// Ensure the endpoint is configured
-		if (!process.env.PROJECT_DEPLOYMENT_ENDPOINT) {
-			throw new Error("PROJECT_DEPLOYMENT_ENDPOINT environment variable is not set")
-		}
 		service = new JigJoyProjectDeploymentService()
 	})
 
