@@ -8,10 +8,6 @@ describe("JigJoyObservabilityService Integration Tests", () => {
 	const testAccountId = `test-account-${Date.now()}`
 
 	beforeAll(() => {
-		// Ensure the endpoint is configured
-		if (!process.env.OBSERVABILITY_ENDPOINT) {
-			throw new Error("OBSERVABILITY_ENDPOINT environment variable is not set")
-		}
 		service = new JigJoyObservabilityService()
 	})
 
