@@ -4,7 +4,7 @@ import { VersionControlService } from "@app/ports/services/version-control-servi
 import { AIDevelopmentWorkflow } from "@app/workflow/ai-development-workflow"
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { DevelopUseCase } from "@app/ports/use-cases/develop"
-import { Task } from "@jigjoy-io/task-contracts"
+import { Task } from "@jigjoy-ai/task-contracts"
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
 import { ObservabilityService } from "@app/ports/services/observability-service"

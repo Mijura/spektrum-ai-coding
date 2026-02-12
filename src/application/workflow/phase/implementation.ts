@@ -1,7 +1,7 @@
 import { AIDevelopmentWorkflow } from "@app/workflow/ai-development-workflow"
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { TaskEmitter } from "@app/events/emitters/task-update"
-import { Task } from "@jigjoy-io/task-contracts"
+import { Task } from "@jigjoy-ai/task-contracts"
 import { FileArtifacts } from "@domain/file-artifacts"
 import { Phase } from "@app/workflow/phase/phase"
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"

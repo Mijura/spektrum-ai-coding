@@ -1,7 +1,7 @@
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { DeploymentRequest } from "@app/types/deployment-request"
 import { EntryPoint } from "@app/types/entry-point"
-import { DeployModuleCommand, PlatformSDK } from "@jigjoy-io/platform-sdk"
+import { DeployModuleCommand, PlatformSDK } from "@jigjoy-ai/platform-sdk"
 
 export class JigJoyProjectDeploymentService implements ProjectDeploymentService {
     private readonly jigjoyClient: PlatformSDK

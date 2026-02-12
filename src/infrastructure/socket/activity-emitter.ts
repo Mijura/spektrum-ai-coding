@@ -1,7 +1,7 @@
-import { TaskExecution } from "@jigjoy-io/observability-client"
+import { TaskExecution } from "@jigjoy-ai/observability-client"
 import { Server as SocketIOServer, Socket } from "socket.io"
 import { eventBus } from "@app/events/event-bus"
-import { Task } from "@jigjoy-io/task-contracts"
+import { Task } from "@jigjoy-ai/task-contracts"
 import { Server as HTTPServer } from "http"
 
 export function initializeActivityEmitter(server: HTTPServer) {

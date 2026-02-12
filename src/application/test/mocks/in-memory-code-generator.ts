@@ -1,6 +1,6 @@
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { FileArtifacts } from "@domain/file-artifacts"
-import { Task } from "@jigjoy-io/task-contracts"
+import { Task } from "@jigjoy-ai/task-contracts"
 
 export class InMemoryCodeGeneratorPort implements CodeGeneratorPort {
 	private byTaskId: Map<string, { comment: string; sourceCode: FileArtifacts }> = new Map()

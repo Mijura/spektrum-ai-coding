@@ -1,5 +1,5 @@
 {
-	"name": "ai-coding",
+	"name": "spektrum",
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
@@ -18,14 +18,14 @@
 		"@aws-sdk/client-dynamodb": "^3.398.0",
 		"@aws-sdk/lib-dynamodb": "^3.398.0",
 		"@aws-sdk/lib-storage": "^3.817.0",
-		"@jigjoy-io/platform-sdk": "^0.0.6",
-		"@jigjoy-io/task-contracts": "^0.0.2",
+		"@jigjoy-ai/platform-sdk": "^0.0.9",
+		"@jigjoy-ai/task-contracts": "^0.0.3",
 		"@mozaik-ai/core": "^0.7.1",
 		"express": "^4.21.2",
 		"fs-extra": "^11.3.2",
 		"socket.io": "^4.8.3",
 		"uuid": "^11.1.0",
-		"zod": "^4.1.13"
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@rstest/core": "^0.7.9",

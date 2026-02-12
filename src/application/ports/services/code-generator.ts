@@ -1,5 +1,5 @@
 import { FileArtifacts } from "@domain/file-artifacts"
-import { Task } from "@jigjoy-io/task-contracts"
+import { Task } from "@jigjoy-ai/task-contracts"
 
 export interface CodeGeneratorPort {
 	generateCode(task: Task, currentSourceCode: FileArtifacts): Promise<{ comment: string; sourceCode: FileArtifacts }>

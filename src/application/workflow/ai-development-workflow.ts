@@ -4,7 +4,7 @@ import { CodebaseRepositoryPort } from "@app/ports/repositories/codebase-reposit
 import { TaskExecutionEmitter } from "@app/events/emitters/task-execution"
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
-import { Task } from "@jigjoy-io/task-contracts"
+import { Task } from "@jigjoy-ai/task-contracts"
 import { TaskEmitter } from "@app/events/emitters/task-update"
 import { ImplementationPhase } from "@app/workflow/phase/implementation"
 import { FileArtifacts } from "@domain/file-artifacts"

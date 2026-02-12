@@ -4,7 +4,7 @@ import { InMemoryProjectPlanningService } from "@app/test/mocks/in-memory-projec
 import { InMemoryCodeGeneratorPort } from "@app/test/mocks/in-memory-code-generator"
 import { AIDevelopmentWorkflow } from "@app/workflow/ai-development-workflow"
 import { FileArtifacts } from "@domain/file-artifacts"
-import { ActivityType, Task, TaskStatus } from "@jigjoy-io/task-contracts"
+import { ActivityType, Task, TaskStatus } from "@jigjoy-ai/task-contracts"
 import { eventBus } from "@app/events/event-bus"
 import { ContributionType } from "@app/types/contribution"
 

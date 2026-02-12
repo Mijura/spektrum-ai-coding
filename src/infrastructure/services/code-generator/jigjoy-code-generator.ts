@@ -1,7 +1,7 @@
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { FileArtifacts } from "@domain/file-artifacts"
-import { Agent, Command } from "@jigjoy-io/mosaic"
-import { Task } from "@jigjoy-io/task-contracts"
+import { Agent, Command } from "@mozaik-ai/core"
+import { Task } from "@jigjoy-ai/task-contracts"
 import z from "zod"
 
 export class JigJoyCodeGenerator implements CodeGeneratorPort {

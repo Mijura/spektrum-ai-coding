@@ -1,6 +1,6 @@
 import { VersionControlService } from "@app/ports/services/version-control-service"
 import { Version } from "@domain/version"
-import { PlatformSDK } from "@jigjoy-io/platform-sdk"
+import { PlatformSDK } from "@jigjoy-ai/platform-sdk"
 
 export class JigJoyVersionControl implements VersionControlService {
     private readonly jigjoyClient: PlatformSDK

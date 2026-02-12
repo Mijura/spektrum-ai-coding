@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "@rstest/core"
 import { Request, Response } from "express"
 import { DevelopUseCase } from "@app/ports/use-cases/develop"
 import { createDevelopController } from "@infra/http/factories/develop"
-import { Task, TaskStatus } from "@jigjoy-io/task-contracts"
+import { Task, TaskStatus } from "@jigjoy-ai/task-contracts"
 
 describe("Develop Controller", () => {
 	let controller: (req: Request, res: Response) => Promise<void>

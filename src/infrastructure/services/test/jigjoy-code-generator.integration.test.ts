@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "@rstest/core"
 import { JigJoyCodeGenerator } from "@infra/services/code-generator/jigjoy-code-generator"
-import { Task, TaskStatus } from "@jigjoy-io/task-contracts"
+import { Task, TaskStatus } from "@jigjoy-ai/task-contracts"
 import { FileArtifacts } from "@domain/file-artifacts"
 
 describe("JigJoyCodeGenerator Integration Tests", () => {

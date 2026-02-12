@@ -1,5 +1,5 @@
 import { DevelopUseCase } from "@app/ports/use-cases/develop"
-import { Task } from "@jigjoy-io/task-contracts"
+import { Task } from "@jigjoy-ai/task-contracts"
 import { Request, Response } from "express"
 
 export function createDevelopController(developUseCase: DevelopUseCase) {

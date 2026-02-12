@@ -1,7 +1,7 @@
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
 import { Contribution, ContributionType } from "@app/types/contribution"
-import { ActivityType, Task } from "@jigjoy-io/task-contracts"
-import { PlatformSDK } from "@jigjoy-io/platform-sdk"
+import { ActivityType, Task } from "@jigjoy-ai/task-contracts"
+import { PlatformSDK } from "@jigjoy-ai/platform-sdk"
 
 export class JigJoyProjectPlanningService implements ProjectPlanningService {
     private readonly jigjoyClient: PlatformSDK

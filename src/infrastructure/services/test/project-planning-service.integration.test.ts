@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from "@rstest/core"
 import { JigJoyProjectPlanningService } from "@infra/services/project-planning/project-planning-service"
 import { ContributionType } from "@app/types/contribution"
-import { Task, TaskStatus } from "@jigjoy-io/task-contracts"
+import { Task, TaskStatus } from "@jigjoy-ai/task-contracts"
 
 describe("JigJoyProjectPlanningService Integration Tests", () => {
 	let service: JigJoyProjectPlanningService

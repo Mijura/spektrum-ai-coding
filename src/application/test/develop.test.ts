@@ -18,7 +18,7 @@ import { LocalDevEnvironment } from "@app/services/local-dev-environment"
 import { Codebase } from "@domain/codebase"
 import { Module, ModuleType } from "@domain/module"
 import { FileArtifacts } from "@domain/file-artifacts"
-import { Task, TaskStatus } from "@jigjoy-io/task-contracts"
+import { Task, TaskStatus } from "@jigjoy-ai/task-contracts"
 import { TaskExecutionStatus } from "@app/types/task-execution"
 import { Version } from "@domain/version"
 

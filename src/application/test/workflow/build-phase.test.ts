@@ -6,7 +6,7 @@ import { InMemoryFileSystemPort } from "@app/test/mocks/in-memory-file-system"
 import { LocalDevEnvironment } from "@app/services/local-dev-environment"
 import { AIDevelopmentWorkflow } from "@app/workflow/ai-development-workflow"
 import { FileArtifacts } from "@domain/file-artifacts"
-import { ActivityType, Task, TaskStatus } from "@jigjoy-io/task-contracts"
+import { ActivityType, Task, TaskStatus } from "@jigjoy-ai/task-contracts"
 import { eventBus } from "@app/events/event-bus"
 import { ContributionType } from "@app/types/contribution"
 

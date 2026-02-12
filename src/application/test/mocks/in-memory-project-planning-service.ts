@@ -1,6 +1,6 @@
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
 import { Contribution } from "@app/types/contribution"
-import { Task, TaskStatus } from "@jigjoy-io/task-contracts"
+import { Task, TaskStatus } from "@jigjoy-ai/task-contracts"
 
 export class InMemoryProjectPlanningService implements ProjectPlanningService {
 	private byTaskId: Map<string, Task> = new Map()

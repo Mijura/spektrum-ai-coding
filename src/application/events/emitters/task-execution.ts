@@ -1,4 +1,4 @@
-import { TaskExecution } from "@jigjoy-io/observability-client"
+import { TaskExecution } from "@jigjoy-ai/observability-client"
 import { eventBus } from "@app/events/event-bus"
 
 export class TaskExecutionEmitter {

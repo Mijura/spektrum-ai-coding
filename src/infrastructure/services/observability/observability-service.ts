@@ -1,6 +1,6 @@
 import { ObservabilityService } from "@app/ports/services/observability-service"
 import { TaskExecution } from "@app/types/task-execution"
-import { PlatformSDK } from "@jigjoy-io/platform-sdk"
+import { PlatformSDK } from "@jigjoy-ai/platform-sdk"
 
 export class JigJoyObservabilityService implements ObservabilityService {
     private readonly jigjoyClient: PlatformSDK
