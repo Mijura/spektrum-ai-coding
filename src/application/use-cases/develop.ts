@@ -8,6 +8,7 @@ import { Task } from "@jigjoy-ai/task-contracts"
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
 import { ObservabilityService } from "@app/ports/services/observability-service"
+import { AccountAndBillingService } from "@app/ports/services/account-and-biling-service"
 
 export class Develop implements DevelopUseCase {
 	constructor(
@@ -17,10 +18,11 @@ export class Develop implements DevelopUseCase {
 		private readonly versionControlService: VersionControlService,
 		private readonly observabilityService: ObservabilityService,
 		private readonly projectDeploymentService: ProjectDeploymentService,
+		private readonly accountBillingService: AccountAndBillingService,
 		private readonly codeGenerator: CodeGeneratorPort,
 	) {}
 
-	async execute(task: Task, accountId: string): Promise<void> {
+	async execute(task: Task, accountId: string): Promise<number> {
 		try {
 			const workflow = new AIDevelopmentWorkflow(
 				this.codebaseRepository,
@@ -29,10 +31,12 @@ export class Develop implements DevelopUseCase {
 				this.versionControlService,
 				this.observabilityService,
 				this.projectDeploymentService,
+				this.accountBillingService,
 				this.codeGenerator,
 			)
 
-			await workflow.handleTask(task, accountId)
+			const totalCostInUSD = await workflow.handleTask(task, accountId)
+			return totalCostInUSD
 		} catch (error: any) {
 			console.error(error)
 			throw error

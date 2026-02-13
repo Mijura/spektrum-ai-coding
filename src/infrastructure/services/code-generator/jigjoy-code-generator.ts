@@ -1,13 +1,16 @@
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { FileArtifacts } from "@domain/file-artifacts"
-import { Agent, Command } from "@mozaik-ai/core"
+import { MozaikAgent, MozaikRequest } from "@mozaik-ai/core"
 import { Task } from "@jigjoy-ai/task-contracts"
 import z from "zod"
 
 export class JigJoyCodeGenerator implements CodeGeneratorPort {
 	constructor() {}
 
-	async generateCode(task: Task, sourceCode: FileArtifacts): Promise<{ comment: string; sourceCode: FileArtifacts }> {
+	async generateCode(
+		task: Task,
+		sourceCode: FileArtifacts,
+	): Promise<{ comment: string; sourceCode: FileArtifacts; totalCostInUSD: number }> {
 		console.log("Generating code for task", task)
 		const outputSchema = z.object({
 			sourceCode: z
@@ -21,7 +24,7 @@ export class JigJoyCodeGenerator implements CodeGeneratorPort {
 				),
 		})
 
-		const command: Command = {
+		const request: MozaikRequest = {
 			model: "gpt-5",
 			task: `### Role:
             You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
@@ -51,19 +54,20 @@ export class JigJoyCodeGenerator implements CodeGeneratorPort {
 			structuredOutput: outputSchema,
 		}
 
-		const developer = new Agent(command)
+		const developer = new MozaikAgent(request)
 
 		const response = await developer.act()
 		console.log("Code generation finished")
 
 		const updatedSourceCode = {
 			...sourceCode,
-			...response.sourceCode,
+			...response.data.sourceCode,
 		}
 
 		return {
-			comment: response.comment,
+			comment: response.data.comment,
 			sourceCode: updatedSourceCode,
+			totalCostInUSD: response.totalCost,
 		}
 	}
 }
