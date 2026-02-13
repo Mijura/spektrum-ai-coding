@@ -30,6 +30,7 @@ export class ImplementationPhase implements Phase {
 
 		const response = await this.codeGenerator.generateCode(task, sourceCode)
 
+		context.addCost(response.totalCostInUSD)
 		context.updateSourceCode(response.sourceCode)
 
 		let finishedContribution: Contribution = {

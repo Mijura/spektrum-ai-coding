@@ -17,10 +17,12 @@ import { ProjectDeploymentService } from "@app/ports/services/project-deployment
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
 import { Contribution, ContributionType } from "@app/types/contribution"
 import { ObservabilityService } from "@app/ports/services/observability-service"
+import { AccountAndBillingService } from "@app/ports/services/account-and-biling-service"
 
 export class AIDevelopmentWorkflow {
 	private phase!: Phase
 	private numberOfTries: number = 3
+	private providerCostInUSD: number = 0
 	private task!: Task
 	private sourceCode!: FileArtifacts
 	private buildArtifacts!: FileArtifacts
@@ -33,6 +35,7 @@ export class AIDevelopmentWorkflow {
 		private readonly versionControlService: VersionControlService,
 		private readonly observabilityService: ObservabilityService,
 		private readonly projectDeploymentService: ProjectDeploymentService,
+		private readonly accountBillingService: AccountAndBillingService,
 		private readonly codeGenerator: CodeGeneratorPort,
 	) {}
 
@@ -64,7 +67,19 @@ export class AIDevelopmentWorkflow {
 		return this.module
 	}
 
-	async handleTask(task: Task, accountId: string): Promise<void> {
+	getProviderCostInUSD(): number {
+		return this.providerCostInUSD
+	}
+
+	addCost(costInUSD: number): void {
+		this.providerCostInUSD += costInUSD
+	}
+
+	getTotalCostInUSD(): number {
+		return this.providerCostInUSD * 5 // 5x markup
+	}
+
+	async handleTask(task: Task, accountId: string): Promise<number> {
 		this.task = task
 		const codebase = await this.codebaseRepository.get(this.task.projectId)
 		const module = codebase.modules[0] // TODO: support multiple modules
@@ -139,5 +154,10 @@ export class AIDevelopmentWorkflow {
 		await this.observabilityService.taskExecutionSucceeded(taskExecution.id)
 		taskExecution.status = TaskExecutionStatus.SUCCEEDED
 		TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
+
+		console.log("Total cost in USD", this.providerCostInUSD)
+		const billedCostInUSD = await this.accountBillingService.charge(accountId, this.providerCostInUSD)
+
+		return billedCostInUSD
 	}
 }
