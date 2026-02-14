@@ -10,7 +10,7 @@ RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > .npmrc && \
     echo "@jigjoy-ai:registry=https://npm.pkg.github.com" >> .npmrc
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --omit=dev
 
 # Remove .npmrc so token doesn't leak into the final image
 RUN rm -f .npmrc
