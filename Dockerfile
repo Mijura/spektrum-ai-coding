@@ -1,20 +1,45 @@
-FROM node:20-alpine
+## ---------- builder ----------
+FROM node:20-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Install app dependencies
+ARG GITHUB_TOKEN
+
+# Configure GitHub Packages auth for @jigjoy-ai/* packages
+RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > .npmrc && \
+    echo "@jigjoy-ai:registry=https://npm.pkg.github.com" >> .npmrc
+
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci --omit=dev
+
+# Remove .npmrc so token doesn't leak into the final image
+RUN rm -f .npmrc
+
+## ---------- runtime ----------
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install yarn (needed by YarnPackageManager for project builds) and tini
+RUN apk add --no-cache yarn tini
 
 # Install ts-node, TypeScript and tsconfig-paths globally
 RUN npm install -g ts-node typescript tsconfig-paths
 
+# Copy production node_modules from builder
+COPY --from=builder /app/node_modules ./node_modules
+
 # Copy app source
 COPY . .
 
-# Expose the port your app runs on
+# Remove any .npmrc that might have been copied from context
+RUN rm -f .npmrc
+
+ENV PORT=8080
 EXPOSE 8080
 
-# Start the app
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD wget -qO- http://localhost:8080/health || exit 1
+
+ENTRYPOINT ["tini", "--"]
 CMD ["ts-node", "-r", "tsconfig-paths/register", "src/infrastructure/http/index.ts"]

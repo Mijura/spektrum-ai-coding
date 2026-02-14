@@ -1,0 +1,11 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "spektrum"
+resolve_s3 = true
+s3_prefix = "spektrum"
+region = "eu-west-1"
+profile = "spektrum-dev"
+capabilities = "CAPABILITY_NAMED_IAM"
+confirm_changeset = true
+parameter_overrides = "VpcId=vpc-0c202fb26e172f14b SubnetId=subnet-0b98347bab62dabc6 KeyPairName=spektrum-dev JigjoyApiEndpoint=https://vvoniad25a.execute-api.eu-west-1.amazonaws.com/Prod/"
