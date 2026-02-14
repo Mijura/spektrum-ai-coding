@@ -23,10 +23,7 @@ WORKDIR /app
 # Install yarn (needed by YarnPackageManager for project builds) and tini
 RUN apk add --no-cache yarn tini
 
-# Install ts-node, TypeScript and tsconfig-paths globally
-RUN npm install -g ts-node typescript tsconfig-paths
-
-# Copy production node_modules from builder
+# Copy production node_modules from builder (includes ts-node, typescript, tsconfig-paths)
 COPY --from=builder /app/node_modules ./node_modules
 
 # Copy app source
@@ -42,4 +39,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD wget -qO- http://localhost:8080/health || exit 1
 
 ENTRYPOINT ["tini", "--"]
-CMD ["ts-node", "-r", "tsconfig-paths/register", "src/infrastructure/http/index.ts"]
+CMD ["npx", "ts-node", "-r", "tsconfig-paths/register", "src/infrastructure/http/index.ts"]
