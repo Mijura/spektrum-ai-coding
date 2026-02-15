@@ -10,7 +10,10 @@ RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > .npmrc && \
     echo "@jigjoy-ai:registry=https://npm.pkg.github.com" >> .npmrc
 
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+RUN npm install
+
+# Install ts-node, TypeScript and tsconfig-paths globally
+RUN npm install -g ts-node typescript tsconfig-paths
 
 # Remove .npmrc so token doesn't leak into the final image
 RUN rm -f .npmrc

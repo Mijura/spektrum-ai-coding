@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Spektrum AI Coding Engine - EC2 with Docker
+Description: Spektrum is vibe coding service that lets developers generate applications on demand and integrate them directly into their products.
 
 Parameters:
     VpcId:

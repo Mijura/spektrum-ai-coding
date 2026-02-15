@@ -1,9 +1,9 @@
 version = 0.1
 
 [default.deploy.parameters]
-stack_name = "spektrum"
+stack_name = "ai-coding"
 resolve_s3 = true
-s3_prefix = "spektrum"
+s3_prefix = "ai-coding"
 region = "eu-west-1"
 profile = "spektrum-dev"
 capabilities = "CAPABILITY_NAMED_IAM"

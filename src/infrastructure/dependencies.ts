@@ -28,6 +28,8 @@ import { ProjectPlanningService } from "@app/ports/services/project-planning-ser
 import { JigJoyProjectPlanningService } from "@infra/services/project-planning/project-planning-service"
 import { ObservabilityService } from "@app/ports/services/observability-service"
 import { JigJoyObservabilityService } from "@infra/services/observability/observability-service"
+import { AccountAndBillingService } from "@app/ports/services/account-and-biling-service"
+import { JigJoyAccountAndBillingService } from "./services/account-and-billing/account-and-billing-service"
 
 // Controllers
 export const aiCodingController = new AICodingController()
@@ -50,14 +52,13 @@ export const localDevEnvironment: LocalDevEnvironment = new LocalDevEnvironment(
 
 export const codebaseRepository: CodebaseRepositoryPort = new DynamoDBCodebaseRepository()
 
-
 const codeGenerator: CodeGeneratorPort = new JigJoyCodeGenerator()
 
 const projectPlanningService: ProjectPlanningService = new JigJoyProjectPlanningService()
 const projectDeploymentService: ProjectDeploymentService = new JigJoyProjectDeploymentService()
 const versionControl: VersionControlService = new JigJoyVersionControl()
 const observabilityService: ObservabilityService = new JigJoyObservabilityService()
-
+const accountBillingService: AccountAndBillingService = new JigJoyAccountAndBillingService()
 // Use Cases
 export const developModuleUseCase: DevelopUseCase = new Develop(
 	codebaseRepository,
@@ -66,6 +67,7 @@ export const developModuleUseCase: DevelopUseCase = new Develop(
 	versionControl,
 	observabilityService,
 	projectDeploymentService,
+	accountBillingService,
 	codeGenerator,
 )
 
