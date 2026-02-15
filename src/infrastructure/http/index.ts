@@ -14,6 +14,9 @@ const app = express()
 app.use(corsMiddleware)
 app.use(express.json())
 
+// Health check
+app.get("/health", (_, res) => res.status(200).json({ status: "ok" }))
+
 // Routes
 app.use("/", aiCodingRoutes)
 

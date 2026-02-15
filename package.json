@@ -1,5 +1,5 @@
 {
-	"name": "spektrum",
+	"name": "spektrum-ai-coding",
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
@@ -8,7 +8,11 @@
 		"dev": "npm-run-all --parallel serve docs",
 		"format": "prettier --write \"src/**/*.{ts,tsx}\"",
 		"test": "rstest -c rstest.config.ts",
-		"coverage": "rstest --coverage"
+		"coverage": "rstest --coverage",
+		"docker:build": "docker build --build-arg GITHUB_TOKEN=$GITHUB_TOKEN --platform linux/amd64 -t spektrum-ai-coding:latest .",
+		"docker:push": "bash -c 'ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text --profile spektrum-dev) && REGION=eu-west-1 && aws ecr get-login-password --region $REGION --profile spektrum-dev | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com && docker tag spektrum-ai-coding:latest $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/spektrum-ai-coding:latest && docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/spektrum-ai-coding:latest'",
+		"build:dev": "sam build --profile spektrum-dev",
+		"deploy:dev": "sam deploy --profile spektrum-dev"
 	},
 	"keywords": [],
 	"author": "",
@@ -34,11 +38,11 @@
 		"@types/fs-extra": "^11.0.4",
 		"@types/node": "^22.13.4",
 		"dotenv": "^17.2.3",
-		"npm-run-all": "^4.1.5",
-		"prettier": "^3.7.4",
-		"swagger-ui-watcher": "^2.1.14",
 		"ts-node": "^10.9.2",
 		"tsconfig-paths": "^4.2.0",
-		"typescript": "^5.7.3"
+		"typescript": "^5.7.3",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^3.7.4",
+		"swagger-ui-watcher": "^2.1.14"
 	}
 }
