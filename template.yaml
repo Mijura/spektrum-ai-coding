@@ -118,6 +118,14 @@ Resources:
                             Resource:
                                 - !GetAtt CodebaseTable.Arn
                                 - !Sub "${CodebaseTable.Arn}/index/*"
+                - PolicyName: secrets-manager-read
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action:
+                                - secretsmanager:GetSecretValue
+                            Resource: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:vars-*"
                 - PolicyName: cloudwatch-logs
                   PolicyDocument:
                       Version: "2012-10-17"
@@ -236,6 +244,11 @@ Resources:
                     # Pull latest image
                     docker pull \$ECR_URI:latest || { echo "No image in ECR yet. Push an image first."; exit 0; }
 
+                    # Fetch API keys from Secrets Manager
+                    SECRETS=\$(aws secretsmanager get-secret-value --secret-id vars --region \$REGION --query SecretString --output text)
+                    OPENAI_API_KEY=\$(echo "\$SECRETS" | python3 -c "import sys,json; print(json.load(sys.stdin)['OpenAIAPIKey'])")
+                    ANTHROPIC_API_KEY=\$(echo "\$SECRETS" | python3 -c "import sys,json; print(json.load(sys.stdin)['AnthropicAPIKey'])")
+
                     # Stop any existing container
                     docker stop spektrum 2>/dev/null || true
                     docker rm spektrum 2>/dev/null || true
@@ -249,6 +262,8 @@ Resources:
                         -e AWS_REGION=\$REGION \
                         -e CODEBASE_TABLE=${CodebaseTable} \
                         -e JIGJOY_API_ENDPOINT=${JigjoyApiEndpoint} \
+                        -e OPENAI_API_KEY=\$OPENAI_API_KEY \
+                        -e ANTHROPIC_API_KEY=\$ANTHROPIC_API_KEY \
                         \$ECR_URI:latest
 
                     echo "Container started successfully"
