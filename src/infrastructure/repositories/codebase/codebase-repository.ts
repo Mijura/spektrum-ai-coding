@@ -5,7 +5,11 @@ import { CodebaseRecord } from "@infra/repositories/codebase/records/codebase"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { Codebase } from "@domain/codebase"
 
-const client = new DynamoDBClient()
+const client = new DynamoDBClient({
+	region: process.env.AWS_REGION,
+	profile: process.env.AWS_PROFILE,
+})
+
 const ddbDocClient = DynamoDBDocumentClient.from(client)
 
 export class DynamoDBCodebaseRepository implements CodebaseRepositoryPort {
