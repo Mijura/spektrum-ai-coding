@@ -1,20 +1,20 @@
 import { VersionControlService } from "@app/ports/services/version-control-service"
 import { Version } from "@domain/version"
-import { PlatformSDK } from "@jigjoy-ai/platform-sdk"
+import { SpektrumClient } from "@jigjoy-ai/spektrum-client"
 
 export class JigJoyVersionControl implements VersionControlService {
-    private readonly jigjoyClient: PlatformSDK
+    private readonly spektrumClient: SpektrumClient
 	constructor() {
 		const JIGJOY_API_ENDPOINT = process.env.JIGJOY_API_ENDPOINT || ""
-		this.jigjoyClient = new PlatformSDK(`${JIGJOY_API_ENDPOINT}`)
+		this.spektrumClient = new SpektrumClient(`${JIGJOY_API_ENDPOINT}`, { kind: "internal" , token: process.env.INTERNAL_SERVICE_TOKEN || "" })
     }
 
 	async init(): Promise<string> {
-		return await this.jigjoyClient.versioning.initializeProjectHistory()
+		return await this.spektrumClient.versioning.initializeProjectHistory()
 	}
 
 	async pull(repositoryId: string): Promise<Version> {
-		const response = await this.jigjoyClient.versioning.getLatestVersion(repositoryId)
+		const response = await this.spektrumClient.versioning.getLatestVersion(repositoryId)
 
 		const version: Version = {
 			repositoryId: response.projectHistoryId,
@@ -31,6 +31,6 @@ export class JigJoyVersionControl implements VersionControlService {
 			buildArtifacts: version.buildArtifacts,
 			sourceCodeArtifacts: version.sourceCodeArtifacts,
 		}
-		await this.jigjoyClient.versioning.saveVersion(versionDTO)
+		await this.spektrumClient.versioning.saveVersion(versionDTO)
 	}
 }
