@@ -1,13 +1,13 @@
 import { ProjectDeploymentService } from "@app/ports/services/project-deployment-service"
 import { DeploymentRequest } from "@app/types/deployment-request"
 import { EntryPoint } from "@app/types/entry-point"
-import { DeployModuleCommand, PlatformSDK } from "@jigjoy-ai/platform-sdk"
+import { DeployModuleCommand, SpektrumClient } from "@jigjoy-ai/spektrum-client"
 
 export class JigJoyProjectDeploymentService implements ProjectDeploymentService {
-    private readonly jigjoyClient: PlatformSDK
+    private readonly spektrumClient: SpektrumClient
 	constructor() {
 		const JIGJOY_API_ENDPOINT = process.env.JIGJOY_API_ENDPOINT || ""
-		this.jigjoyClient = new PlatformSDK(`${JIGJOY_API_ENDPOINT}`)
+		this.spektrumClient = new SpektrumClient(`${JIGJOY_API_ENDPOINT}`, { kind: "internal" , token: process.env.INTERNAL_SERVICE_TOKEN || "" })
     }
 
 	async deployModule(projectId: string, deploymentRequest: DeploymentRequest): Promise<EntryPoint> {
@@ -20,11 +20,11 @@ export class JigJoyProjectDeploymentService implements ProjectDeploymentService 
 			setAsEntryPoint: true,
 		}
 
-		const entryPoint = await this.jigjoyClient.deployment.deployModule(request)
+		const entryPoint = await this.spektrumClient.deployment.deployModule(request)
 		return entryPoint
 	}
 
 	async createCloudProfile(projectId: string): Promise<void> {
-		return await this.jigjoyClient.deployment.createCloudProfile(projectId)
+		return await this.spektrumClient.deployment.createCloudProfile(projectId)
 	}
 }
