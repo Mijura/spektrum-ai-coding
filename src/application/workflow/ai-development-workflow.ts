@@ -157,7 +157,7 @@ export class AIDevelopmentWorkflow {
 
 		console.log("Total cost in USD", this.providerCostInUSD)
 		const billedCostInUSD = await this.accountBillingService.charge(accountId, this.providerCostInUSD)
-
+		TaskExecutionEmitter.taskExecutionCreditsSpent(accountId, billedCostInUSD)
 		return billedCostInUSD
 	}
 }

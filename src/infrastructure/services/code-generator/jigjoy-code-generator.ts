@@ -11,7 +11,7 @@ export class JigJoyCodeGenerator implements CodeGeneratorPort {
 		task: Task,
 		sourceCode: FileArtifacts,
 	): Promise<{ comment: string; sourceCode: FileArtifacts; totalCostInUSD: number }> {
-		console.log("Generating code for task", task)
+		console.log("Generating code for task", task.id)
 		const outputSchema = z.object({
 			sourceCode: z
 				.object({})

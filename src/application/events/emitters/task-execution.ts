@@ -9,4 +9,8 @@ export class TaskExecutionEmitter {
 	static taskExecutionUpdated(taskExecution: TaskExecution): void {
 		eventBus.emit("task-execution:update", taskExecution)
 	}
+
+	static taskExecutionCreditsSpent(accountId: string, amount: Number): void {
+		eventBus.emit("task-execution:credits-spent", accountId, amount)
+	}
 }
