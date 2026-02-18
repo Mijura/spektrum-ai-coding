@@ -7,13 +7,11 @@ export function createDevelopController(developUseCase: DevelopUseCase) {
 		try {
 			const { task, accountId } = req.body as { task: Task; accountId: string }
 
-			console.log("task", task)
-			console.log("accountId", accountId)
 			if (!task || !accountId) {
 				throw new Error("Task and accountId are required")
 			}
-			await developUseCase.execute(task, accountId)
-			res.status(200).json({ message: "Task developed successfully" })
+			const totalCostInUSD = await developUseCase.execute(task, accountId)
+			res.status(200).json({ totalCostInUSD })
 		} catch (error) {
 			console.error("Error during task execution:", error)
 			res.status(500).json({ error: "Internal server error" })

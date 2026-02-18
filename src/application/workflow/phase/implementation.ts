@@ -17,7 +17,7 @@ export class ImplementationPhase implements Phase {
 		const sourceCode: FileArtifacts = context.getSourceCode()
 		const task: Task = context.getTask()
 
-		console.log("React Developer is developing task", task)
+		console.log("React Developer is developing task", task.id)
 
 		let contribution: Contribution = {
 			taskId: task.id,

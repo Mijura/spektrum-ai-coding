@@ -52,4 +52,9 @@ export function initializeActivityEmitter(server: HTTPServer) {
 		console.log(`Broadcasting task-execution:new to room ${taskExecution.accountId}`)
 		io.to(taskExecution.accountId).emit("task-execution:new", taskExecution)
 	})
+
+	eventBus.on("task-execution:credits-spent", (accountId: string, amount: Number) => {
+		console.log(`Broadcasting task-execution:credits-spent to room ${accountId}`)
+		io.to(accountId).emit("task-execution:credits-spent", amount)
+	})
 }
