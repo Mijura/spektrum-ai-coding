@@ -6,6 +6,8 @@ import { FileArtifacts } from "@domain/file-artifacts"
 import { Phase } from "@app/workflow/phase/phase"
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
 import { Contribution, ContributionType } from "@app/types/contribution"
+import { Auth } from "@heksagon/app"
+import { UserData } from "@jigjoy-ai/auth"
 
 export class ImplementationPhase implements Phase {
 	constructor(
@@ -13,7 +15,7 @@ export class ImplementationPhase implements Phase {
 		private readonly codeGenerator: CodeGeneratorPort,
 	) {}
 
-	async execute(context: AIDevelopmentWorkflow): Promise<void> {
+	async execute(context: AIDevelopmentWorkflow, auth: Auth<UserData>): Promise<void> {
 		const sourceCode: FileArtifacts = context.getSourceCode()
 		const task: Task = context.getTask()
 
@@ -25,7 +27,7 @@ export class ImplementationPhase implements Phase {
 			message: "React Developer is generating the code...",
 			type: ContributionType.STARTED_WORK,
 		}
-		let updatedTask = await this.projectPlanningService.recordWork(contribution)
+		let updatedTask = await this.projectPlanningService.recordWork(contribution, auth)
 		TaskEmitter.taskUpdated(updatedTask)
 
 		const response = await this.codeGenerator.generateCode(task, sourceCode)
@@ -39,10 +41,10 @@ export class ImplementationPhase implements Phase {
 			message: "React Developer finished with coding",
 			type: ContributionType.FINISHED_WORK,
 		}
-		updatedTask = await this.projectPlanningService.recordWork(finishedContribution)
+		updatedTask = await this.projectPlanningService.recordWork(finishedContribution, auth)
 		TaskEmitter.taskUpdated(updatedTask)
 
-		updatedTask = await this.projectPlanningService.leaveComment(task.id, response.comment, "React Developer")
+		updatedTask = await this.projectPlanningService.leaveComment(task.id, response.comment, "React Developer", auth)
 		TaskEmitter.taskUpdated(updatedTask)
 		context.updateTask(updatedTask)
 	}

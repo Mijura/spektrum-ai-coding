@@ -1,5 +1,9 @@
 import { Module } from "@domain/module"
+import { AuthenticatedUseCase } from "@heksagon/app"
+import { UserData } from "@jigjoy-ai/auth"
 
-export interface InitializeReactModuleUseCase {
-	execute(projectId: string): Promise<Module>
+export type InitializeReactModuleRequest = {
+	projectId: string
 }
+
+export type InitializeReactModuleUseCase = AuthenticatedUseCase<UserData, InitializeReactModuleRequest, Module>

@@ -6,13 +6,15 @@ import { ProjectDeploymentService } from "@app/ports/services/project-deployment
 import { DeploymentRequest } from "@app/types/deployment-request"
 import { ProjectPlanningService } from "@app/ports/services/project-planning-service"
 import { Contribution, ContributionType } from "@app/types/contribution"
+import { Auth } from "@heksagon/app"
+import { UserData } from "@jigjoy-ai/auth"
 
 export class DeploymentPhase implements Phase {
 	constructor(
 		private readonly projectDeploymentService: ProjectDeploymentService,
 		private readonly projectPlanningService: ProjectPlanningService,
 	) {}
-	async execute(context: AIDevelopmentWorkflow): Promise<void> {
+	async execute(context: AIDevelopmentWorkflow, auth: Auth<UserData>): Promise<void> {
 		const module = context.getModule()
 		const task = context.getTask()
 		console.log("Deploying the application...")
@@ -23,7 +25,7 @@ export class DeploymentPhase implements Phase {
 			message: "Deploying the application...",
 			type: ContributionType.STARTED_WORK,
 		}
-		let updatedTask = await this.projectPlanningService.recordWork(contribution)
+		let updatedTask = await this.projectPlanningService.recordWork(contribution, auth)
 		TaskEmitter.taskUpdated(updatedTask)
 
 		console.log("Deploying module...")
@@ -35,7 +37,7 @@ export class DeploymentPhase implements Phase {
 			setAsEntryPoint: true,
 		}
 
-		await this.projectDeploymentService.deployModule(task.projectId, deploymentRequest)
+		await this.projectDeploymentService.deployModule(task.projectId, deploymentRequest, auth)
 
 		console.log("Module deployed successfully")
 
@@ -45,7 +47,7 @@ export class DeploymentPhase implements Phase {
 			message: "App deployed — check Output tab to test.",
 			type: ContributionType.FINISHED_WORK,
 		}
-		updatedTask = await this.projectPlanningService.recordWork(finishedContribution)
+		updatedTask = await this.projectPlanningService.recordWork(finishedContribution, auth)
 		TaskEmitter.taskUpdated(updatedTask)
 		context.updateTask(updatedTask)
 	}
