@@ -1,3 +1,6 @@
+import { Auth } from "@heksagon/app"
+import { UserData } from "@jigjoy-ai/auth"
+
 export interface AccountAndBillingService {
-	charge(accountId: string, amount: number): Promise<number>
+	charge(amount: number, auth: Auth<UserData>): Promise<number>
 }

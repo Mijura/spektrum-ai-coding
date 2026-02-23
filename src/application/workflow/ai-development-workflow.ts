@@ -18,6 +18,8 @@ import { ProjectPlanningService } from "@app/ports/services/project-planning-ser
 import { Contribution, ContributionType } from "@app/types/contribution"
 import { ObservabilityService } from "@app/ports/services/observability-service"
 import { AccountAndBillingService } from "@app/ports/services/account-and-biling-service"
+import { Auth } from "@heksagon/app"
+import { UserData } from "@jigjoy-ai/auth"
 
 export class AIDevelopmentWorkflow {
 	private phase!: Phase
@@ -79,14 +81,14 @@ export class AIDevelopmentWorkflow {
 		return this.providerCostInUSD * 5 // 5x markup
 	}
 
-	async handleTask(task: Task, accountId: string): Promise<number> {
+	async handleTask(task: Task, auth: Auth<UserData>): Promise<number> {
 		this.task = task
 		const codebase = await this.codebaseRepository.get(this.task.projectId)
 		const module = codebase.modules[0] // TODO: support multiple modules
 		if (!module) {
 			throw new Error("Module not found")
 		}
-		let version: Version = await this.versionControlService.pull(module.repositoryId)
+		let version: Version = await this.versionControlService.pull(module.repositoryId, auth)
 		this.sourceCode = version.sourceCodeArtifacts
 		this.buildArtifacts = version.buildArtifacts
 		this.module = module
@@ -95,7 +97,7 @@ export class AIDevelopmentWorkflow {
 			this.task.title,
 			this.task.projectId,
 			this.task.id,
-			accountId,
+			auth,
 		)
 		TaskExecutionEmitter.newTaskExecution(taskExecution)
 		console.log("Task execution started", taskExecution)
@@ -104,9 +106,9 @@ export class AIDevelopmentWorkflow {
 		while (currentTry <= this.numberOfTries) {
 			try {
 				this.setPhase(new ImplementationPhase(this.projectPlanningService, this.codeGenerator))
-				await this.phase.execute(this)
+				await this.phase.execute(this, auth)
 				this.setPhase(new BuildPhase(this.projectPlanningService, this.devEnvironment))
-				await this.phase.execute(this)
+				await this.phase.execute(this, auth)
 				break
 			} catch (error: any) {
 				console.error(error)
@@ -118,12 +120,13 @@ export class AIDevelopmentWorkflow {
 					message: "Finsihed with error. Please create a new task with the bug description.",
 					type: ContributionType.FINISHED_WORK,
 				}
-				let updatedTask = await this.projectPlanningService.recordWork(contribution)
+				let updatedTask = await this.projectPlanningService.recordWork(contribution, auth)
 
 				updatedTask = await this.projectPlanningService.leaveComment(
 					this.task.id,
 					error.message,
 					"React Developer",
+					auth
 				)
 
 				this.updateTask(updatedTask)
@@ -133,7 +136,7 @@ export class AIDevelopmentWorkflow {
 
 		if (currentTry > this.numberOfTries) {
 			const errorMessage = "Failed to develop task after " + this.numberOfTries + " tries"
-			await this.observabilityService.taskExecutionFailed(taskExecution.id, errorMessage)
+			await this.observabilityService.taskExecutionFailed(taskExecution.id, errorMessage, auth)
 			taskExecution.status = TaskExecutionStatus.FAILED
 			taskExecution.error = errorMessage
 			TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
@@ -146,18 +149,18 @@ export class AIDevelopmentWorkflow {
 			repositoryId: module.repositoryId,
 			buildArtifacts: this.buildArtifacts,
 			sourceCodeArtifacts: this.sourceCode,
-		})
+		}, auth)
 
 		this.setPhase(new DeploymentPhase(this.projectDeploymentService, this.projectPlanningService))
-		await this.phase.execute(this)
+		await this.phase.execute(this, auth)
 
-		await this.observabilityService.taskExecutionSucceeded(taskExecution.id)
+		await this.observabilityService.taskExecutionSucceeded(taskExecution.id, auth)
 		taskExecution.status = TaskExecutionStatus.SUCCEEDED
 		TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
 
 		console.log("Total cost in USD", this.providerCostInUSD)
-		const billedCostInUSD = await this.accountBillingService.charge(accountId, this.providerCostInUSD)
-		TaskExecutionEmitter.taskExecutionCreditsSpent(accountId, billedCostInUSD)
+		const billedCostInUSD = await this.accountBillingService.charge(this.providerCostInUSD, auth)
+		TaskExecutionEmitter.taskExecutionCreditsSpent(auth.data.userId, billedCostInUSD)
 		return billedCostInUSD
 	}
 }

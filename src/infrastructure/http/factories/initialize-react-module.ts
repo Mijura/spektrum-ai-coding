@@ -1,4 +1,5 @@
-import { InitializeReactModuleUseCase } from "@app/ports/use-cases/initialize-react-module"
+import { InitializeReactModuleRequest, InitializeReactModuleUseCase } from "@app/ports/use-cases/initialize-react-module"
+import { extractAuthData } from "@heksagon/http"
 import { Request, Response } from "express"
 
 export function createInitializeReactModuleController(initializeReactModuleUseCase: InitializeReactModuleUseCase) {
@@ -8,8 +9,12 @@ export function createInitializeReactModuleController(initializeReactModuleUseCa
 			throw new Error(`Project id is required`)
 		}
 
+		const auth = extractAuthData(req)
 		try {
-			const module = await initializeReactModuleUseCase.execute(projectId)
+			const params: InitializeReactModuleRequest = {
+				projectId: projectId
+			}
+			const module = await initializeReactModuleUseCase.execute(auth, params)
 			res.status(201).json(module)
 		} catch (error) {
 			console.error("Error during react project initialization:", error)
