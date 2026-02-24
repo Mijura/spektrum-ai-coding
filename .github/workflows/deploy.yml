@@ -2,7 +2,7 @@ name: Build and Deploy Spektrum
 
 on:
     push:
-        branches: [main]
+        branches: [development]
 
 env:
     AWS_REGION: eu-west-1
