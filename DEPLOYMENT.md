@@ -63,8 +63,8 @@ CodeBuild pulls source directly from the GitHub repo. Trigger a build specifying
 
 ```bash
 aws codebuild start-build \
-  --project-name spektrum-build \
-  --source-version <branch-name> \
+  --project-name ai-coding-build \
+  --source-version development \
   --profile spektrum-dev \
   --region eu-west-1
 ```
@@ -86,7 +86,7 @@ The EC2 instance has a `/home/ec2-user/start-container.sh` script that pulls the
 
 ```bash
 aws ssm send-command \
-  --instance-ids "i-060ea510127959e5e" \
+  --instance-ids "i-0a09c6422ec23f0af" \
   --document-name "AWS-RunShellScript" \
   --parameters 'commands=["/home/ec2-user/start-container.sh"]' \
   --profile spektrum-dev \

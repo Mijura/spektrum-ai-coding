@@ -248,6 +248,7 @@ Resources:
                     SECRETS=\$(aws secretsmanager get-secret-value --secret-id vars --region \$REGION --query SecretString --output text)
                     OPENAI_API_KEY=\$(echo "\$SECRETS" | python3 -c "import sys,json; print(json.load(sys.stdin)['OpenAIAPIKey'])")
                     ANTHROPIC_API_KEY=\$(echo "\$SECRETS" | python3 -c "import sys,json; print(json.load(sys.stdin)['AnthropicAPIKey'])")
+                    INTERNAL_SERVICE_TOKEN=\$(echo "\$SECRETS" | python3 -c "import sys,json; print(json.load(sys.stdin)['InternalServiceToken'])")
 
                     # Stop any existing container
                     docker stop spektrum 2>/dev/null || true
@@ -262,6 +263,7 @@ Resources:
                         -e AWS_REGION=\$REGION \
                         -e CODEBASE_TABLE=${CodebaseTable} \
                         -e JIGJOY_API_ENDPOINT=${JigjoyApiEndpoint} \
+                        -e INTERNAL_SERVICE_TOKEN=\$INTERNAL_SERVICE_TOKEN \
                         -e OPENAI_API_KEY=\$OPENAI_API_KEY \
                         -e ANTHROPIC_API_KEY=\$ANTHROPIC_API_KEY \
                         \$ECR_URI:latest
