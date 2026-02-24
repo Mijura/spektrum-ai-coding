@@ -7,7 +7,7 @@ on:
 
 env:
     AWS_REGION: eu-west-1
-    ECR_REPOSITORY: spektrum
+    ECR_REPOSITORY: ai-coding
 
 jobs:
     build-and-push:
@@ -60,7 +60,7 @@ jobs:
               id: get-instance
               run: |
                   INSTANCE_ID=$(aws cloudformation describe-stacks \
-                      --stack-name spektrum \
+                      --stack-name ai-coding \
                       --query "Stacks[0].Outputs[?OutputKey=='InstanceId'].OutputValue" \
                       --output text)
                   echo "instance_id=$INSTANCE_ID" >> "$GITHUB_OUTPUT"
