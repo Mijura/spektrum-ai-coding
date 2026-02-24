@@ -25,25 +25,25 @@ EC2 (t3.medium) --- Docker container --- port 8080
 
 ## Deployed Resources
 
-| Resource | Value |
-|----------|-------|
-| Elastic IP | `52.49.179.242` |
-| Health endpoint | `http://52.49.179.242:8080/health` |
-| EC2 Instance | `i-060ea510127959e5e` (t3.medium, Amazon Linux 2023) |
-| ECR Repository | `425946675747.dkr.ecr.eu-west-1.amazonaws.com/spektrum` |
-| DynamoDB Table | `spektrum-Codebase` (PK: `projectId`) |
-| CloudWatch Logs | `/ec2/spektrum` |
-| CodeBuild Project | `spektrum-build` |
-| Security Group | Inbound: 8080 (app), 22 (SSH) |
-| SSH Key | `spektrum-dev` (local: `~/.ssh/spektrum-dev.pem`) |
+| Resource          | Value                                                   |
+| ----------------- | ------------------------------------------------------- |
+| Elastic IP        | `52.49.179.242`                                         |
+| Health endpoint   | `http://52.49.179.242:8080/health`                      |
+| EC2 Instance      | `i-060ea510127959e5e` (t3.medium, Amazon Linux 2023)    |
+| ECR Repository    | `425946675747.dkr.ecr.eu-west-1.amazonaws.com/spektrum` |
+| DynamoDB Table    | `spektrum-Codebase` (PK: `projectId`)                   |
+| CloudWatch Logs   | `/ec2/spektrum`                                         |
+| CodeBuild Project | `spektrum-build`                                        |
+| Security Group    | Inbound: 8080 (app), 22 (SSH)                           |
+| SSH Key           | `spektrum-dev` (local: `~/.ssh/spektrum-dev.pem`)       |
 
 ## Environment Variables (container)
 
-| Variable | Source |
-|----------|--------|
-| `PORT` | `8080` |
-| `AWS_REGION` | `eu-west-1` |
-| `CODEBASE_TABLE` | `spektrum-Codebase` (from CloudFormation) |
+| Variable              | Source                                                   |
+| --------------------- | -------------------------------------------------------- |
+| `PORT`                | `8080`                                                   |
+| `AWS_REGION`          | `eu-west-1`                                              |
+| `CODEBASE_TABLE`      | `spektrum-Codebase` (from CloudFormation)                |
 | `JIGJOY_API_ENDPOINT` | Platform API Gateway URL (from CloudFormation parameter) |
 
 ## How to Deploy
@@ -142,6 +142,7 @@ npm run docker:push
 ## Alternative: GitHub Actions CI/CD
 
 The `.github/workflows/deploy.yml` workflow automatically builds and deploys on push to `main`. It:
+
 1. Builds the Docker image
 2. Pushes to ECR
 3. Restarts the container on EC2 via SSM
@@ -155,6 +156,7 @@ ssh -i ~/.ssh/spektrum-dev.pem ec2-user@52.49.179.242
 ```
 
 Once connected:
+
 ```bash
 docker ps                    # Check container status
 docker logs spektrum         # View app logs
@@ -164,17 +166,20 @@ docker logs spektrum         # View app logs
 ## Troubleshooting
 
 **Container keeps restarting:**
+
 ```bash
 docker logs spektrum 2>&1 | tail -50
 ```
 
 **Check if image exists in ECR:**
+
 ```bash
 aws ecr describe-images --repository-name spektrum \
   --profile spektrum-dev --region eu-west-1
 ```
 
 **CodeBuild logs:**
+
 ```bash
 # Get log location from build
 aws codebuild batch-get-builds --ids "<build-id>" \
@@ -183,6 +188,7 @@ aws codebuild batch-get-builds --ids "<build-id>" \
 ```
 
 **View CloudWatch container logs:**
+
 ```bash
 aws logs tail /ec2/spektrum --follow \
   --profile spektrum-dev --region eu-west-1
@@ -190,8 +196,8 @@ aws logs tail /ec2/spektrum --follow \
 
 ## Secrets Manager
 
-| Secret | Purpose |
-|--------|---------|
+| Secret         | Purpose                                                                                                      |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
 | `github-token` | GitHub PAT with `read:packages` scope, used by CodeBuild to pull `@jigjoy-ai/*` packages during Docker build |
 
 ## Cost (~$30/month)
@@ -202,11 +208,11 @@ aws logs tail /ec2/spektrum --follow \
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `template.yaml` | CloudFormation: EC2, ECR, DynamoDB, EIP, IAM, CodeBuild |
-| `samconfig.toml` | SAM deploy config (stack, profile, parameters) |
-| `Dockerfile` | Multi-stage build with GitHub Packages auth |
-| `.dockerignore` | Excludes node_modules, .git, etc. from Docker context |
-| `buildspec.yml` | CodeBuild spec (ECR login, docker build, push) |
-| `.github/workflows/deploy.yml` | GitHub Actions CI/CD |
+| File                           | Purpose                                                 |
+| ------------------------------ | ------------------------------------------------------- |
+| `template.yaml`                | CloudFormation: EC2, ECR, DynamoDB, EIP, IAM, CodeBuild |
+| `samconfig.toml`               | SAM deploy config (stack, profile, parameters)          |
+| `Dockerfile`                   | Multi-stage build with GitHub Packages auth             |
+| `.dockerignore`                | Excludes node_modules, .git, etc. from Docker context   |
+| `buildspec.yml`                | CodeBuild spec (ECR login, docker build, push)          |
+| `.github/workflows/deploy.yml` | GitHub Actions CI/CD                                    |
