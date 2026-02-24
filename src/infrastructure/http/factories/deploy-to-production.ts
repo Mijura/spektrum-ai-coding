@@ -9,7 +9,7 @@ export function createDeployToProductionController(deployToProductionUseCase: De
 			throw new Error(`Project id is required`)
 		}
 
-		const auth = extractAuthData(req)
+		const auth = extractAuthData(req.headers)
 		try {
 
 			const params: DeployToProductionRequest = {

@@ -5,17 +5,11 @@ import { Request, Response } from "express"
 
 export function createDevelopController(developUseCase: DevelopUseCase) {
 	return async (req: Request, res: Response): Promise<void> => {
-		try {
-			const { task } = req.body as { task: Task }
-			const auth = extractAuthData(req)
-			if (!task) {
-				throw new Error("Task is required")
-			}
 
-			const userId = req.headers["x-user-id"] as string
-			if (!userId) {
-				throw new Error("User ID is missing in the request headers")
-			}
+		const { task } = req.body as { task: Task }
+		const auth = extractAuthData(req.headers)
+		
+		try {
 
 			const params: DevelopRequest = {
 				task: task
