@@ -158,8 +158,9 @@ export class AIDevelopmentWorkflow {
 		taskExecution.status = TaskExecutionStatus.SUCCEEDED
 		TaskExecutionEmitter.taskExecutionUpdated(taskExecution)
 
-		console.log("Total cost in USD", this.providerCostInUSD)
+		console.log("Provider cost in USD", this.providerCostInUSD)
 		const billedCostInUSD = await this.accountBillingService.charge(this.providerCostInUSD, auth)
+		console.log("Billed cost in USD", billedCostInUSD)
 		TaskExecutionEmitter.taskExecutionCreditsSpent(auth.data.userId, billedCostInUSD)
 		return billedCostInUSD
 	}

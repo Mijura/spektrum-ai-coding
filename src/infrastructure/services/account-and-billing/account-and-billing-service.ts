@@ -10,8 +10,8 @@ export class JigJoyAccountAndBillingService implements AccountAndBillingService 
 		this.spektrumClient = new SpektrumClient(`${JIGJOY_API_ENDPOINT}`, { kind: "internal" , token: process.env.INTERNAL_SERVICE_TOKEN || "" })
 	}
 
-	async charge(amount: number, auth: Auth<UserData>): Promise<number> {
-		const response = await this.spektrumClient.account.chargeAccount(amount, auth)
+	async charge(providerCostUsd: number, auth: Auth<UserData>): Promise<number> {
+		const response = await this.spektrumClient.account.charge(providerCostUsd, auth)
 		return response.totalCostUsd
 	}
 }
