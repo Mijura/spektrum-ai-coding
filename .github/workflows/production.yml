@@ -1,0 +1,87 @@
+name: Production - AI Coding
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+env:
+    ECR_REPOSITORY: ai-coding
+
+jobs:
+    test:
+        name: Run Tests
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - name: Configure npm for private packages
+              run: |
+                  echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PACKAGES_TOKEN }}" > ~/.npmrc
+                  echo "@jigjoy-ai:registry=https://npm.pkg.github.com" >> ~/.npmrc
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run tests
+              run: npm test
+
+    deploy:
+        name: Deploy to Production
+        needs: test
+        if: github.event_name == 'workflow_dispatch'
+        runs-on: ubuntu-latest
+        environment: production
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v2
+
+            - name: Build, tag, and push Docker image
+              env:
+                  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                  GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+              run: |
+                  docker build \
+                      --build-arg GITHUB_TOKEN=$GITHUB_TOKEN \
+                      --platform linux/amd64 \
+                      -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
+                      -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} \
+                      .
+                  docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+                  docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
+
+            - name: Get EC2 instance ID
+              id: get-instance
+              run: |
+                  INSTANCE_ID=$(aws cloudformation describe-stacks \
+                      --stack-name ai-coding \
+                      --query "Stacks[0].Outputs[?OutputKey=='InstanceId'].OutputValue" \
+                      --output text)
+                  echo "instance_id=$INSTANCE_ID" >> "$GITHUB_OUTPUT"
+
+            - name: Restart container via SSM
+              run: |
+                  aws ssm send-command \
+                      --instance-ids "${{ steps.get-instance.outputs.instance_id }}" \
+                      --document-name "AWS-RunShellScript" \
+                      --parameters 'commands=["/home/ec2-user/start-container.sh"]' \
+                      --comment "Production deploy - ${{ github.sha }}"
