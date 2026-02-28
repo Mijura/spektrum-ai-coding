@@ -26,7 +26,7 @@
 		"@heksagon/app": "^0.0.14",
 		"@heksagon/http": "^0.0.9",
 		"@jigjoy-ai/auth": "^0.1.0",
-		"@jigjoy-ai/spektrum-client": "^0.0.17",
+		"@jigjoy-ai/spektrum-client": "^0.0.26",
 		"@jigjoy-ai/task-contracts": "^0.0.3",
 		"@mozaik-ai/core": "^0.8.4",
 		"express": "^5.2.1",
