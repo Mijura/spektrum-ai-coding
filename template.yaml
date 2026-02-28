@@ -3,29 +3,25 @@ Description: Spektrum is vibe coding service that lets developers generate appli
 
 Parameters:
     VpcId:
-        Type: AWS::EC2::VPC::Id
-        Description: VPC to deploy into (default VPC)
+        Type: AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>
+        Default: /jigjoy/ai-coding/VpcId
+        Description: SSM parameter path for VPC ID
     SubnetId:
-        Type: AWS::EC2::Subnet::Id
-        Description: Public subnet for the EC2 instance
+        Type: AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>
+        Default: /jigjoy/ai-coding/SubnetId
+        Description: SSM parameter path for public subnet ID
     ContainerImage:
         Type: String
         Description: "Full ECR image URI (account.dkr.ecr.region.amazonaws.com/repo:tag)"
         Default: ""
     KeyPairName:
-        Type: AWS::EC2::KeyPair::KeyName
-        Description: EC2 key pair for SSH access
+        Type: AWS::SSM::Parameter::Value<String>
+        Default: /jigjoy/ai-coding/KeyPairName
+        Description: SSM parameter path for EC2 key pair name
     InstanceType:
-        Type: String
-        Default: t3.medium
-        AllowedValues:
-            - t3.small
-            - t3.medium
-            - t3.large
-        Description: EC2 instance type
-    JigjoyApiEndpoint:
-        Type: String
-        Description: Platform API endpoint URL (e.g. from platform-serverless-api)
+        Type: AWS::SSM::Parameter::Value<String>
+        Default: /jigjoy/ai-coding/InstanceType
+        Description: SSM parameter path for EC2 instance type
 
 Resources:
     # ---- ECR Repository ----
@@ -249,6 +245,7 @@ Resources:
                     OPENAI_API_KEY=\$(echo "\$SECRETS" | python3 -c "import sys,json; print(json.load(sys.stdin)['OpenAIAPIKey'])")
                     ANTHROPIC_API_KEY=\$(echo "\$SECRETS" | python3 -c "import sys,json; print(json.load(sys.stdin)['AnthropicAPIKey'])")
                     INTERNAL_SERVICE_TOKEN=\$(echo "\$SECRETS" | python3 -c "import sys,json; print(json.load(sys.stdin)['InternalServiceToken'])")
+                    JIGJOY_API_ENDPOINT=\$(echo "\$SECRETS" | python3 -c "import sys,json; print(json.load(sys.stdin)['JigJoyApiEndpoint'])")
 
                     # Stop any existing container
                     docker stop spektrum 2>/dev/null || true
@@ -262,7 +259,7 @@ Resources:
                         -e PORT=8080 \
                         -e AWS_REGION=\$REGION \
                         -e CODEBASE_TABLE=${CodebaseTable} \
-                        -e JIGJOY_API_ENDPOINT=${JigjoyApiEndpoint} \
+                        -e JIGJOY_API_ENDPOINT=\$JIGJOY_API_ENDPOINT \
                         -e INTERNAL_SERVICE_TOKEN=\$INTERNAL_SERVICE_TOKEN \
                         -e OPENAI_API_KEY=\$OPENAI_API_KEY \
                         -e ANTHROPIC_API_KEY=\$ANTHROPIC_API_KEY \

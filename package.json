@@ -12,7 +12,8 @@
 		"docker:build": "docker build --build-arg GITHUB_TOKEN=$GITHUB_TOKEN --platform linux/amd64 -t ai-coding:latest .",
 		"docker:push": "bash -c 'ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text --profile spektrum-dev) && REGION=eu-west-1 && aws ecr get-login-password --region $REGION --profile spektrum-dev | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com && docker tag ai-coding:latest $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/ai-coding:latest && docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/ai-coding:latest'",
 		"build:dev": "sam build --profile spektrum-dev",
-		"deploy:dev": "sam deploy --profile spektrum-dev"
+		"deploy:dev": "sam deploy --config-env dev --profile spektrum-dev",
+		"deploy:prod": "sam deploy --config-env prod --profile spektrum-prod"
 	},
 	"keywords": [],
 	"author": "",

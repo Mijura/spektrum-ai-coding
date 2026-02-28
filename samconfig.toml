@@ -1,10 +1,13 @@
 version = 0.1
 
-[default.deploy.parameters]
+[dev.deploy.parameters]
 stack_name = "ai-coding"
 resolve_s3 = true
 s3_prefix = "ai-coding"
-region = "eu-west-1"
-profile = "spektrum-dev"
 capabilities = "CAPABILITY_NAMED_IAM"
-confirm_changeset = true
+
+[prod.deploy.parameters]
+stack_name = "ai-coding"
+resolve_s3 = true
+s3_prefix = "ai-coding"
+capabilities = "CAPABILITY_NAMED_IAM"
