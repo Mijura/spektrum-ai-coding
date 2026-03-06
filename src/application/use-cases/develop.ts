@@ -25,6 +25,13 @@ export class Develop implements DevelopUseCase {
 
 	async execute(auth: Auth<UserData>, params: DevelopRequest): Promise<number> {
 		console.log(`Auth data: ${JSON.stringify(auth)}`)
+		const accountBalance = await this.accountBillingService.getAccountBalance(auth)
+		console.log(`Account balance: ${accountBalance}`)
+
+		if (accountBalance <= 0) {
+			throw new Error("Account has no credits. Please add credits to your account.")
+		}
+
 		const { task } = params
 		try {
 			const workflow = new AIDevelopmentWorkflow(
