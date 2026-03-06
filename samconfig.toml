@@ -1,0 +1,13 @@
+version = 0.1
+
+[dev.deploy.parameters]
+stack_name = "ai-coding"
+resolve_s3 = true
+s3_prefix = "ai-coding"
+capabilities = "CAPABILITY_NAMED_IAM"
+
+[prod.deploy.parameters]
+stack_name = "ai-coding"
+resolve_s3 = true
+s3_prefix = "ai-coding"
+capabilities = "CAPABILITY_NAMED_IAM"

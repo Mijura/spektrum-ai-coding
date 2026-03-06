@@ -1,36 +1,52 @@
 {
-  "name": "honeycomb",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "serve": "ts-node -r tsconfig-paths/register src/infrastructure/http/index.ts",
-    "start": "ts-node -r tsconfig-paths/register src/infrastructure/http/index.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.398.0",
-    "@aws-sdk/client-s3": "^3.817.0",
-    "@aws-sdk/lib-dynamodb": "^3.398.0",
-    "@aws-sdk/lib-storage": "^3.817.0",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "fs-extra": "^11.3.0",
-    "openai": "^5.12.2",
-    "socket.io": "^4.8.1",
-    "tar-stream": "^3.1.7",
-    "uuid": "^11.1.0",
-    "zod": "3.25.64"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.13.4",
-    "@types/tar-stream": "^3.1.4",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.3"
-  }
+	"name": "ai-coding",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"serve": "ts-node -r tsconfig-paths/register src/infrastructure/http/index.ts",
+		"docs": "npx swagger-ui-watcher openapi.yaml --port 2020",
+		"dev": "npm-run-all --parallel serve docs",
+		"format": "prettier --write \"src/**/*.{ts,tsx}\"",
+		"test": "rstest -c rstest.config.ts",
+		"coverage": "rstest --coverage",
+		"docker:build": "docker build --build-arg GITHUB_TOKEN=$GITHUB_TOKEN --platform linux/amd64 -t ai-coding:latest .",
+		"docker:push": "bash -c 'ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text --profile spektrum-dev) && REGION=eu-west-1 && aws ecr get-login-password --region $REGION --profile spektrum-dev | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com && docker tag ai-coding:latest $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/ai-coding:latest && docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/ai-coding:latest'",
+		"build:dev": "sam build --profile spektrum-dev",
+		"deploy:dev": "sam deploy --config-env dev --profile spektrum-dev",
+		"deploy:prod": "sam deploy --config-env prod --profile spektrum-prod"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@aws-sdk/client-dynamodb": "^3.996.0",
+		"@aws-sdk/lib-dynamodb": "^3.996.0",
+		"@aws-sdk/lib-storage": "^3.996.0",
+		"@heksagon/app": "^0.0.14",
+		"@heksagon/http": "^0.0.9",
+		"@jigjoy-ai/auth": "^0.1.0",
+		"@jigjoy-ai/spektrum-client": "^0.0.27",
+		"@jigjoy-ai/task-contracts": "^0.0.3",
+		"@mozaik-ai/core": "^0.8.4",
+		"express": "^5.2.1",
+		"fs-extra": "^11.3.3",
+		"socket.io": "^4.8.3",
+		"uuid": "^13.0.0",
+		"zod": "^4.3.6"
+	},
+	"devDependencies": {
+		"@rstest/core": "^0.8.5",
+		"@rstest/coverage-istanbul": "^0.2.1",
+		"@types/express": "^5.0.6",
+		"@types/fs-extra": "^11.0.4",
+		"@types/node": "^25.3.0",
+		"dotenv": "^17.3.1",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^3.8.1",
+		"swagger-ui-watcher": "^2.1.14",
+		"ts-node": "^10.9.2",
+		"tsconfig-paths": "^4.2.0",
+		"typescript": "^5.9.3"
+	}
 }

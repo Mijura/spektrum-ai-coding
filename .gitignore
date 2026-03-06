@@ -2,13 +2,13 @@ node_modules
 build
 projects
 dist
+coverage
 
 .env
+.env.test
 .npmrc
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
 
 .yarn
 .yarnrc.yml
+
+.aws-sam

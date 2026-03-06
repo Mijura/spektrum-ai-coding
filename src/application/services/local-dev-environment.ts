@@ -1,22 +1,18 @@
+import { BundlerPort } from "@app/ports/services/bundler"
+import { FileSystemPort } from "@app/ports/services/file-system"
+import { FileArtifacts } from "@domain/file-artifacts"
+import { v4 as uuidv4 } from "uuid"
 import path from "path"
-import { FileArtifacts } from "@domain/value-objects/file-artifacts"
-import { DevEnvironment } from "@domain/ports/services/dev-environment"
-import { Bundler } from "@domain/ports/bundlers/bundler"
-import { FileSystemPort } from "@domain/ports/filesystem/file-system"
-import { v4 as uuidv4 } from 'uuid'
 
-export class LocalDevEnvironment implements DevEnvironment {
-
+export class LocalDevEnvironment {
 	constructor(
-		private readonly jsBundler: Bundler,
-		private readonly fileSystem: FileSystemPort
+		private readonly jsBundler: BundlerPort,
+		private readonly fileSystem: FileSystemPort,
 	) {}
 
 	async build(sourceCode: FileArtifacts): Promise<FileArtifacts> {
 		const buildId = uuidv4()
-		const temporaryBuildFolder = path.resolve(`projects/${buildId}`)		
-
-		// TODO: Fetch the source code from the version control system and merge with the passed source code
+		const temporaryBuildFolder = path.resolve(`projects/${buildId}`)
 
 		// write the source code to the file system
 		let promises = []
@@ -38,6 +34,4 @@ export class LocalDevEnvironment implements DevEnvironment {
 		}
 		return buildArtifact
 	}
-
-
 }

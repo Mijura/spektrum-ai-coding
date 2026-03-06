@@ -1,0 +1,73 @@
+name: Build and Deploy Spektrum
+
+on:
+    workflow_dispatch:
+    push:
+        branches: [development]
+
+env:
+    ECR_REPOSITORY: ai-coding
+
+jobs:
+    build-and-push:
+        name: Build and Push Docker Image
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v2
+
+            - name: Build, tag, and push Docker image
+              env:
+                  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                  GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+              run: |
+                  docker build \
+                      --build-arg GITHUB_TOKEN=$GITHUB_TOKEN \
+                      --platform linux/amd64 \
+                      -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
+                      -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} \
+                      .
+                  docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+                  docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
+
+    deploy:
+        name: Deploy to EC2
+        needs: build-and-push
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: Get EC2 instance ID
+              id: get-instance
+              run: |
+                  INSTANCE_ID=$(aws cloudformation describe-stacks \
+                      --stack-name ai-coding \
+                      --query "Stacks[0].Outputs[?OutputKey=='InstanceId'].OutputValue" \
+                      --output text)
+                  echo "instance_id=$INSTANCE_ID" >> "$GITHUB_OUTPUT"
+
+            - name: Restart container via SSM
+              run: |
+                  aws ssm send-command \
+                      --instance-ids "${{ steps.get-instance.outputs.instance_id }}" \
+                      --document-name "AWS-RunShellScript" \
+                      --parameters 'commands=["/home/ec2-user/start-container.sh"]' \
+                      --comment "Deploy spektrum - ${{ github.sha }}"

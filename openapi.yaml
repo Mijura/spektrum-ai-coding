@@ -1,0 +1,87 @@
+openapi: 3.0.1
+info:
+  title: AI Coding API
+  version: "1.0.0"
+  description: >
+    API for AI-assisted coding workflows and React project initialization.
+
+servers:
+  - url: http://localhost:2000
+    description: Local Express API
+
+paths:
+  /intialize-react-module:
+    post:
+      summary: Initialize React project
+      description: Initialize a React project for a given projectId.
+      operationId: initializeReactProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                  description: ID of the project to initialize
+              required:
+                - projectId
+      responses:
+        "200":
+          description: React project initialized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: React project initialized
+        "400":
+          description: Missing or invalid projectId
+        "500":
+          description: Internal server error
+
+  /develop:
+    post:
+      summary: Start AI develop workflow
+      description: >
+        Starts an AI coding workflow using a task description, optional chat history,
+        and a project identifier.
+      operationId: develop
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: string
+                  description: Task description for the AI workflow
+                chatHistory:
+                  type: array
+                  description: Optional chat history used as context for the AI
+                  items:
+                    type: object
+                    additionalProperties: true
+                projectId:
+                  type: string
+                  description: ID of the related project
+              required:
+                - task
+                - projectId
+      responses:
+        "200":
+          description: Task developed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Task developed successfully
+        "500":
+          description: Internal server error

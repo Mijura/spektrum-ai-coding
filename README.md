@@ -1,6 +1,8 @@
-# JigJoy Backend
+# Spektrum
 
-Backend for the JigJoy vibe coding platform.
+Spektrum is a vibe coding service that lets developers generate applications on demand and integrate them directly into their products.
+
+![spektrum](https://github.com/user-attachments/assets/7342c8f5-67f0-4515-85fc-5db8cf1668e1)
 
 ## Architecture
 

@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+projects
+.git
+.github
+.env
+.env.*
+*.md
+coverage
+openapi.yaml
+rstest.config.ts

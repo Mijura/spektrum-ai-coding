@@ -1,0 +1,10 @@
+{
+    "name": "codebase-sam-template",
+    "version": "1.0.0",
+    "description": "Codebase SAM template",
+    "main": "index.js",
+    "scripts": {
+        "build": "sam build --profile Development",
+        "deploy": "sam deploy --profile Development"
+    }
+}
