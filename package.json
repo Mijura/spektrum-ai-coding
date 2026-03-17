@@ -28,7 +28,7 @@
 		"@jigjoy-ai/auth": "^0.1.0",
 		"@jigjoy-ai/spektrum-client": "^0.0.26",
 		"@jigjoy-ai/task-contracts": "^0.0.3",
-		"@mozaik-ai/core": "^0.8.4",
+		"@mozaik-ai/core": "^0.9.2",
 		"express": "^5.2.1",
 		"fs-extra": "^11.3.3",
 		"socket.io": "^4.8.3",
