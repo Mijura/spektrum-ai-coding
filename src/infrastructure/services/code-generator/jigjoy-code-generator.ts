@@ -1,6 +1,6 @@
 import { CodeGeneratorPort } from "@app/ports/services/code-generator"
 import { FileArtifacts } from "@domain/file-artifacts"
-import { MozaikAgent, MozaikRequest } from "@mozaik-ai/core"
+import { MozaikAgent, MozaikRequest, ReasoningEffort } from "@mozaik-ai/core"
 import { Task } from "@jigjoy-ai/task-contracts"
 import z from "zod"
 
@@ -25,7 +25,7 @@ export class JigJoyCodeGenerator implements CodeGeneratorPort {
 		})
 
 		const request: MozaikRequest = {
-			model: "gpt-5",
+			model: "gpt-5.4",
 			task: `### Role:
             You are an React Frontend Developer working on React project with Tailwind CSS and Framer Motion. 
     
@@ -52,6 +52,7 @@ export class JigJoyCodeGenerator implements CodeGeneratorPort {
                 - **Current Source Code:** ${JSON.stringify(sourceCode)}
             `,
 			structuredOutput: outputSchema,
+			reasoningEffort: ReasoningEffort.HIGH,
 		}
 
 		const developer = new MozaikAgent(request)
